@@ -2,7 +2,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import SessionTracker from '../components/SessionTracker';
 import { useI18n } from '../services/i18n';
 import { getExerciseById } from '../utils/exerciseModel';
-import { getSafetyStatus } from '../utils/safety';
+import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '../utils/safety';
 
 export default function SessionPage() {
   const { exerciseId } = useParams();
@@ -12,7 +12,7 @@ export default function SessionPage() {
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
-  if (!safety.completed) {
+  if (!isSafetyGateCurrentForToday(safety)) {
     return (
       <div className="page">
         <section className="card space-y-4 p-4">
@@ -26,7 +26,7 @@ export default function SessionPage() {
     );
   }
 
-  if (safety.blocked) {
+  if (!canEnterSession(safety)) {
     return (
       <div className="page">
         <section className="card space-y-4 border-red-200 bg-red-50 p-4">

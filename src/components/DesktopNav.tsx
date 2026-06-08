@@ -15,7 +15,7 @@ export default function DesktopNav() {
   const { t } = useI18n();
 
   return (
-    <header className="safe-top sticky top-0 z-30 hidden border-b border-slate-200 bg-white/92 backdrop-blur md:block">
+    <header className="desktop-nav safe-top sticky top-0 z-30 border-b border-slate-200 bg-white/92 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <NavLink to="/" className="focus-ring inline-flex min-h-11 items-center rounded-md text-xl font-bold text-ink">
           {t('app.brand')}

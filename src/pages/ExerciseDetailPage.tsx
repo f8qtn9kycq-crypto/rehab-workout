@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
-import { exercises } from '../data/exercises';
 import { useI18n } from '../services/i18n';
+import { getExerciseById } from '../utils/exerciseModel';
 
 export default function ExerciseDetailPage() {
   const { exerciseId } = useParams();
   const location = useLocation();
   const { t } = useI18n();
-  const exercise = exercises.find((item) => item.id === exerciseId);
+  const exercise = getExerciseById(exerciseId);
   const [modalOpen, setModalOpen] = useState(false);
   const backTarget = `/exercises${location.search}`;
 

@@ -1,13 +1,13 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import SessionTracker from '../components/SessionTracker';
-import { exercises } from '../data/exercises';
 import { useI18n } from '../services/i18n';
+import { getExerciseById } from '../utils/exerciseModel';
 import { getSafetyStatus } from '../utils/safety';
 
 export default function SessionPage() {
   const { exerciseId } = useParams();
   const { t } = useI18n();
-  const exercise = exercises.find((item) => item.id === exerciseId);
+  const exercise = getExerciseById(exerciseId);
   const safety = getSafetyStatus();
 
   if (!exercise) return <Navigate to="/exercises" replace />;

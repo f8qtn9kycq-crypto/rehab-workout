@@ -2,7 +2,7 @@ import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
-import { saveLog } from '../services/logService';
+import { createTrainingLog, saveLog } from '../services/logService';
 import type { Exercise } from '../types/rehab';
 import { shouldStopForPain, shouldUseRecoveryMode } from '../utils/safety';
 import PainScale from './PainScale';
@@ -47,25 +47,19 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
   }
 
   function completeLog(): void {
-    saveLog({
-      id: crypto.randomUUID(),
-      date: new Date().toISOString(),
-      completedAt: new Date().toISOString(),
-      exerciseId: exercise.id,
-      title: exercise.title,
-      exerciseTitle: exercise.title,
-      bodyArea: exercise.bodyArea,
-      type: exercise.type,
-      level: exercise.level,
+    const log = createTrainingLog({
+      exercise,
       setsCompleted: stoppedEarly ? currentSet : exercise.sets,
       repsCompleted: stoppedEarly ? currentRep : exercise.reps,
       painBefore,
       painAfter,
       difficultyRating,
-      notes,
       stoppedEarly,
+      notes,
       stopReason,
     });
+
+    saveLog(log);
     navigate('/logs');
   }
 

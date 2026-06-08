@@ -11,6 +11,7 @@ interface CreateTrainingLogInput {
   painAfter: number;
   difficultyRating: number;
   stoppedEarly: boolean;
+  recoveryMode: boolean;
   notes: string;
   stopReason: string;
 }
@@ -46,6 +47,7 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
     painAfter,
     difficultyRating: Number(rawLog.difficultyRating ?? 3),
     stoppedEarly,
+    recoveryMode: Boolean(rawLog.recoveryMode),
     completionStatus: stoppedEarly ? 'stopped_early' : 'completed',
     notes: String(rawLog.notes ?? ''),
     stopReason: String(rawLog.stopReason ?? ''),
@@ -92,6 +94,7 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
     painAfter: input.painAfter,
     difficultyRating: input.difficultyRating,
     stoppedEarly: input.stoppedEarly,
+    recoveryMode: input.recoveryMode,
     completionStatus: input.stoppedEarly ? 'stopped_early' : 'completed',
     notes: input.notes,
     stopReason: input.stopReason,

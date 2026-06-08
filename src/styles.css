@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  /* Mobile nav is active through 768px; desktop nav starts at 769px. */
+  --desktop-nav-min-width: 769px;
   color: #1e293b;
   background: #f8fafc;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", sans-serif;
@@ -56,10 +58,12 @@ button,
 
 .mobile-bottom-nav {
   display: block;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .mobile-bottom-nav-inner {
-  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  padding-bottom: 4px;
 }
 
 .desktop-nav a,

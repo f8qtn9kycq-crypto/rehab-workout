@@ -16,16 +16,25 @@
 }
 
 html {
+  width: 100%;
+  overflow-x: clip;
   background: #f8fafc;
 }
 
 body {
+  width: 100%;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  overflow-x: clip;
   background:
     linear-gradient(180deg, rgba(233, 245, 244, 0.78), rgba(248, 250, 252, 0.55) 260px),
     #f8fafc;
+}
+
+#root {
+  min-height: 100vh;
+  overflow-x: clip;
 }
 
 button,
@@ -41,6 +50,25 @@ button,
   min-height: 44px;
 }
 
+.desktop-nav {
+  display: none;
+}
+
+.mobile-bottom-nav {
+  display: block;
+}
+
+.mobile-bottom-nav-inner {
+  padding-bottom: max(4px, env(safe-area-inset-bottom));
+}
+
+.desktop-nav a,
+.desktop-nav button,
+.mobile-bottom-nav a,
+.mobile-bottom-nav button {
+  min-height: 44px;
+}
+
 .safe-top {
   padding-top: env(safe-area-inset-top);
 }
@@ -53,12 +81,30 @@ button,
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
+  overflow-x: clip;
   padding: 18px 16px 104px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
+  .desktop-nav {
+    display: block;
+  }
+
+  .mobile-bottom-nav {
+    display: none;
+  }
+
   .page {
     padding: 32px 24px 48px;
+  }
+}
+
+@supports not (overflow-x: clip) {
+  html,
+  body,
+  #root,
+  .page {
+    overflow-x: hidden;
   }
 }
 

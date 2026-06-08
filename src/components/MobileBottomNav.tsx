@@ -25,7 +25,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
   }
 
   return (
-    <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/96 backdrop-blur md:hidden">
+    <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/96 backdrop-blur">
       {moreOpen ? (
         <div id="mobile-more-nav" className="border-b border-slate-200 px-3 py-3">
           <div className="grid grid-cols-2 gap-2">
@@ -45,7 +45,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
           </div>
         </div>
       ) : null}
-      <div className="grid grid-cols-5 px-1 pt-1">
+      <div className="mobile-bottom-nav-inner grid grid-cols-5 px-1 pt-1">
         {primaryItems.map(({ to, labelKey, icon: Icon }) => {
           const active = isActive(to);
           return (

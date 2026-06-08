@@ -9,9 +9,9 @@ export default function AppShell() {
   const nextLanguage = language === 'zh-TW' ? 'en' : 'zh-TW';
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip">
       <DesktopNav />
-      <div className="safe-top fixed right-3 top-3 z-50 md:right-5 md:top-4">
+      <div className="safe-top fixed right-3 top-3 z-50 min-[769px]:right-5 min-[769px]:top-4">
         <button
           type="button"
           onClick={() => setLanguage(nextLanguage)}
@@ -21,7 +21,7 @@ export default function AppShell() {
           {language === 'zh-TW' ? t('app.english') : t('app.chinese')}
         </button>
       </div>
-      <main id="main-content">
+      <main id="main-content" className="min-w-0">
         <Outlet />
       </main>
       <MobileBottomNav currentPath={location.pathname} />

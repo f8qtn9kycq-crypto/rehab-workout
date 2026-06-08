@@ -27,6 +27,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
   const painAfterWarning = shouldWarnForPainIncrease(painBefore, painAfter);
   const canStart = hasPainValue(painBefore) && !painBlocksStart;
   const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
+  const recoverySuggestion = exercise.regressions?.[0];
 
   function nextRep(): void {
     if (currentRep + 1 < exercise.reps) {
@@ -60,6 +61,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
       painAfter,
       difficultyRating,
       stoppedEarly,
+      recoveryMode: useRecoveryMode,
       notes,
       stopReason,
     });
@@ -81,7 +83,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
         {recoveryModeSuggested ? (
           <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
             <p>{t('session.recoveryCopy')}</p>
-            {exercise.regressions[0] ? <p className="font-semibold">{t('session.recoverySuggestion', { value: exercise.regressions[0] })}</p> : null}
+            {recoverySuggestion ? <p className="font-semibold">{t('session.recoverySuggestion', { value: recoverySuggestion })}</p> : null}
             <label className="flex min-h-11 items-center gap-3 rounded-md bg-white/70 px-3 font-bold">
               <input type="checkbox" checked={useRecoveryMode} onChange={(event) => setUseRecoveryMode(event.target.checked)} className="h-5 w-5 accent-calm-600" />
               {t('session.useRecoveryMode')}

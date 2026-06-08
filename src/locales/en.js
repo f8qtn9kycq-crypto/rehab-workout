@@ -221,6 +221,8 @@ export default {
     empty: 'No training logs yet. Finished trainings will appear here.',
     stoppedEarly: 'Stopped early',
     pain: 'Pain {before} → {after}',
+    volume: 'Completed {sets}/{plannedSets} sets, {reps}/{plannedReps} reps',
+    effort: 'Effort: {value}/5',
   },
   video: {
     fallback: 'The video is temporarily unavailable. Please follow the written steps and safety reminders first.',

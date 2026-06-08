@@ -12,6 +12,7 @@ export default {
     exercises: 'Exercise Library',
     logs: 'Logs',
     education: 'Education',
+    more: 'More',
   },
   actions: {
     start: 'Start',

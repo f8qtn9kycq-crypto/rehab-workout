@@ -1,26 +1,19 @@
 import { useState } from 'react';
 import { EQUIPMENT_OPTIONS, PRIMARY_EQUIPMENT_IDS } from '../data/equipmentOptions';
 import { useI18n } from '../services/i18n';
-import { BODY_AREAS, EXERCISE_LEVELS, EXERCISE_TYPES, type BodyArea, type Equipment, type ExerciseLevel, type ExerciseType } from '../types/rehab';
+import {
+  BODY_AREAS,
+  EXERCISE_LEVELS,
+  EXERCISE_TYPES,
+  type Equipment,
+  type ExerciseFilterMode,
+  type ExerciseFilters,
+} from '../types/rehab';
 
 const primaryEquipment: Equipment[] = [...PRIMARY_EQUIPMENT_IDS];
 const supportEquipment = EQUIPMENT_OPTIONS
   .map((item) => item.id)
   .filter((id) => !primaryEquipment.includes(id));
-
-export type ExerciseFilterMode = 'recommended' | 'all';
-export type DurationFilter = 'all' | 'short' | 'medium';
-
-export interface ExerciseFilters {
-  mode: ExerciseFilterMode;
-  bodyArea: BodyArea | 'all';
-  type: ExerciseType | 'all';
-  level: ExerciseLevel | 'all';
-  equipment: Equipment[];
-  noEquipmentOnly: boolean;
-  duration: DurationFilter;
-  painSensitive: boolean;
-}
 
 export default function ExerciseFilter({
   filters,
@@ -174,7 +167,7 @@ export default function ExerciseFilter({
               <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.level')}</span>
               <select
                 value={filters.level}
-                onChange={(event) => onChange({ ...filters, level: event.target.value as ExerciseLevel | 'all' })}
+                onChange={(event) => onChange({ ...filters, level: event.target.value as ExerciseFilters['level'] })}
                 className="focus-ring min-h-11 w-full rounded-md border border-slate-200 bg-white px-3"
               >
                 <option value="all">{t('exercises.allLevels')}</option>
@@ -189,7 +182,7 @@ export default function ExerciseFilter({
               <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.type')}</span>
               <select
                 value={filters.type}
-                onChange={(event) => onChange({ ...filters, type: event.target.value as ExerciseType | 'all' })}
+                onChange={(event) => onChange({ ...filters, type: event.target.value as ExerciseFilters['type'] })}
                 className="focus-ring min-h-11 w-full rounded-md border border-slate-200 bg-white px-3"
               >
                 <option value="all">{t('exercises.allTypes')}</option>
@@ -207,7 +200,7 @@ export default function ExerciseFilter({
               <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.duration')}</span>
               <select
                 value={filters.duration}
-                onChange={(event) => onChange({ ...filters, duration: event.target.value as DurationFilter })}
+                onChange={(event) => onChange({ ...filters, duration: event.target.value as ExerciseFilters['duration'] })}
                 className="focus-ring min-h-11 w-full rounded-md border border-slate-200 bg-white px-3"
               >
                 <option value="all">{t('exercises.anyDuration')}</option>

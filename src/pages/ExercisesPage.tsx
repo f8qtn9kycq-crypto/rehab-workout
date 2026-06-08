@@ -1,25 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ExerciseCard from '../components/ExerciseCard';
-import ExerciseFilter, { type DurationFilter, type ExerciseFilterMode, type ExerciseFilters } from '../components/ExerciseFilter';
-import { EQUIPMENT_OPTIONS, SUPPORT_ONLY_EQUIPMENT_IDS } from '../data/equipmentOptions';
+import ExerciseFilter from '../components/ExerciseFilter';
+import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
 import { assessmentStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
-import { EQUIPMENT_IDS, type BodyArea, type Equipment, type Exercise, type ExerciseLevel, type ExerciseType } from '../types/rehab';
-import { isBodyArea, isEquipment, isExerciseLevel, isExerciseType } from '../utils/exerciseModel';
+import type { BodyArea, DurationFilter, Equipment, ExerciseFilterMode, ExerciseFilters, ExerciseLevel, ExerciseType, SavedAssessment } from '../types/rehab';
+import {
+  filterExercises,
+  isBodyArea,
+  isDurationFilter,
+  isEquipment,
+  isExerciseFilterMode,
+  isExerciseLevel,
+  isExerciseType,
+} from '../utils/exerciseModel';
 
 const validEquipment = EQUIPMENT_OPTIONS.map((item) => item.id);
-const validModes: ExerciseFilterMode[] = ['recommended', 'all'];
-const validDurations: DurationFilter[] = ['all', 'short', 'medium'];
-const supportOnlyEquipment: readonly Equipment[] = SUPPORT_ONLY_EQUIPMENT_IDS;
-
-interface SavedAssessment {
-  bodyArea?: BodyArea;
-  equipment?: Equipment[];
-  mode?: 'recovery' | 'beginner' | 'standard';
-  pain?: number;
-}
 
 function readAssessment(): SavedAssessment | null {
   try {
@@ -43,44 +41,17 @@ function getLevelParam(value: string | null): ExerciseLevel | 'all' {
 }
 
 function getModeParam(value: string | null): ExerciseFilterMode {
-  return validModes.includes(value as ExerciseFilterMode) ? (value as ExerciseFilterMode) : 'recommended';
+  return isExerciseFilterMode(value) ? value : 'recommended';
 }
 
 function getDurationParam(value: string | null): DurationFilter {
-  return validDurations.includes(value as DurationFilter) ? (value as DurationFilter) : 'all';
+  return isDurationFilter(value) ? value : 'all';
 }
 
 function getEquipmentParams(searchParams: URLSearchParams): Equipment[] {
   return searchParams
     .getAll('equipment')
     .filter((value): value is Equipment => isEquipment(value, validEquipment));
-}
-
-function isSupportOnlyExercise(exercise: Exercise): boolean {
-  if (exercise.equipment.length === 0) return true;
-  if (exercise.equipment.includes('bodyweight')) return true;
-  return exercise.equipment.every((item) => supportOnlyEquipment.includes(item));
-}
-
-function isCompatibleWithEquipment(exercise: Exercise, availableEquipment: Equipment[]): boolean {
-  if (exercise.equipment.length === 0) return true;
-
-  return exercise.equipment.every((item) => {
-    if (item === 'bodyweight') return true;
-    if (availableEquipment.includes(item)) return true;
-    return availableEquipment.includes('bodyweight') && supportOnlyEquipment.includes(item);
-  });
-}
-
-function getDurationMinutes(exercise: Exercise): number {
-  const match = exercise.durationText.match(/\d+/);
-  return match ? Number(match[0]) : 99;
-}
-
-function matchesDuration(exercise: Exercise, duration: DurationFilter): boolean {
-  if (duration === 'all') return true;
-  const minutes = getDurationMinutes(exercise);
-  return duration === 'short' ? minutes <= 5 : minutes <= 10;
 }
 
 function buildInitialFilters(searchParams: URLSearchParams, assessment: SavedAssessment | null): ExerciseFilters {
@@ -144,32 +115,9 @@ export default function ExercisesPage() {
 
   const filtered = useMemo(() => {
     const assessmentEquipment = assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [];
-    const availableEquipment = filters.noEquipmentOnly
-      ? [EQUIPMENT_IDS.BODYWEIGHT]
-      : filters.equipment.length > 0
-        ? filters.equipment
-        : assessmentEquipment.length > 0
-          ? assessmentEquipment
-          : [EQUIPMENT_IDS.BODYWEIGHT];
-
-    if (filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') {
-      return [];
-    }
-
-    return exercises.filter((exercise) => {
-      const levelFilter = filters.mode === 'recommended' && filters.level === 'all' ? 'beginner' : filters.level;
-
-      return (
-        (filters.bodyArea === 'all' || exercise.bodyArea === filters.bodyArea) &&
-        (filters.type === 'all' || exercise.type === filters.type) &&
-        (levelFilter === 'all' || exercise.level === levelFilter) &&
-        matchesDuration(exercise, filters.duration) &&
-        (!filters.painSensitive || (exercise.level === 'beginner' && isSupportOnlyExercise(exercise))) &&
-        (!filters.noEquipmentOnly || isSupportOnlyExercise(exercise)) &&
-        (filters.mode === 'recommended'
-          ? isCompatibleWithEquipment(exercise, availableEquipment)
-          : filters.equipment.length === 0 || filters.equipment.some((equipment) => exercise.equipment.includes(equipment)))
-      );
+    return filterExercises(exercises, filters, {
+      hasAssessment: Boolean(assessment),
+      assessmentEquipment,
     });
   }, [assessment, filters]);
 

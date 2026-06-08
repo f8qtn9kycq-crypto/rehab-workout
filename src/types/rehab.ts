@@ -24,6 +24,16 @@ export const EXERCISE_LEVELS = ['beginner', 'intermediate', 'advanced'] as const
 
 export type ExerciseLevel = (typeof EXERCISE_LEVELS)[number];
 
+export const EXERCISE_FILTER_MODES = ['recommended', 'all'] as const;
+
+export type ExerciseFilterMode = (typeof EXERCISE_FILTER_MODES)[number];
+
+export const DURATION_FILTERS = ['all', 'short', 'medium'] as const;
+
+export type DurationFilter = (typeof DURATION_FILTERS)[number];
+
+export type AssessmentMode = 'recovery' | 'beginner' | 'standard';
+
 export interface Exercise {
   id: string;
   title: string;
@@ -68,4 +78,22 @@ export interface AssessmentState {
   painByArea: Record<string, number>;
   bodyAreas: string[];
   completedAt: string;
+}
+
+export interface SavedAssessment {
+  bodyArea?: BodyArea;
+  equipment?: Equipment[];
+  mode?: AssessmentMode;
+  pain?: number;
+}
+
+export interface ExerciseFilters {
+  mode: ExerciseFilterMode;
+  bodyArea: BodyArea | 'all';
+  type: ExerciseType | 'all';
+  level: ExerciseLevel | 'all';
+  equipment: Equipment[];
+  noEquipmentOnly: boolean;
+  duration: DurationFilter;
+  painSensitive: boolean;
 }

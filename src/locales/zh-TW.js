@@ -221,6 +221,8 @@ export default {
     empty: '還沒有訓練紀錄。完成一個訓練後會出現在這裡。',
     stoppedEarly: '提早停止',
     pain: '疼痛 {before} → {after}',
+    volume: '完成 {sets}/{plannedSets} 組，{reps}/{plannedReps} 次',
+    effort: '主觀難度：{value}/5',
   },
   video: {
     fallback: '影片暫時無法播放，請先依照文字步驟與安全提醒操作。',

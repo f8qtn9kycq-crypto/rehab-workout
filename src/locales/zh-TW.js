@@ -12,6 +12,7 @@ export default {
     exercises: '動作庫',
     logs: '紀錄',
     education: '知識',
+    more: '更多',
   },
   actions: {
     start: '開始',

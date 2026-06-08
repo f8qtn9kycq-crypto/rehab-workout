@@ -73,6 +73,23 @@ export interface SessionLog {
   notes: string;
 }
 
+export type SessionCompletionStatus = 'completed' | 'stopped_early';
+
+export interface TrainingLogEntry extends SessionLog {
+  date: string;
+  title: string;
+  bodyArea: BodyArea;
+  type: ExerciseType;
+  level: ExerciseLevel;
+  plannedSets: number;
+  plannedReps: number;
+  difficultyRating: number;
+  stoppedEarly: boolean;
+  completionStatus: SessionCompletionStatus;
+  stopReason: string;
+  painDelta: number;
+}
+
 export interface AssessmentState {
   redFlags: string[];
   painByArea: Record<string, number>;

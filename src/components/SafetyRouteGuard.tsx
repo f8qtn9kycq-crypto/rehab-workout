@@ -1,15 +1,15 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { getSafetyStatus } from '../utils/safety';
+import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '../utils/safety';
 
 export default function SafetyRouteGuard() {
   const location = useLocation();
   const safety = getSafetyStatus();
 
-  if (!safety.completed) {
+  if (!isSafetyGateCurrentForToday(safety)) {
     return <Navigate to="/safety" replace state={{ from: `${location.pathname}${location.search}` }} />;
   }
 
-  if (safety.blocked) {
+  if (!canEnterSession(safety)) {
     return <Navigate to="/safety" replace />;
   }
 

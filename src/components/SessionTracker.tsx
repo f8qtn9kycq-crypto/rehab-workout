@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
 import type { Exercise } from '../types/rehab';
-import { shouldStopForPain, shouldUseRecoveryMode } from '../utils/safety';
+import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import PainScale from './PainScale';
 import RestTimer from './RestTimer';
 
@@ -12,8 +12,9 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
   const navigate = useNavigate();
   const { t } = useI18n();
   const [phase, setPhase] = useState<'before' | 'active' | 'finish'>('before');
-  const [painBefore, setPainBefore] = useState(0);
-  const [painAfter, setPainAfter] = useState(0);
+  const [painBefore, setPainBefore] = useState<number | null>(null);
+  const [painAfter, setPainAfter] = useState<number | null>(null);
+  const [useRecoveryMode, setUseRecoveryMode] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
   const [currentRep, setCurrentRep] = useState(0);
   const [difficultyRating, setDifficultyRating] = useState(3);
@@ -22,8 +23,11 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
   const [stopReason, setStopReason] = useState('');
 
   const painBlocksStart = shouldStopForPain(painBefore);
-  const recoveryMode = shouldUseRecoveryMode(painBefore);
-  const painAfterWarning = painAfter > painBefore + 2 || shouldStopForPain(painAfter);
+  const recoveryModeSuggested = shouldUseRecoveryMode(painBefore);
+  const painAfterWarning = shouldWarnForPainIncrease(painBefore, painAfter);
+  const canStart = hasPainValue(painBefore) && !painBlocksStart;
+  const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
+  const recoverySuggestion = exercise.regressions?.[0];
 
   function nextRep(): void {
     if (currentRep + 1 < exercise.reps) {
@@ -47,6 +51,8 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
   }
 
   function completeLog(): void {
+    if (!hasPainValue(painBefore) || !hasPainValue(painAfter)) return;
+
     const log = createTrainingLog({
       exercise,
       setsCompleted: stoppedEarly ? currentSet : exercise.sets,
@@ -55,6 +61,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
       painAfter,
       difficultyRating,
       stoppedEarly,
+      recoveryMode: useRecoveryMode,
       notes,
       stopReason,
     });
@@ -67,10 +74,20 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
     return (
       <section className="card space-y-5 p-4">
         <h1 className="text-2xl font-bold text-ink">{exercise.title}</h1>
-        <PainScale label={t('session.painBefore')} value={painBefore} onChange={setPainBefore} />
-        {recoveryMode ? (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
-            {t('session.recoveryCopy')}
+        <PainScale label={t('session.painBefore')} value={painBefore} onChange={setPainBefore} zeroLabel={t('session.confirmNoPain')} />
+        {!hasPainValue(painBefore) ? (
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-700">
+            {t('session.painRequiredBefore')}
+          </div>
+        ) : null}
+        {recoveryModeSuggested ? (
+          <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
+            <p>{t('session.recoveryCopy')}</p>
+            {recoverySuggestion ? <p className="font-semibold">{t('session.recoverySuggestion', { value: recoverySuggestion })}</p> : null}
+            <label className="flex min-h-11 items-center gap-3 rounded-md bg-white/70 px-3 font-bold">
+              <input type="checkbox" checked={useRecoveryMode} onChange={(event) => setUseRecoveryMode(event.target.checked)} className="h-5 w-5 accent-calm-600" />
+              {t('session.useRecoveryMode')}
+            </label>
           </div>
         ) : null}
         {painBlocksStart ? (
@@ -79,7 +96,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
           </div>
         ) : null}
         <button
-          disabled={painBlocksStart}
+          disabled={!canStart}
           onClick={() => setPhase('active')}
           className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
         >
@@ -96,7 +113,12 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
           <CheckCircle2 className="text-calm-700" />
           <h1 className="text-2xl font-bold text-ink">{t('session.finishTitle')}</h1>
         </div>
-        <PainScale label={t('session.painAfter')} value={painAfter} onChange={setPainAfter} />
+        <PainScale label={t('session.painAfter')} value={painAfter} onChange={setPainAfter} zeroLabel={t('session.confirmNoPain')} />
+        {!hasPainValue(painAfter) ? (
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-700">
+            {t('session.painRequiredAfter')}
+          </div>
+        ) : null}
         {painAfterWarning ? (
           <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
             {t('session.painAfterWarning')}
@@ -117,7 +139,7 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
             <input value={stopReason} onChange={(event) => setStopReason(event.target.value)} className="focus-ring min-h-11 w-full rounded-md border border-slate-200 px-3" />
           </label>
         ) : null}
-        <button onClick={completeLog} className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
+        <button disabled={!canSaveLog} onClick={completeLog} className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
           {t('session.saveLog')}
         </button>
       </section>
@@ -130,6 +152,11 @@ export default function SessionTracker({ exercise }: { exercise: Exercise }) {
         <h1 className="text-2xl font-bold text-ink">{exercise.title}</h1>
         <p className="mt-1 text-slate-600">{t('session.activeHint')}</p>
       </div>
+      {useRecoveryMode ? (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 font-semibold text-amber-900">
+          {t('session.recoveryActive')}
+        </div>
+      ) : null}
       <div className="rounded-lg bg-calm-100 p-5 text-center">
         <div className="text-sm font-semibold text-calm-700">{t('session.currentProgress')}</div>
         <div className="mt-1 text-4xl font-bold text-calm-700">{t('session.progressText', { set: currentSet, rep: currentRep + 1 })}</div>

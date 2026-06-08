@@ -85,6 +85,7 @@ export interface TrainingLogEntry extends SessionLog {
   plannedReps: number;
   difficultyRating: number;
   stoppedEarly: boolean;
+  recoveryMode: boolean;
   completionStatus: SessionCompletionStatus;
   stopReason: string;
   painDelta: number;

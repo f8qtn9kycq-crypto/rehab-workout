@@ -1,25 +1,23 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { safetyStorageKey } from '../data/safety';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSafetyGate } from '../hooks/useSafetyGate';
 import { useI18n } from '../services/i18n';
-import { getSafetyStatus } from '../utils/safety';
 import RedFlagChecklist from './RedFlagChecklist';
 
 export default function SafetyGate() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { t } = useI18n();
-  const [selected, setSelected] = useState<string[]>(() => getSafetyStatus().redFlags);
+  const { completeSafetyGate, status } = useSafetyGate();
+  const [selected, setSelected] = useState<string[]>(() => status.redFlags);
   const blocked = selected.length > 0;
 
   function submit(): void {
-    const payload = {
-      completed: true,
-      blocked,
-      redFlags: selected,
-      completedAt: new Date().toISOString(),
-    };
-    window.localStorage.setItem(safetyStorageKey, JSON.stringify(payload));
-    if (!blocked) navigate('/assessment');
+    const nextStatus = completeSafetyGate(selected);
+    const from = location.state && typeof location.state === 'object' && 'from' in location.state
+      ? String(location.state.from)
+      : '/assessment';
+    if (!nextStatus.blocked) navigate(from);
   }
 
   return (

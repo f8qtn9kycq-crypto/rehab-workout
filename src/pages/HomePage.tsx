@@ -16,15 +16,15 @@ export default function HomePage() {
 
   return (
     <div className="page space-y-5">
-      <section className="grid gap-4 md:grid-cols-[1.15fr_0.85fr] md:items-center">
+      <section className="grid gap-4 min-[769px]:grid-cols-[1.15fr_0.85fr] min-[769px]:items-center">
         <div>
           <div className="inline-flex min-h-11 items-center gap-2 rounded-md bg-calm-100 px-3 font-semibold text-calm-700">
             <ShieldCheck size={20} />
             {t('home.safetyFirst')}
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-ink md:text-5xl">{t('home.title')}</h1>
-          <p className="mt-3 max-w-2xl text-lg text-slate-600">{t('home.subtitle')}</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <h1 className="mt-4 text-3xl font-bold text-ink min-[769px]:text-5xl">{t('home.title')}</h1>
+          <p className="mt-3 max-w-2xl text-base text-slate-600 min-[769px]:text-lg">{t('home.subtitle')}</p>
+          <div className="mt-5 grid gap-3 min-[640px]:grid-cols-3">
             <Link to="/safety" className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-calm-700 px-4 font-bold text-white">
               {t('home.startSafely')}
               <ArrowRight size={20} />
@@ -39,11 +39,15 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="card p-4">
+        <div className="card hidden p-4 min-[769px]:block">
           <h2 className="text-xl font-bold text-ink">{t('home.weeklyProgress')}</h2>
           <p className="mt-2 text-slate-600">{t('home.savedLogs', { count: logs.length })}</p>
           <div className="mt-4 rounded-lg bg-slate-50 p-4 text-slate-700">{t('home.todayFocus')}</div>
         </div>
+      </section>
+      <section className="card p-4 min-[769px]:hidden">
+        <h2 className="text-lg font-bold text-ink">{t('home.weeklyProgress')}</h2>
+        <p className="mt-2 text-slate-600">{t('home.savedLogs', { count: logs.length })}</p>
       </section>
       <WeeklyRoutineBuilder />
     </div>

@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 :root {
-  /* Mobile nav is active through 768px; desktop nav starts at 769px. */
-  --desktop-nav-min-width: 769px;
   color: #1e293b;
   background: #f8fafc;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", sans-serif;
@@ -60,9 +58,12 @@ button,
   display: block;
   padding-bottom: env(safe-area-inset-bottom);
   background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .mobile-bottom-nav-inner {
+  /* Keep this flat so safe-area padding is applied only by .mobile-bottom-nav. */
   padding-bottom: 4px;
 }
 
@@ -89,6 +90,7 @@ button,
   padding: 18px 16px 104px;
 }
 
+/* Mobile nav is active through 768px; desktop nav starts at 769px. */
 @media (min-width: 769px) {
   .desktop-nav {
     display: block;

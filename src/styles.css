@@ -78,10 +78,6 @@ button,
   padding-top: env(safe-area-inset-top);
 }
 
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
 .page {
   width: 100%;
   max-width: 1120px;
@@ -90,7 +86,11 @@ button,
   padding: 18px 16px 104px;
 }
 
-/* Mobile nav is active through 768px; desktop nav starts at 769px. */
+/*
+  Desktop breakpoint:
+  768px remains mobile intentionally.
+  Desktop starts at 769px.
+*/
 @media (min-width: 769px) {
   .desktop-nav {
     display: block;

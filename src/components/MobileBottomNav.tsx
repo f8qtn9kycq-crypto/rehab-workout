@@ -25,7 +25,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
   }
 
   return (
-    <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/96 backdrop-blur">
+    <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 backdrop-blur">
       {moreOpen ? (
         <div id="mobile-more-nav" className="border-b border-slate-200 px-3 py-3">
           <div className="grid grid-cols-2 gap-2">

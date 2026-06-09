@@ -56,10 +56,15 @@ button,
 
 .mobile-bottom-nav {
   display: block;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .mobile-bottom-nav-inner {
-  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  /* Keep this flat so safe-area padding is applied only by .mobile-bottom-nav. */
+  padding-bottom: 4px;
 }
 
 .desktop-nav a,
@@ -73,10 +78,6 @@ button,
   padding-top: env(safe-area-inset-top);
 }
 
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
 .page {
   width: 100%;
   max-width: 1120px;
@@ -85,6 +86,11 @@ button,
   padding: 18px 16px 104px;
 }
 
+/*
+  Desktop breakpoint:
+  768px remains mobile intentionally.
+  Desktop starts at 769px.
+*/
 @media (min-width: 769px) {
   .desktop-nav {
     display: block;

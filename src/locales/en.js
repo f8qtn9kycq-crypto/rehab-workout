@@ -194,7 +194,7 @@ export default {
     recoverySuggestion: 'Easier option: {value}',
     useRecoveryMode: 'Use recovery mode today',
     recoveryActive: 'Recovery mode is on. Keep the movement smaller and slower today.',
-    painBlockCopy: 'Pain is 6 or higher. Skip this training today and consider a professional assessment.',
+    painBlockCopy: 'Pain is 6 or higher. Skip this training today and consider consulting a physician or physical therapist.',
     start: 'Start training',
     back: 'Back',
     exitSession: 'Exit session',

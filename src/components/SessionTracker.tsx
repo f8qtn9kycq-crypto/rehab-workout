@@ -34,7 +34,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const canStart = hasPainValue(painBefore) && !painBlocksStart;
   const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
   const hasStartedExercise = phase !== 'before';
-  const canSaveExitLog = !hasStartedExercise || hasPainValue(painAfter);
+  const canSaveExitLog = hasPainValue(painBefore) && (!hasStartedExercise || hasPainValue(painAfter));
   const recoverySuggestion = exercise.regressions?.[0];
 
   function nextRep(): void {
@@ -79,15 +79,14 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function saveAndExit(): void {
-    if (!canSaveExitLog) return;
+    if (!canSaveExitLog || !hasPainValue(painBefore)) return;
 
-    const safePainBefore = hasPainValue(painBefore) ? painBefore : 0;
-    const safePainAfter = hasPainValue(painAfter) ? painAfter : safePainBefore;
+    const safePainAfter = hasPainValue(painAfter) ? painAfter : painBefore;
     const log = createTrainingLog({
       exercise,
       setsCompleted: hasStartedExercise ? currentSet : 0,
       repsCompleted: hasStartedExercise ? currentRep : 0,
-      painBefore: safePainBefore,
+      painBefore,
       painAfter: safePainAfter,
       difficultyRating,
       stoppedEarly: true,
@@ -105,11 +104,20 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     onNavigateBack();
   }
 
+  function handleBack(): void {
+    if (hasStartedExercise) {
+      setExitDialogOpen(true);
+      return;
+    }
+
+    onNavigateBack();
+  }
+
   const sessionHeader = (
     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <button
         type="button"
-        onClick={onNavigateBack}
+        onClick={handleBack}
         className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-700"
       >
         <ArrowLeft size={18} />
@@ -126,7 +134,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   );
 
   const exitDialog = exitDialogOpen ? (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 py-5 sm:items-center sm:justify-center" role="dialog" aria-modal="true" aria-labelledby="session-exit-title">
+    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:justify-center sm:py-5" role="dialog" aria-modal="true" aria-labelledby="session-exit-title">
       <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
         <div className="flex items-center gap-2 text-red-800">
           <AlertTriangle size={22} />
@@ -146,6 +154,11 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
                 {t('session.painAfterWarning')}
               </div>
             ) : null}
+          </div>
+        ) : null}
+        {!hasPainValue(painBefore) ? (
+          <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+            {t('session.painRequiredBefore')}
           </div>
         ) : null}
         <div className="mt-5 grid gap-2">

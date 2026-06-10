@@ -34,7 +34,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const canStart = hasPainValue(painBefore) && !painBlocksStart;
   const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
   const hasStartedExercise = phase !== 'before';
-  const canSaveExitLog = hasPainValue(painBefore) && (!hasStartedExercise || hasPainValue(painAfter));
+  const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
 
   function nextRep(): void {
@@ -79,15 +79,14 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function saveAndExit(): void {
-    if (!canSaveExitLog || !hasPainValue(painBefore)) return;
+    if (!canSaveExitLog || !hasPainValue(painBefore) || !hasPainValue(painAfter)) return;
 
-    const safePainAfter = hasPainValue(painAfter) ? painAfter : painBefore;
     const log = createTrainingLog({
       exercise,
-      setsCompleted: hasStartedExercise ? currentSet : 0,
-      repsCompleted: hasStartedExercise ? currentRep : 0,
+      setsCompleted: currentSet,
+      repsCompleted: currentRep,
       painBefore,
-      painAfter: safePainAfter,
+      painAfter,
       difficultyRating,
       stoppedEarly: true,
       recoveryMode: useRecoveryMode,
@@ -123,13 +122,15 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         <ArrowLeft size={18} />
         {t('session.back')}
       </button>
-      <button
-        type="button"
-        onClick={() => setExitDialogOpen(true)}
-        className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 font-bold text-red-700"
-      >
-        {t('session.exitSession')}
-      </button>
+      {hasStartedExercise ? (
+        <button
+          type="button"
+          onClick={() => setExitDialogOpen(true)}
+          className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 font-bold text-red-700"
+        >
+          {t('session.exitSession')}
+        </button>
+      ) : null}
     </div>
   );
 

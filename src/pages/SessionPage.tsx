@@ -12,12 +12,6 @@ export default function SessionPage() {
   const safety = getSafetyStatus();
 
   function navigateBack(): void {
-    const historyIndex = Number(window.history.state?.idx ?? 0);
-    if (historyIndex > 0) {
-      navigate(-1);
-      return;
-    }
-
     navigate('/exercises');
   }
 

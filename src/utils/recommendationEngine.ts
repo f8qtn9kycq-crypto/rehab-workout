@@ -7,7 +7,7 @@ import {
   isSupportOnlyExercise,
   matchesDuration,
 } from './exerciseModel';
-import { hasPainValue, shouldUseRecoveryMode } from './painRules';
+import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode } from './painRules';
 
 interface RecommendationContext {
   assessment: SavedAssessment | null;
@@ -73,6 +73,17 @@ function getRecentLogScore(exercise: Exercise, logs: readonly TrainingLogEntry[]
   return score;
 }
 
+function hasRecentSafetyRegression(exercise: Exercise, logs: readonly TrainingLogEntry[]): boolean {
+  const lastExerciseLog = logs.find((log) => log.exerciseId === exercise.id);
+  if (!lastExerciseLog) return false;
+
+  return (
+    lastExerciseLog.stoppedEarly === true ||
+    lastExerciseLog.painAfter > lastExerciseLog.painBefore + 2 ||
+    lastExerciseLog.painAfter >= 6
+  );
+}
+
 function getSafetyScore(exercise: Exercise, recoveryMode: boolean): number {
   let score = 0;
 
@@ -91,7 +102,6 @@ function rankExercises(
   exerciseList: readonly Exercise[],
   filters: ExerciseFilters,
   context: RecommendationContext,
-  options: { fallback: boolean },
 ): RankedExercise[] {
   const availableEquipment = getAvailableEquipment(filters, context.assessmentEquipment);
   const targetBodyArea = filters.bodyArea !== 'all' ? filters.bodyArea : context.assessment?.bodyArea;
@@ -103,7 +113,8 @@ function rankExercises(
   return exerciseList
     .filter((exercise) => {
       if (!isConservativeDefault(exercise)) return false;
-      if (targetBodyArea && exercise.bodyArea !== targetBodyArea && !options.fallback) return false;
+      if (targetBodyArea && exercise.bodyArea !== targetBodyArea) return false;
+      if (hasRecentSafetyRegression(exercise, context.logs)) return false;
       if (typeFilter && exercise.type !== typeFilter) return false;
       if (levelFilter && exercise.level !== levelFilter) return false;
       if (!matchesDuration(exercise, filters.duration)) return false;
@@ -138,7 +149,10 @@ export function getRecommendedExercises(
   filters: ExerciseFilters,
   context: RecommendationContext,
 ): Exercise[] {
-  const ranked = rankExercises(exerciseList, filters, context, { fallback: false });
+  const pain = context.assessment?.pain ?? null;
+  if (shouldStopForPain(pain)) return [];
+
+  const ranked = rankExercises(exerciseList, filters, context);
   const fallbackRanked = ranked.length > 0
     ? ranked
     : rankExercises(exerciseList, {
@@ -148,9 +162,9 @@ export function getRecommendedExercises(
       level: 'all',
       duration: 'all',
       equipment: [],
-      noEquipmentOnly: true,
+      noEquipmentOnly: false,
       painSensitive: true,
-    }, context, { fallback: true });
+    }, context);
 
   return fallbackRanked.slice(0, DEFAULT_RECOMMENDATION_LIMIT).map(({ exercise }) => exercise);
 }

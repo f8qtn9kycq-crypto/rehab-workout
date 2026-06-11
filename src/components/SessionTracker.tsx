@@ -300,10 +300,10 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         </ol>
         <RestTimer seconds={exercise.restSeconds} />
         <div className="grid gap-3 md:grid-cols-2">
-          <button onClick={nextRep} className="focus-ring rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
+          <button onClick={nextRep} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
             {t('session.nextRep')}
           </button>
-          <button onClick={stopEarly} className="focus-ring inline-flex items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
+          <button onClick={stopEarly} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
             <AlertTriangle size={18} />
             {t('session.stopSession')}
           </button>

@@ -17,6 +17,7 @@ import {
   isExerciseLevel,
   isExerciseType,
 } from '../utils/exerciseModel';
+import { shouldStopForPain } from '../utils/painRules';
 import { getRecommendedExercises } from '../utils/recommendationEngine';
 
 const validEquipment = EQUIPMENT_OPTIONS.map((item) => item.id);
@@ -136,9 +137,11 @@ export default function ExercisesPage() {
     });
   }, [assessment, filters, logs]);
 
-  const emptyMessage = filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
-    ? t('exercises.chooseBodyArea')
-    : t('exercises.empty');
+  const emptyMessage = filters.mode === 'recommended' && shouldStopForPain(assessment?.pain ?? null)
+    ? t('exercises.painStopEmpty')
+    : filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
+      ? t('exercises.chooseBodyArea')
+      : t('exercises.empty');
 
   return (
     <div className="page space-y-5">

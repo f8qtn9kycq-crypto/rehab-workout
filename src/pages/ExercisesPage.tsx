@@ -118,6 +118,10 @@ export default function ExercisesPage() {
 
   const filtered = useMemo(() => {
     const assessmentEquipment = assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [];
+    if (filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') {
+      return [];
+    }
+
     if (filters.mode === 'recommended') {
       return getRecommendedExercises(exercises, filters, {
         assessment,

@@ -1,4 +1,4 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import SessionTracker from '../components/SessionTracker';
 import { useI18n } from '../services/i18n';
 import { getExerciseById } from '../utils/exerciseModel';
@@ -6,9 +6,14 @@ import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '.
 
 export default function SessionPage() {
   const { exerciseId } = useParams();
+  const navigate = useNavigate();
   const { t } = useI18n();
   const exercise = getExerciseById(exerciseId);
   const safety = getSafetyStatus();
+
+  function navigateBack(): void {
+    navigate('/exercises');
+  }
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
@@ -42,7 +47,7 @@ export default function SessionPage() {
 
   return (
     <div className="page">
-      <SessionTracker exercise={exercise} />
+      <SessionTracker exercise={exercise} onNavigateBack={navigateBack} />
     </div>
   );
 }

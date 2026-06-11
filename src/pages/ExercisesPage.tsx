@@ -6,6 +6,7 @@ import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
 import { assessmentStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
+import { getLogs } from '../services/logService';
 import type { BodyArea, DurationFilter, Equipment, ExerciseFilterMode, ExerciseFilters, ExerciseLevel, ExerciseType, SavedAssessment } from '../types/rehab';
 import {
   filterExercises,
@@ -16,6 +17,8 @@ import {
   isExerciseLevel,
   isExerciseType,
 } from '../utils/exerciseModel';
+import { shouldStopForPain } from '../utils/painRules';
+import { getRecommendedExercises } from '../utils/recommendationEngine';
 
 const validEquipment = EQUIPMENT_OPTIONS.map((item) => item.id);
 
@@ -74,6 +77,7 @@ export default function ExercisesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useI18n();
   const assessment = useMemo(() => readAssessment(), []);
+  const logs = useMemo(() => getLogs(), []);
   const [filters, setFilters] = useState<ExerciseFilters>(() => buildInitialFilters(searchParams, assessment));
 
   useEffect(() => {
@@ -115,15 +119,29 @@ export default function ExercisesPage() {
 
   const filtered = useMemo(() => {
     const assessmentEquipment = assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [];
+    if (filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') {
+      return [];
+    }
+
+    if (filters.mode === 'recommended') {
+      return getRecommendedExercises(exercises, filters, {
+        assessment,
+        assessmentEquipment,
+        logs,
+      });
+    }
+
     return filterExercises(exercises, filters, {
       hasAssessment: Boolean(assessment),
       assessmentEquipment,
     });
-  }, [assessment, filters]);
+  }, [assessment, filters, logs]);
 
-  const emptyMessage = filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
-    ? t('exercises.chooseBodyArea')
-    : t('exercises.empty');
+  const emptyMessage = filters.mode === 'recommended' && shouldStopForPain(assessment?.pain ?? null)
+    ? t('exercises.painStopEmpty')
+    : filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
+      ? t('exercises.chooseBodyArea')
+      : t('exercises.empty');
 
   return (
     <div className="page space-y-5">

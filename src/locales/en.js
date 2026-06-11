@@ -100,6 +100,7 @@ export default {
     noEquipmentQuick: 'Bodyweight / No equipment',
     clearEquipment: 'Clear equipment',
     chooseBodyArea: 'Choose a body area to begin.',
+    painStopEmpty: 'Your current pain score is high. Stop training for now and rest. If pain persists or reaches 6/10 or higher, consider consulting a physician or physical therapist.',
     activeFilters: 'Active filters',
     recommendedSummary: 'Recommended',
     allSummary: 'All',

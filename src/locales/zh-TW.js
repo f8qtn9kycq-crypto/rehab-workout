@@ -100,6 +100,7 @@ export default {
     noEquipmentQuick: '徒手 / 無器材',
     clearEquipment: '清除器材',
     chooseBodyArea: '請先選擇一個身體部位開始。',
+    painStopEmpty: '目前疼痛分數偏高，建議先停止訓練並休息；若疼痛持續或達 6/10 以上，建議諮詢醫師或物理治療師。',
     activeFilters: '目前篩選',
     recommendedSummary: '推薦',
     allSummary: '全部',

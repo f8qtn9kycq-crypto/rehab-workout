@@ -153,7 +153,7 @@ export function isCompatibleWithEquipment(exercise: Exercise, availableEquipment
   return requiredEquipment.every((item) => {
     if (item === EQUIPMENT_IDS.BODYWEIGHT) return true;
     if (availableEquipment.includes(item)) return true;
-    return false;
+    return availableEquipment.includes(EQUIPMENT_IDS.BODYWEIGHT) && SUPPORT_ONLY_EQUIPMENT.includes(item);
   });
 }
 

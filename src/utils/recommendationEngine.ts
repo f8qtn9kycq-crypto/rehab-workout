@@ -3,9 +3,16 @@ import type { Equipment, Exercise, ExerciseFilters, SavedAssessment, TrainingLog
 import {
   getAvailableEquipment,
   getDurationMinutes,
+  getExerciseEquipment,
+  getProgressionEquipment,
+  getRecommendationSafetyLevel,
+  getRequiredEquipment,
+  getSafetyTags,
   isCompatibleWithEquipment,
   isSupportOnlyExercise,
   matchesDuration,
+  requiresSupport,
+  shouldAvoidIfPainHigh,
 } from './exerciseModel';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode } from './painRules';
 
@@ -21,7 +28,6 @@ interface RankedExercise {
 }
 
 const DEFAULT_RECOMMENDATION_LIMIT = 12;
-const SUPPORT_EQUIPMENT: readonly Equipment[] = [EQUIPMENT_IDS.BODYWEIGHT, EQUIPMENT_IDS.CHAIR, EQUIPMENT_IDS.WALL];
 const RECENT_LOG_LIMIT = 8;
 
 function containsAny(value: string, keywords: readonly string[]): boolean {
@@ -43,23 +49,45 @@ function getExerciseText(exercise: Exercise): string {
 
 function isConservativeDefault(exercise: Exercise): boolean {
   const text = getExerciseText(exercise);
+  const safetyTags = getSafetyTags(exercise);
 
   if (exercise.level === 'advanced') return false;
+  if (getRecommendationSafetyLevel(exercise) === 'advanced_only') return false;
+  if (safetyTags.includes('high_impact')) return false;
+  if (safetyTags.includes('deep_knee_flexion')) return false;
+  if (safetyTags.includes('aggressive_overhead_loading')) return false;
+  if (safetyTags.includes('unsupported_balance')) return false;
   if (containsAny(text, ['jump', 'plyometric', 'impact', '跳', '衝刺', '爆發'])) return false;
   if (containsAny(text, ['deep squat', 'full squat', '深蹲', '全蹲'])) return false;
   if (containsAny(text, ['overhead press', 'overhead load', '推舉', '過頭負重'])) return false;
-  if ((exercise.type === 'balance' || exercise.type === 'proprioception') && !exercise.equipment.some((item) => SUPPORT_EQUIPMENT.includes(item))) {
+  if ((exercise.type === 'balance' || exercise.type === 'proprioception') && !requiresSupport(exercise)) {
     return false;
   }
 
   return true;
 }
 
+function getLogTime(log: TrainingLogEntry): number {
+  const parsed = Date.parse(log.completedAt || log.date);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function getLatestExerciseLog(exercise: Exercise, logs: readonly TrainingLogEntry[]): TrainingLogEntry | null {
+  return logs
+    .filter((log) => log.exerciseId === exercise.id)
+    .reduce<TrainingLogEntry | null>((latestLog, log) => {
+      if (!latestLog) return log;
+      return getLogTime(log) > getLogTime(latestLog) ? log : latestLog;
+    }, null);
+}
+
 function getRecentLogScore(exercise: Exercise, logs: readonly TrainingLogEntry[]): number {
-  const recentLogs = logs.slice(0, RECENT_LOG_LIMIT);
+  const recentLogs = [...logs]
+    .sort((a, b) => getLogTime(b) - getLogTime(a))
+    .slice(0, RECENT_LOG_LIMIT);
   const exerciseLogs = recentLogs.filter((log) => log.exerciseId === exercise.id);
   const areaLogs = recentLogs.filter((log) => log.bodyArea === exercise.bodyArea);
-  const lastExerciseLog = exerciseLogs[0];
+  const lastExerciseLog = getLatestExerciseLog(exercise, exerciseLogs);
 
   let score = areaLogs.length * 2;
 
@@ -74,7 +102,7 @@ function getRecentLogScore(exercise: Exercise, logs: readonly TrainingLogEntry[]
 }
 
 function hasRecentSafetyRegression(exercise: Exercise, logs: readonly TrainingLogEntry[]): boolean {
-  const lastExerciseLog = logs.find((log) => log.exerciseId === exercise.id);
+  const lastExerciseLog = getLatestExerciseLog(exercise, logs);
   if (!lastExerciseLog) return false;
 
   return (
@@ -90,6 +118,9 @@ function getSafetyScore(exercise: Exercise, recoveryMode: boolean): number {
   if (exercise.level === 'beginner') score += 30;
   if (exercise.level === 'intermediate') score += recoveryMode ? -8 : 4;
   if (isSupportOnlyExercise(exercise)) score += 18;
+  if (getRecommendationSafetyLevel(exercise) === 'gentle') score += 10;
+  if (getRecommendationSafetyLevel(exercise) === 'caution') score -= 12;
+  if (requiresSupport(exercise)) score += recoveryMode ? 8 : 3;
   if (exercise.type === 'mobility' || exercise.type === 'stretch' || exercise.type === 'relaxation') score += 10;
   if (exercise.type === 'balance' || exercise.type === 'proprioception') score += recoveryMode ? -6 : 2;
   if (getDurationMinutes(exercise) <= 5) score += 8;
@@ -115,6 +146,7 @@ function rankExercises(
       if (!isConservativeDefault(exercise)) return false;
       if (targetBodyArea && exercise.bodyArea !== targetBodyArea) return false;
       if (hasRecentSafetyRegression(exercise, context.logs)) return false;
+      if (recoveryMode && shouldAvoidIfPainHigh(exercise)) return false;
       if (typeFilter && exercise.type !== typeFilter) return false;
       if (levelFilter && exercise.level !== levelFilter) return false;
       if (!matchesDuration(exercise, filters.duration)) return false;
@@ -131,8 +163,9 @@ function rankExercises(
       if (context.assessment?.mode === 'beginner' && exercise.level === 'beginner') score += 10;
       if (context.assessment?.mode === 'standard' && exercise.level === 'intermediate' && !recoveryMode) score += 4;
       if (hasPainValue(pain) && pain > 3 && exercise.regressions.length > 0) score += 10;
-      if (exercise.equipment.every((item) => item === EQUIPMENT_IDS.BODYWEIGHT || availableEquipment.includes(item))) score += 8;
-      if (exercise.equipment.some((item) => context.assessmentEquipment.includes(item))) score += 4;
+      if (getRequiredEquipment(exercise).every((item) => item === EQUIPMENT_IDS.BODYWEIGHT || availableEquipment.includes(item))) score += 8;
+      if (getExerciseEquipment(exercise).some((item) => context.assessmentEquipment.includes(item))) score += 4;
+      if (getProgressionEquipment(exercise).length > 0 && recoveryMode) score -= 3;
       score += getRecentLogScore(exercise, context.logs);
 
       return { exercise, score };

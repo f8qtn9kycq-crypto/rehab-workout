@@ -34,6 +34,16 @@ export type DurationFilter = (typeof DURATION_FILTERS)[number];
 
 export type AssessmentMode = 'recovery' | 'beginner' | 'standard';
 
+export type SafetyTag =
+  | 'high_impact'
+  | 'deep_knee_flexion'
+  | 'aggressive_overhead_loading'
+  | 'unsupported_balance'
+  | 'loaded_progression'
+  | 'pain_sensitive';
+
+export type RecommendationSafetyLevel = 'gentle' | 'standard' | 'caution' | 'advanced_only';
+
 export interface Exercise {
   id: string;
   title: string;
@@ -56,6 +66,13 @@ export interface Exercise {
   regressions: string[];
   progressions: string[];
   equipment: Equipment[];
+  requiredEquipment?: Equipment[];
+  optionalEquipment?: Equipment[];
+  progressionEquipment?: Equipment[];
+  safetyTags?: SafetyTag[];
+  recommendationSafetyLevel?: RecommendationSafetyLevel;
+  supportRequired?: boolean;
+  avoidIfPainHigh?: boolean;
   youtubeEmbedUrl: string;
   youtubeSearchUrl: string;
   sourceRef: string;

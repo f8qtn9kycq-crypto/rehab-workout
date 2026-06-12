@@ -79,6 +79,7 @@ export default function ExercisesPage() {
   const assessment = useMemo(() => readAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
   const [filters, setFilters] = useState<ExerciseFilters>(() => buildInitialFilters(searchParams, assessment));
+  const showHighPainWarning = shouldStopForPain(assessment?.pain ?? null);
 
   useEffect(() => {
     const nextFilters = buildInitialFilters(searchParams, assessment);
@@ -137,7 +138,7 @@ export default function ExercisesPage() {
     });
   }, [assessment, filters, logs]);
 
-  const emptyMessage = filters.mode === 'recommended' && shouldStopForPain(assessment?.pain ?? null)
+  const emptyMessage = filters.mode === 'recommended' && showHighPainWarning
     ? t('exercises.painStopEmpty')
     : filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
       ? t('exercises.chooseBodyArea')
@@ -149,6 +150,11 @@ export default function ExercisesPage() {
         <h1 className="text-3xl font-bold text-ink">{t('exercises.title')}</h1>
         <p className="mt-2 text-slate-600">{t('exercises.subtitle')}</p>
       </div>
+      {showHighPainWarning ? (
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 font-semibold text-amber-900" role="alert">
+          {t('exercises.painStopEmpty')}
+        </div>
+      ) : null}
       <ExerciseFilter filters={filters} onChange={handleFilterChange} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filtered.map((exercise) => (

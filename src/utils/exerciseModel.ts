@@ -15,10 +15,20 @@ import {
   type ExerciseFilters,
   type ExerciseLevel,
   type ExerciseType,
+  type RecommendationSafetyLevel,
+  type SafetyTag,
 } from '../types/rehab';
 
 const DEFAULT_AVAILABLE_EQUIPMENT: Equipment[] = [EQUIPMENT_IDS.BODYWEIGHT];
 const SUPPORT_ONLY_EQUIPMENT: readonly Equipment[] = SUPPORT_ONLY_EQUIPMENT_IDS;
+const LOADED_EQUIPMENT: readonly Equipment[] = [EQUIPMENT_IDS.DUMBBELL, EQUIPMENT_IDS.KETTLEBELL];
+const PAIN_HIGH_SAFETY_TAGS: readonly SafetyTag[] = [
+  'high_impact',
+  'deep_knee_flexion',
+  'aggressive_overhead_loading',
+  'unsupported_balance',
+  'pain_sensitive',
+];
 
 export function isBodyArea(value: string | null): value is BodyArea {
   return BODY_AREAS.includes(value as BodyArea);
@@ -48,19 +58,102 @@ export function getExerciseById(exerciseId: string | undefined): Exercise | unde
   return exercises.find((exercise) => exercise.id === exerciseId);
 }
 
+function uniqueEquipment(values: readonly Equipment[]): Equipment[] {
+  return [...new Set(values)];
+}
+
+function getExerciseText(exercise: Exercise): string {
+  return [
+    exercise.title,
+    exercise.condition,
+    exercise.description,
+    exercise.detail,
+    exercise.benefits,
+    ...exercise.cautions,
+    ...exercise.stopRules,
+    ...exercise.regressions,
+    ...exercise.progressions,
+  ].join(' ');
+}
+
+function includesAny(value: string, keywords: readonly string[]): boolean {
+  const normalized = value.toLowerCase();
+  return keywords.some((keyword) => normalized.includes(keyword.toLowerCase()));
+}
+
+export function getRequiredEquipment(exercise: Exercise): Equipment[] {
+  if (exercise.requiredEquipment) return uniqueEquipment(exercise.requiredEquipment);
+  if (exercise.progressionEquipment || exercise.optionalEquipment) {
+    const optional = new Set([...(exercise.optionalEquipment ?? []), ...(exercise.progressionEquipment ?? [])]);
+    return exercise.equipment.filter((item) => !optional.has(item));
+  }
+  return [...exercise.equipment];
+}
+
+export function getOptionalEquipment(exercise: Exercise): Equipment[] {
+  return uniqueEquipment(exercise.optionalEquipment ?? []);
+}
+
+export function getProgressionEquipment(exercise: Exercise): Equipment[] {
+  return uniqueEquipment(exercise.progressionEquipment ?? []);
+}
+
+export function getExerciseEquipment(exercise: Exercise): Equipment[] {
+  return uniqueEquipment([
+    ...getRequiredEquipment(exercise),
+    ...getOptionalEquipment(exercise),
+    ...getProgressionEquipment(exercise),
+    ...exercise.equipment,
+  ]);
+}
+
+export function requiresSupport(exercise: Exercise): boolean {
+  if (typeof exercise.supportRequired === 'boolean') return exercise.supportRequired;
+  return getRequiredEquipment(exercise).some((item) => SUPPORT_ONLY_EQUIPMENT.includes(item));
+}
+
+export function getSafetyTags(exercise: Exercise): SafetyTag[] {
+  const tags = new Set<SafetyTag>(exercise.safetyTags ?? []);
+  const text = getExerciseText(exercise);
+
+  if (includesAny(text, ['jump', 'plyometric', 'impact', '跳', '衝刺', '爆發'])) tags.add('high_impact');
+  if (includesAny(text, ['deep squat', 'full squat', '深蹲', '全蹲'])) tags.add('deep_knee_flexion');
+  if (includesAny(text, ['overhead press', 'overhead load', '推舉', '過頭負重'])) tags.add('aggressive_overhead_loading');
+  if ((exercise.type === 'balance' || exercise.type === 'proprioception') && !requiresSupport(exercise)) tags.add('unsupported_balance');
+  if (getProgressionEquipment(exercise).some((item) => LOADED_EQUIPMENT.includes(item))) tags.add('loaded_progression');
+
+  return [...tags];
+}
+
+export function getRecommendationSafetyLevel(exercise: Exercise): RecommendationSafetyLevel {
+  if (exercise.recommendationSafetyLevel) return exercise.recommendationSafetyLevel;
+  if (exercise.level === 'advanced') return 'advanced_only';
+  if (getSafetyTags(exercise).some((tag) => PAIN_HIGH_SAFETY_TAGS.includes(tag))) return 'caution';
+  if (exercise.level === 'beginner' && (exercise.type === 'mobility' || exercise.type === 'stretch' || exercise.type === 'relaxation')) return 'gentle';
+  return 'standard';
+}
+
+export function shouldAvoidIfPainHigh(exercise: Exercise): boolean {
+  if (typeof exercise.avoidIfPainHigh === 'boolean') return exercise.avoidIfPainHigh;
+  return getRecommendationSafetyLevel(exercise) === 'caution' ||
+    getRecommendationSafetyLevel(exercise) === 'advanced_only' ||
+    getSafetyTags(exercise).some((tag) => PAIN_HIGH_SAFETY_TAGS.includes(tag));
+}
+
 export function isSupportOnlyExercise(exercise: Exercise): boolean {
-  if (exercise.equipment.length === 0) return true;
-  if (exercise.equipment.includes(EQUIPMENT_IDS.BODYWEIGHT)) return true;
-  return exercise.equipment.every((item) => SUPPORT_ONLY_EQUIPMENT.includes(item));
+  const requiredEquipment = getRequiredEquipment(exercise);
+  if (requiredEquipment.length === 0) return true;
+  return requiredEquipment.every((item) => item === EQUIPMENT_IDS.BODYWEIGHT || SUPPORT_ONLY_EQUIPMENT.includes(item));
 }
 
 export function isCompatibleWithEquipment(exercise: Exercise, availableEquipment: readonly Equipment[]): boolean {
-  if (exercise.equipment.length === 0) return true;
+  const requiredEquipment = getRequiredEquipment(exercise);
+  if (requiredEquipment.length === 0) return true;
 
-  return exercise.equipment.every((item) => {
+  return requiredEquipment.every((item) => {
     if (item === EQUIPMENT_IDS.BODYWEIGHT) return true;
     if (availableEquipment.includes(item)) return true;
-    return availableEquipment.includes(EQUIPMENT_IDS.BODYWEIGHT) && SUPPORT_ONLY_EQUIPMENT.includes(item);
+    return false;
   });
 }
 
@@ -105,7 +198,7 @@ export function filterExercises(
       (!filters.noEquipmentOnly || isSupportOnlyExercise(exercise)) &&
       (filters.mode === 'recommended'
         ? isCompatibleWithEquipment(exercise, availableEquipment)
-        : filters.equipment.length === 0 || filters.equipment.some((equipment) => exercise.equipment.includes(equipment)))
+        : filters.equipment.length === 0 || filters.equipment.some((equipment) => getExerciseEquipment(exercise).includes(equipment)))
     );
   });
 }

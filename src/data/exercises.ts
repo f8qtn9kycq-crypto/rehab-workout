@@ -29,7 +29,7 @@ export const exercises: Exercise[] = [
     recommendationSafetyLevel: 'gentle',
     avoidIfPainHigh: true,
     youtubeEmbedUrl: 'https://www.youtube.com/embed/fSD3p0eJ91A',
-    youtubeSearchUrl: 'https://www.youtube.com/watch?v=fSD3p0eJ91A',
+    youtubeSearchUrl: 'https://www.youtube.com/results?search_query=shoulder+flexion+exercise+physical+therapy',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
   {
@@ -59,7 +59,7 @@ export const exercises: Exercise[] = [
     recommendationSafetyLevel: 'gentle',
     supportRequired: true,
     youtubeEmbedUrl: 'https://www.youtube.com/embed/L7vJPzW-SPs',
-    youtubeSearchUrl: 'https://www.youtube.com/watch?v=L7vJPzW-SPs',
+    youtubeSearchUrl: 'https://www.youtube.com/results?search_query=scapular+squeeze+exercise+physical+therapy',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
   {

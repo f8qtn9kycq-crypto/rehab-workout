@@ -512,7 +512,7 @@ export const exercises: Exercise[] = [
     progressions: ['疼痛下降後進入低衝擊肌力訓練'],
     equipment: ['bodyweight'],
     youtubeEmbedUrl: '',
-    youtubeSearchUrl: '',
+    youtubeSearchUrl: 'https://www.youtube.com/results?search_query=knee+RICE+rest+ice+compression+elevation+physical+therapy',
     sourceRef: 'Interactive Guide to Easing Knee Pain with Videos.txt'
   },
   {
@@ -672,7 +672,7 @@ export const exercises: Exercise[] = [
     regressions: ['只寫 A 到 M', '腳放低一點'],
     progressions: ['完整 A 到 Z 做 2 回合', '加大字母範圍'],
     equipment: ['chair'],
-    youtubeEmbedUrl: 'https://example.com/broken-video',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=ankle+alphabet+exercise+physical+therapy',
     sourceRef: 'gemini-code-1780795404889.html'
   },

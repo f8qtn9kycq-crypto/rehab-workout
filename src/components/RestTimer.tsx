@@ -2,7 +2,12 @@ import { Pause, Play, RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useI18n } from '../services/i18n';
 
-export default function RestTimer({ seconds }: { seconds: number }) {
+interface RestTimerProps {
+  seconds: number;
+  autoStartKey?: number;
+}
+
+export default function RestTimer({ seconds, autoStartKey = 0 }: RestTimerProps) {
   const { t } = useI18n();
   const [remaining, setRemaining] = useState(seconds);
   const [running, setRunning] = useState(false);
@@ -11,6 +16,12 @@ export default function RestTimer({ seconds }: { seconds: number }) {
     setRemaining(seconds);
     setRunning(false);
   }, [seconds]);
+
+  useEffect(() => {
+    if (autoStartKey <= 0) return;
+    setRemaining(seconds);
+    setRunning(true);
+  }, [autoStartKey, seconds]);
 
   useEffect(() => {
     if (!running || remaining <= 0) return undefined;

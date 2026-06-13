@@ -58,7 +58,7 @@ export const exercises: Exercise[] = [
     progressionEquipment: ['resistance_band'],
     recommendationSafetyLevel: 'gentle',
     supportRequired: true,
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/L7vJPzW-SPs',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=scapular+squeeze+exercise+physical+therapy',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
@@ -110,7 +110,7 @@ export const exercises: Exercise[] = [
     regressions: ['縮小擺動幅度', '改成坐姿'],
     progressions: ['延長到 60 秒', '配合慢呼吸'],
     equipment: ['bodyweight'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/1T905D4nU_M',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=standing+arm+swings+shoulder+mobility',
     sourceRef: '樂齡肩髖復健計畫互動指南.txt'
   },
@@ -162,7 +162,7 @@ export const exercises: Exercise[] = [
     regressions: ['用手輕扶大腿協助', '改成躺姿滑腳跟'],
     progressions: ['坐姿加停留時間', '增加到 12 次'],
     equipment: ['chair'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/oyZWACoNPXs',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/watch?v=oyZWACoNPXs',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
@@ -192,7 +192,7 @@ export const exercises: Exercise[] = [
     optionalEquipment: ['chair'],
     progressionEquipment: ['resistance_band'],
     recommendationSafetyLevel: 'standard',
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/1I2un2TAcv4',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/watch?v=1I2un2TAcv4',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
@@ -244,7 +244,7 @@ export const exercises: Exercise[] = [
     regressions: ['減少打開角度', '每組 6 次'],
     progressions: ['大腿上方加彈力帶', '增加頂端停留'],
     equipment: ['bodyweight'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/8bbE64T_g_M',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=clamshell+exercise+hip+physical+therapy',
     sourceRef: '樂齡肩髖復健計畫互動指南.txt'
   },
@@ -277,7 +277,7 @@ export const exercises: Exercise[] = [
     recommendationSafetyLevel: 'caution',
     supportRequired: true,
     avoidIfPainHigh: true,
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/Cih24y_12sQ',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=sit+to+stand+exercise+older+adults',
     sourceRef: '樂齡肩髖復健計畫互動指南.txt'
   },
@@ -303,7 +303,7 @@ export const exercises: Exercise[] = [
     regressions: ['減少上滑高度', '離牆一點練習'],
     progressions: ['增加停留時間', '放慢下滑'],
     equipment: ['wall'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/JGp_l_N18JM',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=wall+slide+shoulder+physical+therapy',
     sourceRef: '樂齡肩髖復健計畫互動指南.txt'
   },
@@ -646,7 +646,7 @@ export const exercises: Exercise[] = [
     regressions: ['縮小畫圈範圍', '每方向 5 次'],
     progressions: ['改做腳踝字母', '增加到每方向 15 次'],
     equipment: ['chair'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/S2pM2mS31sY',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=ankle+circles+physical+therapy',
     sourceRef: '互動式踝關節穩定性指南.txt'
   },

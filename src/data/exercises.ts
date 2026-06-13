@@ -674,7 +674,7 @@ export const exercises: Exercise[] = [
     equipment: ['chair'],
     youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=ankle+alphabet+exercise+physical+therapy',
-    sourceRef: 'gemini-code-1780795404889.html'
+    sourceRef: 'gemini-code-1780795404889.html' 
   },
   {
     id: 'ankle-band-inversion-eversion',

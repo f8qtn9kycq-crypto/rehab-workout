@@ -65,6 +65,7 @@ export default {
       benefits: 'Benefits',
     },
     session: {
+      confirmNoPain: '0 | No pain',
       setProgressText: 'Set {set} / {sets}',
       repInstruction: 'Do {reps} reps',
       completeSet: 'Complete set',
@@ -138,6 +139,7 @@ export default {
       benefits: '效益',
     },
     session: {
+      confirmNoPain: '0｜沒有疼痛',
       setProgressText: '第 {set} / {sets} 組',
       repInstruction: '做 {reps} 次',
       completeSet: '完成這一組',

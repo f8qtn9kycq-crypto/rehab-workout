@@ -10,6 +10,7 @@ export default function PainScale({
   zeroLabel?: string;
 }) {
   const displayValue = value === null ? '--' : value;
+  const zeroSelected = value === 0;
 
   return (
     <div>
@@ -27,11 +28,16 @@ export default function PainScale({
           className="h-11 w-full accent-calm-500"
         />
       </label>
-      {value === null && zeroLabel ? (
+      {zeroLabel ? (
         <button
           type="button"
+          aria-pressed={zeroSelected}
           onClick={() => onChange(0)}
-          className="focus-ring mt-2 min-h-11 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700"
+          className={`focus-ring mt-2 min-h-11 rounded-md border px-3 text-sm font-semibold ${
+            zeroSelected
+              ? 'border-calm-300 bg-calm-50 text-calm-800'
+              : 'border-slate-200 bg-white text-slate-700'
+          }`}
         >
           {zeroLabel}
         </button>

@@ -28,7 +28,7 @@ export const exercises: Exercise[] = [
     progressionEquipment: ['dumbbell'],
     recommendationSafetyLevel: 'gentle',
     avoidIfPainHigh: true,
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/fSD3p0eJ91A',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=shoulder+flexion+exercise+physical+therapy',
     sourceRef: '肩髖_rehab_rehab_workout.html'
   },
@@ -136,7 +136,7 @@ export const exercises: Exercise[] = [
     regressions: ['改用毛巾夾住手肘練控制', '減少阻力'],
     progressions: ['增加到 3 組', '放慢回程'],
     equipment: ['resistance_band'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/S2e_Tz5nU4M',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=shoulder+internal+rotation+band+physical+therapy',
     sourceRef: '樂齡肩髖復健計畫互動指南.txt'
   },
@@ -485,7 +485,7 @@ export const exercises: Exercise[] = [
     regressions: ['維持 30 秒', '頭後方墊毛巾'],
     progressions: ['加入下巴內收', '延長到 5 分鐘'],
     equipment: ['wall'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/Y0rQ4LwB544',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=%E8%B2%BC%E7%89%86%E7%AB%99%E7%AB%8B%E5%A7%BF%E5%8B%A2%E7%9F%AF%E6%AD%A3+%E7%83%8F%E9%BE%9C%E9%A0%B8+%E7%89%A9%E7%90%86%E6%B2%BB%E7%99%82%E5%B8%AB',
     sourceRef: 'shoulder_neck_rehab_elder_app_4.html'
   },
@@ -698,7 +698,7 @@ export const exercises: Exercise[] = [
     regressions: ['不用彈力帶先做空腳控制', '每側 8 次'],
     progressions: ['增加彈力帶阻力', '加入慢速回程'],
     equipment: ['resistance_band'],
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/9Gz2-L4yGvQ',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=ankle+inversion+eversion+band+physical+therapy',
     sourceRef: '互動式踝關節穩定性指南.txt'
   },
@@ -729,7 +729,7 @@ export const exercises: Exercise[] = [
     recommendationSafetyLevel: 'caution',
     supportRequired: true,
     avoidIfPainHigh: true,
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/sA-e-g-z00Y',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=single+leg+balance+ankle+rehab',
     sourceRef: '互動式踝關節穩定性指南.txt'
   },
@@ -786,7 +786,7 @@ export const exercises: Exercise[] = [
     recommendationSafetyLevel: 'advanced_only',
     supportRequired: true,
     avoidIfPainHigh: true,
-    youtubeEmbedUrl: 'https://www.youtube.com/embed/n4K_b-8d070',
+    youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=single+leg+reach+ankle+proprioception',
     sourceRef: '互動式踝關節穩定性指南.txt'
   }

@@ -1,13 +1,29 @@
 import { createContext, createElement, useContext, useMemo, useState } from 'react';
 import en from '../locales/en';
+import cleanupLocales from '../locales/cleanup';
 import zhTW from '../locales/zh-TW';
 
 export const defaultLanguage = 'zh-TW';
 export const supportedLanguages = ['zh-TW', 'en'];
 
+function mergeResource(base, extension) {
+  if (!extension || typeof extension !== 'object') return base;
+
+  return Object.entries(extension).reduce((resource, [key, value]) => {
+    const current = resource[key];
+
+    return {
+      ...resource,
+      [key]: value && typeof value === 'object' && !Array.isArray(value)
+        ? mergeResource(current && typeof current === 'object' ? current : {}, value)
+        : value,
+    };
+  }, base);
+}
+
 const resources = {
-  'zh-TW': zhTW,
-  en,
+  'zh-TW': mergeResource(zhTW, cleanupLocales['zh-TW']),
+  en: mergeResource(en, cleanupLocales.en),
 };
 
 const storageKey = 'rehab.language.v1';

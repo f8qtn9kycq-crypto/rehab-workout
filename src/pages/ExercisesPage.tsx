@@ -17,7 +17,7 @@ import {
   isExerciseLevel,
   isExerciseType,
 } from '../utils/exerciseModel';
-import { shouldStopForPain } from '../utils/painRules';
+import { shouldStopForPain, shouldUseRecoveryMode } from '../utils/painRules';
 import { getRecommendedExercises } from '../utils/recommendationEngine';
 
 const validEquipment = EQUIPMENT_OPTIONS.map((item) => item.id);
@@ -80,6 +80,9 @@ export default function ExercisesPage() {
   const logs = useMemo(() => getLogs(), []);
   const [filters, setFilters] = useState<ExerciseFilters>(() => buildInitialFilters(searchParams, assessment));
   const showHighPainWarning = shouldStopForPain(assessment?.pain ?? null);
+  const isRecoveryRecommendation =
+    filters.mode === 'recommended' &&
+    (assessment?.mode === 'recovery' || shouldUseRecoveryMode(assessment?.pain ?? null) || filters.painSensitive);
 
   useEffect(() => {
     const nextFilters = buildInitialFilters(searchParams, assessment);
@@ -138,11 +141,19 @@ export default function ExercisesPage() {
     });
   }, [assessment, filters, logs]);
 
-  const emptyMessage = filters.mode === 'recommended' && showHighPainWarning
-    ? t('exercises.painStopEmpty')
-    : filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all'
-      ? t('exercises.chooseBodyArea')
-      : t('exercises.empty');
+  const emptyMessage = (() => {
+    if (showHighPainWarning) return t('exercises.painStopEmpty');
+    if (filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') {
+      return t('exercises.chooseBodyArea');
+    }
+    if ((filters.equipment.length > 0 || filters.noEquipmentOnly) && filtered.length === 0) {
+      return t('exercises.equipmentTooNarrowEmpty');
+    }
+    if (isRecoveryRecommendation && filtered.length === 0) {
+      return t('exercises.recoveryNoMatchEmpty');
+    }
+    return t('exercises.empty');
+  })();
 
   return (
     <div className="page space-y-5">

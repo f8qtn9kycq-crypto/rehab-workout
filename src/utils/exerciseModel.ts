@@ -1,4 +1,4 @@
-import { SUPPORT_ONLY_EQUIPMENT_IDS } from '../data/equipmentOptions';
+import { SUPPORT_ONLY_EQUIPMENT_IDS, sortEquipmentByPriority } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
 import {
   BODY_AREAS,
@@ -82,29 +82,29 @@ function includesAny(value: string, keywords: readonly string[]): boolean {
 }
 
 export function getRequiredEquipment(exercise: Exercise): Equipment[] {
-  if (exercise.requiredEquipment) return uniqueEquipment(exercise.requiredEquipment);
+  if (exercise.requiredEquipment) return sortEquipmentByPriority(exercise.requiredEquipment);
   if (exercise.progressionEquipment || exercise.optionalEquipment) {
     const optional = new Set([...(exercise.optionalEquipment ?? []), ...(exercise.progressionEquipment ?? [])]);
-    return exercise.equipment.filter((item) => !optional.has(item));
+    return sortEquipmentByPriority(exercise.equipment.filter((item) => !optional.has(item)));
   }
-  return [...exercise.equipment];
+  return sortEquipmentByPriority(exercise.equipment);
 }
 
 export function getOptionalEquipment(exercise: Exercise): Equipment[] {
-  return uniqueEquipment(exercise.optionalEquipment ?? []);
+  return sortEquipmentByPriority(exercise.optionalEquipment ?? []);
 }
 
 export function getProgressionEquipment(exercise: Exercise): Equipment[] {
-  return uniqueEquipment(exercise.progressionEquipment ?? []);
+  return sortEquipmentByPriority(exercise.progressionEquipment ?? []);
 }
 
 export function getExerciseEquipment(exercise: Exercise): Equipment[] {
-  return uniqueEquipment([
+  return sortEquipmentByPriority(uniqueEquipment([
     ...getRequiredEquipment(exercise),
     ...getOptionalEquipment(exercise),
     ...getProgressionEquipment(exercise),
     ...exercise.equipment,
-  ]);
+  ]));
 }
 
 export function requiresSupport(exercise: Exercise): boolean {
@@ -170,8 +170,8 @@ export function matchesDuration(exercise: Exercise, duration: DurationFilter): b
 
 export function getAvailableEquipment(filters: ExerciseFilters, assessmentEquipment: readonly Equipment[]): Equipment[] {
   if (filters.noEquipmentOnly) return DEFAULT_AVAILABLE_EQUIPMENT;
-  if (filters.equipment.length > 0) return filters.equipment;
-  if (assessmentEquipment.length > 0) return [...assessmentEquipment];
+  if (filters.equipment.length > 0) return sortEquipmentByPriority(filters.equipment);
+  if (assessmentEquipment.length > 0) return sortEquipmentByPriority(assessmentEquipment);
   return DEFAULT_AVAILABLE_EQUIPMENT;
 }
 

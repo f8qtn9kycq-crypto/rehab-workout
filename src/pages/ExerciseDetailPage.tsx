@@ -4,7 +4,7 @@ import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
 import { useI18n } from '../services/i18n';
-import { getExerciseById } from '../utils/exerciseModel';
+import { getExerciseById, getExerciseEquipment } from '../utils/exerciseModel';
 
 export default function ExerciseDetailPage() {
   const { exerciseId } = useParams();
@@ -18,6 +18,7 @@ export default function ExerciseDetailPage() {
 
   const stopRules = exercise.stopRules.length > 0 ? exercise.stopRules : [t('detail.defaultStopRule')];
   const regressions = exercise.regressions.length > 0 ? exercise.regressions : [t('detail.defaultStopRule')];
+  const equipmentBadges = getExerciseEquipment(exercise);
 
   return (
     <div className="page space-y-5">
@@ -64,7 +65,7 @@ export default function ExerciseDetailPage() {
           <div>
             <h3 className="font-bold text-slate-900">{t('detail.equipment')}</h3>
             <div className="mt-2 flex flex-wrap gap-2 text-sm font-semibold text-slate-700">
-              {exercise.equipment.map((equipment) => (
+              {equipmentBadges.map((equipment) => (
                 <span key={equipment} className="rounded-md bg-slate-50 px-2 py-1">{t(`equipmentLabels.${equipment}`)}</span>
               ))}
             </div>

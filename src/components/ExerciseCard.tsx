@@ -1,11 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import type { Exercise } from '../types/rehab';
+import { getExerciseEquipment } from '../utils/exerciseModel';
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const location = useLocation();
   const { t } = useI18n();
   const detailSearch = location.pathname === '/exercises' ? location.search : '';
+  const equipmentBadges = getExerciseEquipment(exercise);
 
   return (
     <article className="card flex h-full flex-col p-4">
@@ -17,7 +19,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       <h3 className="mt-3 text-xl font-bold text-ink">{exercise.title}</h3>
       <p className="mt-2 flex-1 text-base text-slate-600">{exercise.description}</p>
       <div className="mt-3 flex flex-wrap gap-2">
-        {exercise.equipment.map((equipment) => (
+        {equipmentBadges.map((equipment) => (
           <span key={equipment} className="rounded-md bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
             {t(`equipmentLabels.${equipment}`)}
           </span>

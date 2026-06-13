@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EQUIPMENT_OPTIONS, PRIMARY_EQUIPMENT_IDS } from '../data/equipmentOptions';
+import { ADVANCED_EQUIPMENT_IDS, PRIMARY_EQUIPMENT_IDS } from '../data/equipmentOptions';
 import { useI18n } from '../services/i18n';
 import {
   BODY_AREAS,
@@ -11,9 +11,7 @@ import {
 } from '../types/rehab';
 
 const primaryEquipment: Equipment[] = [...PRIMARY_EQUIPMENT_IDS];
-const supportEquipment = EQUIPMENT_OPTIONS
-  .map((item) => item.id)
-  .filter((id) => !primaryEquipment.includes(id));
+const advancedEquipment: Equipment[] = [...ADVANCED_EQUIPMENT_IDS];
 
 export default function ExerciseFilter({
   filters,
@@ -111,7 +109,7 @@ export default function ExerciseFilter({
       </div>
 
       <div>
-        <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.equipment')}</span>
+        <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.equipmentBasics')}</span>
         <div className="grid grid-cols-3 gap-2">
           {primaryEquipment.map((equipment) => (
             <button
@@ -136,9 +134,13 @@ export default function ExerciseFilter({
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold text-slate-600">{t('exercises.activeFilters')}</span>
-        {summaryChips.map((chip) => (
-          <span key={chip} className="rounded-md bg-calm-50 px-2 py-1 text-sm font-semibold text-calm-700">{chip}</span>
-        ))}
+        {summaryChips.length > 0 ? (
+          summaryChips.map((chip) => (
+            <span key={chip} className="rounded-md bg-calm-50 px-2 py-1 text-sm font-semibold text-calm-700">{chip}</span>
+          ))
+        ) : (
+          <span className="rounded-md bg-slate-50 px-2 py-1 text-sm font-semibold text-slate-600">{t('exercises.noActiveFilters')}</span>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -220,9 +222,9 @@ export default function ExerciseFilter({
           </div>
 
           <div>
-            <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.supportEquipment')}</span>
+            <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.advancedEquipment')}</span>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {supportEquipment.map((equipment) => (
+              {advancedEquipment.map((equipment) => (
                 <button
                   key={equipment}
                   type="button"

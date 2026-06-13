@@ -21,7 +21,9 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const [painAfter, setPainAfter] = useState<number | null>(null);
   const [useRecoveryMode, setUseRecoveryMode] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
-  const [currentRep, setCurrentRep] = useState(0);
+  const [completedSets, setCompletedSets] = useState(0);
+  const [resting, setResting] = useState(false);
+  const [restTimerKey, setRestTimerKey] = useState(0);
   const [difficultyRating, setDifficultyRating] = useState(3);
   const [notes, setNotes] = useState('');
   const [stoppedEarly, setStoppedEarly] = useState(false);
@@ -37,19 +39,27 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
 
-  function nextRep(): void {
-    if (currentRep + 1 < exercise.reps) {
-      setCurrentRep(currentRep + 1);
+  function completedRepCount(): number {
+    return completedSets > 0 ? exercise.reps : 0;
+  }
+
+  function completeSet(): void {
+    const nextCompletedSets = currentSet;
+    setCompletedSets(nextCompletedSets);
+
+    if (currentSet >= exercise.sets) {
+      setResting(false);
+      setPhase('finish');
       return;
     }
 
-    if (currentSet < exercise.sets) {
-      setCurrentSet(currentSet + 1);
-      setCurrentRep(0);
-      return;
-    }
+    setResting(true);
+    setRestTimerKey((value) => value + 1);
+  }
 
-    setPhase('finish');
+  function startNextSet(): void {
+    setCurrentSet((value) => Math.min(value + 1, exercise.sets));
+    setResting(false);
   }
 
   function stopEarly(): void {
@@ -63,8 +73,8 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
 
     const log = createTrainingLog({
       exercise,
-      setsCompleted: stoppedEarly ? currentSet : exercise.sets,
-      repsCompleted: stoppedEarly ? currentRep : exercise.reps,
+      setsCompleted: stoppedEarly ? completedSets : exercise.sets,
+      repsCompleted: stoppedEarly ? completedRepCount() : exercise.reps,
       painBefore,
       painAfter,
       difficultyRating,
@@ -83,8 +93,8 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
 
     const log = createTrainingLog({
       exercise,
-      setsCompleted: currentSet,
-      repsCompleted: currentRep,
+      setsCompleted: completedSets,
+      repsCompleted: completedRepCount(),
       painBefore,
       painAfter,
       difficultyRating,
@@ -290,7 +300,8 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         ) : null}
         <div className="rounded-lg bg-calm-100 p-5 text-center">
           <div className="text-sm font-semibold text-calm-700">{t('session.currentProgress')}</div>
-          <div className="mt-1 text-4xl font-bold text-calm-700">{t('session.progressText', { set: currentSet, rep: currentRep + 1 })}</div>
+          <div className="mt-1 text-4xl font-bold text-calm-700">{t('session.setProgressText', { set: currentSet, sets: exercise.sets })}</div>
+          <div className="mt-1 text-lg font-semibold text-slate-800">{t('session.repInstruction', { reps: exercise.reps })}</div>
           <div className="mt-1 text-slate-700">{t('session.targetText', { sets: exercise.sets, reps: exercise.reps })}</div>
         </div>
         <ol className="space-y-2">
@@ -298,10 +309,17 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             <li key={step} className="rounded-md bg-slate-50 p-3 text-slate-700">{step}</li>
           ))}
         </ol>
-        <RestTimer seconds={exercise.restSeconds} />
+        {resting ? (
+          <div className="space-y-3">
+            <RestTimer seconds={exercise.restSeconds} autoStartKey={restTimerKey} />
+            <button onClick={startNextSet} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
+              {t('session.nextSet')}
+            </button>
+          </div>
+        ) : null}
         <div className="grid gap-3 md:grid-cols-2">
-          <button onClick={nextRep} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
-            {t('session.nextRep')}
+          <button onClick={completeSet} disabled={resting} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
+            {currentSet >= exercise.sets ? t('session.completeSession') : t('session.completeSet')}
           </button>
           <button onClick={stopEarly} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
             <AlertTriangle size={18} />

@@ -1,4 +1,4 @@
-import { PlayCircle } from 'lucide-react';
+import { Clock, Dumbbell, Layers3, MapPin, PlayCircle } from 'lucide-react';
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
@@ -32,19 +32,28 @@ export default function ExerciseDetailPage() {
       </div>
       <section className="card space-y-5 p-4">
         <div className="flex flex-wrap gap-2 text-sm font-semibold">
-          <span className="rounded-md bg-calm-100 px-2 py-1 text-calm-700">{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
-          <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`typeLabels.${exercise.type}`)}</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
           <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{exercise.durationText}</span>
+          {equipmentBadges.slice(0, 2).map((equipment) => (
+            <span key={equipment} className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Dumbbell size={14} />{t(`equipmentLabels.${equipment}`)}</span>
+          ))}
         </div>
         <div>
           <h1 className="text-3xl font-bold text-ink">{exercise.title}</h1>
-          <p className="mt-2 text-lg text-slate-600">{exercise.detail}</p>
+          <p className="mt-2 text-lg text-slate-600">{exercise.description}</p>
         </div>
         <YouTubeEmbed title={exercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
         <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
           <PlayCircle size={20} />
           {t('detail.enlargeVideo')}
         </button>
+        <details className="rounded-lg bg-slate-50 p-3 text-slate-700">
+          <summary className="min-h-11 cursor-pointer py-2 font-bold text-slate-900">{t('detail.moreDetails')}</summary>
+          <p className="mt-2">{exercise.detail}</p>
+          <p className="mt-3"><strong>{t('detail.benefits')}:</strong> {exercise.benefits}</p>
+        </details>
       </section>
       <section className="grid gap-4 md:grid-cols-[1fr_0.8fr]">
         <div className="card p-4">

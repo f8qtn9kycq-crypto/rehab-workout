@@ -60,6 +60,17 @@ export default {
         },
       },
     },
+    detail: {
+      moreDetails: 'More details',
+      benefits: 'Benefits',
+    },
+    session: {
+      setProgressText: 'Set {set} / {sets}',
+      repInstruction: 'Do {reps} reps',
+      completeSet: 'Complete set',
+      completeSession: 'Complete session',
+      nextSet: 'Next set',
+    },
   },
   'zh-TW': {
     exercises: {
@@ -121,6 +132,17 @@ export default {
           description: '維持足夠的腳踝活動範圍，減少代償。',
         },
       },
+    },
+    detail: {
+      moreDetails: '更多細節',
+      benefits: '效益',
+    },
+    session: {
+      setProgressText: '第 {set} / {sets} 組',
+      repInstruction: '做 {reps} 次',
+      completeSet: '完成這一組',
+      completeSession: '完成訓練',
+      nextSet: '下一組',
     },
   },
 };

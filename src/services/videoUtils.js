@@ -60,12 +60,33 @@ export function isValidYouTubeEmbedUrl(url) {
   }
 }
 
+export function toYouTubeSearchUrl(url, title = '') {
+  const query = encodeURIComponent(title || 'rehab exercise physical therapy');
+
+  if (!url || typeof url !== 'string') {
+    return `https://www.youtube.com/results?search_query=${query}`;
+  }
+
+  try {
+    const parsed = new URL(url);
+    const host = getYouTubeHost(url);
+
+    if ((host === 'youtube.com' || host === 'm.youtube.com') && parsed.pathname === '/results') {
+      return url;
+    }
+  } catch {
+    return `https://www.youtube.com/results?search_query=${query}`;
+  }
+
+  return `https://www.youtube.com/results?search_query=${query}`;
+}
+
 export function getVideoFallbackState(exercise) {
   const embedUrl = toYouTubeEmbedUrl(exercise?.youtubeEmbedUrl);
 
   return {
     embedUrl,
     shouldFallback: !isValidYouTubeEmbedUrl(embedUrl),
-    searchUrl: exercise?.youtubeSearchUrl || '',
+    searchUrl: toYouTubeSearchUrl(exercise?.youtubeSearchUrl, exercise?.title),
   };
 }

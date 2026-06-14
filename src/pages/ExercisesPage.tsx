@@ -7,7 +7,7 @@ import { exercises } from '../data/exercises';
 import { assessmentStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
-import { BODY_AREAS, EQUIPMENT_IDS, EXERCISE_LEVELS, type BodyArea, type DurationFilter, type Equipment, type ExerciseFilterMode, type ExerciseFilters, type ExerciseLevel, type ExerciseType, type SavedAssessment } from '../types/rehab';
+import { BODY_AREAS, type BodyArea, type DurationFilter, type Equipment, type ExerciseFilterMode, type ExerciseFilters, type ExerciseLevel, type ExerciseType, type SavedAssessment } from '../types/rehab';
 import {
   filterExercises,
   getExerciseEquipment,
@@ -162,27 +162,7 @@ export default function ExercisesPage() {
       countFor({ ...filters, bodyArea: bodyAreaOption }),
     ])) as FilterAvailability['bodyArea'];
 
-    const level = Object.fromEntries((['all', ...EXERCISE_LEVELS] as Array<ExerciseLevel | 'all'>).map((levelOption) => [
-      levelOption,
-      countFor({ ...filters, level: levelOption }),
-    ])) as FilterAvailability['level'];
-
-    const equipment = Object.fromEntries(validEquipment.map((equipmentOption) => {
-      if (!coveredEquipment.has(equipmentOption)) return [equipmentOption, 0];
-
-      const isSelected = equipmentOption === EQUIPMENT_IDS.BODYWEIGHT
-        ? filters.noEquipmentOnly
-        : filters.equipment.includes(equipmentOption);
-      const nextFilters = isSelected
-        ? filters
-        : equipmentOption === EQUIPMENT_IDS.BODYWEIGHT
-          ? { ...filters, equipment: [], noEquipmentOnly: true }
-          : { ...filters, equipment: [...filters.equipment, equipmentOption], noEquipmentOnly: false };
-
-      return [equipmentOption, countFor(nextFilters)];
-    })) as FilterAvailability['equipment'];
-
-    return { bodyArea, level, equipment };
+    return { bodyArea };
   }, [assessment, assessmentEquipment, filters, logs]);
 
   function clearExerciseFilters(): void {

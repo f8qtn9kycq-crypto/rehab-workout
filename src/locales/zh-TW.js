@@ -108,7 +108,7 @@ export default {
     advancedFilters: '進階篩選',
     bodyweightOnly: '只看徒手',
     countBadge: '{count}',
-    unavailableFilter: '目前沒有符合的動作',
+    unavailableFilter: '{label}：目前沒有符合的動作',
     empty: '目前沒有符合條件的動作，請調整篩選條件。',
     emptyTitle: '目前沒有完全符合的動作',
     emptyMessage: '目前沒有完全符合的動作。可以改選「徒手 / 椅牆支撐」、降低難度，或回到「今天適合的動作」。',

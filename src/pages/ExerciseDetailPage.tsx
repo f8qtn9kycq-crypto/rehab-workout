@@ -5,19 +5,21 @@ import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
 import { useI18n } from '../services/i18n';
 import { getExerciseById, getExerciseEquipment } from '../utils/exerciseModel';
+import { getLocalizedExercise } from '../utils/localizedExercise';
 
 export default function ExerciseDetailPage() {
   const { exerciseId } = useParams();
   const location = useLocation();
-  const { t } = useI18n();
+  const { language, t } = useI18n();
   const exercise = getExerciseById(exerciseId);
   const [modalOpen, setModalOpen] = useState(false);
   const backTarget = `/exercises${location.search}`;
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
-  const stopRules = exercise.stopRules.length > 0 ? exercise.stopRules : [t('detail.defaultStopRule')];
-  const regressions = exercise.regressions.length > 0 ? exercise.regressions : [t('detail.defaultStopRule')];
+  const displayExercise = getLocalizedExercise(exercise, language);
+  const stopRules = displayExercise.stopRules.length > 0 ? displayExercise.stopRules : [t('detail.defaultStopRule')];
+  const regressions = displayExercise.regressions.length > 0 ? displayExercise.regressions : [t('detail.defaultStopRule')];
   const equipmentBadges = getExerciseEquipment(exercise);
 
   return (
@@ -35,31 +37,31 @@ export default function ExerciseDetailPage() {
           <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
           <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
-          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{exercise.durationText}</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>
           {equipmentBadges.slice(0, 2).map((equipment) => (
             <span key={equipment} className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Dumbbell size={14} />{t(`equipmentLabels.${equipment}`)}</span>
           ))}
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-ink">{exercise.title}</h1>
-          <p className="mt-2 text-lg text-slate-600">{exercise.description}</p>
+          <h1 className="text-3xl font-bold text-ink">{displayExercise.title}</h1>
+          <p className="mt-2 text-lg text-slate-600">{displayExercise.description}</p>
         </div>
-        <YouTubeEmbed title={exercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
+        <YouTubeEmbed title={displayExercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
         <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
           <PlayCircle size={20} />
           {t('detail.enlargeVideo')}
         </button>
         <details className="rounded-lg bg-slate-50 p-3 text-slate-700">
           <summary className="min-h-11 cursor-pointer py-2 font-bold text-slate-900">{t('detail.moreDetails')}</summary>
-          <p className="mt-2">{exercise.detail}</p>
-          <p className="mt-3"><strong>{t('detail.benefits')}:</strong> {exercise.benefits}</p>
+          <p className="mt-2">{displayExercise.detail}</p>
+          <p className="mt-3"><strong>{t('detail.benefits')}:</strong> {displayExercise.benefits}</p>
         </details>
       </section>
       <section className="grid gap-4 md:grid-cols-[1fr_0.8fr]">
         <div className="card p-4">
           <h2 className="text-xl font-bold text-ink">{t('detail.steps')}</h2>
           <ol className="mt-3 space-y-2">
-            {exercise.steps.map((step, index) => (
+            {displayExercise.steps.map((step, index) => (
               <li key={step} className="rounded-md bg-slate-50 p-3 text-slate-700">{index + 1}. {step}</li>
             ))}
           </ol>
@@ -82,7 +84,7 @@ export default function ExerciseDetailPage() {
           <div>
             <h3 className="font-bold text-slate-900">{t('detail.safetyCautions')}</h3>
             <ul className="mt-2 space-y-1 text-slate-700">
-              {exercise.cautions.map((caution) => <li key={caution}>- {caution}</li>)}
+              {displayExercise.cautions.map((caution) => <li key={caution}>- {caution}</li>)}
             </ul>
           </div>
           <div>
@@ -102,7 +104,7 @@ export default function ExerciseDetailPage() {
           </Link>
         </div>
       </section>
-      <ExerciseDetailModal exercise={exercise} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <ExerciseDetailModal exercise={displayExercise} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

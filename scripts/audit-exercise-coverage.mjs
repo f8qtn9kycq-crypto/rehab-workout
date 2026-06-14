@@ -21,6 +21,7 @@ const sourceFiles = {
 const auditBodyAreas = ['shoulder_hip', 'shoulder_neck', 'knee', 'ankle'];
 const requiredLevels = ['beginner', 'intermediate', 'advanced'];
 const requiredTypes = ['mobility', 'strength', 'stretch', 'relaxation', 'balance', 'proprioception'];
+const supportOnlyEquipment = ['bodyweight', 'chair', 'wall'];
 
 function readSource(filePath) {
   return fs.readFileSync(path.join(rootDir, filePath), 'utf8');
@@ -72,6 +73,25 @@ function allExerciseEquipment(exercise) {
   ]);
 }
 
+// Mirrors the minimal equipment logic from src/utils/exerciseModel.ts.
+// This keeps the audit aligned with live filter compatibility without importing app code.
+function getRequiredEquipment(exercise) {
+  if (exercise.requiredEquipment) return exercise.requiredEquipment;
+  if (exercise.progressionEquipment || exercise.optionalEquipment) {
+    const optional = new Set([...(exercise.optionalEquipment ?? []), ...(exercise.progressionEquipment ?? [])]);
+    return exercise.equipment.filter((item) => !optional.has(item));
+  }
+  return exercise.equipment;
+}
+
+function isCompatibleWithSelectedEquipment(exercise, selectedEquipment) {
+  return getRequiredEquipment(exercise).every((item) => {
+    if (item === 'bodyweight') return true;
+    if (item === selectedEquipment) return true;
+    return selectedEquipment === 'bodyweight' && supportOnlyEquipment.includes(item);
+  });
+}
+
 function displayList(values) {
   return values.length > 0 ? values.join(', ') : 'None';
 }
@@ -90,6 +110,12 @@ function table(headers, rows) {
 
 function countBy(items, predicate) {
   return items.filter(predicate).length;
+}
+
+function duplicateValues(values) {
+  const counts = new Map();
+  values.forEach((value) => counts.set(value, (counts.get(value) ?? 0) + 1));
+  return [...counts.entries()].filter(([, count]) => count > 1).map(([value]) => value);
 }
 
 function getGitShortSha() {
@@ -168,17 +194,31 @@ const typeRows = requiredTypes.map((type) => {
   ];
 });
 
-const emptyCombinationRows = [];
+const rawEmptyCombinationRows = [];
+const appEmptyCombinationRows = [];
 for (const bodyArea of auditBodyAreas) {
   const areaExercises = exercisesByAuditArea.get(bodyArea) ?? [];
   for (const level of requiredLevels) {
     for (const equipment of canonicalEquipment) {
-      const matches = areaExercises.filter((exercise) => {
+      const rawMatches = areaExercises.filter((exercise) => {
         return exercise.level === level && allExerciseEquipment(exercise).includes(equipment);
       });
+      const appMatches = areaExercises.filter((exercise) => {
+        return exercise.level === level && isCompatibleWithSelectedEquipment(exercise, equipment);
+      });
 
-      if (matches.length === 0) {
-        emptyCombinationRows.push([
+      if (rawMatches.length === 0) {
+        rawEmptyCombinationRows.push([
+          bodyArea,
+          level,
+          equipment,
+          '0 raw equipment-field matches',
+          'Raw data coverage only. Do not use as live UI dead-end evidence.',
+        ]);
+      }
+
+      if (appMatches.length === 0) {
+        appEmptyCombinationRows.push([
           bodyArea,
           level,
           equipment,
@@ -209,6 +249,15 @@ const zeroLevelByAreaRows = difficultyRows.flatMap(([bodyArea, beginner, interme
     .filter(([, count]) => Number(count) === 0)
     .map(([level]) => [bodyArea, level]);
 });
+const duplicateIds = duplicateValues(exercises.map((exercise) => exercise.id));
+const duplicateTitles = duplicateValues(exercises.map((exercise) => exercise.title));
+const missingSafetyMetadata = {
+  cautions: exercises.filter((exercise) => !exercise.cautions || exercise.cautions.length === 0),
+  stopRules: exercises.filter((exercise) => !exercise.stopRules || exercise.stopRules.length === 0),
+  regressions: exercises.filter((exercise) => !exercise.regressions || exercise.regressions.length === 0),
+  progressions: exercises.filter((exercise) => !exercise.progressions || exercise.progressions.length === 0),
+};
+const missingRequiredEquipment = exercises.filter((exercise) => !exercise.requiredEquipment || exercise.requiredEquipment.length === 0);
 
 const emptyStateChecks = [
   {
@@ -244,6 +293,34 @@ const emptyStateChecks = [
 ];
 
 const dataQualityFindings = [
+  [
+    'Duplicate exercise IDs',
+    sourceFiles.exercises,
+    displayList(duplicateIds),
+    duplicateIds.length > 0 ? 'P1' : 'P2',
+    duplicateIds.length > 0 ? 'IDs must be unique before adding content.' : 'No action needed.',
+  ],
+  [
+    'Duplicate exercise titles',
+    sourceFiles.exercises,
+    displayList(duplicateTitles),
+    duplicateTitles.length > 0 ? 'P2' : 'P2',
+    duplicateTitles.length > 0 ? 'Review whether duplicate titles are intentional.' : 'No action needed.',
+  ],
+  ...Object.entries(missingSafetyMetadata).map(([field, missing]) => [
+    `Missing safety metadata: ${field}`,
+    sourceFiles.exercises,
+    missing.length > 0 ? `${missing.length} exercises: ${missing.slice(0, 6).map((exercise) => exercise.id).join(', ')}${missing.length > 6 ? ', ...' : ''}` : 'None',
+    missing.length > 0 ? 'P1' : 'P2',
+    missing.length > 0 ? `Add reviewed ${field} before content expansion or recommendation broadening.` : 'No action needed.',
+  ]),
+  [
+    'Missing requiredEquipment metadata',
+    sourceFiles.exercises,
+    missingRequiredEquipment.length > 0 ? `${missingRequiredEquipment.length} exercises: ${missingRequiredEquipment.slice(0, 6).map((exercise) => exercise.id).join(', ')}${missingRequiredEquipment.length > 6 ? ', ...' : ''}` : 'None',
+    missingRequiredEquipment.length > 0 ? 'P2' : 'P2',
+    missingRequiredEquipment.length > 0 ? 'Backfill requiredEquipment when touching exercise data; current app has fallback inference.' : 'No action needed.',
+  ],
   ...zeroExerciseEquipment.map((equipment) => [
     'Canonical equipment has no exercise coverage',
     sourceFiles.equipmentOptions,
@@ -309,7 +386,7 @@ const rootCauseRows = [
     'No current evidence',
     'Potentially, if fallback crosses user intent later',
     'No',
-    `${emptyCombinationRows.length} empty bodyArea + difficulty + equipment combinations.`,
+    `${appEmptyCombinationRows.length} app-realistic empty bodyArea + difficulty + equipment combinations; ${rawEmptyCombinationRows.length} raw equipment-field gaps.`,
   ],
   [
     'Canonical foam_roller option has zero total exercise coverage.',
@@ -412,10 +489,10 @@ const mobileUxRows = [
 ];
 
 const topGaps = [
-  `Advanced coverage is missing for ${displayList(zeroLevelByAreaRows.filter(([, level]) => level === 'advanced').map(([bodyArea]) => bodyArea))}.`,
-  `foam_roller is canonical equipment but has 0 exercises.`,
-  `${emptyCombinationRows.length} bodyArea + difficulty + equipment combinations have 0 exercises.`,
-  '「為我推薦」/Recommended for me does not yet explain the personalization inputs in plain language.',
+  'shoulder_neck has 0 intermediate and 0 advanced exercises.',
+  `foam_roller has 0 total exercise coverage.`,
+  `Advanced coverage is missing for ${displayList(zeroLevelByAreaRows.filter(([, level]) => level === 'advanced').map(([bodyArea]) => bodyArea))}; overall, ${appEmptyCombinationRows.length} app-realistic bodyArea + difficulty + equipment combinations have 0 matching exercises.`,
+  '「為我推薦」/Recommended for me is a copy and explanation issue, not current evidence of recommendation logic failure.',
   'shoulder_hip is a user/audit mental model while the app stores shoulder and hip separately, which may confuse copy and reporting.',
 ];
 
@@ -433,7 +510,8 @@ Scope: audit only. This report does not add exercise content, change recommendat
 - Audit body areas: ${auditBodyAreas.join(', ')}
 - App body area enums: ${appBodyAreas.join(', ')}
 - Canonical equipment ids: ${canonicalEquipment.join(', ')}
-- Empty bodyArea + difficulty + equipment combinations: ${emptyCombinationRows.length}
+- Raw equipment-field bodyArea + difficulty + equipment gaps: ${rawEmptyCombinationRows.length}
+- App-realistic filter dead-end combinations: ${appEmptyCombinationRows.length}
 - Canonical equipment with 0 exercises: ${displayList(zeroExerciseEquipment)}
 - Non-canonical exercise bodyArea values: ${displayList(nonCanonicalBodyAreas)}
 - Non-canonical exercise type values: ${displayList(nonCanonicalTypes)}
@@ -461,7 +539,9 @@ ${table(['Type', 'Count', 'Body Areas Covered'], typeRows)}
 
 ## 6. Empty combinations table
 
-${table(['Body Area', 'Difficulty', 'Equipment', 'Result', 'Suggested Action'], emptyCombinationRows)}
+This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is ${rawEmptyCombinationRows.length}, but it should not be used as live UI dead-end evidence.
+
+${table(['Body Area', 'Difficulty', 'Equipment', 'Result', 'Suggested Action'], appEmptyCombinationRows)}
 
 ## 7. Data quality findings
 
@@ -487,6 +567,16 @@ ${table(['Scenario', 'Handled in UI', 'Evidence'], emptyStateChecks.map((check) 
   check.evidence,
 ]))}
 
+## Methodology and limitations
+
+- Raw equipment-field coverage counts only whether an equipment id appears on an exercise.
+- App-realistic filter dead ends model the live compatibility rules from src/utils/exerciseModel.ts: required bodyweight is compatible with any equipment selection, and selecting bodyweight can satisfy support-only chair/wall requirements.
+- Empty-state checks confirm code references, not runtime i18n resolution.
+- This audit does not verify actual rendered UI.
+- This audit does not validate safety metadata completeness beyond presence/absence checks.
+- This audit does not add or recommend random exercises.
+- Content additions require rehab safety review.
+
 ## Next-step recommendations
 
 1. Clarify the 「為我推薦」 label with short helper copy before changing recommendation behavior.
@@ -501,5 +591,6 @@ fs.writeFileSync(outputPath, report);
 
 console.log(`Exercise coverage audit generated: ${path.relative(rootDir, outputPath)}`);
 console.log(`Exercises audited: ${exercises.length}`);
-console.log(`Empty combinations: ${emptyCombinationRows.length}`);
+console.log(`Raw equipment-field empty combinations: ${rawEmptyCombinationRows.length}`);
+console.log(`App-realistic empty combinations: ${appEmptyCombinationRows.length}`);
 console.log(`Zero-coverage equipment: ${displayList(zeroExerciseEquipment)}`);

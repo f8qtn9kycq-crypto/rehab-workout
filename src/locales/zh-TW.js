@@ -16,6 +16,10 @@ export default {
     logs: '紀錄',
     education: '知識',
     more: '更多',
+    primary: '主要導覽',
+    mobilePrimary: '行動版導覽',
+    openMore: '開啟更多導覽選項',
+    closeMore: '關閉更多導覽選項',
   },
   actions: {
     start: '開始',
@@ -24,6 +28,7 @@ export default {
     moreFilters: '更多篩選',
     hideFilters: '收合篩選',
     clearFilters: '清除篩選',
+    close: '關閉',
   },
   home: {
     safetyFirst: '安全優先',
@@ -147,6 +152,8 @@ export default {
     selectRequired: '請選擇是否有以上狀況。',
     noneOfAbove: '無以上狀況',
     noneOfAboveDescription: '我今天沒有上述任何需要優先留意的狀況。',
+    redFlagGroup: '安全症狀檢查',
+    redFlagInstruction: '請勾選今天有出現的狀況；若都沒有，請選擇「無以上狀況」。',
     redFlags: {
       'acute-severe-pain': {
         label: '急性劇痛',
@@ -231,6 +238,7 @@ export default {
     saveLog: '儲存紀錄',
     activeHint: '慢慢做，保持呼吸。任何尖銳疼痛、麻、暈，請立即停止。',
     currentProgress: '目前進度',
+    progressA11y: '目前第 {set} 組，共 {sets} 組。請做 {reps} 次。',
     progressText: '第 {set} 組 / 第 {rep} 次',
     targetText: '目標 {sets} 組 x {reps} 次',
     nextRep: '下一次',
@@ -240,6 +248,7 @@ export default {
   restTimer: {
     title: '休息倒數',
     seconds: '{count} 秒',
+    status: '休息倒數剩下 {count} 秒。',
     pause: '暫停',
     start: '開始',
     reset: '重設倒數',

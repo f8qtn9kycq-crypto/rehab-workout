@@ -25,7 +25,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
   }
 
   return (
-    <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 backdrop-blur">
+    <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 backdrop-blur" aria-label={t('nav.mobilePrimary')}>
       {moreOpen ? (
         <div id="mobile-more-nav" className="border-b border-slate-200 px-3 py-3">
           <div className="grid grid-cols-2 gap-2">
@@ -66,6 +66,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
           type="button"
           aria-controls="mobile-more-nav"
           aria-expanded={moreOpen}
+          aria-label={moreOpen ? t('nav.closeMore') : t('nav.openMore')}
           onClick={() => setMoreOpen((open) => !open)}
           className={`focus-ring flex min-h-[58px] flex-col items-center justify-center rounded-md text-[12px] font-semibold ${
             moreActive || moreOpen ? 'text-calm-700' : 'text-slate-500'

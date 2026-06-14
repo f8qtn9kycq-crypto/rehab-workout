@@ -1,5 +1,5 @@
 import { AlertTriangle, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
@@ -29,6 +29,10 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const [stoppedEarly, setStoppedEarly] = useState(false);
   const [stopReason, setStopReason] = useState('');
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
+  const backButtonRef = useRef<HTMLButtonElement>(null);
+  const exitButtonRef = useRef<HTMLButtonElement>(null);
+  const continueSessionButtonRef = useRef<HTMLButtonElement>(null);
+  const lastExitTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   const painBlocksStart = shouldStopForPain(painBefore);
   const recoveryModeSuggested = shouldUseRecoveryMode(painBefore);
@@ -38,6 +42,15 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const hasStartedExercise = phase !== 'before';
   const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
+
+  useEffect(() => {
+    if (exitDialogOpen) {
+      continueSessionButtonRef.current?.focus();
+      return;
+    }
+
+    lastExitTriggerRef.current?.focus();
+  }, [exitDialogOpen]);
 
   function completedRepCount(): number {
     return completedSets > 0 ? exercise.reps : 0;
@@ -113,9 +126,14 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     onNavigateBack();
   }
 
+  function openExitDialog(trigger: HTMLButtonElement | null): void {
+    lastExitTriggerRef.current = trigger;
+    setExitDialogOpen(true);
+  }
+
   function handleBack(): void {
     if (hasStartedExercise) {
-      setExitDialogOpen(true);
+      openExitDialog(backButtonRef.current);
       return;
     }
 
@@ -125,6 +143,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const sessionHeader = (
     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <button
+        ref={backButtonRef}
         type="button"
         onClick={handleBack}
         className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-700"
@@ -134,8 +153,9 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       </button>
       {hasStartedExercise ? (
         <button
+          ref={exitButtonRef}
           type="button"
-          onClick={() => setExitDialogOpen(true)}
+          onClick={() => openExitDialog(exitButtonRef.current)}
           className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md border border-red-200 bg-red-50 px-4 font-bold text-red-700"
         >
           {t('session.exitSession')}
@@ -145,13 +165,13 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   );
 
   const exitDialog = exitDialogOpen ? (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:justify-center sm:py-5" role="dialog" aria-modal="true" aria-labelledby="session-exit-title">
+    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:justify-center sm:py-5" role="dialog" aria-modal="true" aria-labelledby="session-exit-title" aria-describedby="session-exit-description">
       <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
         <div className="flex items-center gap-2 text-red-800">
           <AlertTriangle size={22} />
           <h2 id="session-exit-title" className="text-xl font-bold">{t('session.exitTitle')}</h2>
         </div>
-        <p className="mt-3 text-slate-700">{t('session.exitConfirmCopy')}</p>
+        <p id="session-exit-description" className="mt-3 text-slate-700">{t('session.exitConfirmCopy')}</p>
         {hasStartedExercise ? (
           <div className="mt-4 space-y-3">
             <PainScale label={t('session.painAfter')} value={painAfter} onChange={setPainAfter} zeroLabel={t('session.confirmNoPain')} />
@@ -174,6 +194,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         ) : null}
         <div className="mt-5 grid gap-2">
           <button
+            ref={continueSessionButtonRef}
             type="button"
             onClick={() => setExitDialogOpen(false)}
             className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 font-bold text-white"
@@ -230,8 +251,9 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           ) : null}
           <button
             disabled={!canStart}
+            type="button"
             onClick={() => setPhase('active')}
-            className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
+            className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
           >
             {t('session.start')}
           </button>
@@ -263,7 +285,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           ) : null}
           <label className="block">
             <span className="mb-2 block font-semibold text-slate-800">{t('session.difficulty')}</span>
-            <input className="h-11 w-full accent-calm-500" type="range" min="1" max="5" value={difficultyRating} onChange={(event) => setDifficultyRating(Number(event.target.value))} />
+            <input className="h-11 w-full accent-calm-500" type="range" min="1" max="5" value={difficultyRating} onChange={(event) => setDifficultyRating(Number(event.target.value))} aria-valuetext={t('session.currentDifficulty', { value: difficultyRating })} />
             <span className="text-sm text-slate-600">{t('session.currentDifficulty', { value: difficultyRating })}</span>
           </label>
           <label className="block">
@@ -276,7 +298,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               <input value={stopReason} onChange={(event) => setStopReason(event.target.value)} className="focus-ring min-h-11 w-full rounded-md border border-slate-200 px-3" />
             </label>
           ) : null}
-          <button disabled={!canSaveLog} onClick={completeLog} className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
+          <button type="button" disabled={!canSaveLog} onClick={completeLog} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
             {t('session.saveLog')}
           </button>
         </section>
@@ -298,7 +320,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             {t('session.recoveryActive')}
           </div>
         ) : null}
-        <div className="rounded-lg bg-calm-100 p-5 text-center">
+        <div className="rounded-lg bg-calm-100 p-5 text-center" role="status" aria-live="polite" aria-label={t('session.progressA11y', { set: currentSet, sets: exercise.sets, reps: exercise.reps })}>
           <div className="text-sm font-semibold text-calm-700">{t('session.currentProgress')}</div>
           <div className="mt-1 text-4xl font-bold text-calm-700">{t('session.setProgressText', { set: currentSet, sets: exercise.sets })}</div>
           <div className="mt-1 text-lg font-semibold text-slate-800">{t('session.repInstruction', { reps: exercise.reps })}</div>
@@ -312,16 +334,16 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         {resting ? (
           <div className="space-y-3">
             <RestTimer seconds={exercise.restSeconds} autoStartKey={restTimerKey} />
-            <button onClick={startNextSet} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
+            <button type="button" onClick={startNextSet} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
               {t('session.nextSet')}
             </button>
           </div>
         ) : null}
         <div className="grid gap-3 md:grid-cols-2">
-          <button onClick={completeSet} disabled={resting} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
+          <button type="button" onClick={completeSet} disabled={resting} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
             {currentSet >= exercise.sets ? t('session.completeSession') : t('session.completeSet')}
           </button>
-          <button onClick={stopEarly} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
+          <button type="button" onClick={stopEarly} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
             <AlertTriangle size={18} />
             {t('session.stopSession')}
           </button>

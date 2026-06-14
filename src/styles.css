@@ -45,6 +45,12 @@ textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 button,
 .tap-target {
   min-height: 44px;
@@ -76,6 +82,10 @@ button,
 
 .safe-top {
   padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .page {
@@ -124,4 +134,21 @@ button,
 .focus-ring:focus-visible {
   outline: 3px solid rgba(74, 155, 146, 0.36);
   outline-offset: 2px;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

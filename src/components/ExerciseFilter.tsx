@@ -67,6 +67,7 @@ export default function ExerciseFilter({
               key={mode}
               type="button"
               onClick={() => onChange({ ...filters, mode })}
+              aria-pressed={filters.mode === mode}
               className={`focus-ring min-h-11 rounded-md px-3 text-sm font-bold ${
                 filters.mode === mode ? 'border-2 border-calm-900 bg-calm-700 text-white' : 'border border-slate-200 bg-slate-100 text-slate-700'
               }`}
@@ -93,6 +94,7 @@ export default function ExerciseFilter({
                 key={bodyArea}
                 type="button"
                 disabled={disabled}
+                aria-pressed={filters.bodyArea === bodyArea}
                 aria-label={disabled ? getDisabledLabel(label) : `${label} ${getCountLabel(count)}`}
                 title={disabled ? getDisabledLabel(label) : undefined}
                 onClick={() => onChange({ ...filters, bodyArea })}

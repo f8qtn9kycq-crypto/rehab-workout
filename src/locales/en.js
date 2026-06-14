@@ -2,6 +2,9 @@ export default {
   app: {
     brand: 'Senior Rehab Training',
     languageLabel: 'Language',
+    languageGroup: 'Language switcher',
+    switchToChinese: 'Switch to Traditional Chinese',
+    switchToEnglish: 'Switch to English',
     chinese: 'Chinese',
     english: 'English',
   },

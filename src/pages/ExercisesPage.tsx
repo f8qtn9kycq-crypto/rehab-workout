@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ExerciseCard from '../components/ExerciseCard';
-import ExerciseFilter from '../components/ExerciseFilter';
+import ExerciseFilter, { type FilterAvailability } from '../components/ExerciseFilter';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
 import { assessmentStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
-import type { BodyArea, DurationFilter, Equipment, ExerciseFilterMode, ExerciseFilters, ExerciseLevel, ExerciseType, SavedAssessment } from '../types/rehab';
+import { BODY_AREAS, EQUIPMENT_IDS, EXERCISE_LEVELS, type BodyArea, type DurationFilter, type Equipment, type ExerciseFilterMode, type ExerciseFilters, type ExerciseLevel, type ExerciseType, type SavedAssessment } from '../types/rehab';
 import {
   filterExercises,
+  getExerciseEquipment,
   isBodyArea,
   isDurationFilter,
   isEquipment,
@@ -79,6 +80,10 @@ export default function ExercisesPage() {
   const assessment = useMemo(() => readAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
   const [filters, setFilters] = useState<ExerciseFilters>(() => buildInitialFilters(searchParams, assessment));
+  const assessmentEquipment = useMemo(() => assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [], [assessment]);
+  const coveredEquipment = useMemo(() => new Set(validEquipment.filter((equipment) => {
+    return exercises.some((exercise) => getExerciseEquipment(exercise).includes(equipment));
+  })), []);
   const showHighPainWarning = shouldStopForPain(assessment?.pain ?? null);
   const isRecoveryRecommendation =
     filters.mode === 'recommended' &&
@@ -121,25 +126,99 @@ export default function ExercisesPage() {
     setSearchParams(nextSearchParams, { replace: true });
   }
 
-  const filtered = useMemo(() => {
-    const assessmentEquipment = assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [];
-    if (filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') {
+  function getFilteredExercises(nextFilters: ExerciseFilters) {
+    if (nextFilters.mode === 'recommended' && !assessment && nextFilters.bodyArea === 'all') {
+      return [];
+    }
+    if (nextFilters.equipment.some((equipment) => !coveredEquipment.has(equipment))) {
       return [];
     }
 
-    if (filters.mode === 'recommended') {
-      return getRecommendedExercises(exercises, filters, {
+    if (nextFilters.mode === 'recommended') {
+      return getRecommendedExercises(exercises, nextFilters, {
         assessment,
         assessmentEquipment,
         logs,
       });
     }
 
-    return filterExercises(exercises, filters, {
+    return filterExercises(exercises, nextFilters, {
       hasAssessment: Boolean(assessment),
       assessmentEquipment,
     });
+  }
+
+  const filtered = useMemo(() => {
+    return getFilteredExercises(filters);
   }, [assessment, filters, logs]);
+
+  const availability = useMemo<FilterAvailability>(() => {
+    function countFor(nextFilters: ExerciseFilters): number {
+      return getFilteredExercises(nextFilters).length;
+    }
+
+    const bodyArea = Object.fromEntries(BODY_AREAS.map((bodyAreaOption) => [
+      bodyAreaOption,
+      countFor({ ...filters, bodyArea: bodyAreaOption }),
+    ])) as FilterAvailability['bodyArea'];
+
+    const level = Object.fromEntries((['all', ...EXERCISE_LEVELS] as Array<ExerciseLevel | 'all'>).map((levelOption) => [
+      levelOption,
+      countFor({ ...filters, level: levelOption }),
+    ])) as FilterAvailability['level'];
+
+    const equipment = Object.fromEntries(validEquipment.map((equipmentOption) => {
+      if (!coveredEquipment.has(equipmentOption)) return [equipmentOption, 0];
+
+      const isSelected = equipmentOption === EQUIPMENT_IDS.BODYWEIGHT
+        ? filters.noEquipmentOnly
+        : filters.equipment.includes(equipmentOption);
+      const nextFilters = isSelected
+        ? filters
+        : equipmentOption === EQUIPMENT_IDS.BODYWEIGHT
+          ? { ...filters, equipment: [], noEquipmentOnly: true }
+          : { ...filters, equipment: [...filters.equipment, equipmentOption], noEquipmentOnly: false };
+
+      return [equipmentOption, countFor(nextFilters)];
+    })) as FilterAvailability['equipment'];
+
+    return { bodyArea, level, equipment };
+  }, [assessment, assessmentEquipment, filters, logs]);
+
+  function clearExerciseFilters(): void {
+    handleFilterChange({
+      mode: 'recommended',
+      bodyArea: 'all',
+      type: 'all',
+      level: 'all',
+      equipment: [],
+      noEquipmentOnly: false,
+      duration: 'all',
+      painSensitive: false,
+    });
+  }
+
+  function tryBodyweightExercises(): void {
+    handleFilterChange({
+      ...filters,
+      level: 'beginner',
+      equipment: [],
+      noEquipmentOnly: true,
+    });
+  }
+
+  function backToRecommended(): void {
+    handleFilterChange({
+      mode: 'recommended',
+      bodyArea: assessment?.bodyArea ?? 'all',
+      type: 'all',
+      level: 'all',
+      equipment: [],
+      noEquipmentOnly: false,
+      duration: 'all',
+      painSensitive: false,
+    });
+  }
 
   const emptyMessage = (() => {
     if (showHighPainWarning) return t('exercises.painStopEmpty');
@@ -166,13 +245,46 @@ export default function ExercisesPage() {
           {t('exercises.painStopEmpty')}
         </div>
       ) : null}
-      <ExerciseFilter filters={filters} onChange={handleFilterChange} />
+      <ExerciseFilter filters={filters} availability={availability} onChange={handleFilterChange} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filtered.map((exercise) => (
           <ExerciseCard key={exercise.id} exercise={exercise} />
         ))}
       </div>
-      {filtered.length === 0 ? (
+      {filtered.length === 0 && !showHighPainWarning && !(filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') ? (
+        <div className="card space-y-4 p-5 text-slate-700">
+          <div>
+            <h2 className="text-lg font-bold text-ink">{t('exercises.emptyTitle')}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{t('exercises.emptyMessage')}</p>
+            {isRecoveryRecommendation ? (
+              <p className="mt-2 text-sm leading-6 text-amber-800">{t('exercises.recoveryNoMatchEmpty')}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            <button
+              type="button"
+              onClick={clearExerciseFilters}
+              className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 text-sm font-bold text-white"
+            >
+              {t('exercises.emptyClearAction')}
+            </button>
+            <button
+              type="button"
+              onClick={tryBodyweightExercises}
+              className="focus-ring min-h-11 rounded-md border border-slate-200 bg-white px-4 text-sm font-bold text-slate-800"
+            >
+              {t('exercises.emptyBodyweightAction')}
+            </button>
+            <button
+              type="button"
+              onClick={backToRecommended}
+              className="focus-ring min-h-11 rounded-md px-4 text-sm font-bold text-calm-700"
+            >
+              {t('exercises.emptyRecommendedAction')}
+            </button>
+          </div>
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="card p-5 text-slate-600">{emptyMessage}</div>
       ) : null}
     </div>

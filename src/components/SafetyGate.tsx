@@ -53,7 +53,7 @@ export default function SafetyGate() {
         type="button"
         onClick={submit}
         disabled={!hasSafetyChoice}
-        className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
+        className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
       >
         {blocked ? t('safety.blockedAction') : t('safety.readyAction')}
       </button>

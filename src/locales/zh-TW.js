@@ -2,6 +2,9 @@ export default {
   app: {
     brand: '樂齡復健訓練',
     languageLabel: '語言',
+    languageGroup: '語言切換',
+    switchToChinese: '切換到繁體中文',
+    switchToEnglish: '切換到英文',
     chinese: '中文',
     english: '英文',
   },

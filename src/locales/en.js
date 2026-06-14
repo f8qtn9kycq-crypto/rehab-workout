@@ -16,6 +16,10 @@ export default {
     logs: 'Logs',
     education: 'Education',
     more: 'More',
+    primary: 'Primary navigation',
+    mobilePrimary: 'Mobile navigation',
+    openMore: 'Open more navigation options',
+    closeMore: 'Close more navigation options',
   },
   actions: {
     start: 'Start',
@@ -24,6 +28,7 @@ export default {
     moreFilters: 'More filters',
     hideFilters: 'Hide filters',
     clearFilters: 'Clear filters',
+    close: 'Close',
   },
   home: {
     safetyFirst: 'Safety first',
@@ -147,6 +152,8 @@ export default {
     selectRequired: 'Choose whether any of the above apply today.',
     noneOfAbove: 'None of the above',
     noneOfAboveDescription: 'None of these priority safety concerns apply to me today.',
+    redFlagGroup: 'Safety symptoms checklist',
+    redFlagInstruction: 'Select any symptoms that apply today, or choose None of the above.',
     redFlags: {
       'acute-severe-pain': {
         label: 'Sudden severe pain',
@@ -231,6 +238,7 @@ export default {
     saveLog: 'Save log',
     activeHint: 'Move slowly and keep breathing. Stop right away for sharp pain, numbness, or dizziness.',
     currentProgress: 'Current progress',
+    progressA11y: 'Current set {set} of {sets}. Do {reps} reps.',
     progressText: 'Set {set} / Rep {rep}',
     targetText: 'Target {sets} sets x {reps} reps',
     nextRep: 'Next rep',
@@ -240,6 +248,7 @@ export default {
   restTimer: {
     title: 'Rest timer',
     seconds: '{count} sec',
+    status: '{count} seconds remaining in the rest timer.',
     pause: 'Pause',
     start: 'Start',
     reset: 'Reset timer',

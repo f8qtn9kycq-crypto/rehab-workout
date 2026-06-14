@@ -1,5 +1,4 @@
 import EducationCard from '../components/EducationCard';
-import WeeklyRoutineBuilder from '../components/WeeklyRoutineBuilder';
 import { anklePillars, educationCards } from '../data/education';
 import { useI18n } from '../services/i18n';
 
@@ -28,7 +27,6 @@ export default function EducationPage() {
           ))}
         </div>
       </section>
-      <WeeklyRoutineBuilder />
     </div>
   );
 }

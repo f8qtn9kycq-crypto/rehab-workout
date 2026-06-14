@@ -201,6 +201,8 @@ export default function ExercisesPage() {
   function tryBodyweightExercises(): void {
     handleFilterChange({
       ...filters,
+      mode: assessment ? filters.mode : 'all',
+      bodyArea: filters.bodyArea !== 'all' ? filters.bodyArea : (assessment?.bodyArea ?? 'all'),
       level: 'beginner',
       equipment: [],
       noEquipmentOnly: true,

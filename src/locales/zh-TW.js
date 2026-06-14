@@ -80,7 +80,7 @@ export default {
     title: '動作庫',
     subtitle: '可以先看推薦動作，也可以選身體部位開始。文字步驟與安全提醒會一直保留。',
     filterTitle: '尋找動作',
-    filterHint: '先用簡單篩選，更多條件需要時再打開。',
+    filterHint: '先選今天模式與身體部位。難度與器材會保留在動作卡作為參考。',
     mode: '模式',
     recommendedMode: '今天適合的動作',
     recommendedHelper: '依目前狀態篩選',
@@ -139,8 +139,11 @@ export default {
     subtitle: '以下內容只作為教育與自我照護輔助，不提供診斷，也不宣稱治療或治癒。',
     blocked: '你勾選了需要優先留意的狀況。為了安全，今天先不要開始訓練，建議先諮詢醫師或物理治療師。',
     ready: '若沒有以上狀況，可以從低強度、慢速度、可控制的動作開始。',
-    blockedAction: '儲存並查看安全提醒',
-    readyAction: '我已確認，前往自我評估',
+    blockedAction: '查看安全建議',
+    readyAction: '確認並繼續',
+    selectRequired: '請選擇是否有以上狀況。',
+    noneOfAbove: '無以上狀況',
+    noneOfAboveDescription: '我今天沒有上述任何需要優先留意的狀況。',
     redFlags: {
       'acute-severe-pain': {
         label: '急性劇痛',

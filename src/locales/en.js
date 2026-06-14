@@ -108,7 +108,7 @@ export default {
     advancedFilters: 'Advanced filters',
     bodyweightOnly: 'Bodyweight only',
     countBadge: '{count}',
-    unavailableFilter: 'No matching exercises yet',
+    unavailableFilter: '{label}: no matching exercises yet',
     empty: 'No exercises match these filters. Try adjusting the filters.',
     emptyTitle: 'No exact match yet',
     emptyMessage: 'No exact match yet. Try "Bodyweight / chair or wall support," choose an easier level, or return to "Today’s suitable exercises."',

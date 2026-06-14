@@ -198,7 +198,7 @@ export function filterExercises(
       (!filters.noEquipmentOnly || isSupportOnlyExercise(exercise)) &&
       (filters.mode === 'recommended'
         ? isCompatibleWithEquipment(exercise, availableEquipment)
-        : filters.equipment.length === 0 || filters.equipment.some((equipment) => getExerciseEquipment(exercise).includes(equipment)))
+        : filters.equipment.length === 0 || isCompatibleWithEquipment(exercise, filters.equipment))
     );
   });
 }

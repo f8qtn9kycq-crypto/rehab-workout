@@ -2,12 +2,13 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import SessionTracker from '../components/SessionTracker';
 import { useI18n } from '../services/i18n';
 import { getExerciseById } from '../utils/exerciseModel';
+import { getLocalizedExercise } from '../utils/localizedExercise';
 import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '../utils/safety';
 
 export default function SessionPage() {
   const { exerciseId } = useParams();
   const navigate = useNavigate();
-  const { t } = useI18n();
+  const { language, t } = useI18n();
   const exercise = getExerciseById(exerciseId);
   const safety = getSafetyStatus();
 
@@ -47,7 +48,7 @@ export default function SessionPage() {
 
   return (
     <div className="page">
-      <SessionTracker exercise={exercise} onNavigateBack={navigateBack} />
+      <SessionTracker exercise={getLocalizedExercise(exercise, language)} onNavigateBack={navigateBack} />
     </div>
   );
 }

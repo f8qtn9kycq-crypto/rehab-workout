@@ -80,7 +80,7 @@ export default {
     title: 'Exercise Library',
     subtitle: 'Start with recommended exercises or choose a body area. Written steps and safety notes stay visible.',
     filterTitle: 'Find exercises',
-    filterHint: 'Start simple. More filters are optional.',
+    filterHint: 'Choose today’s mode and body area. Level and equipment stay visible as reference labels.',
     mode: 'Mode',
     recommendedMode: "Today's suitable exercises",
     recommendedHelper: 'Filtered by your current status',
@@ -139,8 +139,11 @@ export default {
     subtitle: 'This content is for education and self-care support only. It does not diagnose, treat, or claim to cure.',
     blocked: 'You selected a condition that needs attention first. For safety, skip training today and consider consulting a physician or physical therapist.',
     ready: 'If none of these apply, begin with low intensity, slow speed, and controlled movement.',
-    blockedAction: 'Save and review safety reminders',
-    readyAction: 'I checked, go to assessment',
+    blockedAction: 'View safety guidance',
+    readyAction: 'Confirm and continue',
+    selectRequired: 'Choose whether any of the above apply today.',
+    noneOfAbove: 'None of the above',
+    noneOfAboveDescription: 'None of these priority safety concerns apply to me today.',
     redFlags: {
       'acute-severe-pain': {
         label: 'Sudden severe pain',

@@ -8,11 +8,15 @@ export default function SafetyGate() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useI18n();
-  const { completeSafetyGate, status } = useSafetyGate();
+  const { completeSafetyGate, isCurrentForToday, status } = useSafetyGate();
   const [selected, setSelected] = useState<string[]>(() => status.redFlags);
+  const [noneSelected, setNoneSelected] = useState(() => isCurrentForToday && status.redFlags.length === 0);
   const blocked = selected.length > 0;
+  const hasSafetyChoice = noneSelected || blocked;
 
   function submit(): void {
+    if (!hasSafetyChoice) return;
+
     const nextStatus = completeSafetyGate(selected);
     const from = location.state && typeof location.state === 'object' && 'from' in location.state
       ? String(location.state.from)
@@ -26,10 +30,19 @@ export default function SafetyGate() {
         <h1 className="text-2xl font-bold text-ink">{t('safety.title')}</h1>
         <p className="mt-2 text-slate-600">{t('safety.subtitle')}</p>
       </div>
-      <RedFlagChecklist selected={selected} onChange={setSelected} />
+      <RedFlagChecklist
+        selected={selected}
+        noneSelected={noneSelected}
+        onChange={setSelected}
+        onNoneChange={setNoneSelected}
+      />
       {blocked ? (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
           {t('safety.blocked')}
+        </div>
+      ) : !noneSelected ? (
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-700">
+          {t('safety.selectRequired')}
         </div>
       ) : (
         <div className="rounded-lg border border-calm-100 bg-calm-50 p-4 text-calm-700">
@@ -39,7 +52,8 @@ export default function SafetyGate() {
       <button
         type="button"
         onClick={submit}
-        className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white"
+        disabled={!hasSafetyChoice}
+        className="focus-ring w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
       >
         {blocked ? t('safety.blockedAction') : t('safety.readyAction')}
       </button>

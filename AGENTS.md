@@ -23,6 +23,10 @@ Use root workflow files as the contract and `/docs` files as detailed handbooks:
 
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
+- `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
+- `docs/architecture.md`: React/Vite/Router structure, routes, component responsibilities, LocalStorage, media embed rules, and validation.
+- `docs/exercise-data-model.md`: exercise schema, bodyArea/type enums, equipment taxonomy, training log schema, and content data rules.
 - `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
 - `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.

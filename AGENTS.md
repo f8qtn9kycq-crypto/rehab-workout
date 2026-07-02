@@ -1,50 +1,58 @@
 # AGENTS.md
 
-## Review mode
+## Product context
 
-This repo uses AI-assisted PR review. Optimize for minimal, high-confidence findings.
+This is a mobile-first Active Aging / rehab-oriented web app.
 
-## Product rules
-
-Mobile-first web app.
-Do not request full rewrites.
-Prefer localized changes.
-Preserve existing user data and LocalStorage compatibility.
-Preserve iOS Safari compatibility.
+Primary users:
+- adults returning to exercise
+- beginners
+- users with minor shoulder, hip, knee, or back limitations
 
 ## Safety rules
 
-Pain >= 6 must block training.
-Red flags must block training.
-Pain > 3 should recommend regression or recovery.
-Do not make diagnosis, cure, or medical certainty claims.
-Shoulder: avoid aggressive overhead defaults.
-Hip: avoid high-impact and deep-flexion defaults.
-Back: avoid heavy hinge defaults.
+- Pain 0-3: allow normal or modified training.
+- Pain >3: recommend regression, recovery, or easier movement.
+- Pain >=6: stop training.
+- Red flags must block training.
+- Do not make diagnosis, cure, or medical certainty claims.
+- Shoulder: avoid aggressive overhead defaults.
+- Hip: avoid high-impact and deep-flexion defaults.
+- Back: avoid heavy hinge defaults.
+
+## Engineering rules
+
+- Keep changes minimal and localized.
+- Do not rewrite the app unless explicitly requested.
+- Preserve existing user data.
+- Preserve LocalStorage compatibility.
+- Preserve iOS Safari compatibility.
+- Preserve mobile-first layout.
+- Prefer tests or explicit QA evidence for changed behavior.
 
 ## P0 blockers
 
-Flag only if:
-- app cannot build
-- user cannot complete primary flow
+Flag as P0 only when:
+- build fails
+- core user flow is broken
 - safety gate can be bypassed
-- pain >= 6 can start training
+- pain >=6 can start training
 - red flag does not block training
-- session exit loses required state
-- iOS Safari / SPA route breaks core usage
-- LocalStorage migration loses existing user data
+- required session state is lost
+- iOS Safari / SPA routing breaks core use
+- existing stored user data may be lost
 
 ## P1 improvements
 
-Flag if:
+Flag as P1 when:
 - mobile navigation is confusing
 - important controls are hidden on mobile
-- copy is too dense for 3-second scan
+- user-facing copy is too dense
 - i18n is mixed or broken
-- accessibility labels are missing on primary actions
-- QA evidence is incomplete for changed behavior
+- primary controls lack accessibility labels
+- changed behavior lacks test or QA evidence
 
-## Output format
+## Output contract
 
 Return:
 1. Verdict: Pass / Partial Pass / Fail
@@ -53,6 +61,5 @@ Return:
 4. Exact files to change
 5. Acceptance criteria
 
-No broad rewrites.
-No speculative issues.
-No low-value style comments.
+Do not include P2 wishlist items unless explicitly requested.
+Do not suggest broad rewrites.

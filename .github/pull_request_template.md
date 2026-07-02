@@ -6,6 +6,14 @@ What changed:
 
 What user problem this addresses:
 
+## Workflow contract
+
+- [ ] Read `AGENTS.md`
+- [ ] Read `REVIEW.md`
+- [ ] Read this PR template before opening the PR
+- [ ] Kept changes minimal and localized
+- [ ] Did not rewrite unrelated app areas
+
 ## Risk tier
 
 - [ ] Tier 0: docs / copy / small CSS
@@ -19,11 +27,14 @@ What user problem this addresses:
 - [ ] Safety logic changed and tests/QA updated
 - [ ] Pain >=6 still blocks training
 - [ ] Red flags still block training
+- [ ] SafetyGate cannot be bypassed
+- [ ] SessionRouteGuard still blocks unsafe direct session entry
 
 ## QA evidence
 
 - [ ] Build passed
 - [ ] Tests passed if available
+- [ ] `npm run audit:exercise-coverage` passed if exercise data, filters, recommendations, or coverage docs changed
 - [ ] Mobile layout checked
 - [ ] iOS Safari / SPA routing risk considered
 - [ ] LocalStorage compatibility considered
@@ -31,7 +42,7 @@ What user problem this addresses:
 ## AI review routing
 
 - [ ] Codex review needed
-- [ ] Claude review needed only for Tier 2+
+- [ ] Claude review needed only for Tier 2+ or conflicting findings
 - [ ] ChatGPT PM synthesis needed only if findings conflict or PR is high-risk
 
 ## Merge readiness

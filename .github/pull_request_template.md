@@ -39,3 +39,9 @@ What user problem this addresses:
 - [ ] No P0
 - [ ] P1 either fixed or explicitly deferred
 - [ ] Acceptance criteria met
+
+## Post-merge cleanup
+
+- [ ] Branch can be deleted after merge
+- [ ] No follow-up work depends on this branch
+- [ ] GitHub auto-delete branch setting is enabled, or branch deletion is planned

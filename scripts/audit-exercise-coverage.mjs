@@ -274,9 +274,13 @@ const emptyStateChecks = [
     evidence: 'ExercisesPage shows painStopEmpty and recommendationEngine returns [] at stop threshold.',
   },
   {
-    scenario: 'Equipment filters too narrow',
-    handled: exercisesPageSource.includes('exercises.equipmentTooNarrowEmpty'),
-    evidence: 'ExercisesPage uses equipmentTooNarrowEmpty when filtered results are empty.',
+    scenario: 'Unavailable visible filters',
+    handled: exercisesPageSource.includes('availability') &&
+      exercisesPageSource.includes('countFor({ ...filters, bodyArea: bodyAreaOption })') &&
+      exerciseFilterSource.includes('getBodyAreaDisabled') &&
+      exerciseFilterSource.includes('exercises.unavailableFilter') &&
+      exerciseFilterSource.includes('exercises.countBadge'),
+    evidence: 'ExercisesPage computes body-area availability; ExerciseFilter shows counts and disables unavailable body-area chips.',
   },
   {
     scenario: 'Recovery mode has no match',
@@ -285,10 +289,11 @@ const emptyStateChecks = [
   },
   {
     scenario: 'Mobile filter fatigue',
-    handled: exerciseFilterSource.includes('advancedOpen') &&
+    handled: !exerciseFilterSource.includes('advancedOpen') &&
       exerciseFilterSource.includes('summaryChips') &&
-      exerciseFilterSource.includes('activeFilters'),
-    evidence: 'ExerciseFilter keeps advanced filters collapsed and renders active summary chips.',
+      exerciseFilterSource.includes('activeFilters') &&
+      exerciseFilterSource.includes('clearFilters'),
+    evidence: 'ExerciseFilter uses a compact mode/body-area control set with active summary chips and one-tap clear.',
   },
 ];
 

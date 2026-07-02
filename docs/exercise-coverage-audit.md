@@ -1,8 +1,8 @@
 # Exercise Coverage Audit
 
-Generated: 2026-06-14T08:41:25.914Z
+Generated: 2026-07-02T16:57:37.587Z
 
-Source commit: c011306
+Source commit: 00e6d07
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
@@ -178,7 +178,7 @@ This section models live filter compatibility, including bodyweight-required exe
 | Canonical foam_roller option has zero total exercise coverage. | Yes | No current evidence | No current evidence | Potentially | foam_roller appears in EQUIPMENT_IDS/EQUIPMENT_OPTIONS and has 0 exercises. |
 | Advanced coverage is sparse and absent outside ankle. | Yes | No current evidence | No current evidence | Potentially | shoulder_hip, shoulder_neck, knee |
 | 「為我推薦」 may be unclear to users. | No | No current evidence | No current evidence | Yes | Mode label exists, but the visible copy does not explain inputs used: assessment, equipment, pain, and logs. |
-| Empty states are present for major filter miss cases. | No | No current evidence | No current evidence | No | No assessment + Recommended mode + all body areas: handled; Pain >= 6: handled; Equipment filters too narrow: handled; Recovery mode has no match: handled; Mobile filter fatigue: handled |
+| Empty states are present for major filter miss cases. | No | No current evidence | No current evidence | No | No assessment + Recommended mode + all body areas: handled; Pain >= 6: handled; Unavailable visible filters: handled; Recovery mode has no match: handled; Mobile filter fatigue: handled |
 
 ## 9. Safety implications
 
@@ -206,9 +206,9 @@ This section models live filter compatibility, including bodyweight-required exe
 | --- | --- | --- |
 | No assessment + Recommended mode + all body areas | Yes | ExercisesPage returns [] and uses exercises.chooseBodyArea. |
 | Pain >= 6 | Yes | ExercisesPage shows painStopEmpty and recommendationEngine returns [] at stop threshold. |
-| Equipment filters too narrow | Yes | ExercisesPage uses equipmentTooNarrowEmpty when filtered results are empty. |
+| Unavailable visible filters | Yes | ExercisesPage computes body-area availability; ExerciseFilter shows counts and disables unavailable body-area chips. |
 | Recovery mode has no match | Yes | ExercisesPage uses recoveryNoMatchEmpty for recovery recommendation misses. |
-| Mobile filter fatigue | Yes | ExerciseFilter keeps advanced filters collapsed and renders active summary chips. |
+| Mobile filter fatigue | Yes | ExerciseFilter uses a compact mode/body-area control set with active summary chips and one-tap clear. |
 
 ## Methodology and limitations
 

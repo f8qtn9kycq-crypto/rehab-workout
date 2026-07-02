@@ -52,6 +52,17 @@ Flag as P1 when:
 - primary controls lack accessibility labels
 - changed behavior lacks test or QA evidence
 
+## Post-merge cleanup
+
+After a PR is merged:
+- Confirm the PR is merged into `main`.
+- Confirm no open follow-up work depends on the branch.
+- Delete the remote branch, or verify GitHub auto-deleted it.
+- Delete any temporary local branch or worktree if it exists.
+- Do not touch unrelated local edits.
+
+Prefer GitHub's built-in automatic head-branch deletion after merge when available. It is the lowest-HBC path because GitHub handles routine remote branch cleanup without extra manual steps.
+
 ## Output contract
 
 Return:

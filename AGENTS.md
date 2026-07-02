@@ -17,6 +17,18 @@ For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo
 7. If the requested work is broad, split it into the smallest safe PR.
 8. Do not rely on memory alone for workflow, safety, or review requirements.
 
+## Detailed repo docs
+
+Use root workflow files as the contract and `/docs` files as detailed handbooks:
+
+- `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
+- `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
+- `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
+- `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
+
+Do not duplicate the full product spec inside ChatGPT Project Instructions. Keep ChatGPT compact and route detailed rules to repo docs.
+
 ## Product context
 
 This is a mobile-first Active Aging / rehab-oriented web app.
@@ -61,6 +73,7 @@ Codex must:
 ChatGPT must:
 - check repo workflow files before generating Codex prompts or PR reviews when repo access is available.
 - use `AGENTS.md`, `REVIEW.md`, and the PR template as the workflow contract.
+- use detailed docs under `/docs` for safety, mobile UX, localization, and workflow specifics.
 - avoid broad refactor prompts unless explicitly requested.
 - provide Codex-ready prompts with changed-file targets, acceptance criteria, QA checks, and merge gates.
 

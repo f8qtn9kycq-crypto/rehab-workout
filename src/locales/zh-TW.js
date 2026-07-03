@@ -40,6 +40,40 @@ export default {
     weeklyProgress: '本週進度',
     savedLogs: '已儲存 {count} 筆訓練紀錄。',
     todayFocus: '今天只需要完成一個安全、可控制的訓練。',
+    summaryLabel: '首頁摘要',
+    functionCheckTitle: '功能狀態確認',
+    outcomeSummary: '已儲存 {count} 筆功能確認。',
+    routineTitle: '本週計畫',
+    routineSummary: '想有人帶著開始時，可以先用既有短計畫。',
+    nextAction: {
+      label: '今天下一步',
+      guardNote: '開始訓練仍會套用既有安全檢查與訓練流程。',
+      safety: {
+        title: '先完成安全確認',
+        body: '選動作前，先確認今天是否有需要暫停訓練的紅旗狀況。',
+        cta: '前往安全確認',
+      },
+      assessment: {
+        title: '更新今天狀態',
+        body: '選今天想照顧的部位、疼痛程度與可用器材，讓動作庫維持保守。',
+        cta: '開始自我評估',
+      },
+      outcome: {
+        title: '補一筆功能確認',
+        body: '你已經有訓練紀錄。用一個快速確認，看看日常動作感覺如何。',
+        cta: '新增功能確認',
+      },
+      continue: {
+        title: '從最近一次訓練繼續',
+        body: '如果今天仍覺得可控制、沒有警訊，可以重複最近一次動作。',
+        cta: '繼續訓練',
+      },
+      start: {
+        title: '從今天適合的動作開始',
+        body: '選一個身體部位，用慢速度、可控制、低衝擊的方式開始。',
+        cta: '選擇動作',
+      },
+    },
   },
   weeklyRoutine: {
     title: '本週訓練計畫',

@@ -40,6 +40,40 @@ export default {
     weeklyProgress: 'Weekly progress',
     savedLogs: '{count} training logs saved on this device.',
     todayFocus: 'Today only needs one safe, controlled training session.',
+    summaryLabel: 'Home summary',
+    functionCheckTitle: 'Function check-in',
+    outcomeSummary: '{count} function check-ins saved on this device.',
+    routineTitle: 'Weekly routine',
+    routineSummary: 'Use a short existing routine when you want a guided starting point.',
+    nextAction: {
+      label: 'Next step today',
+      guardNote: 'Start actions still use the existing safety check and session flow.',
+      safety: {
+        title: 'Complete the safety check first',
+        body: 'Before choosing exercises, confirm whether any red flags apply today.',
+        cta: 'Go to safety check',
+      },
+      assessment: {
+        title: 'Update today’s assessment',
+        body: 'Choose today’s body area, pain level, and available equipment so the library can stay conservative.',
+        cta: 'Start assessment',
+      },
+      outcome: {
+        title: 'Add a quick function check-in',
+        body: 'You have recent training logs. A short function check-in helps compare how daily movement feels.',
+        cta: 'Add check-in',
+      },
+      continue: {
+        title: 'Continue from your latest training',
+        body: 'Repeat the last exercise only if today still feels controlled and safe.',
+        cta: 'Continue training',
+      },
+      start: {
+        title: 'Start with today’s suitable exercises',
+        body: 'Choose a body area and begin with slow, controlled, low-impact movement.',
+        cta: 'Choose exercises',
+      },
+    },
   },
   weeklyRoutine: {
     title: 'Weekly training plan',

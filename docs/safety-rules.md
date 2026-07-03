@@ -143,6 +143,16 @@ Always verify when the PR touches relevant code:
 - No diagnosis or cure claims.
 - No high-impact defaults for active-aging users.
 
+## Guardrail Audit
+
+Run the lightweight safety and localization guardrail before merging copy, i18n, or exercise-content changes:
+
+```bash
+npm run audit:safety-i18n
+```
+
+The audit is intentionally narrow. It checks runtime copy/data for obvious cure, guarantee, and universal-safety claims; checks English-visible UI files for unintended Traditional Chinese leakage; and verifies every exercise still has cautions, stop rules, regressions, and progressions.
+
 ## Written Instructions Requirement
 
 Video may support an exercise, but written steps and safety notes must remain accessible.

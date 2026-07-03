@@ -26,7 +26,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
   }
 
   return (
-    <section className="card p-4" aria-labelledby="outcome-check-in-title">
+    <section id="function-check-in" className="card p-4" aria-labelledby="outcome-check-in-title">
       <div>
         <h2 id="outcome-check-in-title" className="text-xl font-bold text-ink">{t('outcomes.title')}</h2>
         <p className="mt-1 text-sm text-slate-600">{t('outcomes.subtitle')}</p>

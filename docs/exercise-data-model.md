@@ -40,13 +40,16 @@ Every exercise should follow this shape:
 Allowed `bodyArea` values:
 
 ```text
-shoulder_hip
+shoulder
+hip
 shoulder_neck
 knee
 ankle
 ```
 
 Do not introduce new body-area IDs without updating filters, recommendations, copy, audits, and docs.
+
+The audit script may group `shoulder` and `hip` as `shoulder_hip` for coverage reporting. `shoulder_hip` is not a valid exercise schema value.
 
 ## Exercise Type IDs
 

@@ -32,6 +32,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/codex-issue-workflow.md`: one-line ChatGPT task creation and short Codex issue-to-PR trigger.
 - `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
 - `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
 - `docs/architecture.md`: React/Vite/Router structure, route expectations, component responsibilities, LocalStorage, media embed rules, and validation.
@@ -39,6 +40,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
 - `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
+- `ai/skills/rehab-workout-issue-to-pr/SKILL.md`: repo-tracked Codex skill for implementing a GitHub issue and opening a PR.
 
 ## ChatGPT Role
 
@@ -55,6 +57,8 @@ Use ChatGPT for:
 - product decisions
 
 ChatGPT should read `AGENTS.md`, `REVIEW.md`, and the PR template before producing Codex prompts, PR reviews, merge gates, post-merge cleanup instructions, or workflow recommendations.
+
+When the user says `Codex task: <goal>`, ChatGPT should create a GitHub issue using the Codex Task template and return only the issue link, inferred risk tier, and one-line Codex trigger. ChatGPT should not attempt to edit, push, or ship code through the GitHub app.
 
 ## Codex Role
 
@@ -78,6 +82,8 @@ Codex must:
 5. Keep changes minimal and localized.
 6. Fill the PR template with concrete QA evidence.
 7. Avoid automatic merge unless the user explicitly asks.
+
+For repeated issue-to-PR work, Codex should follow `ai/skills/rehab-workout-issue-to-pr/SKILL.md`.
 
 ## Claude Role
 

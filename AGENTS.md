@@ -63,6 +63,18 @@ Primary users:
 - Preserve mobile-first layout.
 - Prefer tests or explicit QA evidence for changed behavior.
 
+## Workflow docs
+
+Detailed workflow rules live in repo docs:
+
+- `docs/ai-workflow.md`
+- `docs/pr-workflow.md`
+- `docs/codex-issue-workflow.md`
+- `docs/chatgpt-project-instructions-compact.md`
+- `ai/skills/rehab-workout-issue-to-pr/SKILL.md`
+
+Use repo-tracked workflow files as source of truth over pasted compact context or prior chat memory.
+
 ## AI execution rules
 
 Codex must:

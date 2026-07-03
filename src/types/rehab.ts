@@ -2,6 +2,8 @@ export const BODY_AREAS = ['shoulder', 'hip', 'shoulder_neck', 'knee', 'ankle'] 
 
 export type BodyArea = (typeof BODY_AREAS)[number];
 
+export type OutcomeScore = 1 | 2 | 3 | 4 | 5;
+
 export type Joint = BodyArea;
 
 export const EQUIPMENT_IDS = {
@@ -106,6 +108,15 @@ export interface TrainingLogEntry extends SessionLog {
   completionStatus: SessionCompletionStatus;
   stopReason: string;
   painDelta: number;
+}
+
+export interface FunctionalOutcomeEntry {
+  id: string;
+  date: string;
+  bodyArea: BodyArea;
+  questionId: string;
+  score: OutcomeScore;
+  note: string;
 }
 
 export interface AssessmentState {

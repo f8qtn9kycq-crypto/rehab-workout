@@ -5,6 +5,7 @@
     "build": "tsc && vite build",
     "test": "npm run test:smoke",
     "test:smoke": "node scripts/smoke-regression.mjs",
+    "audit:safety-i18n": "node scripts/audit-safety-i18n.mjs",
     "audit:exercise-coverage": "node scripts/audit-exercise-coverage.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },

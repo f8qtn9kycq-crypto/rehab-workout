@@ -98,6 +98,14 @@ When translation changes are made, check:
 - Touch targets remain usable.
 - The copy can be understood within a short scan.
 
+Run the repeatable guardrail audit when changing English copy, zh-TW copy, or exercise text:
+
+```bash
+npm run audit:safety-i18n
+```
+
+This command catches obvious unsafe claim phrases and unintended Traditional Chinese leakage in English-visible UI files. It is a guardrail, not a replacement for human review of tone and safety meaning.
+
 ## Reviewer Guidance
 
 Translation and localization findings are P1 when:

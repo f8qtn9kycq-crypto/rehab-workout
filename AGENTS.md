@@ -1,5 +1,38 @@
 # AGENTS.md
 
+## Mandatory workflow bootstrap
+
+For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo:
+
+1. Read this file first.
+2. Read `REVIEW.md` before reviewing or preparing a PR for review.
+3. Read `.github/pull_request_template.md` before opening or updating a PR.
+4. Treat repo-tracked workflow files as the source of truth over pasted chat context when they conflict.
+5. Classify the task risk tier before implementation:
+   - Tier 0: docs / copy / small CSS
+   - Tier 1: mobile UX / i18n / navigation
+   - Tier 2: safety / session / storage / routing
+   - Tier 3: architecture / data migration / security
+6. Keep the change scoped to the selected risk tier.
+7. If the requested work is broad, split it into the smallest safe PR.
+8. Do not rely on memory alone for workflow, safety, or review requirements.
+
+## Detailed repo docs
+
+Use root workflow files as the contract and `/docs` files as detailed handbooks:
+
+- `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
+- `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
+- `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
+- `docs/architecture.md`: React/Vite/Router structure, routes, component responsibilities, LocalStorage, media embed rules, and validation.
+- `docs/exercise-data-model.md`: exercise schema, bodyArea/type enums, equipment taxonomy, training log schema, and content data rules.
+- `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
+- `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
+- `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
+
+Do not duplicate the full product spec inside ChatGPT Project Instructions. Keep ChatGPT compact and route detailed rules to repo docs.
+
 ## Product context
 
 This is a mobile-first Active Aging / rehab-oriented web app.
@@ -29,6 +62,29 @@ Primary users:
 - Preserve iOS Safari compatibility.
 - Preserve mobile-first layout.
 - Prefer tests or explicit QA evidence for changed behavior.
+
+## AI execution rules
+
+Codex must:
+- sync from latest `main` before creating an implementation branch.
+- create a branch for changes instead of committing directly to `main`.
+- keep PRs small and reviewable.
+- fill the PR template with concrete QA evidence.
+- run `npm run build` before reporting completion.
+- run `npm run audit:exercise-coverage` when exercise data, filters, recommendations, or coverage docs may be affected.
+- avoid changing safety, session, storage, or routing behavior unless the task explicitly asks for it.
+
+ChatGPT must:
+- check repo workflow files before generating Codex prompts or PR reviews when repo access is available.
+- use `AGENTS.md`, `REVIEW.md`, and the PR template as the workflow contract.
+- use detailed docs under `/docs` for safety, mobile UX, localization, and workflow specifics.
+- avoid broad refactor prompts unless explicitly requested.
+- provide Codex-ready prompts with changed-file targets, acceptance criteria, QA checks, and merge gates.
+
+Review agents must:
+- follow `REVIEW.md` severity definitions.
+- avoid duplicate findings.
+- include file, behavior, risk, and acceptance criterion for every P0/P1.
 
 ## P0 blockers
 

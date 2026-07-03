@@ -1,9 +1,10 @@
-import { AlertTriangle, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle2, ClipboardCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
-import type { Exercise } from '../types/rehab';
+import { getOutcomeEntries } from '../services/outcomeStorage';
+import type { BodyArea, Exercise, FunctionalOutcomeEntry } from '../types/rehab';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import PainScale from './PainScale';
 import RestTimer from './RestTimer';
@@ -13,10 +14,22 @@ interface SessionTrackerProps {
   onNavigateBack: () => void;
 }
 
+type SessionPhase = 'before' | 'active' | 'finish' | 'outcomePrompt';
+
+const recentOutcomeWindowMs = 1000 * 60 * 60 * 24 * 14;
+
+function hasRecentOutcomeForBodyArea(outcomes: FunctionalOutcomeEntry[], bodyArea: BodyArea, today = new Date()): boolean {
+  return outcomes.some((outcome) => {
+    if (outcome.bodyArea !== bodyArea) return false;
+    const outcomeDate = new Date(outcome.date);
+    return !Number.isNaN(outcomeDate.getTime()) && today.getTime() - outcomeDate.getTime() <= recentOutcomeWindowMs;
+  });
+}
+
 export default function SessionTracker({ exercise, onNavigateBack }: SessionTrackerProps) {
   const navigate = useNavigate();
   const { t } = useI18n();
-  const [phase, setPhase] = useState<'before' | 'active' | 'finish'>('before');
+  const [phase, setPhase] = useState<SessionPhase>('before');
   const [painBefore, setPainBefore] = useState<number | null>(null);
   const [painAfter, setPainAfter] = useState<number | null>(null);
   const [useRecoveryMode, setUseRecoveryMode] = useState(false);
@@ -39,7 +52,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const painAfterWarning = shouldWarnForPainIncrease(painBefore, painAfter);
   const canStart = hasPainValue(painBefore) && !painBlocksStart;
   const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
-  const hasStartedExercise = phase !== 'before';
+  const hasStartedExercise = phase !== 'before' && phase !== 'outcomePrompt';
   const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
 
@@ -98,6 +111,12 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     });
 
     saveLog(log);
+
+    if (!hasRecentOutcomeForBodyArea(getOutcomeEntries(), exercise.bodyArea)) {
+      setPhase('outcomePrompt');
+      return;
+    }
+
     navigate('/logs');
   }
 
@@ -124,6 +143,14 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   function exitWithoutSaving(): void {
     setExitDialogOpen(false);
     onNavigateBack();
+  }
+
+  function addOutcomeNow(): void {
+    navigate('/logs#function-check-in');
+  }
+
+  function skipOutcomePrompt(): void {
+    navigate('/logs');
   }
 
   function openExitDialog(trigger: HTMLButtonElement | null): void {
@@ -257,6 +284,32 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           >
             {t('session.start')}
           </button>
+        </section>
+      </>
+    );
+  }
+
+  if (phase === 'outcomePrompt') {
+    return (
+      <>
+        {sessionHeader}
+        <section className="card space-y-5 p-4" aria-labelledby="session-outcome-prompt-title">
+          <div className="flex items-center gap-2 text-calm-700">
+            <ClipboardCheck size={24} />
+            <h1 id="session-outcome-prompt-title" className="text-2xl font-bold text-ink">{t('session.outcomePromptTitle')}</h1>
+          </div>
+          <p className="leading-7 text-slate-700">{t('session.outcomePromptBody')}</p>
+          <div className="rounded-lg border border-calm-100 bg-calm-50 p-4 text-sm leading-6 text-calm-800">
+            {t('session.outcomePromptSaved')}
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button type="button" onClick={addOutcomeNow} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
+              {t('session.outcomePromptAdd')}
+            </button>
+            <button type="button" onClick={skipOutcomePrompt} className="focus-ring min-h-11 rounded-md border border-slate-200 bg-white px-4 py-3 font-bold text-slate-700">
+              {t('session.outcomePromptSkip')}
+            </button>
+          </div>
         </section>
       </>
     );

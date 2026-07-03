@@ -24,7 +24,21 @@ Keep these files in the repo root as the workflow contract:
 - `REVIEW.md`
 - `.github/pull_request_template.md`
 
-Detailed product, safety, UX, and localization rules live in `/docs`.
+Detailed product, safety, UX, data, and localization rules live in `/docs`.
+
+## Where Detailed Rules Live
+
+Use this map instead of pasting the full product spec into ChatGPT Project Instructions:
+
+- `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
+- `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
+- `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
+- `docs/architecture.md`: React/Vite/Router structure, route expectations, component responsibilities, LocalStorage, media embed rules, and validation.
+- `docs/exercise-data-model.md`: exercise schema, bodyArea/type enums, equipment taxonomy, training log schema, and content data rules.
+- `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
+- `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
+- `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 
 ## ChatGPT Role
 

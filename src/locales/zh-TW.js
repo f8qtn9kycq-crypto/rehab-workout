@@ -48,7 +48,7 @@ export default {
     bodyArea10: '10 分鐘部位計畫',
     starter3Day: '3 天入門',
     recovery5Helper: '疼痛或疲勞較高時，先用放鬆與溫和活動度建立節奏。',
-    bodyArea10Helper: '依今天想照顧的部位，挑一組短時間、低衝擊的動作。',
+    bodyArea10Helper: '以下是各部位的短計畫，選今天想照顧的部位，從保守動作開始。',
     starter3DayHelper: '一週三天，每次少量，適合剛開始建立運動習慣。',
     monday: '週一',
     wednesday: '週三',

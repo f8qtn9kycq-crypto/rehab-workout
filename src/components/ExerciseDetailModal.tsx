@@ -16,10 +16,14 @@ export default function ExerciseDetailModal({
 }) {
   const { language, t } = useI18n();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen) closeButtonRef.current?.focus();
-  }, [isOpen]);
+    if (!isOpen) return;
+
+    contentRef.current?.scrollTo({ left: 0, top: 0 });
+    closeButtonRef.current?.focus();
+  }, [exercise?.id, isOpen]);
 
   if (!isOpen || !exercise) return null;
 
@@ -27,7 +31,7 @@ export default function ExerciseDetailModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/70 p-0 md:items-center md:p-6" role="dialog" aria-modal="true" aria-labelledby="exercise-video-title" aria-describedby="exercise-video-description">
-      <div className="safe-bottom max-h-[92vh] w-full overflow-auto rounded-t-xl bg-white p-4 shadow-soft md:mx-auto md:max-w-3xl md:rounded-xl">
+      <div ref={contentRef} className="safe-bottom max-h-[92vh] w-full overflow-auto rounded-t-xl bg-white p-4 shadow-soft md:mx-auto md:max-w-3xl md:rounded-xl">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id="exercise-video-title" className="text-xl font-bold text-ink">{displayExercise.title}</h2>
           <button

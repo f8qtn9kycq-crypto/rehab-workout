@@ -83,7 +83,7 @@ export default function ExerciseFilter({
 
       <div>
         <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.bodyArea')}</span>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {BODY_AREAS.map((bodyArea) => {
             const count = availability.bodyArea[bodyArea];
             const disabled = getBodyAreaDisabled(bodyArea);
@@ -98,7 +98,7 @@ export default function ExerciseFilter({
                 aria-label={disabled ? getDisabledLabel(label) : `${label} ${getCountLabel(count)}`}
                 title={disabled ? getDisabledLabel(label) : undefined}
                 onClick={() => onChange({ ...filters, bodyArea })}
-                className={`focus-ring min-h-11 shrink-0 rounded-md px-3 text-sm font-semibold ${
+                className={`focus-ring min-h-11 rounded-md px-2 py-2 text-sm font-semibold ${
                   filters.bodyArea === bodyArea
                     ? 'border-2 border-calm-900 bg-calm-700 text-white'
                     : disabled
@@ -106,8 +106,8 @@ export default function ExerciseFilter({
                       : 'border border-slate-200 bg-slate-100 text-slate-700'
                 }`}
               >
-                <span>{label}</span>
-                <span className={`ml-2 rounded px-1.5 py-0.5 text-xs ${filters.bodyArea === bodyArea ? 'bg-white/20' : 'bg-white/70'}`}>
+                <span className="block leading-5">{label}</span>
+                <span className={`mt-1 inline-flex rounded px-1.5 py-0.5 text-xs ${filters.bodyArea === bodyArea ? 'bg-white/20' : 'bg-white/70'}`}>
                   {getCountLabel(count)}
                 </span>
               </button>

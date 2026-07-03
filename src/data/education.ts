@@ -6,6 +6,48 @@ export const educationCards = [
     summaryKey: 'education.cards.startSafely.summary',
   },
   {
+    id: 'pain-trend',
+    titleKey: 'education.cards.painTrend.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.painTrend.summary',
+  },
+  {
+    id: 'function-trend',
+    titleKey: 'education.cards.functionTrend.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.functionTrend.summary',
+  },
+  {
+    id: 'recovery-mode',
+    titleKey: 'education.cards.recoveryMode.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.recoveryMode.summary',
+  },
+  {
+    id: 'safe-progression',
+    titleKey: 'education.cards.safeProgression.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.safeProgression.summary',
+  },
+  {
+    id: 'slow-down',
+    titleKey: 'education.cards.slowDown.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.slowDown.summary',
+  },
+  {
+    id: 'consistent-sessions',
+    titleKey: 'education.cards.consistentSessions.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.consistentSessions.summary',
+  },
+  {
+    id: 'written-safety-notes',
+    titleKey: 'education.cards.writtenSafetyNotes.title',
+    bodyArea: 'all',
+    summaryKey: 'education.cards.writtenSafetyNotes.summary',
+  },
+  {
     id: 'knee-immediate-relief',
     titleKey: 'education.cards.kneeImmediateRelief.title',
     bodyArea: 'knee',

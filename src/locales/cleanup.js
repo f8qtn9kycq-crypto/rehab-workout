@@ -16,6 +16,34 @@ export default {
           title: 'Safety before training',
           summary: 'Home training is education and self-care support only. It does not replace medical assessment. If red flags are present, consult a physician or physical therapist first.',
         },
+        painTrend: {
+          title: 'How to read pain trend',
+          summary: 'A lower pain trend can mean the current plan fits better. If pain rises or feels sharper, use an easier option and slow the next session down.',
+        },
+        functionTrend: {
+          title: 'How to read function trend',
+          summary: 'Function trend is about daily movement confidence. Small improvements, steadier balance, or easier stairs can matter even when pain changes slowly.',
+        },
+        recoveryMode: {
+          title: 'Why recovery mode helps',
+          summary: 'Recovery mode keeps you moving gently when today feels harder. Use smaller range, fewer reps, and more support instead of forcing progress.',
+        },
+        safeProgression: {
+          title: 'Progress one step at a time',
+          summary: 'Progress when recent sessions feel controlled. Add only a little range, time, or resistance so your body has time to adapt.',
+        },
+        slowDown: {
+          title: 'When to slow down',
+          summary: 'Slow down or stop this session if pain increases, numbness or weakness appears, or movement feels unstable. Consider checking with a physician or physical therapist.',
+        },
+        consistentSessions: {
+          title: 'Small sessions count',
+          summary: 'Short, consistent sessions build trust and routine. A steady five minutes can be more useful than doing too much on one good day.',
+        },
+        writtenSafetyNotes: {
+          title: 'Video does not replace safety notes',
+          summary: 'Use video only as a visual aid. Written steps, cautions, stop rules, and easier options remain the main guide for safe home practice.',
+        },
         kneeImmediateRelief: {
           title: 'Immediate knee relief',
           summary: 'Short term care can include rest, ice, light compression, and elevation. Avoid continuing activities that trigger pain.',
@@ -89,6 +117,34 @@ export default {
         startSafely: {
           title: '先安全，再訓練',
           summary: '居家訓練只做教育與自我照護輔助，不取代醫療評估。若有紅旗症狀，請先找醫師或物理治療師。',
+        },
+        painTrend: {
+          title: '如何看疼痛趨勢',
+          summary: '疼痛趨勢下降，可能代表目前安排較適合。若疼痛上升或變尖銳，下次請改簡單一點、放慢一點。',
+        },
+        functionTrend: {
+          title: '如何看功能趨勢',
+          summary: '功能趨勢看的是日常動作信心。站得更穩、上下樓更順，或活動後比較安心，都是值得觀察的進步。',
+        },
+        recoveryMode: {
+          title: '為什麼需要恢復模式',
+          summary: '恢復模式讓狀態較差的日子也能溫和活動。用較小角度、較少次數、更多支撐，不需要硬撐進步。',
+        },
+        safeProgression: {
+          title: '一次只進步一點',
+          summary: '最近幾次都能穩定完成，再慢慢增加角度、時間或阻力。每次只加一點，讓身體有時間適應。',
+        },
+        slowDown: {
+          title: '什麼時候要放慢',
+          summary: '如果疼痛增加、出現麻木無力，或感覺不穩，請停止本次訓練，並建議諮詢醫師或物理治療師。',
+        },
+        consistentSessions: {
+          title: '短時間也有意義',
+          summary: '短而穩定的訓練能建立信心與習慣。穩穩做五分鐘，通常比某天一次做太多更容易持續。',
+        },
+        writtenSafetyNotes: {
+          title: '影片不能取代安全文字',
+          summary: '影片只是輔助示範。文字步驟、安全提醒、停止規則與降階動作，仍是居家練習時最重要的依據。',
         },
         kneeImmediateRelief: {
           title: '膝痛立即舒緩',

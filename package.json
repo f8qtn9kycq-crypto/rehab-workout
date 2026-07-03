@@ -3,6 +3,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
+    "test": "npm run test:smoke",
+    "test:smoke": "node scripts/smoke-regression.mjs",
     "audit:exercise-coverage": "node scripts/audit-exercise-coverage.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },

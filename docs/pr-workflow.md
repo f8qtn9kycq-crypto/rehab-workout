@@ -172,6 +172,27 @@ For runtime PRs, also confirm:
 - LocalStorage compatibility considered when storage changed
 - iOS Safari / SPA routing risk considered when routes changed
 
+## Deployment Environment Gate
+
+Issue #39 audit result as of 2026-07-03:
+
+- The tracked GitHub Actions workflow on `main` is `.github/workflows/build.yml`.
+- That workflow runs a CI build only. It does not contain a deployment job.
+- No tracked workflow job currently uses `environment: Production`.
+- Recent GitHub deployments are created by `vercel[bot]` for `Preview` and `Production`, which indicates the active deployment path is the Vercel GitHub integration rather than a GitHub Actions deployment job.
+
+Do not add `environment: Production` to the CI-only `build` job. That would gate the build check, not the production deploy.
+
+If this repo later adds a GitHub Actions deployment job, scope the environment gate to that deployment job only:
+
+```yaml
+jobs:
+  deploy:
+    environment: Production
+```
+
+If production deploys remain Vercel-driven, configure production approval/protection in Vercel or the Vercel/GitHub integration. GitHub Environment protection alone does not gate an external Vercel production deploy unless the deploy is routed through a GitHub Actions job that declares `environment: Production`.
+
 ## Post-Merge Cleanup
 
 After merge:

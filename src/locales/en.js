@@ -292,6 +292,13 @@ export default {
       improved: 'Function score improved compared with the last check-in',
       declined: 'Function score is lower than the last check-in, so slow down a little',
     },
+    education: {
+      title: 'How to read these trends',
+      pain: 'Pain trend is a guide, not a diagnosis or proof of recovery.',
+      function: 'Function scores reflect how daily movement feels to you over time; they do not replace medical evaluation.',
+      consistency: 'Consistency shows whether you logged sessions this week. More is not always better.',
+      insufficient: 'Not enough data yet is normal. If pain trends higher, keep the next session gentler, use a smaller range, or choose recovery mode.',
+    },
   },
   outcomes: {
     title: 'Function check-in',

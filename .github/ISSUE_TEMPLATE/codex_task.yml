@@ -1,0 +1,115 @@
+name: Codex Task
+description: Create a repo-scoped task that Codex can implement without a long pasted prompt.
+title: "[Codex] "
+labels:
+  - codex-task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to make a Codex-ready task. Codex must read `AGENTS.md`, `REVIEW.md`, and `.github/pull_request_template.md` before editing.
+
+  - type: dropdown
+    id: risk_tier
+    attributes:
+      label: Risk tier
+      description: Match the repo PR template.
+      options:
+        - Tier 0: docs / copy / small CSS
+        - Tier 1: mobile UX / i18n / navigation
+        - Tier 2: safety / session / storage / routing
+        - Tier 3: architecture / data migration / security
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should Codex accomplish?
+      placeholder: Example: Make the mobile body-area selector show all 4 options without hidden horizontal scroll.
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_problem
+    attributes:
+      label: User problem
+      description: What user feedback or product problem does this address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Keep this minimal and localized.
+      placeholder: |
+        Do:
+        - ...
+
+        Do not:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: likely_files
+    attributes:
+      label: Likely files
+      description: List the files Codex should inspect first.
+      placeholder: |
+        - src/components/BodyAreaSelector.tsx
+        - src/pages/ExercisesPage.tsx
+        - docs/mobile-ux-guidelines.md
+    validations:
+      required: false
+
+  - type: textarea
+    id: safety_constraints
+    attributes:
+      label: Safety constraints
+      description: Required for all product changes. Use N/A only for docs-only tasks.
+      value: |
+        - Do not change pain thresholds.
+        - Do not bypass SafetyGate.
+        - Do not weaken red-flag blocking.
+        - Do not change SessionRouteGuard.
+        - Do not change recommendation safety logic.
+        - Do not introduce diagnosis or cure claims.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation required
+      value: |
+        - npm run build
+        - npm run audit:exercise-coverage if exercise data, filters, recommendations, or coverage docs are affected
+        - npm run test if available
+        - Manual 320px / 375px mobile QA if UI changed
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Concrete, testable merge criteria.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: codex_short_trigger
+    attributes:
+      label: Short Codex trigger
+      description: Copy this one-liner into Codex instead of a long prompt.
+      value: |
+        Implement this GitHub issue following AGENTS.md, REVIEW.md, and .github/pull_request_template.md. Keep scope minimal, create a branch, run required validation, open a PR, and do not merge automatically.
+    validations:
+      required: false

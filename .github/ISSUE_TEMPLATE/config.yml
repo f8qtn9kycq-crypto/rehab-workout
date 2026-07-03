@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Rehab-Workout workflow docs
+    url: https://github.com/f8qtn9kycq-crypto/rehab-workout/blob/main/docs/chatgpt-codex-workflow.md
+    about: Read the ChatGPT and Codex workflow before creating implementation tasks.

@@ -48,7 +48,7 @@ export default {
     bodyArea10: '10-min body-area plan',
     starter3Day: '3-day starter',
     recovery5Helper: 'Use relaxation and gentle mobility when pain or fatigue is higher than usual.',
-    bodyArea10Helper: 'Pick a short, low-impact set for the body area you want to care for today.',
+    bodyArea10Helper: "Below are short sets for each body area. Pick today's section and start gently.",
     starter3DayHelper: 'Three light days per week, designed for building a steady beginner habit.',
     monday: 'Monday',
     wednesday: 'Wednesday',

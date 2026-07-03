@@ -135,6 +135,30 @@ Each saved log entry should preserve:
 
 Preserve LocalStorage compatibility unless a migration is explicitly requested.
 
+## Functional Outcome Schema
+
+Functional outcome check-ins use a separate LocalStorage key and must not change the training log key or shape.
+
+Each saved outcome entry should preserve:
+
+```js
+{
+  id,
+  date,
+  bodyArea,
+  questionId,
+  score,
+  note
+}
+```
+
+Rules:
+
+- `bodyArea` must use the canonical body-area IDs above.
+- `score` uses a 1-5 scale where higher means the daily function feels easier.
+- Malformed outcome entries should be ignored safely.
+- Outcome storage must not require migration of existing training logs.
+
 ## Required Exercise Detail Fields
 
 Every exercise detail should include:

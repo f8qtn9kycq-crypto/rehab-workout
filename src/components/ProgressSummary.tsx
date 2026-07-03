@@ -22,6 +22,18 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
         </p>
       </div>
 
+      <details className="card p-3">
+        <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">
+          {t('progress.education.title')}
+        </summary>
+        <ul className="mt-2 space-y-2 text-sm text-slate-600">
+          <li>{t('progress.education.pain')}</li>
+          <li>{t('progress.education.function')}</li>
+          <li>{t('progress.education.consistency')}</li>
+          <li>{t('progress.education.insufficient')}</li>
+        </ul>
+      </details>
+
       <div className="grid gap-3 md:grid-cols-3">
         <article className="card p-4">
           <div className="text-sm font-semibold text-slate-500">{t('progress.recoveryTrend')}</div>

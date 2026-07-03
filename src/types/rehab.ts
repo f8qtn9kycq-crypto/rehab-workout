@@ -116,7 +116,7 @@ export interface FunctionalOutcomeEntry {
   bodyArea: BodyArea;
   questionId: string;
   score: OutcomeScore;
-  note?: string;
+  note: string;
 }
 
 export interface AssessmentState {

@@ -1,5 +1,12 @@
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
 
+function generateId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
 const OUTCOME_KEY = 'rehab.functionalOutcomes.v1';
 const MAX_OUTCOMES = 200;
 const OUTCOME_SCORES = [1, 2, 3, 4, 5] as const;
@@ -58,7 +65,7 @@ export function createOutcomeEntry(input: {
   note?: string;
 }): FunctionalOutcomeEntry {
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     date: new Date().toISOString(),
     bodyArea: input.bodyArea,
     questionId: OUTCOME_QUESTION_IDS[input.bodyArea],

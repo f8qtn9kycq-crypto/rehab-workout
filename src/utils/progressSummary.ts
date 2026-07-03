@@ -102,7 +102,7 @@ export function buildWeeklyProgressSummary(
     trainedBodyAreas,
     averagePainBefore: average(weeklyLogs.map((log) => Number(log.painBefore)).filter(Number.isFinite)),
     averagePainAfter: average(weeklyLogs.map((log) => Number(log.painAfter)).filter(Number.isFinite)),
-    painTrend: getPainTrend(weeklyLogs),
+    painTrend: getPainTrend(logs),
     functionTrend: getFunctionTrend(outcomes),
     latestOutcomeByArea: getLatestOutcomeByArea(outcomes),
   };

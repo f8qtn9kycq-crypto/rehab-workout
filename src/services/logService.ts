@@ -77,7 +77,9 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
   const painDelta = input.painAfter - input.painBefore;
 
   return {
-    id: crypto.randomUUID(),
+    id: typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     date: completedAt,
     completedAt,
     exerciseId: input.exercise.id,

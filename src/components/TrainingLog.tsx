@@ -1,8 +1,10 @@
 import { useI18n } from '../services/i18n';
 import type { TrainingLogEntry } from '../types/rehab';
+import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
   const { language, t } = useI18n();
+  const fallbackTitle = t('logs.savedExerciseFallback');
 
   if (logs.length === 0) {
     return <div className="card p-5 text-sm leading-6 text-slate-600">{t('logs.empty')}</div>;
@@ -14,7 +16,7 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
         <article key={log.id} className="card bg-white/80 p-4">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h2 className="text-lg font-black leading-tight text-ink">{log.title}</h2>
+              <h2 className="text-lg font-black leading-tight text-ink">{getLocalizedTrainingLogTitle(log, language, fallbackTitle)}</h2>
               <p className="mt-1 text-sm text-slate-600">{new Date(log.date).toLocaleString(language)}</p>
             </div>
             {log.stoppedEarly ? <span className="rounded-md bg-red-50 px-2 py-1 text-sm font-semibold text-red-700">{t('logs.stoppedEarly')}</span> : null}

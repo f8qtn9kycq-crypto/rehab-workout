@@ -295,6 +295,7 @@ export default {
     title: 'Training Logs',
     subtitle: 'Pain levels, completion status, and notes are saved on this device.',
     empty: 'No training logs yet. Finished trainings will appear here.',
+    savedExerciseFallback: 'Saved exercise',
     stoppedEarly: 'Stopped early',
     pain: 'Pain {before} → {after}',
     volume: 'Completed {sets}/{plannedSets} sets, {reps}/{plannedReps} reps',

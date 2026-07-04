@@ -21,6 +21,7 @@ const files = {
   progressSummaryComponent: 'src/components/ProgressSummary.tsx',
   functionalOutcomeCheckIn: 'src/components/FunctionalOutcomeCheckIn.tsx',
   trainingLog: 'src/components/TrainingLog.tsx',
+  localizedExercise: 'src/utils/localizedExercise.ts',
   homePage: 'src/pages/HomePage.tsx',
   weeklyRoutineBuilder: 'src/components/WeeklyRoutineBuilder.tsx',
   educationPage: 'src/pages/EducationPage.tsx',
@@ -138,9 +139,13 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'getLogs()', 'logs page reads logs');
   assertIncludes(source.logsPage, 'getOutcomeEntries()', 'logs page reads outcomes');
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');
+  assertIncludes(source.localizedExercise, 'getLocalizedTrainingLogTitle(', 'localized saved-log title helper exists');
+  assertIncludes(source.localizedExercise, 'getExerciseById(log.exerciseId)', 'saved logs localize from stable exercise id');
+  assertIncludes(source.logsPage, 'getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle)', 'latest training summary uses localized saved-log title');
   assertIncludes(source.logsPage, '<ProgressSummary summary={summary} />', 'progress summary renders');
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
   assertIncludes(source.logsPage, '<TrainingLog logs={logs} />', 'training log renders');
+  assertIncludes(source.trainingLog, 'getLocalizedTrainingLogTitle(log, language, fallbackTitle)', 'training history uses localized saved-log title');
 });
 
 section('routine builder and education pages remain reachable', () => {

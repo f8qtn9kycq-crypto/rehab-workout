@@ -6,6 +6,7 @@ import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, FunctionalOutcomeEntry, OutcomeScore, TrainingLogEntry } from '../types/rehab';
+import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
 
 function latestByDate<T extends { date: string }>(entries: T[]): T | null {
@@ -25,6 +26,7 @@ export default function LogsPage() {
   const { language, t } = useI18n();
   const [logs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
+  const fallbackTitle = t('logs.savedExerciseFallback');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
   const latestLog = useMemo<TrainingLogEntry | null>(() => latestByDate(logs), [logs]);
   const latestOutcome = useMemo<FunctionalOutcomeEntry | null>(() => latestByDate(outcomes), [outcomes]);
@@ -51,7 +53,7 @@ export default function LogsPage() {
           <article className="card border-calm-200 bg-calm-50/80 p-5">
             <div className="text-xs font-black uppercase tracking-wide text-calm-700">{t('records.latest.trainingLabel')}</div>
             <p className="mt-3 text-2xl font-black leading-tight text-ink">
-              {latestLog ? latestLog.title : t('records.latest.noTraining')}
+              {latestLog ? getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle) : t('records.latest.noTraining')}
             </p>
             <p className="mt-3 text-sm font-semibold leading-6 text-calm-800">
               {latestLog

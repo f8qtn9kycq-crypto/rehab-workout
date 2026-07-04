@@ -3,8 +3,9 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke",
+    "test": "npm run test:smoke && npm run audit:visible-i18n",
     "test:smoke": "node scripts/smoke-regression.mjs",
+    "audit:visible-i18n": "node scripts/audit-visible-i18n.mjs",
     "audit:safety-i18n": "node scripts/audit-safety-i18n.mjs",
     "audit:exercise-coverage": "node scripts/audit-exercise-coverage.mjs",
     "preview": "vite preview --host 127.0.0.1"

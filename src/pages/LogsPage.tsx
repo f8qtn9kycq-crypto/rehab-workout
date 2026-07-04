@@ -5,14 +5,33 @@ import TrainingLog from '../components/TrainingLog';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
-import type { BodyArea, OutcomeScore } from '../types/rehab';
+import type { BodyArea, FunctionalOutcomeEntry, OutcomeScore, TrainingLogEntry } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
 
+function latestByDate<T extends { date: string }>(entries: T[]): T | null {
+  return [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null;
+}
+
+function SectionHeader({ id, title, subtitle }: { id: string; title: string; subtitle: string }) {
+  return (
+    <div>
+      <h2 id={id} className="text-xl font-bold text-ink">{title}</h2>
+      <p className="mt-1 text-sm leading-6 text-slate-600">{subtitle}</p>
+    </div>
+  );
+}
+
 export default function LogsPage() {
-  const { t } = useI18n();
+  const { language, t } = useI18n();
   const [logs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
+  const latestLog = useMemo<TrainingLogEntry | null>(() => latestByDate(logs), [logs]);
+  const latestOutcome = useMemo<FunctionalOutcomeEntry | null>(() => latestByDate(outcomes), [outcomes]);
+
+  function formatDate(date: string): string {
+    return new Date(date).toLocaleDateString(language);
+  }
 
   function saveOutcome(bodyArea: BodyArea, score: OutcomeScore, note: string): void {
     const entry = createOutcomeEntry({ bodyArea, score, note });
@@ -20,14 +39,67 @@ export default function LogsPage() {
   }
 
   return (
-    <div className="page space-y-5">
+    <div className="page space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-ink">{t('logs.title')}</h1>
         <p className="mt-2 text-slate-600">{t('logs.subtitle')}</p>
       </div>
-      <ProgressSummary summary={summary} />
-      <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
-      <TrainingLog logs={logs} />
+
+      <section className="space-y-3" aria-labelledby="records-latest-title">
+        <div>
+          <h2 id="records-latest-title" className="text-xl font-bold text-ink">{t('records.latest.title')}</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">{t('records.latest.subtitle')}</p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <article className="card p-4">
+            <div className="text-sm font-semibold text-slate-500">{t('records.latest.trainingLabel')}</div>
+            <p className="mt-2 text-lg font-bold text-ink">
+              {latestLog ? latestLog.title : t('records.latest.noTraining')}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              {latestLog
+                ? t('records.latest.trainingMeta', {
+                  date: formatDate(latestLog.date),
+                  painBefore: latestLog.painBefore,
+                  painAfter: latestLog.painAfter,
+                })
+                : t('records.latest.trainingEmpty')}
+            </p>
+          </article>
+
+          <article className="card p-4">
+            <div className="text-sm font-semibold text-slate-500">{t('records.latest.outcomeLabel')}</div>
+            <p className="mt-2 text-lg font-bold text-ink">
+              {latestOutcome
+                ? t('records.latest.outcomeValue', {
+                  area: t(`bodyAreas.${latestOutcome.bodyArea}.label`),
+                  score: latestOutcome.score,
+                })
+                : t('records.latest.noOutcome')}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              {latestOutcome
+                ? t('records.latest.outcomeMeta', { date: formatDate(latestOutcome.date) })
+                : t('records.latest.outcomeEmpty')}
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section className="space-y-3" aria-labelledby="records-progress-title">
+        <SectionHeader id="records-progress-title" title={t('records.progress.title')} subtitle={t('records.progress.subtitle')} />
+        <ProgressSummary summary={summary} />
+      </section>
+
+      <section className="space-y-3" aria-labelledby="records-outcomes-title">
+        <SectionHeader id="records-outcomes-title" title={t('records.outcomes.title')} subtitle={t('records.outcomes.subtitle')} />
+        <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
+      </section>
+
+      <section className="space-y-3" aria-labelledby="records-history-title">
+        <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} />
+        <TrainingLog logs={logs} />
+      </section>
     </div>
   );
 }

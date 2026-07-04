@@ -16,6 +16,7 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
   const { language, t } = useI18n();
   const hasPainAverages = summary.averagePainBefore !== null && summary.averagePainAfter !== null;
   const statusKey = recoveryStatusKey(summary.painTrend);
+  const functionStatusKey = recoveryStatusKey(summary.functionTrend);
   const trainedAreas = summary.trainedBodyAreas.length > 0
     ? summary.trainedBodyAreas.map((bodyArea) => t(`bodyAreas.${bodyArea}.label`)).join(t('progress.areaSeparator'))
     : t('progress.noAreas');
@@ -29,11 +30,17 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
         </p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <article className="card border-calm-200 bg-calm-50/80 p-5">
           <div className="text-xs font-black uppercase tracking-wide text-calm-700">{t('progress.recoveryStatus')}</div>
           <p className="mt-3 text-2xl font-black leading-tight text-ink">{t(`progress.trends.${statusKey}`)}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.recoveryStatusHelper')}</p>
+        </article>
+
+        <article className="card p-5">
+          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.functionTrend')}</div>
+          <p className="mt-3 text-2xl font-black leading-tight text-ink">{t(`progress.trends.${functionStatusKey}`)}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.functionHelper')}</p>
         </article>
 
         <article className="card p-5">

@@ -7,6 +7,33 @@ export default {
       recoveryNoMatchEmpty: 'No recovery-mode match is available with the current filters. Try choosing another body area or clearing advanced filters.',
       equipmentTooNarrowEmpty: 'No exercises match the selected equipment. Try clearing equipment filters or choosing bodyweight support.',
     },
+    records: {
+      latest: {
+        title: 'Today / latest summary',
+        subtitle: 'Start here for the most recent training and check-in snapshot.',
+        trainingLabel: 'Latest training',
+        outcomeLabel: 'Latest check-in',
+        noTraining: 'No training yet',
+        noOutcome: 'No check-in yet',
+        trainingMeta: '{date} · pain {painBefore} → {painAfter}',
+        outcomeValue: '{area}: {score}/5',
+        outcomeMeta: 'Saved on {date}',
+        trainingEmpty: 'Complete one session and it will appear here.',
+        outcomeEmpty: 'Add a recovery check-in to compare daily movement over time.',
+      },
+      progress: {
+        title: 'Weekly recovery trend',
+        subtitle: 'A short view of recent pain, status, and training consistency.',
+      },
+      outcomes: {
+        title: 'Functional outcome check-in',
+        subtitle: 'Update one daily movement signal when you have a moment.',
+      },
+      history: {
+        title: 'Training history',
+        subtitle: 'Detailed saved sessions remain below for review.',
+      },
+    },
     progress: {
       title: 'Weekly progress',
       weekStart: 'Week of {date}',
@@ -173,6 +200,33 @@ export default {
       noActiveFilters: '預設',
       recoveryNoMatchEmpty: '目前篩選下沒有適合恢復模式的動作。可以改選其他身體部位，或清除進階篩選。',
       equipmentTooNarrowEmpty: '目前選擇的器材沒有符合動作。可以清除器材篩選，或改選徒手支撐動作。',
+    },
+    records: {
+      latest: {
+        title: '今日 / 最近摘要',
+        subtitle: '先看最近一次訓練與功能確認，快速掌握目前狀態。',
+        trainingLabel: '最近訓練',
+        outcomeLabel: '最近功能確認',
+        noTraining: '尚未訓練',
+        noOutcome: '尚未確認',
+        trainingMeta: '{date} · 疼痛 {painBefore} → {painAfter}',
+        outcomeValue: '{area}：{score}/5 分',
+        outcomeMeta: '{date} 儲存',
+        trainingEmpty: '完成一次訓練後，會出現在這裡。',
+        outcomeEmpty: '新增恢復狀態確認後，可以比較日常動作變化。',
+      },
+      progress: {
+        title: '本週恢復趨勢',
+        subtitle: '用簡短方式查看近期疼痛、狀態與訓練持續性。',
+      },
+      outcomes: {
+        title: '功能成果評估',
+        subtitle: '有空時更新一個日常動作感覺。',
+      },
+      history: {
+        title: '訓練歷史紀錄',
+        subtitle: '詳細訓練紀錄仍保留在下方，方便回顧。',
+      },
     },
     progress: {
       title: '本週進度',

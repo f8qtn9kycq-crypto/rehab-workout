@@ -21,24 +21,24 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
     : t('progress.noAreas');
 
   return (
-    <section className="space-y-3" aria-labelledby="weekly-progress-title">
+    <section className="space-y-4" aria-labelledby="weekly-progress-title">
       <div>
-        <h2 id="weekly-progress-title" className="text-xl font-bold text-ink">{t('progress.title')}</h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <h2 id="weekly-progress-title" className="text-lg font-black text-ink">{t('progress.title')}</h2>
+        <p className="mt-1 text-sm leading-6 text-slate-600">
           {t('progress.weekStart', { date: new Date(summary.weekStart).toLocaleDateString(language) })}
         </p>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">
-        <article className="card p-4">
-          <div className="text-sm font-semibold text-slate-500">{t('progress.recoveryStatus')}</div>
-          <p className="mt-2 text-xl font-bold text-ink">{t(`progress.trends.${statusKey}`)}</p>
+        <article className="card border-calm-200 bg-calm-50/80 p-5">
+          <div className="text-xs font-black uppercase tracking-wide text-calm-700">{t('progress.recoveryStatus')}</div>
+          <p className="mt-3 text-2xl font-black leading-tight text-ink">{t(`progress.trends.${statusKey}`)}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.recoveryStatusHelper')}</p>
         </article>
 
-        <article className="card p-4">
-          <div className="text-sm font-semibold text-slate-500">{t('progress.painChange')}</div>
-          <p className="mt-2 text-xl font-bold text-ink">
+        <article className="card p-5">
+          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.painChange')}</div>
+          <p className="mt-3 text-2xl font-black leading-tight text-ink">
             {hasPainAverages
               ? t('progress.painChangeValue', {
                 before: formatAverage(summary.averagePainBefore),
@@ -51,9 +51,9 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
           </p>
         </article>
 
-        <article className="card p-4">
-          <div className="text-sm font-semibold text-slate-500">{t('progress.thisWeek')}</div>
-          <p className="mt-2 text-xl font-bold text-ink">{t('progress.sessionsCompleted', { count: summary.sessionsThisWeek })}</p>
+        <article className="card p-5">
+          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.thisWeek')}</div>
+          <p className="mt-3 text-2xl font-black leading-tight text-ink">{t('progress.sessionsCompleted', { count: summary.sessionsThisWeek })}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.trainedAreas', { areas: trainedAreas })}</p>
         </article>
       </div>
@@ -70,13 +70,13 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
         </ul>
       </details>
 
-      <div className="card p-4">
-        <h3 className="font-bold text-ink">{t('progress.latestOutcomes')}</h3>
+      <div className="card p-5">
+        <h3 className="text-lg font-black text-ink">{t('progress.latestOutcomes')}</h3>
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
           {BODY_AREAS.map((bodyArea) => {
             const outcome = summary.latestOutcomeByArea[bodyArea];
             return (
-              <div key={bodyArea} className="rounded-md bg-slate-50 p-3">
+              <div key={bodyArea} className="min-h-[76px] rounded-md bg-slate-50 p-3">
                 <div className="text-sm font-semibold text-slate-700">{t(`bodyAreas.${bodyArea}.label`)}</div>
                 <div className="mt-1 text-sm text-slate-600">
                   {outcome

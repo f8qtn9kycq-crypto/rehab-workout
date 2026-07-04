@@ -26,13 +26,13 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
   }
 
   return (
-    <section id="function-check-in" className="card p-4" aria-labelledby="outcome-check-in-title">
+    <section id="function-check-in" className="card p-5" aria-labelledby="outcome-check-in-title">
       <div>
-        <h2 id="outcome-check-in-title" className="text-xl font-bold text-ink">{t('outcomes.title')}</h2>
+        <h2 id="outcome-check-in-title" className="text-xl font-black text-ink">{t('outcomes.title')}</h2>
         <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.subtitle')}</p>
       </div>
 
-      <form className="mt-4 space-y-5" onSubmit={submit}>
+      <form className="mt-5 space-y-6" onSubmit={submit}>
         <fieldset>
           <legend className="mb-2 font-semibold text-slate-800">{t('outcomes.bodyAreaLabel')}</legend>
           <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
@@ -41,7 +41,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
                 key={area}
                 type="button"
                 onClick={() => setBodyArea(area)}
-                className={`focus-ring min-h-11 rounded-md border px-3 py-2 text-left text-sm font-bold ${
+                className={`focus-ring min-h-12 rounded-md border px-3 py-2 text-left text-sm font-bold ${
                   area === bodyArea
                     ? 'border-calm-600 bg-calm-50 text-calm-800 shadow-sm'
                     : 'border-slate-200 bg-white text-slate-700'
@@ -54,11 +54,11 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
           </div>
         </fieldset>
 
-        <div className="rounded-md border border-calm-100 bg-calm-50 p-4">
-          <div className="text-sm font-semibold text-calm-700">
+        <div className="rounded-md border border-calm-200 bg-calm-50/80 p-4">
+          <div className="text-xs font-black uppercase tracking-wide text-calm-700">
             {t('outcomes.selectedAreaTitle', { area: t(`bodyAreas.${bodyArea}.label`) })}
           </div>
-          <p className="mt-2 text-lg font-bold leading-7 text-ink">{t(`outcomes.questions.${bodyArea}`)}</p>
+          <p className="mt-3 text-lg font-black leading-7 text-ink">{t(`outcomes.questions.${bodyArea}`)}</p>
           {latestForBodyArea ? (
             <p className="mt-3 text-sm leading-6 text-calm-800">
               {t('outcomes.latestForArea', {
@@ -72,9 +72,9 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
         <fieldset>
           <legend className="font-semibold text-slate-800">{t('outcomes.scoreLabel')}</legend>
           <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.scoreHelper')}</p>
-          <div className="mt-3 grid grid-cols-5 gap-2">
+          <div className="mt-3 grid grid-cols-5 gap-2 sm:gap-3">
             {OUTCOME_SCORES.map((value) => (
-              <label key={value} className={`focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-calm-700 flex min-h-[76px] cursor-pointer flex-col items-center justify-center gap-1 rounded-md border px-1 py-2 text-center ${
+              <label key={value} className={`focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-calm-700 flex min-h-[84px] cursor-pointer flex-col items-center justify-center gap-1 rounded-md border px-1 py-2 text-center ${
                 score === value ? 'border-calm-600 bg-calm-50 text-calm-900 shadow-sm' : 'border-slate-200 bg-white text-slate-700'
               }`}>
                 <input
@@ -85,7 +85,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
                   onChange={() => setScore(value)}
                   className="sr-only"
                 />
-                <span className="text-lg font-black leading-none">{value}</span>
+                <span className="text-xl font-black leading-none">{value}</span>
                 <span className="text-[11px] font-semibold leading-tight">{t(`outcomes.scoreLabels.${value}`)}</span>
               </label>
             ))}

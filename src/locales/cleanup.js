@@ -46,9 +46,10 @@ export default {
       noOutcomeYet: 'No check-in yet',
     },
     outcomes: {
-      title: 'Function check-in',
-      subtitle: 'Track one daily movement signal so progress is not only based on pain.',
-      bodyAreaLabel: 'Body area',
+      title: 'Recovery check-in',
+      subtitle: 'Pick one body area and record how daily movement feels today.',
+      bodyAreaLabel: 'Choose body area',
+      selectedAreaTitle: '{area} check-in',
       questionLabel: 'Today’s question',
       questions: {
         shoulder: 'How comfortable does shoulder movement feel today?',
@@ -58,7 +59,8 @@ export default {
         ankle: 'How stable does standing, walking, or balancing feel today?',
       },
       latestForArea: 'Latest: {score}/5 on {date}',
-      scoreLabel: 'Score',
+      scoreLabel: 'How did it feel?',
+      scoreHelper: '1 means hard today. 5 means very steady.',
       scoreLabels: {
         1: 'Hard today',
         2: 'Limited',
@@ -66,9 +68,9 @@ export default {
         4: 'Comfortable',
         5: 'Very steady',
       },
-      noteLabel: 'Note',
+      noteLabel: 'Notes (optional)',
       notePlaceholder: 'Example: stairs felt easier; shoulder was tight this morning',
-      save: 'Save check-in',
+      save: 'Save assessment',
     },
     education: {
       title: 'Rehab Learning',
@@ -211,9 +213,10 @@ export default {
       noOutcomeYet: '尚未確認',
     },
     outcomes: {
-      title: '功能狀態確認',
-      subtitle: '記錄一個日常動作感覺，讓進度不只看疼痛分數。',
-      bodyAreaLabel: '身體部位',
+      title: '恢復狀態確認',
+      subtitle: '選一個身體部位，記錄今天日常動作感覺。',
+      bodyAreaLabel: '選擇身體部位',
+      selectedAreaTitle: '{area}確認',
       questionLabel: '今天確認問題',
       questions: {
         shoulder: '今天肩部活動感覺有多順？',
@@ -223,7 +226,8 @@ export default {
         ankle: '今天站立、走路或平衡感覺有多穩？',
       },
       latestForArea: '上次：{date}，{score}/5 分',
-      scoreLabel: '分數',
+      scoreLabel: '今天感覺如何？',
+      scoreHelper: '1 代表今天很吃力，5 代表很穩定。',
       scoreLabels: {
         1: '今天很吃力',
         2: '有些受限',
@@ -231,9 +235,9 @@ export default {
         4: '感覺順暢',
         5: '很穩定',
       },
-      noteLabel: '備註',
+      noteLabel: '補充說明（選填）',
       notePlaceholder: '例如：上下樓比較順；早上肩膀較緊',
-      save: '儲存功能確認',
+      save: '儲存評估',
     },
     education: {
       title: '復健學習',

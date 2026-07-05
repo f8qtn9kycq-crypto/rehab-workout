@@ -17,6 +17,7 @@ on:
 permissions:
   contents: read
   issues: read
+  # Classic Projects only. Projects V2 requires PROJECTS_TOKEN with project scope.
   repository-projects: write
 
 jobs:
@@ -29,8 +30,18 @@ jobs:
       PROJECT_NUMBER: "2"
       DEFAULT_STATUS: Backlog
       DEFAULT_AI_OWNER: Codex
-      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN || github.token }}
+      GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
+      - name: Verify PROJECTS_TOKEN is set
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo "::error::PROJECTS_TOKEN secret is not set. This workflow requires a PAT with project scope because GITHUB_TOKEN cannot access Projects V2 fields."
+            exit 1
+          fi
+
       - name: Resolve issue metadata
         id: issue
         shell: bash

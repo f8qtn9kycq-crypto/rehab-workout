@@ -193,6 +193,21 @@ jobs:
 
 If production deploys remain Vercel-driven, configure production approval/protection in Vercel or the Vercel/GitHub integration. GitHub Environment protection alone does not gate an external Vercel production deploy unless the deploy is routed through a GitHub Actions job that declares `environment: Production`.
 
+## Project Auto-Add Gate
+
+The tracked GitHub Actions workflow `.github/workflows/project-auto-add.yml` adds issues to Project #2 and populates project fields.
+
+Projects V2 automation requires a repo Actions secret named `PROJECTS_TOKEN` whose value is a PAT with GitHub Projects V2 read/write access. For classic PATs, this means the `project` OAuth scope. For fine-grained PATs, grant the repo access needed to read issues and Projects read/write access for the owner project.
+
+Do not rely on `GITHUB_TOKEN` for Projects V2 field writes. The workflow `permissions.repository-projects: write` entry applies to Classic Projects only and does not grant Projects V2 access.
+
+If Project fields are empty or the `Project auto-add` workflow fails:
+
+1. Confirm `PROJECTS_TOKEN` exists in repo Actions secrets.
+2. Confirm the token can access Project #2 owned by `f8qtn9kycq-crypto`.
+3. Re-run `Project auto-add` with `workflow_dispatch` for the missed issue number.
+4. Backfill missed issues only after a test issue verifies field population.
+
 ## Post-Merge Cleanup
 
 After merge:

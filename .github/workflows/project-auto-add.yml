@@ -211,6 +211,16 @@ jobs:
           }
 
           infer_area() {
+            local explicit_area
+            explicit_area="$(grep -Eim1 '^[[:space:]]*Area:[[:space:]]*(Safety|i18n|Progress|UX)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Area:[[:space:]]*//I' | xargs)"
+
+            case "${explicit_area,,}" in
+              safety) echo "Safety"; return ;;
+              i18n) echo "i18n"; return ;;
+              progress) echo "Progress"; return ;;
+              ux) echo "UX"; return ;;
+            esac
+
             if grep -Eiq 'safety|red.?flag|pain|recovery|sessionrouteguard' <<<"$haystack"; then echo "Safety"; return; fi
             if grep -Eiq 'i18n|locali[sz]ation|translation|language|zh-TW|English' <<<"$haystack"; then echo "i18n"; return; fi
             if grep -Eiq 'progress|records|logs|outcome|check-in|dashboard' <<<"$haystack"; then echo "Progress"; return; fi

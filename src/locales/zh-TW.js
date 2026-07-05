@@ -295,6 +295,7 @@ export default {
     title: '訓練紀錄',
     subtitle: '疼痛前後、完成狀態與備註會儲存在這台裝置。',
     empty: '還沒有訓練紀錄。完成一個訓練後會出現在這裡。',
+    savedExerciseFallback: '已儲存動作',
     stoppedEarly: '提早停止',
     pain: '疼痛 {before} → {after}',
     volume: '完成 {sets}/{plannedSets} 組，{reps}/{plannedReps} 次',

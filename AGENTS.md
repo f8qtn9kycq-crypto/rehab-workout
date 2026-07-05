@@ -86,6 +86,29 @@ Codex must:
 - run `npm run audit:exercise-coverage` when exercise data, filters, recommendations, or coverage docs may be affected.
 - avoid changing safety, session, storage, or routing behavior unless the task explicitly asks for it.
 
+## GitHub Projects V2 automation
+
+The repo uses `.github/workflows/project-auto-add.yml` to add issues to Project #2 and populate project fields.
+
+This workflow requires:
+
+- A repo secret named `PROJECTS_TOKEN`.
+- A PAT value with GitHub Projects V2 read/write access, including the `project` OAuth scope or equivalent fine-grained Projects read/write permission.
+
+`GITHUB_TOKEN` cannot access Projects V2 fields. The workflow must not fall back to `github.token` for project field writes.
+
+If `Project auto-add` fails:
+
+1. Check whether `PROJECTS_TOKEN` exists in repo Actions secrets.
+2. If it is missing, report it as the blocker.
+3. Do not work around the failure by using `github.token`.
+
+After the secret is set, missed issues can be backfilled by running:
+
+```bash
+gh workflow run project-auto-add.yml -f issue_number=<N>
+```
+
 ChatGPT must:
 - check repo workflow files before generating Codex prompts or PR reviews when repo access is available.
 - use `AGENTS.md`, `REVIEW.md`, and the PR template as the workflow contract.

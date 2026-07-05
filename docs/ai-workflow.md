@@ -33,6 +33,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
 - `docs/codex-issue-workflow.md`: one-line ChatGPT task creation and short Codex issue-to-PR trigger.
+- `docs/product-feedback-workflow.md`: Feedback Inbox, PM triage, promotion rules, and when feedback becomes GitHub work.
 - `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
 - `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
 - `docs/architecture.md`: React/Vite/Router structure, route expectations, component responsibilities, LocalStorage, media embed rules, and validation.
@@ -42,6 +43,24 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`: repo-tracked Codex skill for implementing a GitHub issue and opening a PR.
 
+## Feedback Intake
+
+Raw product observations should use `docs/product-feedback-workflow.md` before becoming GitHub issues.
+
+Default rule:
+
+```text
+Production bug / safety issue / regression / blocker
+  -> create GitHub issue immediately
+
+Everything else
+  -> Feedback Inbox
+  -> ChatGPT PM triage
+  -> update existing issue, create new issue, create epic, or no action
+```
+
+This keeps the GitHub backlog focused while preserving fast feedback capture.
+
 ## ChatGPT Role
 
 ChatGPT is the PM, architect, prompt owner, and review synthesizer.
@@ -50,6 +69,7 @@ Use ChatGPT for:
 
 - prioritization
 - backlog shaping
+- feedback triage
 - Codex prompts
 - merge gates
 - PR review synthesis
@@ -57,6 +77,8 @@ Use ChatGPT for:
 - product decisions
 
 ChatGPT should read `AGENTS.md`, `REVIEW.md`, and the PR template before producing Codex prompts, PR reviews, merge gates, post-merge cleanup instructions, or workflow recommendations.
+
+When the user says `Feedback:`, ChatGPT should treat the content as Feedback Inbox material and follow `docs/product-feedback-workflow.md` before creating GitHub issues, unless the feedback is a production bug, safety issue, regression, or blocker.
 
 When the user says `Codex task: <goal>`, ChatGPT should create a GitHub issue using the Codex Task template and return only the issue link, inferred risk tier, and one-line Codex trigger. ChatGPT should not attempt to edit, push, or ship code through the GitHub app.
 
@@ -238,38 +260,4 @@ Do not:
 - change safety thresholds
 - bypass SafetyGate
 - weaken red-flag blocking
-- add backend unless requested
-- add gamification unless requested
-- add new exercises unless explicitly scoped
 ```
-
-## Merge Gate Template
-
-Use this merge gate for implementation PRs:
-
-```text
-Build passes
-Relevant audit/test passes
-No SafetyGate regression
-No pain threshold changes
-Red flags still block
-SessionRouteGuard still works
-No LocalStorage data loss risk
-No diagnosis/cure claims
-Mobile 320px / 375px no horizontal overflow
-IOS safe-area intact
-PR scope matches requested branch
-PR template filled
-Post-merge branch cleanup plan exists
-```
-
-## Post-Merge Cleanup
-
-After a PR is merged:
-
-1. Confirm merge completed.
-2. Confirm GitHub auto-delete behavior or manually delete remote branch if needed.
-3. Delete local branch only after confirming it is merged.
-4. Do not touch unrelated local stashes.
-5. Do not delete stashes without explicit user approval.
-6. Return merged PR number, merge commit if available, branch cleanup result, validation status, and next recommended action.

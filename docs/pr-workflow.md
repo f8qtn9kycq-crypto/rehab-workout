@@ -195,7 +195,7 @@ If production deploys remain Vercel-driven, configure production approval/protec
 
 ## Project Auto-Add Gate
 
-The tracked GitHub Actions workflow `.github/workflows/project-auto-add.yml` adds issues to Project #2 and populates project fields.
+The tracked GitHub Actions workflow `.github/workflows/project-auto-add.yml` adds issues and pull requests to Project #2, populates project fields, and syncs Project Status from GitHub lifecycle state.
 
 Projects V2 automation requires a repo Actions secret named `PROJECTS_TOKEN` whose value is a PAT with GitHub Projects V2 read/write access. For classic PATs, this means the `project` OAuth scope. For fine-grained PATs, grant the repo access needed to read issues and Projects read/write access for the owner project.
 
@@ -203,12 +203,41 @@ Do not rely on `GITHUB_TOKEN` for Projects V2 field writes. The workflow `permis
 
 Keep the Projects V2 owner type explicit in `.github/workflows/project-auto-add.yml`. The current Project #2 is a user-owned project, so the workflow should use `PROJECT_OWNER_TYPE: user` with `PROJECT_OWNER: f8qtn9kycq-crypto` and GraphQL `user(login:)` lookup instead of implicit owner inference.
 
+The workflow should track these GitHub content types:
+
+- Issues on opened, reopened, edited, labeled, and closed events.
+- Pull requests on opened, reopened, edited, synchronize, ready_for_review, labeled, and closed events.
+- Manual `workflow_dispatch` backfills for either `target_type=issue` or `target_type=pull_request`.
+
+Status sync rules:
+
+- Open or reopened issues should set Project Status to `Backlog`.
+- Issues closed as completed should set Project Status to `Done`.
+- Open pull requests should set Project Status to `Review` when that Project option exists, otherwise `In Progress` when that option exists.
+- Merged pull requests should set Project Status to `Done`.
+- Pull requests closed without merge should not be marked `Done`; leave Status unchanged if there is no safer Project option.
+- Merged pull requests with `Closes #N`, `Fixes #N`, or `Resolves #N` should also set linked issue `#N` Project Status to `Done`.
+
+For pull requests, explicit PR title/body/label metadata should win first. If metadata is missing and the PR body links an issue with `Closes #N`, `Fixes #N`, or `Resolves #N`, the workflow should fetch that issue and use its metadata as fallback for Priority, Risk Tier, AI Owner, Area, and Status where appropriate.
+
 If Project fields are empty or the `Project auto-add` workflow fails:
 
 1. Confirm `PROJECTS_TOKEN` exists in repo Actions secrets.
 2. Confirm the token can access Project #2 owned by `f8qtn9kycq-crypto`.
-3. Re-run `Project auto-add` with `workflow_dispatch` for the missed issue number.
-4. Backfill missed issues only after a test issue verifies field population.
+3. Re-run `Project auto-add` with `workflow_dispatch` for the missed issue or pull request.
+4. Backfill missed content only after a test item verifies field population.
+
+Backfill examples:
+
+```bash
+gh workflow run project-auto-add.yml -f target_type=issue -f target_number=77
+gh workflow run project-auto-add.yml -f target_type=pull_request -f target_number=89
+```
+
+Expected backfill behavior:
+
+- Issue #77 should sync to Project Status `Done` because it is closed as completed.
+- PR #89 should be added to Project #2 and inherit missing metadata from issue #79 because its PR body contains `Closes #79`.
 
 ## Post-Merge Cleanup
 

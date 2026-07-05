@@ -7,29 +7,48 @@ on:
       - reopened
       - edited
       - labeled
+      - closed
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+      - ready_for_review
+      - labeled
+      - closed
   workflow_dispatch:
     inputs:
-      issue_number:
-        description: Issue number to add/update in the project
+      target_type:
+        description: GitHub content type to add/update in the project
+        required: true
+        default: issue
+        type: choice
+        options:
+          - issue
+          - pull_request
+      target_number:
+        description: Issue or pull request number to add/update in the project
         required: true
         type: string
 
 permissions:
   contents: read
   issues: read
+  pull-requests: read
   # Classic Projects only. Projects V2 requires PROJECTS_TOKEN with project scope.
   repository-projects: write
 
 jobs:
-  add-issue-to-project:
-    name: Add issue to Project backlog
-    if: github.event_name == 'workflow_dispatch' || github.event.issue.pull_request == null
+  add-content-to-project:
+    name: Add GitHub content to Project
+    if: github.event_name != 'issues' || github.event.issue.pull_request == null
     runs-on: ubuntu-latest
     env:
       PROJECT_OWNER: f8qtn9kycq-crypto
       PROJECT_OWNER_TYPE: user
       PROJECT_NUMBER: "2"
-      DEFAULT_STATUS: Backlog
+      DEFAULT_ISSUE_STATUS: Backlog
       DEFAULT_AI_OWNER: Codex
       GH_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
     steps:
@@ -43,39 +62,122 @@ jobs:
             exit 1
           fi
 
-      - name: Resolve issue metadata
-        id: issue
+      - name: Resolve content metadata
+        id: content
         shell: bash
         run: |
           set -euo pipefail
 
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            issue_number="${{ inputs.issue_number }}"
+          write_output() {
+            local name="$1"
+            local value="$2"
+            local delimiter="PROJECT_AUTO_ADD_${name}_EOF"
+
+            {
+              echo "$name<<$delimiter"
+              printf '%s\n' "$value"
+              echo "$delimiter"
+            } >> "$GITHUB_OUTPUT"
+          }
+
+          event_name="${{ github.event_name }}"
+
+          if [[ "$event_name" == "workflow_dispatch" ]]; then
+            target_type="${{ inputs.target_type }}"
+            target_number="${{ inputs.target_number }}"
+          elif [[ "$event_name" == "pull_request" ]]; then
+            target_type="pull_request"
+            target_number="${{ github.event.pull_request.number }}"
           else
-            issue_number="${{ github.event.issue.number }}"
+            target_type="issue"
+            target_number="${{ github.event.issue.number }}"
           fi
 
-          issue_json="$(gh issue view "$issue_number" --repo "$GITHUB_REPOSITORY" --json id,url,title,body,labels)"
-          issue_id="$(jq -r '.id' <<<"$issue_json")"
-          issue_url="$(jq -r '.url' <<<"$issue_json")"
-          issue_title="$(jq -r '.title // ""' <<<"$issue_json")"
-          issue_body="$(jq -r '.body // ""' <<<"$issue_json")"
-          issue_labels="$(jq -r '[.labels[].name] | join(" ")' <<<"$issue_json")"
+          case "$target_type" in
+            issue|pull_request)
+              ;;
+            *)
+              echo "::error::Unsupported target_type '$target_type'. Use 'issue' or 'pull_request'."
+              exit 1
+              ;;
+          esac
 
-          {
-            echo "number=$issue_number"
-            echo "id=$issue_id"
-            echo "url=$issue_url"
-            echo "title<<EOF"
-            echo "$issue_title"
-            echo "EOF"
-            echo "body<<EOF"
-            echo "$issue_body"
-            echo "EOF"
-            echo "labels<<EOF"
-            echo "$issue_labels"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          if ! [[ "$target_number" =~ ^[0-9]+$ ]]; then
+            echo "::error::target_number must be a numeric issue or pull request number."
+            exit 1
+          fi
+
+          labels="$(gh api "repos/$GITHUB_REPOSITORY/issues/$target_number" --jq '[.labels[].name] | join(" ")')"
+
+          if [[ "$target_type" == "issue" ]]; then
+            content_json="$(gh api "repos/$GITHUB_REPOSITORY/issues/$target_number")"
+
+            if [[ "$(jq -r 'has("pull_request")' <<<"$content_json")" == "true" ]]; then
+              echo "::error::#$target_number is a pull request. Re-run with target_type=pull_request."
+              exit 1
+            fi
+
+            content_id="$(jq -r '.node_id' <<<"$content_json")"
+            content_url="$(jq -r '.html_url' <<<"$content_json")"
+            content_title="$(jq -r '.title // ""' <<<"$content_json")"
+            content_body="$(jq -r '.body // ""' <<<"$content_json")"
+            content_state="$(jq -r '.state // ""' <<<"$content_json")"
+            content_state_reason="$(jq -r '.state_reason // ""' <<<"$content_json")"
+            content_merged="false"
+          else
+            content_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number")"
+            content_id="$(jq -r '.node_id' <<<"$content_json")"
+            content_url="$(jq -r '.html_url' <<<"$content_json")"
+            content_title="$(jq -r '.title // ""' <<<"$content_json")"
+            content_body="$(jq -r '.body // ""' <<<"$content_json")"
+            content_state="$(jq -r '.state // ""' <<<"$content_json")"
+            content_state_reason=""
+            content_merged="$(jq -r '.merged // false' <<<"$content_json")"
+          fi
+
+          linked_issue_number=""
+          linked_issue_id=""
+          linked_issue_url=""
+          linked_issue_title=""
+          linked_issue_body=""
+          linked_issue_labels=""
+
+          if [[ "$target_type" == "pull_request" ]]; then
+            linked_issue_number="$(printf '%s\n%s\n' "$content_title" "$content_body" \
+              | perl -ne 'if (/(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/i) { print "$1\n"; exit }')"
+
+            if [[ -n "$linked_issue_number" ]]; then
+              linked_issue_json="$(gh api "repos/$GITHUB_REPOSITORY/issues/$linked_issue_number")"
+
+              if [[ "$(jq -r 'has("pull_request")' <<<"$linked_issue_json")" == "true" ]]; then
+                echo "Linked reference #$linked_issue_number is a pull request, not an issue. Skipping linked issue inheritance."
+                linked_issue_number=""
+              else
+                linked_issue_id="$(jq -r '.node_id' <<<"$linked_issue_json")"
+                linked_issue_url="$(jq -r '.html_url' <<<"$linked_issue_json")"
+                linked_issue_title="$(jq -r '.title // ""' <<<"$linked_issue_json")"
+                linked_issue_body="$(jq -r '.body // ""' <<<"$linked_issue_json")"
+                linked_issue_labels="$(jq -r '[.labels[].name] | join(" ")' <<<"$linked_issue_json")"
+              fi
+            fi
+          fi
+
+          write_output "target_type" "$target_type"
+          write_output "number" "$target_number"
+          write_output "id" "$content_id"
+          write_output "url" "$content_url"
+          write_output "title" "$content_title"
+          write_output "body" "$content_body"
+          write_output "labels" "$labels"
+          write_output "state" "$content_state"
+          write_output "state_reason" "$content_state_reason"
+          write_output "merged" "$content_merged"
+          write_output "linked_issue_number" "$linked_issue_number"
+          write_output "linked_issue_id" "$linked_issue_id"
+          write_output "linked_issue_url" "$linked_issue_url"
+          write_output "linked_issue_title" "$linked_issue_title"
+          write_output "linked_issue_body" "$linked_issue_body"
+          write_output "linked_issue_labels" "$linked_issue_labels"
 
       - name: Add item and set project fields
         shell: bash
@@ -135,39 +237,77 @@ jobs:
             exit 1
           fi
 
-          issue_id="${{ steps.issue.outputs.id }}"
-          issue_url="${{ steps.issue.outputs.url }}"
+          target_type="$(cat <<'PROJECT_AUTO_ADD_TARGET_TYPE_EOF'
+          ${{ steps.content.outputs.target_type }}
+          PROJECT_AUTO_ADD_TARGET_TYPE_EOF
+          )"
+          content_id="$(cat <<'PROJECT_AUTO_ADD_ID_EOF'
+          ${{ steps.content.outputs.id }}
+          PROJECT_AUTO_ADD_ID_EOF
+          )"
+          content_url="$(cat <<'PROJECT_AUTO_ADD_URL_EOF'
+          ${{ steps.content.outputs.url }}
+          PROJECT_AUTO_ADD_URL_EOF
+          )"
           title="$(cat <<'PROJECT_AUTO_ADD_TITLE_EOF'
-          ${{ steps.issue.outputs.title }}
+          ${{ steps.content.outputs.title }}
           PROJECT_AUTO_ADD_TITLE_EOF
           )"
           body="$(cat <<'PROJECT_AUTO_ADD_BODY_EOF'
-          ${{ steps.issue.outputs.body }}
+          ${{ steps.content.outputs.body }}
           PROJECT_AUTO_ADD_BODY_EOF
           )"
           labels="$(cat <<'PROJECT_AUTO_ADD_LABELS_EOF'
-          ${{ steps.issue.outputs.labels }}
+          ${{ steps.content.outputs.labels }}
           PROJECT_AUTO_ADD_LABELS_EOF
           )"
-          haystack="$title $body $labels"
+          state="$(cat <<'PROJECT_AUTO_ADD_STATE_EOF'
+          ${{ steps.content.outputs.state }}
+          PROJECT_AUTO_ADD_STATE_EOF
+          )"
+          state_reason="$(cat <<'PROJECT_AUTO_ADD_STATE_REASON_EOF'
+          ${{ steps.content.outputs.state_reason }}
+          PROJECT_AUTO_ADD_STATE_REASON_EOF
+          )"
+          merged="$(cat <<'PROJECT_AUTO_ADD_MERGED_EOF'
+          ${{ steps.content.outputs.merged }}
+          PROJECT_AUTO_ADD_MERGED_EOF
+          )"
+          linked_issue_number="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_NUMBER_EOF'
+          ${{ steps.content.outputs.linked_issue_number }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_NUMBER_EOF
+          )"
+          linked_issue_id="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_ID_EOF'
+          ${{ steps.content.outputs.linked_issue_id }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_ID_EOF
+          )"
+          linked_issue_url="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_URL_EOF'
+          ${{ steps.content.outputs.linked_issue_url }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_URL_EOF
+          )"
+          linked_issue_title="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_TITLE_EOF'
+          ${{ steps.content.outputs.linked_issue_title }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_TITLE_EOF
+          )"
+          linked_issue_body="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_BODY_EOF'
+          ${{ steps.content.outputs.linked_issue_body }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_BODY_EOF
+          )"
+          linked_issue_labels="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_LABELS_EOF'
+          ${{ steps.content.outputs.linked_issue_labels }}
+          PROJECT_AUTO_ADD_LINKED_ISSUE_LABELS_EOF
+          )"
 
-          item_id=""
-          set +e
-          item_id="$(gh api graphql \
-            -f query='mutation($projectId: ID!, $contentId: ID!) { addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) { item { id } } }' \
-            -f projectId="$project_id" \
-            -f contentId="$issue_id" \
-            --jq '.data.addProjectV2ItemById.item.id' 2>/tmp/project_item_add_error)"
-          add_status=$?
-          set -e
+          explicit_haystack="$title $body $labels"
+          linked_haystack="$linked_issue_title $linked_issue_body $linked_issue_labels"
 
-          if [[ $add_status -ne 0 || -z "$item_id" ]]; then
-            echo "Item add did not return a new item id. Trying to find an existing project item."
-            cat /tmp/project_item_add_error || true
+          find_existing_project_item() {
+            local item_url="$1"
+            local item_id=""
+            local after_cursor=""
+            local checked_items=0
 
-            after_cursor=""
-            checked_items=0
-            while [[ -z "$item_id" && $checked_items -lt 200 ]]; do
+            while [[ -z "$item_id" && $checked_items -lt 300 ]]; do
               if [[ -z "$after_cursor" ]]; then
                 items_json="$(gh api graphql \
                   -f query='query($projectId: ID!) { node(id: $projectId) { ... on ProjectV2 { items(first: 100) { pageInfo { hasNextPage endCursor } nodes { id content { ... on Issue { url } ... on PullRequest { url } } } } } } }' \
@@ -179,7 +319,7 @@ jobs:
                   -f after="$after_cursor")"
               fi
 
-              item_id="$(jq -r --arg url "$issue_url" '.data.node.items.nodes[]? | select(.content.url == $url) | .id' <<<"$items_json" | head -n 1)"
+              item_id="$(jq -r --arg url "$item_url" '.data.node.items.nodes[]? | select(.content.url == $url) | .id' <<<"$items_json" | head -n 1)"
               checked_items=$((checked_items + $(jq '.data.node.items.nodes | length' <<<"$items_json")))
 
               if [[ "$(jq -r '.data.node.items.pageInfo.hasNextPage' <<<"$items_json")" != "true" ]]; then
@@ -188,49 +328,67 @@ jobs:
 
               after_cursor="$(jq -r '.data.node.items.pageInfo.endCursor // ""' <<<"$items_json")"
             done
-          fi
 
-          if [[ -z "$item_id" ]]; then
-            echo "Unable to add or find project item for $issue_url" >&2
-            exit 1
-          fi
-
-          infer_priority() {
-            if grep -Eiq '(^|[^A-Za-z0-9])P0([^A-Za-z0-9]|$)|\[P0\]' <<<"$haystack"; then echo "P0"; return; fi
-            if grep -Eiq '(^|[^A-Za-z0-9])P1([^A-Za-z0-9]|$)|\[P1\]' <<<"$haystack"; then echo "P1"; return; fi
-            if grep -Eiq '(^|[^A-Za-z0-9])P2([^A-Za-z0-9]|$)|\[P2\]' <<<"$haystack"; then echo "P2"; return; fi
-            echo ""
+            printf '%s\n' "$item_id"
           }
 
-          infer_risk_tier() {
-            if grep -Eiq 'Tier[[:space:]]*0' <<<"$haystack"; then echo "Tier 0"; return; fi
-            if grep -Eiq 'Tier[[:space:]]*1' <<<"$haystack"; then echo "Tier 1"; return; fi
-            if grep -Eiq 'Tier[[:space:]]*2' <<<"$haystack"; then echo "Tier 2"; return; fi
-            if grep -Eiq 'Tier[[:space:]]*3' <<<"$haystack"; then echo "Tier 3"; return; fi
-            echo ""
+          add_or_find_project_item() {
+            local item_content_id="$1"
+            local item_url="$2"
+            local label="$3"
+            local item_id=""
+
+            set +e
+            item_id="$(gh api graphql \
+              -f query='mutation($projectId: ID!, $contentId: ID!) { addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) { item { id } } }' \
+              -f projectId="$project_id" \
+              -f contentId="$item_content_id" \
+              --jq '.data.addProjectV2ItemById.item.id' 2>/tmp/project_item_add_error)"
+            add_status=$?
+            set -e
+
+            if [[ $add_status -ne 0 || -z "$item_id" ]]; then
+              echo "Item add did not return a new item id for $label. Trying to find an existing project item." >&2
+              cat /tmp/project_item_add_error >&2 || true
+              item_id="$(find_existing_project_item "$item_url")"
+            fi
+
+            if [[ -z "$item_id" ]]; then
+              echo "::error::Unable to add or find project item for $item_url" >&2
+              exit 1
+            fi
+
+            printf '%s\n' "$item_id"
           }
 
-          infer_area() {
-            local explicit_area
-            explicit_area="$(grep -Eim1 '^[[:space:]]*Area:[[:space:]]*(Safety|i18n|Progress|UX)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Area:[[:space:]]*//I' | xargs)"
-
-            case "${explicit_area,,}" in
-              safety) echo "Safety"; return ;;
-              i18n) echo "i18n"; return ;;
-              progress) echo "Progress"; return ;;
-              ux) echo "UX"; return ;;
-            esac
-
-            if grep -Eiq 'safety|red.?flag|pain|recovery|sessionrouteguard' <<<"$haystack"; then echo "Safety"; return; fi
-            if grep -Eiq 'i18n|locali[sz]ation|translation|language|zh-TW|English' <<<"$haystack"; then echo "i18n"; return; fi
-            if grep -Eiq 'progress|records|logs|outcome|check-in|dashboard' <<<"$haystack"; then echo "Progress"; return; fi
-            if grep -Eiq 'ux|mobile|layout|navigation|visual|readability|accessibility' <<<"$haystack"; then echo "UX"; return; fi
-            echo ""
-          }
-
-          set_single_select_field() {
+          field_option_exists() {
             local field_name="$1"
             local option_name="$2"
+
+            jq -e --arg name "$field_name" --arg option "$option_name" \
+              '.[] | select(.name == $name) | .options[]? | select(.name == $option)' \
+              <<<"$fields_json" >/dev/null
+          }
+
+          first_available_option() {
+            local field_name="$1"
+            shift
+
+            local option_name
+            for option_name in "$@"; do
+              if field_option_exists "$field_name" "$option_name"; then
+                printf '%s\n' "$option_name"
+                return
+              fi
+            done
+
+            return 0
+          }
+
+          set_single_select_field_for_item() {
+            local target_item_id="$1"
+            local field_name="$2"
+            local option_name="$3"
 
             if [[ -z "$option_name" ]]; then
               echo "Skipping $field_name: no option inferred."
@@ -255,17 +413,156 @@ jobs:
             gh api graphql \
               -f query='mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) { updateProjectV2ItemFieldValue(input: { projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: { singleSelectOptionId: $optionId } }) { projectV2Item { id } } }' \
               -f projectId="$project_id" \
-              -f itemId="$item_id" \
+              -f itemId="$target_item_id" \
               -f fieldId="$field_id" \
               -f optionId="$option_id" >/dev/null
 
             echo "Set $field_name=$option_name"
           }
 
-          set_single_select_field "Status" "$DEFAULT_STATUS"
-          set_single_select_field "Priority" "$(infer_priority)"
-          set_single_select_field "Risk Tier" "$(infer_risk_tier)"
-          set_single_select_field "AI Owner" "$DEFAULT_AI_OWNER"
-          set_single_select_field "Area" "$(infer_area)"
+          infer_priority_from() {
+            local haystack="$1"
+            if grep -Eiq '(^|[^A-Za-z0-9])P0([^A-Za-z0-9]|$)|\[P0\]' <<<"$haystack"; then echo "P0"; return; fi
+            if grep -Eiq '(^|[^A-Za-z0-9])P1([^A-Za-z0-9]|$)|\[P1\]' <<<"$haystack"; then echo "P1"; return; fi
+            if grep -Eiq '(^|[^A-Za-z0-9])P2([^A-Za-z0-9]|$)|\[P2\]' <<<"$haystack"; then echo "P2"; return; fi
+            return 0
+          }
 
-          echo "Project automation completed for $issue_url"
+          infer_risk_tier_from() {
+            local haystack="$1"
+            if grep -Eiq 'Tier[[:space:]]*0' <<<"$haystack"; then echo "Tier 0"; return; fi
+            if grep -Eiq 'Tier[[:space:]]*1' <<<"$haystack"; then echo "Tier 1"; return; fi
+            if grep -Eiq 'Tier[[:space:]]*2' <<<"$haystack"; then echo "Tier 2"; return; fi
+            if grep -Eiq 'Tier[[:space:]]*3' <<<"$haystack"; then echo "Tier 3"; return; fi
+            return 0
+          }
+
+          infer_ai_owner_from() {
+            local haystack="$1"
+            local explicit_owner
+            explicit_owner="$(grep -Eim1 '^[[:space:]]*AI Owner:[[:space:]]*(Codex|Claude|ChatGPT|Gemini)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*AI Owner:[[:space:]]*//I' | xargs)"
+
+            case "${explicit_owner,,}" in
+              codex) echo "Codex"; return ;;
+              claude) echo "Claude"; return ;;
+              chatgpt) echo "ChatGPT"; return ;;
+              gemini) echo "Gemini"; return ;;
+            esac
+
+            return 0
+          }
+
+          infer_area_from() {
+            local haystack="$1"
+            local explicit_area
+            explicit_area="$(grep -Eim1 '^[[:space:]]*Area:[[:space:]]*(Safety|i18n|Progress|UX|Workflow)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Area:[[:space:]]*//I' | xargs)"
+
+            case "${explicit_area,,}" in
+              safety) echo "Safety"; return ;;
+              i18n) echo "i18n"; return ;;
+              progress) echo "Progress"; return ;;
+              ux) echo "UX"; return ;;
+              workflow) echo "Workflow"; return ;;
+            esac
+
+            if grep -Eiq 'workflow|github actions|project auto-add|project status|projects v2|branch cleanup|merge gate|pull request template' <<<"$haystack"; then echo "Workflow"; return; fi
+            if grep -Eiq 'safety|red.?flag|pain|recovery|sessionrouteguard' <<<"$haystack"; then echo "Safety"; return; fi
+            if grep -Eiq 'i18n|locali[sz]ation|translation|language|zh-TW|English' <<<"$haystack"; then echo "i18n"; return; fi
+            if grep -Eiq 'progress|records|logs|outcome|check-in|dashboard' <<<"$haystack"; then echo "Progress"; return; fi
+            if grep -Eiq 'ux|mobile|layout|navigation|visual|readability|accessibility' <<<"$haystack"; then echo "UX"; return; fi
+            return 0
+          }
+
+          infer_status_from_metadata() {
+            local haystack="$1"
+            local explicit_status
+            explicit_status="$(grep -Eim1 '^[[:space:]]*Status:[[:space:]]*(Backlog|In Progress|Review|Done)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Status:[[:space:]]*//I' | xargs)"
+
+            case "${explicit_status,,}" in
+              backlog) echo "Backlog"; return ;;
+              "in progress") echo "In Progress"; return ;;
+              review) echo "Review"; return ;;
+              done) echo "Done"; return ;;
+            esac
+
+            return 0
+          }
+
+          infer_with_linked_fallback() {
+            local infer_fn="$1"
+            local value
+
+            value="$("$infer_fn" "$explicit_haystack")"
+            if [[ -n "$value" ]]; then
+              printf '%s\n' "$value"
+              return
+            fi
+
+            value="$("$infer_fn" "$linked_haystack")"
+            if [[ -n "$value" ]]; then
+              printf '%s\n' "$value"
+            fi
+
+            return 0
+          }
+
+          infer_lifecycle_status() {
+            if [[ "$target_type" == "issue" ]]; then
+              if [[ "$state" == "open" ]]; then
+                echo "$DEFAULT_ISSUE_STATUS"
+                return
+              fi
+
+              if [[ "$state" == "closed" && "$state_reason" == "completed" ]]; then
+                echo "Done"
+                return
+              fi
+
+              echo "Skipping Status: closed issue state_reason='$state_reason' is not completed."
+              return
+            fi
+
+            if [[ "$target_type" == "pull_request" ]]; then
+              if [[ "$merged" == "true" ]]; then
+                echo "Done"
+                return
+              fi
+
+              if [[ "$state" == "open" ]]; then
+                first_available_option "Status" "Review" "In Progress"
+                return
+              fi
+
+              echo "Skipping Status: pull request is closed without merge."
+            fi
+          }
+
+          item_id="$(add_or_find_project_item "$content_id" "$content_url" "$target_type #${{ steps.content.outputs.number }}")"
+
+          status_option="$(infer_lifecycle_status)"
+          if [[ "$status_option" == Skipping\ Status:* ]]; then
+            echo "$status_option"
+            status_option=""
+          fi
+          if [[ -z "$status_option" && "$target_type" != "pull_request" ]]; then
+            status_option="$(infer_with_linked_fallback infer_status_from_metadata)"
+          fi
+
+          ai_owner_option="$(infer_with_linked_fallback infer_ai_owner_from)"
+          if [[ -z "$ai_owner_option" ]]; then
+            ai_owner_option="$DEFAULT_AI_OWNER"
+          fi
+
+          set_single_select_field_for_item "$item_id" "Status" "$status_option"
+          set_single_select_field_for_item "$item_id" "Priority" "$(infer_with_linked_fallback infer_priority_from)"
+          set_single_select_field_for_item "$item_id" "Risk Tier" "$(infer_with_linked_fallback infer_risk_tier_from)"
+          set_single_select_field_for_item "$item_id" "AI Owner" "$ai_owner_option"
+          set_single_select_field_for_item "$item_id" "Area" "$(infer_with_linked_fallback infer_area_from)"
+
+          if [[ "$target_type" == "pull_request" && "$merged" == "true" && -n "$linked_issue_id" && -n "$linked_issue_url" ]]; then
+            linked_item_id="$(add_or_find_project_item "$linked_issue_id" "$linked_issue_url" "linked issue #$linked_issue_number")"
+            set_single_select_field_for_item "$linked_item_id" "Status" "Done"
+            echo "Set linked issue #$linked_issue_number Status=Done"
+          fi
+
+          echo "Project automation completed for $content_url"

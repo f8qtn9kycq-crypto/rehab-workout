@@ -298,8 +298,44 @@ jobs:
           PROJECT_AUTO_ADD_LINKED_ISSUE_LABELS_EOF
           )"
 
-          explicit_haystack="$title $body $labels"
-          linked_haystack="$linked_issue_title $linked_issue_body $linked_issue_labels"
+          extract_structured_metadata() {
+            local text="$1"
+
+            printf '%s\n' "$text" | perl -ne '
+              chomp;
+              s/\r$//;
+              my $line = $_;
+              $line =~ s/^\s+|\s+$//g;
+
+              next if $line =~ /^[-*]\s+\[[ xX]\]/;
+
+              if ($line =~ /^(Status|Priority|Risk\s+Tier|AI\s+Owner|Area)\s*:\s*(.+)$/i) {
+                print "$1: $2\n";
+                next;
+              }
+
+              if ($line =~ /^#{1,6}\s*(Status|Priority|Risk\s+Tier|AI\s+Owner|Area)\s*:?\s*$/i) {
+                $pending = $1;
+                next;
+              }
+
+              if (defined $pending && $line eq "") {
+                next;
+              }
+
+              if (defined $pending) {
+                if ($line =~ /^(Backlog|In Progress|Review|Done|P[0-2]|Tier\s*[0-3]|Codex|Claude|ChatGPT|Gemini|Safety|i18n|Progress|UX|Workflow)$/i) {
+                  print "$pending: $line\n";
+                }
+                undef $pending;
+              }
+            '
+          }
+
+          explicit_metadata="$(extract_structured_metadata "$body")"
+          linked_issue_metadata="$(extract_structured_metadata "$linked_issue_body")"
+          explicit_haystack="$title $labels"$'\n'"$explicit_metadata"
+          linked_haystack="$linked_issue_title $linked_issue_labels"$'\n'"$linked_issue_metadata"
 
           find_existing_project_item() {
             local item_url="$1"

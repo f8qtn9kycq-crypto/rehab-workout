@@ -137,9 +137,18 @@ jobs:
 
           issue_id="${{ steps.issue.outputs.id }}"
           issue_url="${{ steps.issue.outputs.url }}"
-          title="${{ steps.issue.outputs.title }}"
-          body="${{ steps.issue.outputs.body }}"
-          labels="${{ steps.issue.outputs.labels }}"
+          title="$(cat <<'PROJECT_AUTO_ADD_TITLE_EOF'
+          ${{ steps.issue.outputs.title }}
+          PROJECT_AUTO_ADD_TITLE_EOF
+          )"
+          body="$(cat <<'PROJECT_AUTO_ADD_BODY_EOF'
+          ${{ steps.issue.outputs.body }}
+          PROJECT_AUTO_ADD_BODY_EOF
+          )"
+          labels="$(cat <<'PROJECT_AUTO_ADD_LABELS_EOF'
+          ${{ steps.issue.outputs.labels }}
+          PROJECT_AUTO_ADD_LABELS_EOF
+          )"
           haystack="$title $body $labels"
 
           item_id=""

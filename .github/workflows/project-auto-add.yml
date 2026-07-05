@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROJECT_OWNER: f8qtn9kycq-crypto
+      PROJECT_OWNER_TYPE: user
       PROJECT_NUMBER: "2"
       DEFAULT_STATUS: Backlog
       DEFAULT_AI_OWNER: Codex
@@ -54,7 +55,8 @@ jobs:
             issue_number="${{ github.event.issue.number }}"
           fi
 
-          issue_json="$(gh issue view "$issue_number" --repo "$GITHUB_REPOSITORY" --json url,title,body,labels)"
+          issue_json="$(gh issue view "$issue_number" --repo "$GITHUB_REPOSITORY" --json id,url,title,body,labels)"
+          issue_id="$(jq -r '.id' <<<"$issue_json")"
           issue_url="$(jq -r '.url' <<<"$issue_json")"
           issue_title="$(jq -r '.title // ""' <<<"$issue_json")"
           issue_body="$(jq -r '.body // ""' <<<"$issue_json")"
@@ -62,6 +64,7 @@ jobs:
 
           {
             echo "number=$issue_number"
+            echo "id=$issue_id"
             echo "url=$issue_url"
             echo "title<<EOF"
             echo "$issue_title"
@@ -79,10 +82,60 @@ jobs:
         run: |
           set -euo pipefail
 
-          project_json="$(gh project view "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json)"
-          project_id="$(jq -r '.id' <<<"$project_json")"
-          fields_json="$(gh project field-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --limit 100 --format json)"
+          case "$PROJECT_OWNER_TYPE" in
+            user)
+              owner_project_query='user(login: $owner)'
+              ;;
+            organization)
+              owner_project_query='organization(login: $owner)'
+              ;;
+            *)
+              echo "::error::Unsupported PROJECT_OWNER_TYPE '$PROJECT_OWNER_TYPE'. Use 'user' or 'organization'."
+              exit 1
+              ;;
+          esac
 
+          project_query="$(cat <<GRAPHQL
+          query(\$owner: String!, \$number: Int!) {
+            owner: $owner_project_query {
+              projectV2(number: \$number) {
+                id
+                fields(first: 100) {
+                  nodes {
+                    ... on ProjectV2Field {
+                      id
+                      name
+                    }
+                    ... on ProjectV2IterationField {
+                      id
+                      name
+                    }
+                    ... on ProjectV2SingleSelectField {
+                      id
+                      name
+                      options {
+                        id
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          GRAPHQL
+          )"
+
+          project_json="$(gh api graphql -f query="$project_query" -f owner="$PROJECT_OWNER" -F number="$PROJECT_NUMBER")"
+          project_id="$(jq -r '.data.owner.projectV2.id // ""' <<<"$project_json")"
+          fields_json="$(jq -c '.data.owner.projectV2.fields.nodes // []' <<<"$project_json")"
+
+          if [[ -z "$project_id" ]]; then
+            echo "::error::Project #$PROJECT_NUMBER was not found for $PROJECT_OWNER_TYPE owner '$PROJECT_OWNER'."
+            exit 1
+          fi
+
+          issue_id="${{ steps.issue.outputs.id }}"
           issue_url="${{ steps.issue.outputs.url }}"
           title="${{ steps.issue.outputs.title }}"
           body="${{ steps.issue.outputs.body }}"
@@ -91,15 +144,41 @@ jobs:
 
           item_id=""
           set +e
-          item_id="$(gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "$issue_url" --format json --jq '.id' 2>/tmp/project_item_add_error)"
+          item_id="$(gh api graphql \
+            -f query='mutation($projectId: ID!, $contentId: ID!) { addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) { item { id } } }' \
+            -f projectId="$project_id" \
+            -f contentId="$issue_id" \
+            --jq '.data.addProjectV2ItemById.item.id' 2>/tmp/project_item_add_error)"
           add_status=$?
           set -e
 
           if [[ $add_status -ne 0 || -z "$item_id" ]]; then
             echo "Item add did not return a new item id. Trying to find an existing project item."
             cat /tmp/project_item_add_error || true
-            item_id="$(gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --limit 200 --format json \
-              --jq ".items[] | select(.content.url == \"$issue_url\") | .id" | head -n 1)"
+
+            after_cursor=""
+            checked_items=0
+            while [[ -z "$item_id" && $checked_items -lt 200 ]]; do
+              if [[ -z "$after_cursor" ]]; then
+                items_json="$(gh api graphql \
+                  -f query='query($projectId: ID!) { node(id: $projectId) { ... on ProjectV2 { items(first: 100) { pageInfo { hasNextPage endCursor } nodes { id content { ... on Issue { url } ... on PullRequest { url } } } } } } }' \
+                  -f projectId="$project_id")"
+              else
+                items_json="$(gh api graphql \
+                  -f query='query($projectId: ID!, $after: String!) { node(id: $projectId) { ... on ProjectV2 { items(first: 100, after: $after) { pageInfo { hasNextPage endCursor } nodes { id content { ... on Issue { url } ... on PullRequest { url } } } } } } }' \
+                  -f projectId="$project_id" \
+                  -f after="$after_cursor")"
+              fi
+
+              item_id="$(jq -r --arg url "$issue_url" '.data.node.items.nodes[]? | select(.content.url == $url) | .id' <<<"$items_json" | head -n 1)"
+              checked_items=$((checked_items + $(jq '.data.node.items.nodes | length' <<<"$items_json")))
+
+              if [[ "$(jq -r '.data.node.items.pageInfo.hasNextPage' <<<"$items_json")" != "true" ]]; then
+                break
+              fi
+
+              after_cursor="$(jq -r '.data.node.items.pageInfo.endCursor // ""' <<<"$items_json")"
+            done
           fi
 
           if [[ -z "$item_id" ]]; then
@@ -141,8 +220,8 @@ jobs:
 
             local field_id
             local option_id
-            field_id="$(jq -r --arg name "$field_name" '.fields[] | select(.name == $name) | .id' <<<"$fields_json" | head -n 1)"
-            option_id="$(jq -r --arg name "$field_name" --arg option "$option_name" '.fields[] | select(.name == $name) | .options[]? | select(.name == $option) | .id' <<<"$fields_json" | head -n 1)"
+            field_id="$(jq -r --arg name "$field_name" '.[] | select(.name == $name) | .id' <<<"$fields_json" | head -n 1)"
+            option_id="$(jq -r --arg name "$field_name" --arg option "$option_name" '.[] | select(.name == $name) | .options[]? | select(.name == $option) | .id' <<<"$fields_json" | head -n 1)"
 
             if [[ -z "$field_id" || "$field_id" == "null" ]]; then
               echo "Skipping $field_name: field not found in project."
@@ -154,11 +233,12 @@ jobs:
               return 0
             fi
 
-            gh project item-edit \
-              --id "$item_id" \
-              --project-id "$project_id" \
-              --field-id "$field_id" \
-              --single-select-option-id "$option_id" >/dev/null
+            gh api graphql \
+              -f query='mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) { updateProjectV2ItemFieldValue(input: { projectId: $projectId, itemId: $itemId, fieldId: $fieldId, value: { singleSelectOptionId: $optionId } }) { projectV2Item { id } } }' \
+              -f projectId="$project_id" \
+              -f itemId="$item_id" \
+              -f fieldId="$field_id" \
+              -f optionId="$option_id" >/dev/null
 
             echo "Set $field_name=$option_name"
           }

@@ -88,7 +88,7 @@ Codex must:
 
 ## GitHub Projects V2 automation
 
-The repo uses `.github/workflows/project-auto-add.yml` to add issues to Project #2 and populate project fields.
+The repo uses `.github/workflows/project-auto-add.yml` to add issues and pull requests to Project #2, populate project fields, and sync Project Status from GitHub lifecycle state.
 
 This workflow requires:
 
@@ -97,16 +97,31 @@ This workflow requires:
 
 `GITHUB_TOKEN` cannot access Projects V2 fields. The workflow must not fall back to `github.token` for project field writes.
 
+The workflow tracks:
+
+- Issues: opened / reopened / edited / labeled / closed.
+- Pull requests: opened / reopened / edited / synchronize / ready_for_review / labeled / closed.
+
+Lifecycle status rules:
+
+- Open or reopened issues sync to `Backlog`.
+- Issues closed as completed sync to `Done`.
+- Open pull requests sync to `Review` when available, otherwise `In Progress` when available.
+- Merged pull requests sync to `Done`.
+- Pull requests closed without merge must not be marked `Done`.
+- Merged pull requests with `Closes #N`, `Fixes #N`, or `Resolves #N` also sync linked issue `#N` to `Done`.
+
 If `Project auto-add` fails:
 
 1. Check whether `PROJECTS_TOKEN` exists in repo Actions secrets.
 2. If it is missing, report it as the blocker.
 3. Do not work around the failure by using `github.token`.
 
-After the secret is set, missed issues can be backfilled by running:
+After the secret is set, missed issues and pull requests can be backfilled by running:
 
 ```bash
-gh workflow run project-auto-add.yml -f issue_number=<N>
+gh workflow run project-auto-add.yml -f target_type=issue -f target_number=<N>
+gh workflow run project-auto-add.yml -f target_type=pull_request -f target_number=<N>
 ```
 
 ChatGPT must:

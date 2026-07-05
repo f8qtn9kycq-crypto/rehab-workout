@@ -201,6 +201,8 @@ Projects V2 automation requires a repo Actions secret named `PROJECTS_TOKEN` who
 
 Do not rely on `GITHUB_TOKEN` for Projects V2 field writes. The workflow `permissions.repository-projects: write` entry applies to Classic Projects only and does not grant Projects V2 access.
 
+Keep the Projects V2 owner type explicit in `.github/workflows/project-auto-add.yml`. The current Project #2 is a user-owned project, so the workflow should use `PROJECT_OWNER_TYPE: user` with `PROJECT_OWNER: f8qtn9kycq-crypto` and GraphQL `user(login:)` lookup instead of implicit owner inference.
+
 If Project fields are empty or the `Project auto-add` workflow fails:
 
 1. Confirm `PROJECTS_TOKEN` exists in repo Actions secrets.

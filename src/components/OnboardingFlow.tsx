@@ -2,13 +2,14 @@ import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { onboardingStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
+import { safeSetItem } from '../services/localStorageService';
 
 export default function OnboardingFlow() {
   const navigate = useNavigate();
   const { t } = useI18n();
 
   function finish(): void {
-    window.localStorage.setItem(onboardingStorageKey, JSON.stringify(true));
+    safeSetItem(onboardingStorageKey, JSON.stringify(true));
     navigate('/safety');
   }
 

@@ -1,6 +1,7 @@
 import { createContext, createElement, useContext, useMemo, useState } from 'react';
 import en from '../locales/en';
 import cleanupLocales from '../locales/cleanup';
+import localDataLocales from '../locales/localData';
 import zhTW from '../locales/zh-TW';
 
 export const defaultLanguage = 'zh-TW';
@@ -22,8 +23,8 @@ function mergeResource(base, extension) {
 }
 
 const resources = {
-  'zh-TW': mergeResource(zhTW, cleanupLocales['zh-TW']),
-  en: mergeResource(en, cleanupLocales.en),
+  'zh-TW': mergeResource(mergeResource(zhTW, cleanupLocales['zh-TW']), localDataLocales['zh-TW']),
+  en: mergeResource(mergeResource(en, cleanupLocales.en), localDataLocales.en),
 };
 
 const storageKey = 'rehab.language.v1';

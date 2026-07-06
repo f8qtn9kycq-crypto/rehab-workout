@@ -1,9 +1,11 @@
 import { ArrowRight, ClipboardCheck, ListChecks, PlayCircle, RotateCcw, ShieldCheck, TrendingUp } from 'lucide-react';
 import { Navigate, Link } from 'react-router-dom';
 import WeeklyRoutineBuilder from '../components/WeeklyRoutineBuilder';
-import { assessmentStorageKey, onboardingStorageKey } from '../data/safety';
+import { onboardingStorageKey } from '../data/safety';
+import { getSavedAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
+import { safeGetItem } from '../services/localStorageService';
 import { getOutcomeEntries } from '../services/outcomeStorage';
 import type { FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
 import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '../utils/safety';
@@ -17,14 +19,6 @@ type NextAction = {
 };
 
 const recentOutcomeWindowMs = 1000 * 60 * 60 * 24 * 14;
-
-function hasSavedAssessment(): boolean {
-  try {
-    return Boolean(window.localStorage.getItem(assessmentStorageKey));
-  } catch {
-    return false;
-  }
-}
 
 function hasRecentOutcome(outcomes: FunctionalOutcomeEntry[], today = new Date()): boolean {
   return outcomes.some((outcome) => {
@@ -90,12 +84,12 @@ function getNextAction(input: {
 
 export default function HomePage() {
   const { t } = useI18n();
-  const seenOnboarding = window.localStorage.getItem(onboardingStorageKey);
+  const seenOnboarding = safeGetItem(onboardingStorageKey);
   if (!seenOnboarding) return <Navigate to="/onboarding" replace />;
 
   const safety = getSafetyStatus();
   const safetyReady = isSafetyGateCurrentForToday(safety) && canEnterSession(safety);
-  const hasAssessment = hasSavedAssessment();
+  const hasAssessment = Boolean(getSavedAssessment());
   const logs = getLogs();
   const outcomes = getOutcomeEntries();
   const latestLog = logs[0];

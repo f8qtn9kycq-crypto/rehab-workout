@@ -1,4 +1,5 @@
 import { safetyStorageKey } from '../data/safety';
+import { safeReadJson, safeSetItem } from '../services/localStorageService';
 import { shouldStopForPain, shouldUseRecoveryMode } from './painRules';
 
 export interface SafetyStatus {
@@ -45,12 +46,8 @@ function normalizeSafetyStatus(rawStatus: Partial<SafetyStatus>): SafetyStatus {
 }
 
 export function getSafetyStatus(): SafetyStatus {
-  try {
-    const raw = window.localStorage.getItem(safetyStorageKey);
-    return raw ? normalizeSafetyStatus(JSON.parse(raw)) : defaultSafetyStatus;
-  } catch {
-    return defaultSafetyStatus;
-  }
+  const parsed = safeReadJson<Partial<SafetyStatus> | null>(safetyStorageKey, null);
+  return parsed && typeof parsed === 'object' ? normalizeSafetyStatus(parsed) : defaultSafetyStatus;
 }
 
 export function saveSafetyStatus(input: CompleteSafetyGateInput): SafetyStatus {
@@ -63,7 +60,7 @@ export function saveSafetyStatus(input: CompleteSafetyGateInput): SafetyStatus {
     completedAt,
   };
 
-  window.localStorage.setItem(safetyStorageKey, JSON.stringify(status));
+  safeSetItem(safetyStorageKey, JSON.stringify(status));
   return status;
 }
 

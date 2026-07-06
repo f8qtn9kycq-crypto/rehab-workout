@@ -16,6 +16,8 @@ const files = {
   sessionPage: 'src/pages/SessionPage.tsx',
   logService: 'src/services/logService.ts',
   outcomeStorage: 'src/services/outcomeStorage.ts',
+  assessmentStorage: 'src/services/assessmentStorage.ts',
+  localStorageService: 'src/services/localStorageService.ts',
   logsPage: 'src/pages/LogsPage.tsx',
   progressSummary: 'src/utils/progressSummary.ts',
   progressSummaryComponent: 'src/components/ProgressSummary.tsx',
@@ -27,6 +29,7 @@ const files = {
   educationPage: 'src/pages/EducationPage.tsx',
   localeEn: 'src/locales/en.js',
   localeZh: 'src/locales/zh-TW.js',
+  localDataLocale: 'src/locales/localData.js',
   rehabTypes: 'src/types/rehab.ts',
 };
 
@@ -101,7 +104,7 @@ section('pain rules and required pain inputs are preserved', () => {
   assertIncludes(source.painRules, 'blockSessionAt: 6', 'pain >=6 stop threshold');
   assertIncludes(source.painRules, 'afterSessionWarningIncrease: 2', 'pain-after warning delta');
   assertIncludes(source.painRules, 'pain !== null', 'pain zero remains valid');
-  assertIncludes(source.sessionTracker, "useState<number | null>(null)", 'pain state starts unset');
+  assertIncludes(source.sessionTracker, 'useState<number | null>(null)', 'pain state starts unset');
   assertIncludes(source.sessionTracker, 'const painBlocksStart = shouldStopForPain(painBefore)', 'pain-before stop check');
   assertIncludes(source.sessionTracker, 'const canStart = hasPainValue(painBefore) && !painBlocksStart', 'pain-before required to start');
   assertIncludes(source.sessionTracker, 'const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter)', 'pain-before and pain-after required to save');
@@ -111,11 +114,27 @@ section('pain rules and required pain inputs are preserved', () => {
   assertIncludes(source.sessionTracker, 'shouldWarnForPainIncrease(painBefore, painAfter)', 'pain-after increase warning');
 });
 
+section('LocalStorage readers fail soft and preserve app keys', () => {
+  assertIncludes(source.localStorageService, "'rehab.trainingLogs.v1'", 'training log key preserved');
+  assertIncludes(source.localStorageService, "'rehab.functionalOutcomes.v1'", 'outcome key preserved');
+  assertIncludes(source.localStorageService, "'rehab.safetyGate.v1'", 'safety key preserved');
+  assertIncludes(source.localStorageService, "'rehab.onboardingSeen.v1'", 'onboarding key preserved');
+  assertIncludes(source.localStorageService, "'rehab.assessment.v1'", 'assessment key preserved');
+  assertIncludes(source.localStorageService, 'safeReadJson', 'safe JSON reader exists');
+  assertIncludes(source.localStorageService, 'catch', 'localStorage helper catches browser/storage failures');
+  assertIncludes(source.safetyUtils, 'safeReadJson', 'safety status uses safe JSON reader');
+  assertIncludes(source.assessmentStorage, 'getSavedAssessment', 'assessment reader is centralized');
+  assertIncludes(source.assessmentStorage, 'normalizeAssessment', 'assessment reader normalizes stored data');
+});
+
 section('session logs persist with required fields and refresh-safe readers', () => {
   assertIncludes(source.logService, "const LOG_KEY = 'rehab.trainingLogs.v1'", 'training log storage key');
-  assertIncludes(source.logService, 'window.localStorage.getItem(LOG_KEY)', 'read logs from localStorage');
-  assertIncludes(source.logService, 'window.localStorage.setItem(LOG_KEY, JSON.stringify(logs))', 'write logs to localStorage');
+  assertIncludes(source.logService, 'safeReadJson<unknown>(LOG_KEY, [])', 'read logs through safe storage helper');
+  assertIncludes(source.logService, 'safeSetItem(LOG_KEY, JSON.stringify(logs))', 'write logs through safe storage helper');
   assertIncludes(source.logService, 'return parsed.map((log) => normalizeLog(log))', 'normalize persisted logs');
+  assertIncludes(source.logService, 'isBodyArea', 'invalid log body areas ignored safely');
+  assertIncludes(source.logService, 'isExerciseType', 'invalid log types ignored safely');
+  assertIncludes(source.logService, 'isExerciseLevel', 'invalid log levels ignored safely');
   [
     'painBefore',
     'painAfter',
@@ -133,8 +152,8 @@ section('session logs persist with required fields and refresh-safe readers', ()
 
 section('functional outcomes persist and progress renders from stored data', () => {
   assertIncludes(source.outcomeStorage, "const OUTCOME_KEY = 'rehab.functionalOutcomes.v1'", 'outcome storage key');
-  assertIncludes(source.outcomeStorage, 'window.localStorage.getItem(OUTCOME_KEY)', 'read outcomes from localStorage');
-  assertIncludes(source.outcomeStorage, 'window.localStorage.setItem(OUTCOME_KEY, JSON.stringify(outcomes))', 'write outcomes to localStorage');
+  assertIncludes(source.outcomeStorage, 'safeReadJson<unknown>(OUTCOME_KEY, [])', 'read outcomes through safe storage helper');
+  assertIncludes(source.outcomeStorage, 'safeSetItem(OUTCOME_KEY, JSON.stringify(outcomes))', 'write outcomes through safe storage helper');
   assertIncludes(source.outcomeStorage, 'normalizeOutcome(entry)', 'normalize persisted outcomes');
   assertIncludes(source.logsPage, 'getLogs()', 'logs page reads logs');
   assertIncludes(source.logsPage, 'getOutcomeEntries()', 'logs page reads outcomes');
@@ -146,6 +165,14 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
   assertIncludes(source.logsPage, '<TrainingLog logs={logs} />', 'training log renders');
   assertIncludes(source.trainingLog, 'getLocalizedTrainingLogTitle(log, language, fallbackTitle)', 'training history uses localized saved-log title');
+});
+
+section('clear local data is explicit and confirmed', () => {
+  assertIncludes(source.localStorageService, 'clearRehabLocalData', 'clear local data helper exists');
+  assertIncludes(source.logsPage, 'window.confirm', 'clear local data requires confirmation');
+  assertIncludes(source.logsPage, 'clearRehabLocalData()', 'clear action calls storage helper');
+  assertIncludes(source.logsPage, "t('logs.clearLocalDataConfirm')", 'clear confirmation is localized');
+  assertIncludes(source.localDataLocale, 'clearLocalDataTitle', 'clear local data zh-TW/en copy exists');
 });
 
 section('routine builder and education pages remain reachable', () => {
@@ -180,14 +207,16 @@ section('required i18n keys for smoke-covered flows exist', () => {
     'safety.blocked',
     'safety.noneOfAbove',
     'logs.title',
+    'logs.clearLocalDataTitle',
+    'logs.clearLocalDataConfirm',
     'outcomes.title',
     'weeklyRoutine.title',
     'education.title',
   ].forEach((key) => {
     const pathParts = key.split('.');
     const looseKeyPattern = new RegExp(`${pathParts[pathParts.length - 1]}\\s*:`);
-    assertMatch(source.localeEn, looseKeyPattern, `English locale has ${key}`);
-    assertMatch(source.localeZh, looseKeyPattern, `zh-TW locale has ${key}`);
+    assertMatch(source.localeEn + source.localDataLocale, looseKeyPattern, `English locale has ${key}`);
+    assertMatch(source.localeZh + source.localDataLocale, looseKeyPattern, `zh-TW locale has ${key}`);
   });
 });
 

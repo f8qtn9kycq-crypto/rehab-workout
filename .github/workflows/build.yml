@@ -27,5 +27,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Visible i18n guardrail
-        run: npm run audit:visible-i18n
+      - name: Smoke and visible i18n guardrails
+        run: npm run test
+
+      - name: Safety i18n guardrail
+        run: npm run audit:safety-i18n

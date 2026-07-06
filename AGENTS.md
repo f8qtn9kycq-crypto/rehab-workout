@@ -77,7 +77,7 @@ Detailed workflow rules live in repo docs:
 - `docs/ai-workflow.md`
 - `docs/pr-workflow.md`
 - `docs/codex-issue-workflow.md`
-- `docs/product-source-hygiene.md`
+- `docs/project-source-hygiene.md`
 - `docs/chatgpt-project-instructions-compact.md`
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`
 

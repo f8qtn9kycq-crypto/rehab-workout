@@ -1,4 +1,14 @@
-import type { BodyArea, Exercise, ExerciseLevel, ExerciseType, TrainingLogEntry } from '../types/rehab';
+import {
+  BODY_AREAS,
+  EXERCISE_LEVELS,
+  EXERCISE_TYPES,
+  type BodyArea,
+  type Exercise,
+  type ExerciseLevel,
+  type ExerciseType,
+  type TrainingLogEntry,
+} from '../types/rehab';
+import { safeReadJson, safeRemoveItem, safeSetItem } from './localStorageService';
 
 const LOG_KEY = 'rehab.trainingLogs.v1';
 const MAX_LOGS = 100;
@@ -16,12 +26,38 @@ interface CreateTrainingLogInput {
   stopReason: string;
 }
 
-function migrateBodyArea(bodyArea: unknown): BodyArea {
-  return bodyArea === 'shoulder_hip' ? 'shoulder' : (bodyArea as BodyArea);
+function isBodyArea(value: unknown): value is BodyArea {
+  return typeof value === 'string' && BODY_AREAS.includes(value as BodyArea);
+}
+
+function isExerciseType(value: unknown): value is ExerciseType {
+  return typeof value === 'string' && EXERCISE_TYPES.includes(value as ExerciseType);
+}
+
+function isExerciseLevel(value: unknown): value is ExerciseLevel {
+  return typeof value === 'string' && EXERCISE_LEVELS.includes(value as ExerciseLevel);
+}
+
+function hasValidDate(value: unknown): value is string {
+  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
+}
+
+function migrateBodyArea(bodyArea: unknown): BodyArea | null {
+  const migratedBodyArea = bodyArea === 'shoulder_hip' ? 'shoulder' : bodyArea;
+  return isBodyArea(migratedBodyArea) ? migratedBodyArea : null;
 }
 
 function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | null {
+  if (!rawLog || typeof rawLog !== 'object') return null;
   if (!rawLog.id || !rawLog.exerciseId || !rawLog.exerciseTitle) return null;
+
+  const bodyArea = migrateBodyArea(rawLog.bodyArea);
+  const type = isExerciseType(rawLog.type) ? rawLog.type : null;
+  const level = isExerciseLevel(rawLog.level) ? rawLog.level : null;
+  const date = rawLog.date ?? rawLog.completedAt;
+  const completedAt = rawLog.completedAt ?? rawLog.date;
+
+  if (!bodyArea || !type || !level || !hasValidDate(date) || !hasValidDate(completedAt)) return null;
 
   const setsCompleted = Number(rawLog.setsCompleted ?? 0);
   const repsCompleted = Number(rawLog.repsCompleted ?? 0);
@@ -29,16 +65,18 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
   const painAfter = Number(rawLog.painAfter ?? 0);
   const stoppedEarly = Boolean(rawLog.stoppedEarly);
 
+  if ([setsCompleted, repsCompleted, painBefore, painAfter].some((value) => Number.isNaN(value))) return null;
+
   return {
     id: String(rawLog.id),
-    date: String(rawLog.date ?? rawLog.completedAt ?? new Date().toISOString()),
-    completedAt: String(rawLog.completedAt ?? rawLog.date ?? new Date().toISOString()),
+    date,
+    completedAt,
     exerciseId: String(rawLog.exerciseId),
     title: String(rawLog.title ?? rawLog.exerciseTitle),
     exerciseTitle: String(rawLog.exerciseTitle),
-    bodyArea: migrateBodyArea(rawLog.bodyArea),
-    type: rawLog.type as ExerciseType,
-    level: rawLog.level as ExerciseLevel,
+    bodyArea,
+    type,
+    level,
     plannedSets: Number(rawLog.plannedSets ?? rawLog.setsCompleted ?? 0),
     plannedReps: Number(rawLog.plannedReps ?? rawLog.repsCompleted ?? 0),
     setsCompleted,
@@ -56,19 +94,14 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
 }
 
 export function getLogs(): TrainingLogEntry[] {
-  try {
-    const raw = window.localStorage.getItem(LOG_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map((log) => normalizeLog(log)).filter((log): log is TrainingLogEntry => Boolean(log));
-  } catch {
-    return [];
-  }
+  const parsed = safeReadJson<unknown>(LOG_KEY, []);
+  if (!Array.isArray(parsed)) return [];
+  return parsed.map((log) => normalizeLog(log)).filter((log): log is TrainingLogEntry => Boolean(log));
 }
 
 export function saveLog(log: TrainingLogEntry): TrainingLogEntry[] {
   const logs = [log, ...getLogs()].slice(0, MAX_LOGS);
-  window.localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+  safeSetItem(LOG_KEY, JSON.stringify(logs));
   return logs;
 }
 
@@ -105,5 +138,5 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
 }
 
 export function clearLogs(): void {
-  window.localStorage.removeItem(LOG_KEY);
+  safeRemoveItem(LOG_KEY);
 }

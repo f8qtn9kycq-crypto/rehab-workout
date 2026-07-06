@@ -4,6 +4,8 @@ Use this checklist to verify the real Rehab-Workout user journey before treating
 
 This checklist is intentionally manual and evidence-oriented. It complements `docs/release-candidate-qa.md`, `docs/mobile-ux-guidelines.md`, and the PR template. It does not change app behavior.
 
+For full release-candidate QA, use `docs/release-candidate-qa.md`. This document is the production UX evidence overlay for screenshots, deployment freshness, real-device/mobile viewport notes, and reviewer evidence around the core rehab journey.
+
 ## Scope
 
 Validate the core rehab journey:

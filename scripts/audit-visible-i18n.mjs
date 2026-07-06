@@ -104,15 +104,16 @@ async function loadLocale(relativePath) {
   return (await import(url.href)).default;
 }
 
-const [en, zhTW, cleanupLocales] = await Promise.all([
+const [en, zhTW, cleanupLocales, localDataLocales] = await Promise.all([
   loadLocale('src/locales/en.js'),
   loadLocale('src/locales/zh-TW.js'),
   loadLocale('src/locales/cleanup.js'),
+  loadLocale('src/locales/localData.js'),
 ]);
 
 const resources = {
-  en: mergeResource(en, cleanupLocales.en),
-  'zh-TW': mergeResource(zhTW, cleanupLocales['zh-TW']),
+  en: mergeResource(mergeResource(en, cleanupLocales.en), localDataLocales.en),
+  'zh-TW': mergeResource(mergeResource(zhTW, cleanupLocales['zh-TW']), localDataLocales['zh-TW']),
 };
 
 function createTranslator(language) {

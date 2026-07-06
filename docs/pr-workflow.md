@@ -172,6 +172,48 @@ For runtime PRs, also confirm:
 - LocalStorage compatibility considered when storage changed
 - iOS Safari / SPA routing risk considered when routes changed
 
+## Auto-Merge Eligibility
+
+Auto-merge is allowed only after the normal merge gate is satisfied. Risk tier lowers the review burden; it does not bypass evidence, CI, or the PR template.
+
+### Tier 0 docs-only PRs
+
+Auto-merge may be enabled when all are true:
+
+- changed files are limited to documentation, comments, templates, or non-runtime workflow instructions
+- no product source files under `src/` changed
+- no app behavior changed
+- no safety, session, storage, routing, recommendation, or exercise data behavior changed
+- PR template is filled
+- required checks pass
+- no P0 remains
+- P1 findings are fixed or explicitly deferred
+- acceptance criteria are met
+- branch cleanup plan exists
+
+### Tier 0 workflow PRs
+
+Workflow-only PRs are still Tier 0 when they do not change runtime app behavior, but they affect repository trust and automation reliability.
+
+Auto-merge may be enabled only when all Tier 0 docs-only conditions are true and the PR also documents:
+
+- changed workflow files are limited to `.github/workflows/*` and supporting docs
+- YAML and shell syntax were validated as practical
+- `PROJECTS_TOKEN` remains required for Projects V2 field writes
+- no fallback to `github.token` is introduced for Projects V2
+- Project owner type remains explicit when Projects V2 automation is touched
+- post-merge runtime validation steps are listed when behavior depends on real GitHub Actions or GitHub Projects events
+
+For Tier 0 workflow PRs, human review is recommended but not mandatory when the PR is narrow, evidence is complete, and CI passes. Claude review is not required unless findings conflict or the change broadens beyond workflow/docs.
+
+### Tier 1 and higher PRs
+
+Do not enable blind auto-merge for Tier 1 or higher.
+
+- Tier 1 PRs require acceptance-criteria review before merge.
+- Tier 2 PRs require state, routing, session, storage, and safety regression consideration where applicable.
+- Tier 3 PRs require stronger safety/content review and should not auto-merge without explicit approval.
+
 ## Deployment Environment Gate
 
 Issue #39 audit result as of 2026-07-03:

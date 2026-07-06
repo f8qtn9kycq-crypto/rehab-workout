@@ -4,7 +4,7 @@ import ExerciseCard from '../components/ExerciseCard';
 import ExerciseFilter, { type FilterAvailability } from '../components/ExerciseFilter';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
-import { assessmentStorageKey } from '../data/safety';
+import { getSavedAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { BODY_AREAS, type BodyArea, type ExerciseFilterMode, type ExerciseFilters, type SavedAssessment } from '../types/rehab';
@@ -18,15 +18,6 @@ import { getRecommendedExercises } from '../utils/recommendationEngine';
 
 const validEquipment = EQUIPMENT_OPTIONS.map((item) => item.id);
 const deprecatedFilterParams = ['type', 'level', 'equipment', 'noEquipment', 'duration', 'painSensitive'];
-
-function readAssessment(): SavedAssessment | null {
-  try {
-    const raw = window.localStorage.getItem(assessmentStorageKey);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
 
 function getBodyAreaParam(value: string | null): BodyArea | 'all' {
   return isBodyArea(value) ? value : 'all';
@@ -80,7 +71,7 @@ function removeDeprecatedFilterParams(searchParams: URLSearchParams): URLSearchP
 export default function ExercisesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useI18n();
-  const assessment = useMemo(() => readAssessment(), []);
+  const assessment = useMemo(() => getSavedAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
   const [filters, setFilters] = useState<ExerciseFilters>(() => buildInitialFilters(searchParams, assessment));
   const assessmentEquipment = useMemo(() => assessment?.equipment?.filter((item) => validEquipment.includes(item)) ?? [], [assessment]);

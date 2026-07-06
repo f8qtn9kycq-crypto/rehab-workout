@@ -22,6 +22,7 @@ const files = {
   functionalOutcomeCheckIn: 'src/components/FunctionalOutcomeCheckIn.tsx',
   trainingLog: 'src/components/TrainingLog.tsx',
   localizedExercise: 'src/utils/localizedExercise.ts',
+  trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   weeklyRoutineBuilder: 'src/components/WeeklyRoutineBuilder.tsx',
   educationPage: 'src/pages/EducationPage.tsx',
@@ -127,6 +128,12 @@ section('session logs persist with required fields and refresh-safe readers', ()
     assertIncludes(source.logService, field, `training log preserves ${field}`);
     assertIncludes(source.rehabTypes, field, `TrainingLogEntry type includes ${field}`);
   });
+  assertIncludes(source.trainingLogStopReasons, "export const EARLY_STOP_REASON_CODE = 'early_stop'", 'stable early-stop reason code exists');
+  assertIncludes(source.trainingLogStopReasons, "export const USER_EXIT_REASON_CODE = 'user_exit'", 'stable user-exit reason code exists');
+  assertIncludes(source.trainingLogStopReasons, 'return stoppedEarly && !trimmedReason && !trimmedNotes ? EARLY_STOP_REASON_CODE : trimmedReason', 'blank built-in early stop saves stable code only when notes are also blank');
+  assertIncludes(source.trainingLogStopReasons, 'legacyEarlyStopReasonLabels.has(stopReason)', 'legacy translated early-stop labels are localized at render time');
+  assertIncludes(source.sessionTracker, 'normalizeStopReasonForSave(stopReason, stoppedEarly, notes)', 'session save normalizes built-in stop reason while preserving notes fallback');
+  assertIncludes(source.trainingLog, 'getLocalizedStopReasonLabel(log, t)', 'training history localizes built-in stop reasons');
   assertIncludes(source.sessionTracker, 'saveLog(log)', 'session completion saves log');
   assertIncludes(source.sessionTracker, "navigate('/logs')", 'saved session routes to logs');
 });

@@ -32,6 +32,24 @@ const seededEnglishLog = {
   stopReason: '',
   notes: '',
 };
+const seededEnglishEarlyStopLog = {
+  ...seededEnglishLog,
+  id: 'audit-log-early-stop',
+  stoppedEarly: true,
+  stopReason: 'early_stop',
+};
+const seededLegacyZhEarlyStopLog = {
+  ...seededEnglishLog,
+  id: 'audit-log-legacy-zh-early-stop',
+  stoppedEarly: true,
+  stopReason: '訓練中感到不適或想先停止。',
+};
+const seededUserTextStopLog = {
+  ...seededEnglishLog,
+  id: 'audit-log-user-text-stop',
+  stoppedEarly: true,
+  stopReason: 'Stopped because the right side felt tight.',
+};
 const seededEnglishOutcome = {
   id: 'audit-outcome-1',
   date: '2026-07-03T12:00:00.000Z',
@@ -154,6 +172,19 @@ function getLocalizedTrainingLogTitle(log, language, fallbackTitle) {
   return titleMatchesLanguage(storedTitle, language) ? storedTitle : fallbackTitle;
 }
 
+function getStopReasonLabel(log, t) {
+  if (log.stopReason === 'user_exit') return t('session.exitWithoutSaving');
+  if (
+    log.stopReason === 'early_stop' ||
+    log.stopReason === 'Felt discomfort or chose to stop early.' ||
+    log.stopReason === '訓練中感到不適或想先停止。'
+  ) {
+    return t('session.earlyStopDefault');
+  }
+
+  return log.stopReason || log.notes || null;
+}
+
 function formatDate(date, language) {
   return new Date(date).toLocaleDateString(language);
 }
@@ -208,6 +239,9 @@ function renderSeededEnglishRecordsState() {
       }),
     },
     { surface: 'records.history.effort', text: t('logs.effort', { value: seededEnglishLog.difficultyRating }) },
+    { surface: 'records.history.earlyStopReason', text: getStopReasonLabel(seededEnglishEarlyStopLog, t) },
+    { surface: 'records.history.legacyZhEarlyStopReason', text: getStopReasonLabel(seededLegacyZhEarlyStopLog, t) },
+    { surface: 'records.history.userTextStopReason', text: getStopReasonLabel(seededUserTextStopLog, t) },
     { surface: 'records.outcomes.title', text: t('outcomes.title') },
     { surface: 'records.outcomes.bodyAreaLabel', text: t('outcomes.bodyAreaLabel') },
     { surface: 'records.outcomes.selectedAreaTitle', text: t('outcomes.selectedAreaTitle', { area: bodyAreaLabel }) },

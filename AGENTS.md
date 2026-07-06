@@ -23,6 +23,7 @@ Use root workflow files as the contract and `/docs` files as detailed handbooks:
 
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
+- `docs/project-source-hygiene.md`: ChatGPT Project uploaded-source cleanup, stale-source handling, and active/archive naming rules.
 - `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
 - `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
 - `docs/architecture.md`: React/Vite/Router structure, routes, component responsibilities, LocalStorage, media embed rules, and validation.
@@ -32,6 +33,12 @@ Use root workflow files as the contract and `/docs` files as detailed handbooks:
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 
 Do not duplicate the full product spec inside ChatGPT Project Instructions. Keep ChatGPT compact and route detailed rules to repo docs.
+
+## External Project sources
+
+ChatGPT Project uploaded files, branch compact contexts, and one-time implementation prompts are reference material only unless they explicitly match current repo docs.
+
+Use `docs/project-source-hygiene.md` when auditing or cleaning Project sources. Archive or remove stale uploaded sources instead of letting old prompts override current repo workflow, safety, risk tier, or validation rules.
 
 ## Product context
 
@@ -70,6 +77,7 @@ Detailed workflow rules live in repo docs:
 - `docs/ai-workflow.md`
 - `docs/pr-workflow.md`
 - `docs/codex-issue-workflow.md`
+- `docs/product-source-hygiene.md`
 - `docs/chatgpt-project-instructions-compact.md`
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`
 
@@ -127,7 +135,7 @@ gh workflow run project-auto-add.yml -f target_type=pull_request -f target_numbe
 ChatGPT must:
 - check repo workflow files before generating Codex prompts or PR reviews when repo access is available.
 - use `AGENTS.md`, `REVIEW.md`, and the PR template as the workflow contract.
-- use detailed docs under `/docs` for safety, mobile UX, localization, and workflow specifics.
+- use detailed docs under `/docs` for safety, mobile UX, localization, workflow specifics, and Project source hygiene.
 - avoid broad refactor prompts unless explicitly requested.
 - provide Codex-ready prompts with changed-file targets, acceptance criteria, QA checks, and merge gates.
 

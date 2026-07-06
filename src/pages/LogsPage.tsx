@@ -4,6 +4,7 @@ import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
+import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, FunctionalOutcomeEntry, OutcomeScore, TrainingLogEntry } from '../types/rehab';
 import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
@@ -24,8 +25,9 @@ function SectionHeader({ id, title, subtitle }: { id: string; title: string; sub
 
 export default function LogsPage() {
   const { language, t } = useI18n();
-  const [logs] = useState(() => getLogs());
+  const [logs, setLogs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
+  const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const fallbackTitle = t('logs.savedExerciseFallback');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
   const latestLog = useMemo<TrainingLogEntry | null>(() => latestByDate(logs), [logs]);
@@ -38,6 +40,16 @@ export default function LogsPage() {
   function saveOutcome(bodyArea: BodyArea, score: OutcomeScore, note: string): void {
     const entry = createOutcomeEntry({ bodyArea, score, note });
     setOutcomes(saveOutcomeEntry(entry));
+    setClearStatus('idle');
+  }
+
+  function clearLocalData(): void {
+    if (!window.confirm(t('logs.clearLocalDataConfirm'))) return;
+
+    const result = clearRehabLocalData();
+    setLogs([]);
+    setOutcomes([]);
+    setClearStatus(result.failedKeys.length > 0 ? 'partial' : 'success');
   }
 
   return (
@@ -98,6 +110,25 @@ export default function LogsPage() {
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} />
         <TrainingLog logs={logs} />
+      </section>
+
+      <section className="card space-y-3 border-amber-100 bg-amber-50/60 p-5" aria-labelledby="records-local-data-title">
+        <div>
+          <h2 id="records-local-data-title" className="text-lg font-black text-ink">{t('logs.clearLocalDataTitle')}</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-700">{t('logs.clearLocalDataBody')}</p>
+        </div>
+        {clearStatus !== 'idle' ? (
+          <p className="rounded-md bg-white/80 p-3 text-sm font-semibold text-amber-900" role="status">
+            {clearStatus === 'success' ? t('logs.clearLocalDataSuccess') : t('logs.clearLocalDataPartial')}
+          </p>
+        ) : null}
+        <button
+          type="button"
+          onClick={clearLocalData}
+          className="focus-ring min-h-11 w-full rounded-md border border-amber-300 bg-white px-4 py-2 text-sm font-bold text-amber-900 sm:w-auto"
+        >
+          {t('logs.clearLocalDataAction')}
+        </button>
       </section>
     </div>
   );

@@ -1,4 +1,5 @@
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
+import { safeReadJson, safeSetItem } from './localStorageService';
 
 function generateId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -29,6 +30,7 @@ function normalizeScore(value: unknown): OutcomeScore | null {
 }
 
 function normalizeOutcome(rawOutcome: Partial<FunctionalOutcomeEntry>): FunctionalOutcomeEntry | null {
+  if (!rawOutcome || typeof rawOutcome !== 'object') return null;
   if (!rawOutcome.id || !isBodyArea(rawOutcome.bodyArea)) return null;
 
   const score = normalizeScore(rawOutcome.score);
@@ -47,16 +49,11 @@ function normalizeOutcome(rawOutcome: Partial<FunctionalOutcomeEntry>): Function
 }
 
 export function getOutcomeEntries(): FunctionalOutcomeEntry[] {
-  try {
-    const raw = window.localStorage.getItem(OUTCOME_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    if (!Array.isArray(parsed)) return [];
-    return parsed
-      .map((entry) => normalizeOutcome(entry))
-      .filter((entry): entry is FunctionalOutcomeEntry => Boolean(entry));
-  } catch {
-    return [];
-  }
+  const parsed = safeReadJson<unknown>(OUTCOME_KEY, []);
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .map((entry) => normalizeOutcome(entry))
+    .filter((entry): entry is FunctionalOutcomeEntry => Boolean(entry));
 }
 
 export function createOutcomeEntry(input: {
@@ -76,6 +73,6 @@ export function createOutcomeEntry(input: {
 
 export function saveOutcomeEntry(entry: FunctionalOutcomeEntry): FunctionalOutcomeEntry[] {
   const outcomes = [entry, ...getOutcomeEntries()].slice(0, MAX_OUTCOMES);
-  window.localStorage.setItem(OUTCOME_KEY, JSON.stringify(outcomes));
+  safeSetItem(OUTCOME_KEY, JSON.stringify(outcomes));
   return outcomes;
 }

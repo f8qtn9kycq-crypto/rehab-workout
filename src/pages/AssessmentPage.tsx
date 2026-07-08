@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import BodyAreaSelector from '../components/BodyAreaSelector';
 import PainScale from '../components/PainScale';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
-import { assessmentStorageKey } from '../data/safety';
+import { saveAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import type { BodyArea, Equipment } from '../types/rehab';
 
@@ -27,10 +27,7 @@ export default function AssessmentPage() {
   }
 
   function save(): void {
-    window.localStorage.setItem(
-      assessmentStorageKey,
-      JSON.stringify({ bodyArea, pain, confidence, equipment, sessionLength, mode, completedAt: new Date().toISOString() }),
-    );
+    saveAssessment({ bodyArea, pain, confidence, equipment, sessionLength, mode, completedAt: new Date().toISOString() });
   }
 
   return (

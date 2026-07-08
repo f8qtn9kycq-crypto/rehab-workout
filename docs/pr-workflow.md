@@ -255,7 +255,7 @@ Status sync rules:
 
 - Open or reopened issues should set Project Status to `Backlog`.
 - Issues closed as completed should set Project Status to `Done`.
-- Open pull requests should set Project Status to `Ready to Merge` only when strict readiness is verifiable: the PR is open, not draft, mergeable with clean merge state, has a successful current-head status or Build run, and has no active requested-changes review.
+- Open pull requests should set Project Status to `Ready to Merge` only when strict readiness is verifiable: the PR is open, not draft, mergeable with clean merge state, has a successful current-head `build` check run, and has no active requested-changes review. Do not treat unrelated combined commit statuses as a substitute for the current-head Build gate.
 - Open pull requests that are not strictly ready should set Project Status to `Review` when that Project option exists, otherwise `In Progress` when that option exists.
 - If `Ready to Merge` does not exist as a Project Status option, the workflow should log the fallback and keep using `Review` / `In Progress`.
 - Merged pull requests should set Project Status to `Done`.
@@ -268,10 +268,10 @@ Project Status meanings:
 - `Ready for Codex`: issue is ready for implementation when that option is available/manual/project-level.
 - `In Progress`: implementation is underway or a PR exists and `Review` is unavailable.
 - `PR Review` / `Review`: PR exists and needs validation, review, or unresolved-gate work.
-- `Ready to Merge`: strict merge gate passed for the current PR head.
+- `Ready to Merge`: strict merge gate passed for the current PR head, including the current-head Build check and review-state gate.
 - `Done`: issue is completed or PR is merged.
 
-GitHub can briefly return unknown mergeability or incomplete check state immediately after PR events. When any readiness signal is unavailable or not clean, the workflow should prefer `Review` / `In Progress` rather than `Ready to Merge`.
+GitHub can briefly return unknown mergeability or incomplete check state immediately after PR events. When any readiness signal is unavailable or not clean, the workflow should prefer `Review` / `In Progress` rather than `Ready to Merge`. A `CHANGES_REQUESTED` review remains blocking until that reviewer later approves or the review is dismissed; later comments alone do not clear it.
 
 For pull requests, explicit PR title/body/label metadata should win first. If metadata is missing and the PR body links an issue with `Closes #N`, `Fixes #N`, or `Resolves #N`, the workflow should fetch that issue and use its metadata as fallback for Priority, Risk Tier, AI Owner, Area, and Status where appropriate.
 

@@ -549,19 +549,19 @@ jobs:
             return 0
           }
 
-          has_successful_build_run() {
+          has_successful_current_head_build() {
             local head_sha="$1"
-            local runs_json
+            local checks_json
 
-            runs_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs?event=pull_request&head_sha=$head_sha&per_page=100")"
+            checks_json="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/check-runs?per_page=100")"
             jq -e --arg sha "$head_sha" '
-              [.workflow_runs[]?
-                | select(.name == "Build")
+              [.check_runs[]?
+                | select((.name | ascii_downcase) == "build")
                 | select(.head_sha == $sha)
                 | select(.status == "completed")
                 | select(.conclusion == "success")
               ] | length > 0
-            ' <<<"$runs_json" >/dev/null
+            ' <<<"$checks_json" >/dev/null
           }
 
           has_no_active_requested_changes() {
@@ -569,8 +569,12 @@ jobs:
 
             reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews")"
             jq -e '
-              [sort_by(.user.login)
-                | group_by(.user.login)[]
+              [.[]?
+                | select(.user.login != null)
+                | select(.state == "CHANGES_REQUESTED" or .state == "APPROVED" or .state == "DISMISSED")
+              ]
+              | sort_by(.user.login, .submitted_at // "")
+              | [group_by(.user.login)[]
                 | sort_by(.submitted_at // "")
                 | last
                 | select(.state == "CHANGES_REQUESTED")
@@ -584,7 +588,6 @@ jobs:
             local mergeable
             local mergeable_state
             local head_sha
-            local combined_state
 
             if ! field_option_exists "Status" "Ready to Merge"; then
               echo "Ready to Merge option is unavailable; falling back to review status." >&2
@@ -612,9 +615,8 @@ jobs:
               return 1
             fi
 
-            combined_state="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/status" --jq '.state // ""')"
-            if [[ "$combined_state" != "success" ]] && ! has_successful_build_run "$head_sha"; then
-              echo "Ready to Merge blocked: no successful current-head status or Build run was found." >&2
+            if ! has_successful_current_head_build "$head_sha"; then
+              echo "Ready to Merge blocked: no successful current-head Build check run was found." >&2
               return 1
             fi
 

@@ -11,6 +11,7 @@ What user problem this addresses:
 - [ ] Read `AGENTS.md`
 - [ ] Read `REVIEW.md`
 - [ ] Read this PR template before opening the PR
+- [ ] Read `.github/ai-automation.yml` when automation, issue selection, PR gating, or GitHub mutation behavior is touched
 - [ ] Kept changes minimal and localized
 - [ ] Did not rewrite unrelated app areas
 

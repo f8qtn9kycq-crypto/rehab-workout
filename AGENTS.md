@@ -7,20 +7,22 @@ For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo
 1. Read this file first.
 2. Read `REVIEW.md` before reviewing or preparing a PR for review.
 3. Read `.github/pull_request_template.md` before opening or updating a PR.
-4. Treat repo-tracked workflow files as the source of truth over pasted chat context when they conflict.
-5. Classify the task risk tier before implementation:
+4. Read `.github/ai-automation.yml` before scheduled automation, issue selection, PR gating, or any GitHub mutation when the file exists.
+5. Treat repo-tracked workflow files as the source of truth over pasted chat context when they conflict.
+6. Classify the task risk tier before implementation:
    - Tier 0: docs / copy / small CSS
    - Tier 1: mobile UX / i18n / navigation
    - Tier 2: safety / session / storage / routing
    - Tier 3: architecture / data migration / security
-6. Keep the change scoped to the selected risk tier.
-7. If the requested work is broad, split it into the smallest safe PR.
-8. Do not rely on memory alone for workflow, safety, or review requirements.
+7. Keep the change scoped to the selected risk tier.
+8. If the requested work is broad, split it into the smallest safe PR.
+9. Do not rely on memory alone for workflow, safety, or review requirements.
 
 ## Detailed repo docs
 
 Use root workflow files as the contract and `/docs` files as detailed handbooks:
 
+- `.github/ai-automation.yml`: repo-owned automation contract for scheduled runners, repo preflight, issue/PR selection, validation, review routing, and merge gating.
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
 - `docs/project-source-hygiene.md`: ChatGPT Project uploaded-source cleanup, stale-source handling, and active/archive naming rules.
@@ -74,6 +76,7 @@ Primary users:
 
 Detailed workflow rules live in repo docs:
 
+- `.github/ai-automation.yml`
 - `docs/ai-workflow.md`
 - `docs/pr-workflow.md`
 - `docs/codex-issue-workflow.md`
@@ -84,6 +87,12 @@ Detailed workflow rules live in repo docs:
 Use repo-tracked workflow files as source of truth over pasted compact context or prior chat memory.
 
 ## AI execution rules
+
+Scheduled automation runners must:
+- read `.github/ai-automation.yml` before selecting issues, gating PRs, or mutating GitHub.
+- verify the local git remote, queried GitHub repo, and repo-tracked instructions match this repository.
+- stop with `repo-mismatch blocker` before mutation when identity or product instructions do not match.
+- execute at most one issue/PR unit of work per scheduled run.
 
 Codex must:
 - sync from latest `main` before creating an implementation branch.

@@ -11,8 +11,9 @@ When instructions conflict, use this order:
 3. Current user request.
 4. Current compact context.
 5. Prior chat memory.
+6. Uploaded ChatGPT Project sources or one-time branch context.
 
-Repo-tracked workflow files override pasted compact context or memory when they conflict.
+Repo-tracked workflow files override pasted compact context, memory, and uploaded Project sources when they conflict.
 
 If GitHub/repo access is unavailable, say the recommendation is based on pasted context and should be verified against the latest repo workflow files.
 
@@ -24,7 +25,7 @@ Keep these files in the repo root as the workflow contract:
 - `REVIEW.md`
 - `.github/pull_request_template.md`
 
-Detailed product, safety, UX, data, and localization rules live in `/docs`.
+Detailed product, safety, UX, data, source hygiene, and localization rules live in `/docs`.
 
 ## Where Detailed Rules Live
 
@@ -34,6 +35,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
 - `docs/codex-issue-workflow.md`: one-line ChatGPT task creation and short Codex issue-to-PR trigger.
 - `docs/product-feedback-workflow.md`: Feedback Inbox, PM triage, promotion rules, and when feedback becomes GitHub work.
+- `docs/project-source-hygiene.md`: ChatGPT Project uploaded-source cleanup, stale-source handling, and active/archive naming rules.
 - `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
 - `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
 - `docs/architecture.md`: React/Vite/Router structure, route expectations, component responsibilities, LocalStorage, media embed rules, and validation.
@@ -42,6 +44,14 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`: repo-tracked Codex skill for implementing a GitHub issue and opening a PR.
+
+## Project Source Hygiene
+
+ChatGPT Project Instructions should use `docs/chatgpt-project-instructions-compact.md` as the active paste-ready block.
+
+Uploaded Project sources, old branch compact contexts, and one-time Codex prompts should be treated as reference or archive material. They must not override repo-tracked workflow, safety, risk tier, validation, or product scope rules.
+
+Use `docs/project-source-hygiene.md` when auditing Project sources or deciding what to archive, remove, or keep active.
 
 ## Feedback Intake
 

@@ -1,0 +1,214 @@
+# Repo-owned automation contract for f8qtn9kycq-crypto/rehab-workout.
+# Scheduled runners must read this file before choosing work or mutating GitHub.
+version: 1
+
+repository:
+  full_name: f8qtn9kycq-crypto/rehab-workout
+  default_branch: main
+  product: rehab-workout
+  expected_remotes:
+    - https://github.com/f8qtn9kycq-crypto/rehab-workout.git
+    - git@github.com:f8qtn9kycq-crypto/rehab-workout.git
+
+source_of_truth:
+  required_before_work:
+    - AGENTS.md
+    - REVIEW.md
+    - .github/pull_request_template.md
+    - .github/ai-automation.yml
+    - docs/ai-workflow.md
+    - docs/pr-workflow.md
+    - docs/codex-issue-workflow.md
+  supporting_docs:
+    - docs/product-scope.md
+    - docs/architecture.md
+    - docs/exercise-data-model.md
+    - docs/safety-rules.md
+    - docs/mobile-ux-guidelines.md
+    - docs/localization-style-guide.md
+    - docs/project-source-hygiene.md
+    - ai/skills/rehab-workout-issue-to-pr/SKILL.md
+
+preflight:
+  required_before_github_mutation:
+    - local_git_remote_matches_repository_full_name
+    - github_repo_query_matches_repository_full_name
+    - repo_tracked_instructions_match_product
+    - default_branch_is_synced_before_branch_creation
+  mismatch_behavior: repo-mismatch blocker
+  missing_contract_behavior: stop_without_mutation
+  stale_or_ambiguous_context_behavior: prefer_repo_tracked_files
+
+execution:
+  max_units_per_run: 1
+  allowed_chain:
+    - issue implementation
+    - pull request creation or update
+    - ChatGPT pull request review when required
+    - verdict retrieval
+    - gate-based action on verdict
+  disallowed_by_default:
+    - bulk-triggering Codex
+    - broad unrelated refactors
+    - direct commits to main
+    - automatic merge without explicit contract eligibility
+    - changing product safety thresholds unless the selected issue explicitly scopes it
+
+selection:
+  issue_order:
+    priority: [P0, P1, P2]
+    status: [Ready for Codex, Backlog]
+    risk_tier: [Tier 0, Tier 1, Tier 2, Tier 3]
+    tie_breaker: oldest_first
+  pr_order:
+    priority: [P0, P1, P2]
+    status: [PR Review, Review, Ready to Merge]
+    risk_tier: [Tier 0, Tier 1, Tier 2, Tier 3]
+    tie_breaker: oldest_first
+  readiness_required_fields:
+    - goal_or_user_problem
+    - scope
+    - priority
+    - risk_tier
+    - ai_owner_codex_or_equivalent
+    - safety_constraints
+    - acceptance_criteria
+    - qa_or_validation_requirements
+    - codex_trigger_or_implementation_contract
+
+validation:
+  default:
+    - npm run build
+  if_test_script_exists:
+    - npm run test
+  if_exercise_data_filters_recommendations_or_coverage_change:
+    - npm run audit:exercise-coverage
+  if_safety_session_storage_or_routing_change:
+    - verify SafetyGate cannot be bypassed
+    - verify pain >=6 blocks training
+    - verify red flags block training
+    - verify SessionRouteGuard behavior
+    - verify LocalStorage compatibility
+    - consider iOS Safari and SPA routing risk
+  docs_only:
+    - confirm no product source files under src changed
+    - confirm no app behavior changed
+    - confirm no safety, session, storage, routing, recommendation, or exercise data behavior changed
+
+risk_tiers:
+  Tier 0:
+    description: docs, copy, templates, or small CSS with no runtime behavior change
+    review_routing:
+      codex_review: optional
+      claude_review: not_required_unless_findings_conflict
+      chatgpt_pm_synthesis: not_required_unless_findings_conflict
+    auto_merge_eligible: true
+  Tier 1:
+    description: mobile UX, i18n, navigation, or low-risk runtime UX
+    review_routing:
+      codex_review: recommended
+      claude_review: not_required_unless_safety_session_or_routing_risk_appears
+      chatgpt_pm_synthesis: optional_for_conflicting_findings
+    auto_merge_eligible: false
+  Tier 2:
+    description: safety-adjacent product flow, session, storage, routing, or recommendation behavior
+    review_routing:
+      codex_review: required
+      claude_review: recommended
+      chatgpt_pm_synthesis: recommended_for_conflicting_findings_or_merge_gate
+    auto_merge_eligible: false
+  Tier 3:
+    description: architecture, data migration, security, safety logic, or exercise content changes
+    review_routing:
+      codex_review: required
+      claude_review: required
+      chatgpt_pm_synthesis: required_before_merge
+    auto_merge_eligible: false
+
+auto_merge:
+  allowed_only_when:
+    - risk_tier_is_Tier_0
+    - changed_files_are_limited_to_docs_templates_comments_or_non_runtime_workflow_instructions
+    - no_src_files_changed
+    - no_app_behavior_changed
+    - no_safety_session_storage_routing_recommendation_or_exercise_data_behavior_changed
+    - pull_request_template_is_complete
+    - required_checks_pass_on_current_head
+    - no_active_requested_changes_review
+    - no_P0_findings_remain
+    - P1_findings_are_fixed_or_explicitly_deferred
+    - acceptance_criteria_are_met
+    - branch_cleanup_plan_exists
+  workflow_pr_extra_requirements:
+    - PROJECTS_TOKEN_remains_required_for_Projects_V2_field_writes
+    - no_fallback_to_github_token_for_Projects_V2_field_writes
+    - Project_owner_type_remains_explicit_when_Project_V2_automation_is_touched
+    - post_merge_runtime_validation_is_listed_when_behavior_depends_on_real_GitHub_events
+
+control_plane:
+  labels:
+    ready_for_implementation:
+      - codex-ready
+    review_required:
+      - review-required
+      - chatgpt-review-required
+      - claude-review-required
+    automation:
+      - automerge-allowed
+      - blocked
+      - repo-mismatch
+    priority:
+      - priority:P0
+      - priority:P1
+      - priority:P2
+    risk:
+      - risk:tier-0
+      - risk:tier-1
+      - risk:tier-2
+      - risk:tier-3
+  project_fields:
+    status:
+      backlog: Backlog
+      ready_for_codex: Ready for Codex
+      in_progress: In Progress
+      review: Review
+      ready_to_merge: Ready to Merge
+      done: Done
+    priority:
+      - P0
+      - P1
+      - P2
+    risk_tier:
+      - Tier 0
+      - Tier 1
+      - Tier 2
+      - Tier 3
+
+boundaries:
+  do_not_touch_without_explicit_scope:
+    - safety thresholds
+    - red-flag blocking
+    - SafetyGate bypass rules
+    - SessionRouteGuard
+    - LocalStorage schema compatibility
+    - recommendation safety filters
+    - exercise content coverage
+    - Vercel deployment behavior
+  stop_conditions:
+    - repo-mismatch blocker
+    - missing required workflow contract
+    - unclear selected issue scope
+    - validation failure
+    - current-head CI failure
+    - active requested-changes review
+    - safety/session/storage/routing ambiguity above selected risk tier
+
+reporting:
+  required_output:
+    - verdict
+    - selected unit of work
+    - files changed or inspected
+    - validation evidence
+    - review verdicts retrieved
+    - merge or stop reason
+    - next recommended action

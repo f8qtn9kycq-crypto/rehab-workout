@@ -1,6 +1,7 @@
 import { useI18n } from '../services/i18n';
 import type { TrainingLogEntry } from '../types/rehab';
 import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
+import { getLocalizedStopReasonLabel } from '../utils/trainingLogStopReasons';
 
 export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
   const { language, t } = useI18n();
@@ -11,8 +12,7 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
   }
 
   function getStopReasonLabel(log: TrainingLogEntry): string | null {
-    if (log.stopReason === 'user_exit') return t('session.exitWithoutSaving');
-    return log.stopReason || log.notes || null;
+    return getLocalizedStopReasonLabel(log, t);
   }
 
   return (

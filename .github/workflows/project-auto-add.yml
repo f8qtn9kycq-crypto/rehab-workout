@@ -567,7 +567,7 @@ jobs:
           has_no_active_requested_changes() {
             local reviews_json
 
-            reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews")"
+            reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews?per_page=100")"
             jq -e '
               [.[]?
                 | select(.user.login != null)

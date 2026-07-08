@@ -6,6 +6,7 @@ import { createTrainingLog, saveLog } from '../services/logService';
 import { getOutcomeEntries } from '../services/outcomeStorage';
 import type { BodyArea, Exercise, FunctionalOutcomeEntry } from '../types/rehab';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
+import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
 import PainScale from './PainScale';
 import RestTimer from './RestTimer';
 
@@ -90,7 +91,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
 
   function stopEarly(): void {
     setStoppedEarly(true);
-    setStopReason(t('session.earlyStopDefault'));
+    setStopReason('');
     setPhase('finish');
   }
 
@@ -107,7 +108,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       stoppedEarly,
       recoveryMode: useRecoveryMode,
       notes,
-      stopReason,
+      stopReason: normalizeStopReasonForSave(stopReason, stoppedEarly, notes),
     });
 
     saveLog(log);
@@ -133,7 +134,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       stoppedEarly: true,
       recoveryMode: useRecoveryMode,
       notes,
-      stopReason: 'user_exit',
+      stopReason: USER_EXIT_REASON_CODE,
     });
 
     saveLog(log);
@@ -348,7 +349,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           {stoppedEarly ? (
             <label className="block">
               <span className="mb-2 block font-semibold text-slate-800">{t('session.stopReason')}</span>
-              <input value={stopReason} onChange={(event) => setStopReason(event.target.value)} className="focus-ring min-h-11 w-full rounded-md border border-slate-200 px-3" />
+              <input value={stopReason} onChange={(event) => setStopReason(event.target.value)} placeholder={t('session.earlyStopDefault')} className="focus-ring min-h-11 w-full rounded-md border border-slate-200 px-3" />
             </label>
           ) : null}
           <button type="button" disabled={!canSaveLog} onClick={completeLog} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">

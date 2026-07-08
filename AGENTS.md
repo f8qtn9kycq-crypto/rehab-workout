@@ -123,7 +123,9 @@ Lifecycle status rules:
 
 - Open or reopened issues sync to `Backlog`.
 - Issues closed as completed sync to `Done`.
-- Open pull requests sync to `Review` when available, otherwise `In Progress` when available.
+- Open pull requests sync to `Ready to Merge` only when strict readiness is verifiable: the PR is open, not draft, mergeable with clean merge state, has a successful current-head Build check, and has no active requested-changes review.
+- Open pull requests that are not strictly ready sync to `Review` when available, otherwise `In Progress` when available.
+- If `Ready to Merge` does not exist as a Project Status option, the workflow logs the fallback and keeps using `Review` / `In Progress`.
 - Merged pull requests sync to `Done`.
 - Pull requests closed without merge must not be marked `Done`.
 - Merged pull requests with `Closes #N`, `Fixes #N`, or `Resolves #N` also sync linked issue `#N` to `Done`.

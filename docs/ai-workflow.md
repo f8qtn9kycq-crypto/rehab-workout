@@ -117,6 +117,19 @@ Codex must:
 
 For repeated issue-to-PR work, Codex should follow `ai/skills/rehab-workout-issue-to-pr/SKILL.md`.
 
+## Project Status Semantics
+
+Project #2 uses Status as an operational view after issues and PRs are created:
+
+- `Backlog`: open issue not started.
+- `Ready for Codex`: issue is ready for implementation when that option is available/manual/project-level.
+- `In Progress`: implementation underway, or PR exists and `Review` is unavailable.
+- `PR Review` / `Review`: PR exists and needs validation or review.
+- `Ready to Merge`: current PR head has passed strict readiness checks, including a successful current-head Build check and no active requested-changes review.
+- `Done`: issue completed or PR merged.
+
+Automation should prefer conservative status when GitHub mergeability, checks, or review state is unavailable. `Ready to Merge` is a merge-gate result, not a synonym for `ready_for_review`. A `CHANGES_REQUESTED` review remains blocking until the reviewer later approves or the review is dismissed; later review comments alone do not clear the block.
+
 ## Claude Role
 
 Claude is a PR reviewer and code risk reviewer.

@@ -98,9 +98,10 @@ export default {
   },
   onboarding: {
     badge: 'Safety first',
-    title: 'Do a little today and rebuild steadiness gradually',
-    subtitle: 'Pick a body area, check pain level, and begin with low-impact, slow, controlled movements.',
-    steps: ['Safety check', 'Pick body area', 'Pick level', 'Log result'],
+    title: 'Start with one safe path today',
+    subtitle: 'First confirm safety, then choose a body area and learn when to check pain before and after training.',
+    stepsLabel: 'First-run path',
+    steps: ['Safety check', 'Choose body area', 'Pain before and after', 'Start suitable exercise'],
     start: 'Start safety check',
   },
   bodyAreas: {

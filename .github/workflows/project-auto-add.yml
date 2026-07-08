@@ -241,6 +241,10 @@ jobs:
           ${{ steps.content.outputs.target_type }}
           PROJECT_AUTO_ADD_TARGET_TYPE_EOF
           )"
+          target_number="$(cat <<'PROJECT_AUTO_ADD_NUMBER_EOF'
+          ${{ steps.content.outputs.number }}
+          PROJECT_AUTO_ADD_NUMBER_EOF
+          )"
           content_id="$(cat <<'PROJECT_AUTO_ADD_ID_EOF'
           ${{ steps.content.outputs.id }}
           PROJECT_AUTO_ADD_ID_EOF
@@ -324,7 +328,7 @@ jobs:
               }
 
               if (defined $pending) {
-                if ($line =~ /^(Backlog|In Progress|Review|Done|P[0-2]|Tier\s*[0-3]|Codex|Claude|ChatGPT|Gemini|Safety|i18n|Progress|UX|Workflow)$/i) {
+                if ($line =~ /^(Backlog|Ready for Codex|In Progress|PR Review|Review|Ready to Merge|Done|P[0-2]|Tier\s*[0-3]|Codex|Claude|ChatGPT|Gemini|Safety|i18n|Progress|UX|Workflow)$/i) {
                   print "$pending: $line\n";
                 }
                 undef $pending;
@@ -512,12 +516,15 @@ jobs:
           infer_status_from_metadata() {
             local haystack="$1"
             local explicit_status
-            explicit_status="$(grep -Eim1 '^[[:space:]]*Status:[[:space:]]*(Backlog|In Progress|Review|Done)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Status:[[:space:]]*//I' | xargs)"
+            explicit_status="$(grep -Eim1 '^[[:space:]]*Status:[[:space:]]*(Backlog|Ready for Codex|In Progress|PR Review|Review|Ready to Merge|Done)[[:space:]]*$' <<<"$haystack" | sed -E 's/^[[:space:]]*Status:[[:space:]]*//I' | xargs)"
 
             case "${explicit_status,,}" in
               backlog) echo "Backlog"; return ;;
+              "ready for codex") echo "Ready for Codex"; return ;;
               "in progress") echo "In Progress"; return ;;
+              "pr review") echo "PR Review"; return ;;
               review) echo "Review"; return ;;
+              "ready to merge") echo "Ready to Merge"; return ;;
               done) echo "Done"; return ;;
             esac
 
@@ -540,6 +547,85 @@ jobs:
             fi
 
             return 0
+          }
+
+          has_successful_current_head_build() {
+            local head_sha="$1"
+            local checks_json
+
+            checks_json="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/check-runs?per_page=100")"
+            jq -e --arg sha "$head_sha" '
+              [.check_runs[]?
+                | select((.name | ascii_downcase) == "build")
+                | select(.head_sha == $sha)
+                | select(.status == "completed")
+                | select(.conclusion == "success")
+              ] | length > 0
+            ' <<<"$checks_json" >/dev/null
+          }
+
+          has_no_active_requested_changes() {
+            local reviews_json
+
+            reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews?per_page=100")"
+            jq -e '
+              [.[]?
+                | select(.user.login != null)
+                | select(.state == "CHANGES_REQUESTED" or .state == "APPROVED" or .state == "DISMISSED")
+              ]
+              | sort_by(.user.login, .submitted_at // "")
+              | [group_by(.user.login)[]
+                | sort_by(.submitted_at // "")
+                | last
+                | select(.state == "CHANGES_REQUESTED")
+              ] | length == 0
+            ' <<<"$reviews_json" >/dev/null
+          }
+
+          infer_ready_to_merge_status() {
+            local pr_json
+            local is_draft
+            local mergeable
+            local mergeable_state
+            local head_sha
+
+            if ! field_option_exists "Status" "Ready to Merge"; then
+              echo "Ready to Merge option is unavailable; falling back to review status." >&2
+              return 1
+            fi
+
+            pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number")"
+            is_draft="$(jq -r '.draft // false' <<<"$pr_json")"
+            mergeable="$(jq -r '.mergeable // ""' <<<"$pr_json")"
+            mergeable_state="$(jq -r '.mergeable_state // ""' <<<"$pr_json")"
+            head_sha="$(jq -r '.head.sha // ""' <<<"$pr_json")"
+
+            if [[ "$is_draft" == "true" ]]; then
+              echo "Ready to Merge blocked: pull request is draft." >&2
+              return 1
+            fi
+
+            if [[ "$mergeable" != "true" || "$mergeable_state" != "clean" ]]; then
+              echo "Ready to Merge blocked: mergeability is mergeable='$mergeable' mergeable_state='$mergeable_state'." >&2
+              return 1
+            fi
+
+            if [[ -z "$head_sha" || "$head_sha" == "null" ]]; then
+              echo "Ready to Merge blocked: head SHA is unavailable." >&2
+              return 1
+            fi
+
+            if ! has_successful_current_head_build "$head_sha"; then
+              echo "Ready to Merge blocked: no successful current-head Build check run was found." >&2
+              return 1
+            fi
+
+            if ! has_no_active_requested_changes; then
+              echo "Ready to Merge blocked: latest review state includes active requested changes." >&2
+              return 1
+            fi
+
+            echo "Ready to Merge"
           }
 
           infer_lifecycle_status() {
@@ -565,6 +651,11 @@ jobs:
               fi
 
               if [[ "$state" == "open" ]]; then
+                if ready_status="$(infer_ready_to_merge_status)"; then
+                  echo "$ready_status"
+                  return
+                fi
+
                 first_available_option "Status" "Review" "In Progress"
                 return
               fi

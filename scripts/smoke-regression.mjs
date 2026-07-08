@@ -24,7 +24,9 @@ const files = {
   functionalOutcomeCheckIn: 'src/components/FunctionalOutcomeCheckIn.tsx',
   trainingLog: 'src/components/TrainingLog.tsx',
   localizedExercise: 'src/utils/localizedExercise.ts',
+  trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
+  onboardingFlow: 'src/components/OnboardingFlow.tsx',
   weeklyRoutineBuilder: 'src/components/WeeklyRoutineBuilder.tsx',
   educationPage: 'src/pages/EducationPage.tsx',
   localeEn: 'src/locales/en.js',
@@ -146,6 +148,12 @@ section('session logs persist with required fields and refresh-safe readers', ()
     assertIncludes(source.logService, field, `training log preserves ${field}`);
     assertIncludes(source.rehabTypes, field, `TrainingLogEntry type includes ${field}`);
   });
+  assertIncludes(source.trainingLogStopReasons, "export const EARLY_STOP_REASON_CODE = 'early_stop'", 'stable early-stop reason code exists');
+  assertIncludes(source.trainingLogStopReasons, "export const USER_EXIT_REASON_CODE = 'user_exit'", 'stable user-exit reason code exists');
+  assertIncludes(source.trainingLogStopReasons, 'return stoppedEarly && !trimmedReason && !trimmedNotes ? EARLY_STOP_REASON_CODE : trimmedReason', 'blank built-in early stop saves stable code only when notes are also blank');
+  assertIncludes(source.trainingLogStopReasons, 'legacyEarlyStopReasonLabels.has(stopReason)', 'legacy translated early-stop labels are localized at render time');
+  assertIncludes(source.sessionTracker, 'normalizeStopReasonForSave(stopReason, stoppedEarly, notes)', 'session save normalizes built-in stop reason while preserving notes fallback');
+  assertIncludes(source.trainingLog, 'getLocalizedStopReasonLabel(log, t)', 'training history localizes built-in stop reasons');
   assertIncludes(source.sessionTracker, 'saveLog(log)', 'session completion saves log');
   assertIncludes(source.sessionTracker, "navigate('/logs')", 'saved session routes to logs');
 });
@@ -173,6 +181,28 @@ section('clear local data is explicit and confirmed', () => {
   assertIncludes(source.logsPage, 'clearRehabLocalData()', 'clear action calls storage helper');
   assertIncludes(source.logsPage, "t('logs.clearLocalDataConfirm')", 'clear confirmation is localized');
   assertIncludes(source.localDataLocale, 'clearLocalDataTitle', 'clear local data zh-TW/en copy exists');
+});
+
+
+section('first-run onboarding stays focused on safe start basics', () => {
+  const englishOnboarding = source.localeEn.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
+  const zhOnboarding = source.localeZh.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
+
+  assertIncludes(source.onboardingFlow, "t('onboarding.stepsLabel')", 'onboarding step list has accessible label');
+  assertIncludes(englishOnboarding, 'Pain before and after', 'English onboarding covers pain before and after');
+  assertIncludes(zhOnboarding, '記錄前後疼痛', 'zh-TW onboarding covers pain before and after');
+  assertIncludes(englishOnboarding, 'Start suitable exercise', 'English onboarding leads to suitable exercise start');
+  assertIncludes(zhOnboarding, '開始合適動作', 'zh-TW onboarding leads to suitable exercise start');
+  ['Pick level', 'Log result'].forEach((outdatedStep) => {
+    if (englishOnboarding.includes(outdatedStep)) {
+      fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);
+    }
+  });
+  ['選擇難度', '記錄結果'].forEach((outdatedStep) => {
+    if (zhOnboarding.includes(outdatedStep)) {
+      fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);
+    }
+  });
 });
 
 section('routine builder and education pages remain reachable', () => {

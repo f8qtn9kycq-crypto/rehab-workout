@@ -6,7 +6,7 @@ This file defines how ChatGPT, Codex, Claude, Gemini, and Perplexity should coll
 
 When instructions conflict, use this order:
 
-1. Latest repo files: `AGENTS.md`, `REVIEW.md`, `.github/pull_request_template.md`, and relevant docs under `/docs`.
+1. Latest repo files: `AGENTS.md`, `REVIEW.md`, `.github/pull_request_template.md`, `.github/ai-automation.yml`, and relevant docs under `/docs`.
 2. Current PR description, changed files, and build/test evidence.
 3. Current user request.
 4. Current compact context.
@@ -19,18 +19,41 @@ If GitHub/repo access is unavailable, say the recommendation is based on pasted 
 
 ## Root Workflow Contract
 
-Keep these files in the repo root as the workflow contract:
+Keep these files in the repo root or `.github` as the workflow contract:
 
 - `AGENTS.md`
 - `REVIEW.md`
 - `.github/pull_request_template.md`
+- `.github/ai-automation.yml`
 
 Detailed product, safety, UX, data, source hygiene, and localization rules live in `/docs`.
+
+## Repo-Owned Automation Contract
+
+`.github/ai-automation.yml` is the repo-owned contract for scheduled automation and low-HBC issue/PR execution.
+
+Scheduled runners must use it to:
+
+- verify repo identity before GitHub mutation.
+- stop with `repo-mismatch blocker` when the local remote, queried GitHub repo, or repo-tracked product instructions do not match.
+- select at most one issue/PR unit of work per run.
+- route Codex, ChatGPT, and Claude review gates by risk tier.
+- apply repo-specific validation commands and auto-merge eligibility.
+- preserve product boundaries instead of using one generic cross-repo prompt.
+
+Use the shared chain only as the workflow skeleton:
+
+```text
+issue implementation -> PR -> ChatGPT PR review -> retrieve verdict -> act on verdict
+```
+
+Each repository must own its own `.github/ai-automation.yml` rather than relying on a fully generic cross-repo scheduled task.
 
 ## Where Detailed Rules Live
 
 Use this map instead of pasting the full product spec into ChatGPT Project Instructions:
 
+- `.github/ai-automation.yml`: repo-owned scheduled automation contract, repo preflight, issue/PR selection, validation, review routing, and merge gating.
 - `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
 - `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
 - `docs/codex-issue-workflow.md`: one-line ChatGPT task creation and short Codex issue-to-PR trigger.
@@ -86,7 +109,7 @@ Use ChatGPT for:
 - conflict resolution between reviewers
 - product decisions
 
-ChatGPT should read `AGENTS.md`, `REVIEW.md`, and the PR template before producing Codex prompts, PR reviews, merge gates, post-merge cleanup instructions, or workflow recommendations.
+ChatGPT should read `AGENTS.md`, `REVIEW.md`, `.github/pull_request_template.md`, and `.github/ai-automation.yml` before producing Codex prompts, scheduled runner instructions, PR reviews, merge gates, post-merge cleanup instructions, or workflow recommendations.
 
 When the user says `Feedback:`, ChatGPT should treat the content as Feedback Inbox material and follow `docs/product-feedback-workflow.md` before creating GitHub issues, unless the feedback is a production bug, safety issue, regression, or blocker.
 
@@ -110,12 +133,13 @@ Codex must:
 1. Sync from latest `main` before creating an implementation branch.
 2. Create a task branch instead of committing directly to `main`.
 3. Read `AGENTS.md`, `REVIEW.md`, and `.github/pull_request_template.md` before editing.
-4. Classify risk tier before implementation.
-5. Keep changes minimal and localized.
-6. Fill the PR template with concrete QA evidence.
-7. Avoid automatic merge unless the user explicitly asks.
+4. Read `.github/ai-automation.yml` before scheduled issue selection, PR gating, or repo automation work when present.
+5. Classify risk tier before implementation.
+6. Keep changes minimal and localized.
+7. Fill the PR template with concrete QA evidence.
+8. Avoid automatic merge unless the user explicitly asks and the repo automation contract allows it.
 
-For repeated issue-to-PR work, Codex should follow `ai/skills/rehab-workout-issue-to-pr/SKILL.md`.
+For repeated issue-to-PR work, Codex should follow `ai/skills/rehab-workout-issue-to-pr/SKILL.md` and `.github/ai-automation.yml`.
 
 ## Project Status Semantics
 
@@ -183,6 +207,7 @@ Examples:
 - `REVIEW.md`
 - PR template
 - docs updates
+- `.github/ai-automation.yml`
 
 Requirements:
 
@@ -274,7 +299,8 @@ Before making changes:
 1. Read AGENTS.md.
 2. Read REVIEW.md.
 3. Read .github/pull_request_template.md.
-4. Follow them as source of truth.
+4. Read .github/ai-automation.yml when present.
+5. Follow them as source of truth.
 
 Do not:
 - push to main

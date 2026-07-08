@@ -25,6 +25,7 @@ const files = {
   trainingLog: 'src/components/TrainingLog.tsx',
   localizedExercise: 'src/utils/localizedExercise.ts',
   homePage: 'src/pages/HomePage.tsx',
+  onboardingFlow: 'src/components/OnboardingFlow.tsx',
   weeklyRoutineBuilder: 'src/components/WeeklyRoutineBuilder.tsx',
   educationPage: 'src/pages/EducationPage.tsx',
   localeEn: 'src/locales/en.js',
@@ -173,6 +174,28 @@ section('clear local data is explicit and confirmed', () => {
   assertIncludes(source.logsPage, 'clearRehabLocalData()', 'clear action calls storage helper');
   assertIncludes(source.logsPage, "t('logs.clearLocalDataConfirm')", 'clear confirmation is localized');
   assertIncludes(source.localDataLocale, 'clearLocalDataTitle', 'clear local data zh-TW/en copy exists');
+});
+
+
+section('first-run onboarding stays focused on safe start basics', () => {
+  const englishOnboarding = source.localeEn.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
+  const zhOnboarding = source.localeZh.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
+
+  assertIncludes(source.onboardingFlow, "t('onboarding.stepsLabel')", 'onboarding step list has accessible label');
+  assertIncludes(englishOnboarding, 'Pain before and after', 'English onboarding covers pain before and after');
+  assertIncludes(zhOnboarding, '記錄前後疼痛', 'zh-TW onboarding covers pain before and after');
+  assertIncludes(englishOnboarding, 'Start suitable exercise', 'English onboarding leads to suitable exercise start');
+  assertIncludes(zhOnboarding, '開始合適動作', 'zh-TW onboarding leads to suitable exercise start');
+  ['Pick level', 'Log result'].forEach((outdatedStep) => {
+    if (englishOnboarding.includes(outdatedStep)) {
+      fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);
+    }
+  });
+  ['選擇難度', '記錄結果'].forEach((outdatedStep) => {
+    if (zhOnboarding.includes(outdatedStep)) {
+      fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);
+    }
+  });
 });
 
 section('routine builder and education pages remain reachable', () => {

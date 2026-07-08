@@ -1,6 +1,16 @@
 # Issue-driven Codex workflow
 
-Use this workflow when you want to trigger Codex with a short instruction instead of pasting a long prompt.
+## Workflow version
+
+Current operating model: **Workflow v2.0**.
+
+Workflow v2.0 means:
+
+- active open issues and all future implementation issues should use the Codex Task contract below.
+- closed historical issues are not rewritten for cosmetic consistency.
+- obsolete open issues should be closed or clearly marked as superseded instead of being silently left active.
+- Project #2 is the operational source of truth after an issue is created.
+- ChatGPT owns PM triage and issue creation; Codex owns branch, implementation, validation, and PR creation.
 
 ## Why
 
@@ -38,6 +48,27 @@ A GitHub issue can hold the task scope and acceptance criteria. Codex then only 
 7. Review the PR using `REVIEW.md`.
 8. Merge only when the PR template evidence is complete and no P0 remains.
 9. After merge, verify branch auto-delete or delete the branch manually.
+
+## Active issue normalization
+
+Open active issues should include enough metadata for both humans and Project #2 automation:
+
+- `Status`
+- `Priority`
+- `Risk Tier`
+- `AI Owner`
+- `Area`
+- `Goal`
+- `User problem`
+- `Scope`
+- `Likely files`
+- `Safety constraints`
+- `Validation required`
+- `Acceptance criteria`
+- `QA checklist`
+- `Short Codex trigger`
+
+If an older open issue is otherwise clear but lacks one or more sections, prefer adding a concise clarifying comment instead of rewriting the issue history. Do not rewrite closed legacy issues unless essential traceability is missing.
 
 ## ChatGPT shortcut
 

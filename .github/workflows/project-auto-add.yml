@@ -51,12 +51,12 @@ permissions:
   repository-projects: write
 
 jobs:
-  validate-project-sync-request:
-    name: Validate Project sync request
+  record-project-sync-request:
+    name: Record Project sync request
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Validate pull request event
+      - name: Record pull request event
         env:
           EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
           EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -74,7 +74,7 @@ jobs:
             exit 1
           fi
 
-          echo "Project sync request validated for PR #$EVENT_PULL_REQUEST_NUMBER at $EVENT_PULL_REQUEST_HEAD_SHA."
+          echo "Recorded Project sync request for PR #$EVENT_PULL_REQUEST_NUMBER at $EVENT_PULL_REQUEST_HEAD_SHA."
 
   add-content-to-project:
     name: Add GitHub content to Project

@@ -60,7 +60,7 @@ Recommended token access:
 - Project access: Project #2 owned by `f8qtn9kycq-crypto`
 - Permissions sufficient for reading issues and writing project items / fields
 
-Pull requests use two event paths. The ordinary `pull_request` job validates the request on the PR head without secrets. The `pull_request_target` job reads the trusted workflow from the default branch and performs Project V2 writes with `PROJECTS_TOKEN`; it must never check out or execute pull-request code.
+Pull requests use two independent event paths. The ordinary `pull_request` job records a non-secret lifecycle check on the PR head; it is not security or Project-mutation evidence and does not gate the trusted job. The `pull_request_target` job reads the trusted workflow from the default branch and performs Project V2 writes with `PROJECTS_TOKEN`; its successful run is the authoritative Project-sync evidence, and it must never check out or execute pull-request code.
 
 ## Manual backfill
 

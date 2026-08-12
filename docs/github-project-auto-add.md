@@ -1,6 +1,6 @@
 # GitHub Project auto-add workflow
 
-This repo uses `.github/workflows/project-auto-add.yml` to add newly opened issues to the user Project backlog.
+This repo uses `.github/workflows/project-auto-add.yml` to add issues and pull requests to the user Project backlog and keep lifecycle fields synchronized.
 
 ## What it does
 
@@ -42,15 +42,13 @@ The option names must match exactly because GitHub Project single-select fields 
 
 ## Token setup
 
-The workflow uses this token order:
+The workflow requires this repository secret:
 
 ```text
 secrets.PROJECTS_TOKEN
-↓ fallback
-GITHUB_TOKEN
 ```
 
-For user-owned Projects, `GITHUB_TOKEN` may not have enough Project v2 permission in every setup. If the workflow cannot access Project #2, create a fine-grained personal access token and save it as a repository secret named:
+`GITHUB_TOKEN` is not a fallback for Projects V2 field writes. For user-owned Projects, create a fine-grained personal access token and save it as a repository secret named:
 
 ```text
 PROJECTS_TOKEN
@@ -61,6 +59,8 @@ Recommended token access:
 - Repository access: `f8qtn9kycq-crypto/rehab-workout`
 - Project access: Project #2 owned by `f8qtn9kycq-crypto`
 - Permissions sufficient for reading issues and writing project items / fields
+
+Pull requests use two independent event paths. The ordinary `pull_request` job records a non-secret lifecycle check on the PR head; it is not security or Project-mutation evidence and does not gate the trusted job. The `pull_request_target` job reads the trusted workflow from the default branch and performs Project V2 writes with `PROJECTS_TOKEN`; its successful run is the authoritative Project-sync evidence, and it must never check out or execute pull-request code.
 
 ## Manual backfill
 

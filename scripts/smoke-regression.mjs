@@ -18,6 +18,7 @@ const files = {
   outcomeStorage: 'src/services/outcomeStorage.ts',
   assessmentStorage: 'src/services/assessmentStorage.ts',
   localStorageService: 'src/services/localStorageService.ts',
+  i18nService: 'src/services/i18n.js',
   logsPage: 'src/pages/LogsPage.tsx',
   progressSummary: 'src/utils/progressSummary.ts',
   progressSummaryComponent: 'src/components/ProgressSummary.tsx',
@@ -248,6 +249,12 @@ section('required i18n keys for smoke-covered flows exist', () => {
     assertMatch(source.localeEn + source.localDataLocale, looseKeyPattern, `English locale has ${key}`);
     assertMatch(source.localeZh + source.localDataLocale, looseKeyPattern, `zh-TW locale has ${key}`);
   });
+});
+
+section('language changes update browser metadata', () => {
+  assertIncludes(source.i18nService, 'useEffect', 'i18n provider reacts to language changes');
+  assertIncludes(source.i18nService, "document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant'", 'document language follows active locale');
+  assertIncludes(source.i18nService, "document.title = resolvePath(resource, 'app.brand')", 'browser title follows active locale');
 });
 
 const distIndex = path.join(rootDir, 'dist/index.html');

@@ -1,4 +1,4 @@
-import { createContext, createElement, useContext, useMemo, useState } from 'react';
+import { createContext, createElement, useContext, useEffect, useMemo, useState } from 'react';
 import en from '../locales/en';
 import cleanupLocales from '../locales/cleanup';
 import localDataLocales from '../locales/localData';
@@ -50,6 +50,12 @@ function interpolate(value, params = {}) {
 
 export function I18nProvider({ children }) {
   const [language, setLanguageState] = useState(getSavedLanguage);
+
+  useEffect(() => {
+    const resource = resources[language] ?? resources[defaultLanguage];
+    document.documentElement.lang = language === 'en' ? 'en' : 'zh-Hant';
+    document.title = resolvePath(resource, 'app.brand') ?? resolvePath(resources[defaultLanguage], 'app.brand');
+  }, [language]);
 
   function setLanguage(nextLanguage) {
     const safeLanguage = supportedLanguages.includes(nextLanguage) ? nextLanguage : defaultLanguage;

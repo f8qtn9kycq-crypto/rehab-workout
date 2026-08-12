@@ -248,7 +248,7 @@ Keep the Projects V2 owner type explicit in `.github/workflows/project-auto-add.
 The workflow should track these GitHub content types:
 
 - Issues on opened, reopened, edited, labeled, and closed events.
-- Pull requests on opened, reopened, edited, synchronize, ready_for_review, labeled, and closed events.
+- Pull requests on opened, reopened, edited, synchronize, ready_for_review, labeled, and closed events. The ordinary `pull_request` job validates the request on the PR head without secrets, while the matching `pull_request_target` job uses the trusted default-branch workflow definition to write Project V2 fields. The privileged job must never check out or execute PR code.
 - Manual `workflow_dispatch` backfills for either `target_type=issue` or `target_type=pull_request`.
 
 Status sync rules:

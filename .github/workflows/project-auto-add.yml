@@ -8,7 +8,18 @@ on:
       - edited
       - labeled
       - closed
+  # Use the trusted default-branch workflow definition so Dependabot PRs can
+  # access PROJECTS_TOKEN. This workflow never checks out or executes PR code.
   pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+      - ready_for_review
+      - labeled
+      - closed
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -40,9 +51,34 @@ permissions:
   repository-projects: write
 
 jobs:
+  validate-project-sync-request:
+    name: Validate Project sync request
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate pull request event
+        env:
+          EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! [[ "$EVENT_PULL_REQUEST_NUMBER" =~ ^[0-9]+$ ]]; then
+            echo "::error::Pull request number must be numeric."
+            exit 1
+          fi
+
+          if ! [[ "$EVENT_PULL_REQUEST_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Pull request head SHA must be a full commit SHA."
+            exit 1
+          fi
+
+          echo "Project sync request validated for PR #$EVENT_PULL_REQUEST_NUMBER at $EVENT_PULL_REQUEST_HEAD_SHA."
+
   add-content-to-project:
     name: Add GitHub content to Project
-    if: github.event_name != 'issues' || github.event.issue.pull_request == null
+    if: github.event_name != 'pull_request' && (github.event_name != 'issues' || github.event.issue.pull_request == null)
     runs-on: ubuntu-latest
     env:
       PROJECT_OWNER: f8qtn9kycq-crypto
@@ -65,13 +101,19 @@ jobs:
       - name: Resolve content metadata
         id: content
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TARGET_TYPE: ${{ inputs.target_type }}
+          INPUT_TARGET_NUMBER: ${{ inputs.target_number }}
+          EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
 
           write_output() {
             local name="$1"
             local value="$2"
-            local delimiter="PROJECT_AUTO_ADD_${name}_EOF"
+            local delimiter="PROJECT_AUTO_ADD_${name}_$(openssl rand -hex 16)"
 
             {
               echo "$name<<$delimiter"
@@ -80,17 +122,17 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           }
 
-          event_name="${{ github.event_name }}"
+          event_name="$EVENT_NAME"
 
           if [[ "$event_name" == "workflow_dispatch" ]]; then
-            target_type="${{ inputs.target_type }}"
-            target_number="${{ inputs.target_number }}"
-          elif [[ "$event_name" == "pull_request" ]]; then
+            target_type="$INPUT_TARGET_TYPE"
+            target_number="$INPUT_TARGET_NUMBER"
+          elif [[ "$event_name" == "pull_request_target" ]]; then
             target_type="pull_request"
-            target_number="${{ github.event.pull_request.number }}"
+            target_number="$EVENT_PULL_REQUEST_NUMBER"
           else
             target_type="issue"
-            target_number="${{ github.event.issue.number }}"
+            target_number="$EVENT_ISSUE_NUMBER"
           fi
 
           case "$target_type" in
@@ -181,6 +223,23 @@ jobs:
 
       - name: Add item and set project fields
         shell: bash
+        env:
+          CONTENT_TARGET_TYPE: ${{ steps.content.outputs.target_type }}
+          CONTENT_TARGET_NUMBER: ${{ steps.content.outputs.number }}
+          CONTENT_ID: ${{ steps.content.outputs.id }}
+          CONTENT_URL: ${{ steps.content.outputs.url }}
+          CONTENT_TITLE: ${{ steps.content.outputs.title }}
+          CONTENT_BODY: ${{ steps.content.outputs.body }}
+          CONTENT_LABELS: ${{ steps.content.outputs.labels }}
+          CONTENT_STATE: ${{ steps.content.outputs.state }}
+          CONTENT_STATE_REASON: ${{ steps.content.outputs.state_reason }}
+          CONTENT_MERGED: ${{ steps.content.outputs.merged }}
+          LINKED_ISSUE_NUMBER: ${{ steps.content.outputs.linked_issue_number }}
+          LINKED_ISSUE_ID: ${{ steps.content.outputs.linked_issue_id }}
+          LINKED_ISSUE_URL: ${{ steps.content.outputs.linked_issue_url }}
+          LINKED_ISSUE_TITLE: ${{ steps.content.outputs.linked_issue_title }}
+          LINKED_ISSUE_BODY: ${{ steps.content.outputs.linked_issue_body }}
+          LINKED_ISSUE_LABELS: ${{ steps.content.outputs.linked_issue_labels }}
         run: |
           set -euo pipefail
 
@@ -237,70 +296,22 @@ jobs:
             exit 1
           fi
 
-          target_type="$(cat <<'PROJECT_AUTO_ADD_TARGET_TYPE_EOF'
-          ${{ steps.content.outputs.target_type }}
-          PROJECT_AUTO_ADD_TARGET_TYPE_EOF
-          )"
-          target_number="$(cat <<'PROJECT_AUTO_ADD_NUMBER_EOF'
-          ${{ steps.content.outputs.number }}
-          PROJECT_AUTO_ADD_NUMBER_EOF
-          )"
-          content_id="$(cat <<'PROJECT_AUTO_ADD_ID_EOF'
-          ${{ steps.content.outputs.id }}
-          PROJECT_AUTO_ADD_ID_EOF
-          )"
-          content_url="$(cat <<'PROJECT_AUTO_ADD_URL_EOF'
-          ${{ steps.content.outputs.url }}
-          PROJECT_AUTO_ADD_URL_EOF
-          )"
-          title="$(cat <<'PROJECT_AUTO_ADD_TITLE_EOF'
-          ${{ steps.content.outputs.title }}
-          PROJECT_AUTO_ADD_TITLE_EOF
-          )"
-          body="$(cat <<'PROJECT_AUTO_ADD_BODY_EOF'
-          ${{ steps.content.outputs.body }}
-          PROJECT_AUTO_ADD_BODY_EOF
-          )"
-          labels="$(cat <<'PROJECT_AUTO_ADD_LABELS_EOF'
-          ${{ steps.content.outputs.labels }}
-          PROJECT_AUTO_ADD_LABELS_EOF
-          )"
-          state="$(cat <<'PROJECT_AUTO_ADD_STATE_EOF'
-          ${{ steps.content.outputs.state }}
-          PROJECT_AUTO_ADD_STATE_EOF
-          )"
-          state_reason="$(cat <<'PROJECT_AUTO_ADD_STATE_REASON_EOF'
-          ${{ steps.content.outputs.state_reason }}
-          PROJECT_AUTO_ADD_STATE_REASON_EOF
-          )"
-          merged="$(cat <<'PROJECT_AUTO_ADD_MERGED_EOF'
-          ${{ steps.content.outputs.merged }}
-          PROJECT_AUTO_ADD_MERGED_EOF
-          )"
-          linked_issue_number="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_NUMBER_EOF'
-          ${{ steps.content.outputs.linked_issue_number }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_NUMBER_EOF
-          )"
-          linked_issue_id="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_ID_EOF'
-          ${{ steps.content.outputs.linked_issue_id }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_ID_EOF
-          )"
-          linked_issue_url="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_URL_EOF'
-          ${{ steps.content.outputs.linked_issue_url }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_URL_EOF
-          )"
-          linked_issue_title="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_TITLE_EOF'
-          ${{ steps.content.outputs.linked_issue_title }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_TITLE_EOF
-          )"
-          linked_issue_body="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_BODY_EOF'
-          ${{ steps.content.outputs.linked_issue_body }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_BODY_EOF
-          )"
-          linked_issue_labels="$(cat <<'PROJECT_AUTO_ADD_LINKED_ISSUE_LABELS_EOF'
-          ${{ steps.content.outputs.linked_issue_labels }}
-          PROJECT_AUTO_ADD_LINKED_ISSUE_LABELS_EOF
-          )"
+          target_type="$CONTENT_TARGET_TYPE"
+          target_number="$CONTENT_TARGET_NUMBER"
+          content_id="$CONTENT_ID"
+          content_url="$CONTENT_URL"
+          title="$CONTENT_TITLE"
+          body="$CONTENT_BODY"
+          labels="$CONTENT_LABELS"
+          state="$CONTENT_STATE"
+          state_reason="$CONTENT_STATE_REASON"
+          merged="$CONTENT_MERGED"
+          linked_issue_number="$LINKED_ISSUE_NUMBER"
+          linked_issue_id="$LINKED_ISSUE_ID"
+          linked_issue_url="$LINKED_ISSUE_URL"
+          linked_issue_title="$LINKED_ISSUE_TITLE"
+          linked_issue_body="$LINKED_ISSUE_BODY"
+          linked_issue_labels="$LINKED_ISSUE_LABELS"
 
           extract_structured_metadata() {
             local text="$1"

@@ -675,7 +675,7 @@ jobs:
             fi
           }
 
-          item_id="$(add_or_find_project_item "$content_id" "$content_url" "$target_type #${{ steps.content.outputs.number }}")"
+          item_id="$(add_or_find_project_item "$content_id" "$content_url" "$target_type #$target_number")"
 
           status_option="$(infer_lifecycle_status)"
           if [[ "$status_option" == Skipping\ Status:* ]]; then

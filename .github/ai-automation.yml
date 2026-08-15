@@ -125,6 +125,26 @@ risk_tiers:
       chatgpt_pm_synthesis: required_before_merge
     auto_merge_eligible: false
 
+approval_policy:
+  sole_contributor_exception:
+    enabled: true
+    verification:
+      - live_repository_collaborator_count_is_exactly_one
+      - pull_request_author_is_that_collaborator
+      - github_self_approval_is_rejected_or_unavailable
+    substitute_evidence:
+      - exact_head_human_walkthrough_comment
+    required_alongside_substitute:
+      - Claude_Tier_3_review
+      - ChatGPT_PM_synthesis
+      - current_head_required_checks
+      - no_unresolved_review_threads
+      - clean_mergeability
+      - product_safety_and_acceptance_gates
+    constraints:
+      - never_claim_formal_github_approve
+      - disable_when_collaborator_count_changes
+
 auto_merge:
   allowed_only_when:
     - risk_tier_is_Tier_0

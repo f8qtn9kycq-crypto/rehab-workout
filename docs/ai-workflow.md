@@ -270,6 +270,17 @@ Requirements:
 - no diagnosis/cure claims
 - stricter merge gate
 
+### Sole-contributor approval exception
+
+The repo uses a conditional sole-contributor exception for the human approval
+step. Before delivery, verify through GitHub that exactly one collaborator has
+repository access and that the PR author is that collaborator. If GitHub rejects
+self-approval, an exact-head human walkthrough comment can serve as approval
+evidence. This does not replace Claude Tier 3 review, ChatGPT PM synthesis,
+checks, thread review, safety gates, or mergeability checks, and must never be
+represented as a formal GitHub `APPROVE` review. Adding a second contributor
+automatically disables the exception.
+
 ## Default Validation
 
 Always run for implementation PRs:

@@ -52,6 +52,23 @@ Backlog only. Do not block merge.
 - Do not request Claude / ChatGPT PM synthesis for Tier 0 or Tier 1 PRs unless findings conflict or safety/session/routing risk appears.
 - For Tier 2+ PRs, explicitly verify SafetyGate, pain rules, red-flag blocking, session route guards, LocalStorage compatibility, and iOS Safari / SPA routing risk.
 
+## Sole-contributor approval exception
+
+When the live repository collaborator list contains exactly one contributor and
+the PR author is that contributor, GitHub may reject formal self-approval. In
+that case, a human walkthrough comment on the exact current head may satisfy the
+human-approval evidence requirement, provided that:
+
+- Claude review is formally recorded for Tier 3 work.
+- ChatGPT PM synthesis is recorded where required.
+- Required checks, review threads, mergeability, Draft state, and acceptance
+  criteria are clean.
+- The comment explicitly says it is human approval evidence and not a GitHub
+  `APPROVE` review.
+
+Re-check collaborator count before each delivery decision. This exception is
+disabled as soon as a second contributor is present.
+
 ## Final output
 
 Use this format:

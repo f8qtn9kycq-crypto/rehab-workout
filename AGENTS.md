@@ -155,6 +155,25 @@ Review agents must:
 - avoid duplicate findings.
 - include file, behavior, risk, and acceptance criterion for every P0/P1.
 
+## Sole-contributor approval policy
+
+This repository currently has one collaborator with repository access. Until that
+changes, use this default approval exception when GitHub rejects the PR author's
+self-approval:
+
+- Verify the live collaborator list still contains exactly one repository
+  contributor and that the PR author is that contributor.
+- Record a human walkthrough result in a PR comment against the exact current
+  head SHA.
+- Keep the required Claude Tier 3 review, ChatGPT PM synthesis, current-head
+  checks, review-thread check, mergeability check, safety gates, and acceptance
+  criteria unchanged.
+- Treat the recorded walkthrough as human approval evidence only; do not claim
+  that GitHub recorded a formal `APPROVE` review.
+- If another collaborator is added, or the PR author is not the sole
+  contributor, this exception is disabled and a formal independent human review
+  is required.
+
 ## P0 blockers
 
 Flag as P0 only when:

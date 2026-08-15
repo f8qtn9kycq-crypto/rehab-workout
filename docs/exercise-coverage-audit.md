@@ -1,19 +1,19 @@
 # Exercise Coverage Audit
 
-Generated: 2026-07-02T16:57:37.587Z
+Generated: 2026-08-15T08:48:52.309Z
 
-Source commit: 00e6d07
+Source commit: 4ca4d6a
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
 ## 1. Executive summary
 
-- Total exercises audited: 29
+- Total exercises audited: 32
 - Audit body areas: shoulder_hip, shoulder_neck, knee, ankle
 - App body area enums: shoulder, hip, shoulder_neck, knee, ankle
 - Canonical equipment ids: bodyweight, dumbbell, kettlebell, chair, wall, resistance_band, foam_roller
-- Raw equipment-field bodyArea + difficulty + equipment gaps: 66
-- App-realistic filter dead-end combinations: 47
+- Raw equipment-field bodyArea + difficulty + equipment gaps: 65
+- App-realistic filter dead-end combinations: 46
 - Canonical equipment with 0 exercises: foam_roller
 - Non-canonical exercise bodyArea values: None
 - Non-canonical exercise type values: None
@@ -23,7 +23,7 @@ Top 5 gaps:
 
 1. shoulder_neck has 0 intermediate and 0 advanced exercises.
 2. foam_roller has 0 total exercise coverage.
-3. Advanced coverage is missing for shoulder_hip, shoulder_neck, knee; overall, 47 app-realistic bodyArea + difficulty + equipment combinations have 0 matching exercises.
+3. Advanced coverage is missing for shoulder_hip, shoulder_neck, knee; overall, 46 app-realistic bodyArea + difficulty + equipment combinations have 0 matching exercises.
 4. 「為我推薦」/Recommended for me is a copy and explanation issue, not current evidence of recommendation logic failure.
 5. shoulder_hip is a user/audit mental model while the app stores shoulder and hip separately, which may confuse copy and reporting.
 
@@ -59,6 +59,9 @@ Top 5 gaps:
 | 彈力帶腳踝內翻外翻 | ankle-band-inversion-eversion | ankle | strength | beginner | resistance_band |
 | 單腳站立 | ankle-single-leg-stand | ankle | balance | intermediate | chair |
 | 站姿小腿提踵 | ankle-calf-raise | ankle | strength | intermediate | chair |
+| 靠牆直膝小腿伸展 | ankle-gastrocnemius-stretch | ankle | stretch | beginner | wall |
+| 靠牆屈膝小腿伸展 | ankle-soleus-stretch | ankle | stretch | beginner | wall |
+| 坐姿屈膝提踵 | ankle-seated-soleus-raise | ankle | strength | beginner | chair |
 | 單腳觸遠 | ankle-single-leg-reach | ankle | proprioception | advanced | chair |
 
 ## 3. Difficulty coverage table
@@ -68,7 +71,7 @@ Top 5 gaps:
 | shoulder_hip | 7 | 4 | 0 |
 | shoulder_neck | 7 | 0 | 0 |
 | knee | 4 | 1 | 0 |
-| ankle | 3 | 2 | 1 |
+| ankle | 6 | 2 | 1 |
 
 ## 4. Equipment coverage table
 
@@ -77,8 +80,8 @@ Top 5 gaps:
 | bodyweight | 9 | shoulder_hip, shoulder_neck, knee | advanced |
 | dumbbell | 1 | shoulder_hip | intermediate, advanced |
 | kettlebell | 1 | shoulder_hip | intermediate, advanced |
-| chair | 16 | shoulder_hip, shoulder_neck, knee, ankle | None |
-| wall | 4 | shoulder_hip, shoulder_neck, knee | advanced |
+| chair | 17 | shoulder_hip, shoulder_neck, knee, ankle | None |
+| wall | 6 | shoulder_hip, shoulder_neck, knee, ankle | advanced |
 | resistance_band | 5 | shoulder_hip, ankle | advanced |
 | foam_roller | 0 | None | beginner, intermediate, advanced |
 
@@ -87,15 +90,15 @@ Top 5 gaps:
 | Type | Count | Body Areas Covered |
 | --- | --- | --- |
 | mobility | 7 | shoulder_hip, shoulder_neck, ankle |
-| strength | 14 | shoulder_hip, shoulder_neck, knee, ankle |
-| stretch | 3 | shoulder_neck |
+| strength | 15 | shoulder_hip, shoulder_neck, knee, ankle |
+| stretch | 5 | shoulder_neck, ankle |
 | relaxation | 3 | shoulder_neck, knee |
 | balance | 1 | ankle |
 | proprioception | 1 | ankle |
 
 ## 6. Empty combinations table
 
-This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 66, but it should not be used as live UI dead-end evidence.
+This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 65, but it should not be used as live UI dead-end evidence.
 
 | Body Area | Difficulty | Equipment | Result | Suggested Action |
 | --- | --- | --- | --- | --- |
@@ -134,7 +137,6 @@ This section models live filter compatibility, including bodyweight-required exe
 | knee | advanced | foam_roller | 0 exercises | Content gap: add reviewed advanced option only if safety guardrails are explicit. |
 | ankle | beginner | dumbbell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | ankle | beginner | kettlebell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
-| ankle | beginner | wall | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | ankle | beginner | foam_roller | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | ankle | intermediate | dumbbell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | ankle | intermediate | kettlebell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
@@ -174,7 +176,7 @@ This section models live filter compatibility, including bodyweight-required exe
 
 | Finding | Content Gap | Filter Bug | Recommendation Bug | Copy/UX Issue | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 47 app-realistic empty bodyArea + difficulty + equipment combinations; 66 raw equipment-field gaps. |
+| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 46 app-realistic empty bodyArea + difficulty + equipment combinations; 65 raw equipment-field gaps. |
 | Canonical foam_roller option has zero total exercise coverage. | Yes | No current evidence | No current evidence | Potentially | foam_roller appears in EQUIPMENT_IDS/EQUIPMENT_OPTIONS and has 0 exercises. |
 | Advanced coverage is sparse and absent outside ankle. | Yes | No current evidence | No current evidence | Potentially | shoulder_hip, shoulder_neck, knee |
 | 「為我推薦」 may be unclear to users. | No | No current evidence | No current evidence | Yes | Mode label exists, but the visible copy does not explain inputs used: assessment, equipment, pain, and logs. |

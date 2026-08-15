@@ -1,0 +1,122 @@
+name: ChatGPT PM synthesis
+
+on:
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: Pull request number to receive the synthesis result
+        required: true
+        type: string
+      head_sha:
+        description: Exact PR head SHA reviewed by ChatGPT
+        required: true
+        type: string
+      result:
+        description: ChatGPT PM synthesis result to publish verbatim
+        required: true
+        type: string
+      trigger_reason:
+        description: Why synthesis was required or triggered
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  request:
+    name: Record synthesis request
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, 'ChatGPT PM synthesis')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record exact-head request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")"
+          head_sha="$(jq -r '.head.sha' <<<"$pr_json")"
+          state="$(jq -r '.state' <<<"$pr_json")"
+
+          if [[ "$state" != "open" ]]; then
+            echo "PR #$PR_NUMBER is not open; no synthesis request recorded."
+            exit 0
+          fi
+
+          body="<!-- chatgpt-pm-synthesis-request: head_sha=$head_sha -->
+          ChatGPT PM synthesis requested for PR #$PR_NUMBER.
+
+          - Exact head SHA: `$head_sha`
+          - Trigger: explicit PR comment containing `ChatGPT PM synthesis`
+          - Result publication: run the **ChatGPT PM synthesis** workflow with this PR number and exact head SHA.
+
+          ChatGPT must return scope, risk tier, user/product impact, validation and current-head check evidence, review/thread state, mergeability, blockers, and a merge recommendation. This request is not a GitHub approval."
+
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            -f body="$body" >/dev/null
+
+  publish:
+    name: Publish synthesis result
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate exact head and publish result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pull_request_number }}
+          EXPECTED_HEAD_SHA: ${{ inputs.head_sha }}
+          SYNTHESIS_RESULT: ${{ inputs.result }}
+          TRIGGER_REASON: ${{ inputs.trigger_reason }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+            echo "::error::pull_request_number must be numeric."
+            exit 1
+          fi
+          if ! [[ "$EXPECTED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::head_sha must be a full commit SHA."
+            exit 1
+          fi
+          if [[ -z "$SYNTHESIS_RESULT" ]]; then
+            echo "::error::result must not be empty."
+            exit 1
+          fi
+
+          pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")"
+          actual_head_sha="$(jq -r '.head.sha' <<<"$pr_json")"
+          state="$(jq -r '.state' <<<"$pr_json")"
+
+          if [[ "$state" != "open" ]]; then
+            echo "::error::PR #$PR_NUMBER is not open."
+            exit 1
+          fi
+          if [[ "$actual_head_sha" != "$EXPECTED_HEAD_SHA" ]]; then
+            echo "::error::Stale synthesis: expected $EXPECTED_HEAD_SHA but PR head is $actual_head_sha."
+            exit 1
+          fi
+
+          body="<!-- chatgpt-pm-synthesis-result: head_sha=$EXPECTED_HEAD_SHA -->
+          ## ChatGPT PM synthesis
+
+          - Exact head SHA: `$EXPECTED_HEAD_SHA`
+          - Trigger reason: $TRIGGER_REASON
+          - This is supplemental synthesis, not a formal GitHub approval.
+
+          $SYNTHESIS_RESULT"
+
+          gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            -f body="$body" >/dev/null

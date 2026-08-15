@@ -45,6 +45,7 @@ execution:
     - issue implementation
     - pull request creation or update
     - ChatGPT pull request review when required
+    - ChatGPT PM synthesis request and exact-head result publication when required or triggered
     - verdict retrieval
     - gate-based action on verdict
   disallowed_by_default:
@@ -166,6 +167,17 @@ auto_merge:
     - post_merge_runtime_validation_is_listed_when_behavior_depends_on_real_GitHub_events
 
 control_plane:
+  chatgpt_pm_synthesis:
+    request_triggers:
+      - PR body or label requires synthesis by risk tier or conflicting findings
+      - explicit PR comment containing "ChatGPT PM synthesis"
+    result_comment_requirements:
+      - publish to the same PR as a GitHub comment
+      - include exact current head SHA and trigger reason
+      - include scope, risk tier, product impact, validation and current-head checks
+      - include review/thread state, mergeability, blockers, and recommendation
+      - state that the result is supplemental and not a formal GitHub approval
+      - reject stale results when the PR head SHA has changed
   labels:
     ready_for_implementation:
       - codex-ready

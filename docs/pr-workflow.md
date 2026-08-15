@@ -113,6 +113,18 @@ Expected evidence:
 - no diagnosis/cure claims
 - stricter merge gate
 
+## Sole-contributor approval policy
+
+For this repository, the default human-approval path is conditional on the live
+GitHub collaborator list. If exactly one contributor exists and the PR author is
+that contributor, GitHub self-approval may be impossible. The delivery record
+may use a human walkthrough comment tied to the exact head SHA as human approval
+evidence, but must still include the Claude review, ChatGPT PM synthesis,
+current-head checks, review-thread state, mergeability, and all product safety
+gates. The record must say that it is evidence, not a formal GitHub approval.
+
+If collaborator count changes, require an independent formal human review again.
+
 ## PR Template Evidence
 
 Every PR should fill or preserve:

@@ -51,6 +51,7 @@ What user problem this addresses:
 - [ ] No P0
 - [ ] P1 either fixed or explicitly deferred
 - [ ] Acceptance criteria met
+- [ ] Human approval recorded, or sole-contributor exact-head walkthrough evidence recorded when the repository has exactly one contributor and GitHub rejects self-approval
 
 ## Post-merge cleanup
 

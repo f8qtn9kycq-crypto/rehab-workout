@@ -193,6 +193,10 @@ When exercise data, filters, recommendations, or coverage docs change, run:
 
 ```bash
 npm run audit:exercise-coverage
+
+## Knowledge sources
+
+Exercise content may reference `src/data/knowledgeSources.ts` using a stable `knowledgeSources:<sourceId>` value in `sourceRef`. The registry is an evidence and curation layer, not a replacement for written exercise instructions. Records distinguish hospital/professional sources, expert videos, and higher-level evidence, and must retain safety limitations and content notes.
 ```
 
 Audit output should help identify:

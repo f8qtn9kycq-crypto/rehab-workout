@@ -73,6 +73,12 @@ Prioritize:
 - rhomboids
 - gentle mobility
 
+### Head / neck symptom escalation
+
+For shoulder-neck content, do not treat headache or dizziness as proof of muscle tightness or as a reason to continue exercising. Stop and recommend professional evaluation when symptoms include sudden or unusual severe headache, dizziness or nausea, visual or balance changes, pain spreading into an arm, new numbness, tingling, weakness, an electric-shock sensation, or recent head/neck trauma.
+
+These symptoms must not be handled by automatically suggesting another neck exercise. Headache content remains education-only; the app must not diagnose a headache type or claim that an exercise treats or cures headache.
+
 ### Hip
 
 Avoid when discomfort exists:

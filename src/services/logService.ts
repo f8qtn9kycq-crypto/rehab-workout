@@ -8,9 +8,10 @@ import {
   type ExerciseType,
   type TrainingLogEntry,
 } from '../types/rehab';
-import { safeReadJson, safeRemoveItem, safeSetItem } from './localStorageService';
+import { safeGetItem, safeReadJson, safeRemoveItem, safeSetItem } from './localStorageService';
 
-const LOG_KEY = 'rehab.trainingLogs.v1';
+const LEGACY_LOG_KEY = 'rehab.trainingLogs.v1';
+const LOG_KEY = 'rehab.trainingLogs.v2';
 const MAX_LOGS = 100;
 
 interface CreateTrainingLogInput {
@@ -47,7 +48,7 @@ function migrateBodyArea(bodyArea: unknown): BodyArea | null {
   return isBodyArea(migratedBodyArea) ? migratedBodyArea : null;
 }
 
-function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | null {
+function normalizeLog(rawLog: Partial<TrainingLogEntry>, legacyFivePoint = false): TrainingLogEntry | null {
   if (!rawLog || typeof rawLog !== 'object') return null;
   if (!rawLog.id || !rawLog.exerciseId || !rawLog.exerciseTitle) return null;
 
@@ -63,9 +64,14 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
   const repsCompleted = Number(rawLog.repsCompleted ?? 0);
   const painBefore = Number(rawLog.painBefore ?? 0);
   const painAfter = Number(rawLog.painAfter ?? 0);
+  const rawDifficultyRating = Number(rawLog.difficultyRating ?? (legacyFivePoint ? 3 : 5));
+  const difficultyRating = legacyFivePoint && rawDifficultyRating >= 1 && rawDifficultyRating <= 5
+    ? rawDifficultyRating * 2
+    : rawDifficultyRating;
   const stoppedEarly = Boolean(rawLog.stoppedEarly);
 
-  if ([setsCompleted, repsCompleted, painBefore, painAfter].some((value) => Number.isNaN(value))) return null;
+  if ([setsCompleted, repsCompleted, painBefore, painAfter, difficultyRating].some((value) => Number.isNaN(value))) return null;
+  if (difficultyRating < 0 || difficultyRating > 10) return null;
 
   return {
     id: String(rawLog.id),
@@ -83,7 +89,7 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
     repsCompleted,
     painBefore,
     painAfter,
-    difficultyRating: Number(rawLog.difficultyRating ?? 3),
+    difficultyRating,
     stoppedEarly,
     recoveryMode: Boolean(rawLog.recoveryMode),
     completionStatus: stoppedEarly ? 'stopped_early' : 'completed',
@@ -94,9 +100,14 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>): TrainingLogEntry | nul
 }
 
 export function getLogs(): TrainingLogEntry[] {
-  const parsed = safeReadJson<unknown>(LOG_KEY, []);
+  const hasV2Data = safeGetItem(LOG_KEY) !== null;
+  const parsed = safeReadJson<unknown>(hasV2Data ? LOG_KEY : LEGACY_LOG_KEY, []);
   if (!Array.isArray(parsed)) return [];
-  return parsed.map((log) => normalizeLog(log)).filter((log): log is TrainingLogEntry => Boolean(log));
+  const logs = parsed
+    .map((log) => normalizeLog(log, !hasV2Data))
+    .filter((log): log is TrainingLogEntry => Boolean(log));
+  if (!hasV2Data) safeSetItem(LOG_KEY, JSON.stringify(logs));
+  return logs;
 }
 
 export function saveLog(log: TrainingLogEntry): TrainingLogEntry[] {
@@ -139,4 +150,5 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
 
 export function clearLogs(): void {
   safeRemoveItem(LOG_KEY);
+  safeRemoveItem(LEGACY_LOG_KEY);
 }

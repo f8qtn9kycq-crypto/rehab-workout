@@ -119,7 +119,9 @@ section('pain rules and required pain inputs are preserved', () => {
 
 section('LocalStorage readers fail soft and preserve app keys', () => {
   assertIncludes(source.localStorageService, "'rehab.trainingLogs.v1'", 'training log key preserved');
+  assertIncludes(source.localStorageService, "'rehab.trainingLogs.v2'", 'ten-point training log key preserved');
   assertIncludes(source.localStorageService, "'rehab.functionalOutcomes.v1'", 'outcome key preserved');
+  assertIncludes(source.localStorageService, "'rehab.functionalOutcomes.v2'", 'ten-point outcome key preserved');
   assertIncludes(source.localStorageService, "'rehab.safetyGate.v1'", 'safety key preserved');
   assertIncludes(source.localStorageService, "'rehab.onboardingSeen.v1'", 'onboarding key preserved');
   assertIncludes(source.localStorageService, "'rehab.assessment.v1'", 'assessment key preserved');
@@ -131,10 +133,12 @@ section('LocalStorage readers fail soft and preserve app keys', () => {
 });
 
 section('session logs persist with required fields and refresh-safe readers', () => {
-  assertIncludes(source.logService, "const LOG_KEY = 'rehab.trainingLogs.v1'", 'training log storage key');
-  assertIncludes(source.logService, 'safeReadJson<unknown>(LOG_KEY, [])', 'read logs through safe storage helper');
+  assertIncludes(source.logService, "const LEGACY_LOG_KEY = 'rehab.trainingLogs.v1'", 'legacy training log storage key preserved');
+  assertIncludes(source.logService, "const LOG_KEY = 'rehab.trainingLogs.v2'", 'ten-point training log storage key');
+  assertIncludes(source.logService, 'rawDifficultyRating * 2', 'migrate legacy five-point effort to ten-point values');
+  assertIncludes(source.logService, 'normalizeLog(log, !hasV2Data)', 'normalize persisted logs with legacy scale awareness');
+  assertIncludes(source.logService, 'safeReadJson<unknown>(hasV2Data ? LOG_KEY : LEGACY_LOG_KEY, [])', 'read current or legacy logs through safe storage helper');
   assertIncludes(source.logService, 'safeSetItem(LOG_KEY, JSON.stringify(logs))', 'write logs through safe storage helper');
-  assertIncludes(source.logService, 'return parsed.map((log) => normalizeLog(log))', 'normalize persisted logs');
   assertIncludes(source.logService, 'isBodyArea', 'invalid log body areas ignored safely');
   assertIncludes(source.logService, 'isExerciseType', 'invalid log types ignored safely');
   assertIncludes(source.logService, 'isExerciseLevel', 'invalid log levels ignored safely');
@@ -160,10 +164,13 @@ section('session logs persist with required fields and refresh-safe readers', ()
 });
 
 section('functional outcomes persist and progress renders from stored data', () => {
-  assertIncludes(source.outcomeStorage, "const OUTCOME_KEY = 'rehab.functionalOutcomes.v1'", 'outcome storage key');
-  assertIncludes(source.outcomeStorage, 'safeReadJson<unknown>(OUTCOME_KEY, [])', 'read outcomes through safe storage helper');
+  assertIncludes(source.outcomeStorage, "const LEGACY_OUTCOME_KEY = 'rehab.functionalOutcomes.v1'", 'legacy outcome storage key preserved');
+  assertIncludes(source.outcomeStorage, "const OUTCOME_KEY = 'rehab.functionalOutcomes.v2'", 'ten-point outcome storage key');
+  assertIncludes(source.outcomeStorage, 'safeReadJson<unknown>(hasV2Data ? OUTCOME_KEY : LEGACY_OUTCOME_KEY, [])', 'read current or legacy outcomes through safe storage helper');
   assertIncludes(source.outcomeStorage, 'safeSetItem(OUTCOME_KEY, JSON.stringify(outcomes))', 'write outcomes through safe storage helper');
-  assertIncludes(source.outcomeStorage, 'normalizeOutcome(entry)', 'normalize persisted outcomes');
+  assertIncludes(source.outcomeStorage, 'rawScore * 2', 'migrate legacy five-point outcomes to ten-point values');
+  assertIncludes(source.outcomeStorage, 'score === null', 'zero remains a valid ten-point outcome score');
+  assertIncludes(source.outcomeStorage, 'normalizeOutcome(entry, !hasV2Data)', 'normalize persisted outcomes with legacy scale awareness');
   assertIncludes(source.logsPage, 'getLogs()', 'logs page reads logs');
   assertIncludes(source.logsPage, 'getOutcomeEntries()', 'logs page reads outcomes');
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');

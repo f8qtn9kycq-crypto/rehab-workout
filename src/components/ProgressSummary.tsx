@@ -32,19 +32,19 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
 
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <article className="card border-calm-200 bg-calm-50/80 p-5">
-          <div className="text-xs font-black uppercase tracking-wide text-calm-700">{t('progress.recoveryStatus')}</div>
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-calm-700"><HeartPulse size={16} aria-hidden="true" />{t('progress.recoveryStatus')}</div>
           <p className="mt-3 text-2xl font-black leading-tight text-ink">{t(`progress.trends.${statusKey}`)}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.recoveryStatusHelper')}</p>
         </article>
 
         <article className="card p-5">
-          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.functionTrend')}</div>
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><TrendingUp size={16} aria-hidden="true" />{t('progress.functionTrend')}</div>
           <p className="mt-3 text-2xl font-black leading-tight text-ink">{t(`progress.trends.${functionStatusKey}`)}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.functionHelper')}</p>
         </article>
 
         <article className="card p-5">
-          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.painChange')}</div>
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><Activity size={16} aria-hidden="true" />{t('progress.painChange')}</div>
           <p className="mt-3 text-2xl font-black leading-tight text-ink">
             {hasPainAverages
               ? t('progress.painChangeValue', {
@@ -59,7 +59,7 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
         </article>
 
         <article className="card p-5">
-          <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('progress.thisWeek')}</div>
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><CalendarCheck size={16} aria-hidden="true" />{t('progress.thisWeek')}</div>
           <p className="mt-3 text-2xl font-black leading-tight text-ink">{t('progress.sessionsCompleted', { count: summary.sessionsThisWeek })}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.trainedAreas', { areas: trainedAreas })}</p>
         </article>
@@ -101,3 +101,4 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
     </section>
   );
 }
+import { Activity, CalendarCheck, HeartPulse, TrendingUp } from 'lucide-react';

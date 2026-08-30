@@ -267,8 +267,12 @@ export default {
     painAfter: '結束後疼痛程度',
     painRequiredAfter: '儲存紀錄前，請先選擇訓練結束後的疼痛程度。',
     painAfterWarning: '疼痛上升較多或達 6 分以上。下次先停止這個動作，並考慮請專業人員確認動作是否適合。',
-    difficulty: '主觀難度 1 到 5',
-    currentDifficulty: '目前：{value}',
+    difficulty: '今天動作有多吃力？（0–10）',
+    currentDifficulty: '目前：{value} / 10',
+    difficultyLabels: {
+      0: '完全不費力', 1: '非常輕鬆', 2: '很輕鬆', 3: '輕鬆', 4: '有點輕鬆',
+      5: '剛剛好', 6: '有點吃力', 7: '吃力', 8: '很吃力', 9: '非常吃力', 10: '最吃力',
+    },
     notes: '備註',
     notesPlaceholder: '例如：右側比較緊、今天先少做一組',
     stopReason: '停止原因',
@@ -303,7 +307,7 @@ export default {
     stoppedEarly: '提早停止',
     pain: '疼痛 {before} → {after}',
     volume: '完成 {sets}/{plannedSets} 組，{reps}/{plannedReps} 次',
-    effort: '主觀難度：{value}/5',
+    effort: '動作吃力程度：{value}/10',
   },
   video: {
     fallback: '影片暫時無法播放，請先依照文字步驟與安全提醒操作。',

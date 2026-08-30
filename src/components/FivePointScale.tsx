@@ -10,14 +10,14 @@ export default function FivePointScale({
   onChange: (value: number) => void;
 }) {
   return (
-    <div className="grid grid-cols-5 gap-2 sm:gap-3">
+    <div className="grid grid-cols-5 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
       {labels.map((label, index) => {
         const score = index + 1;
         return (
-          <label key={score} className={`focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-calm-700 flex min-h-[84px] cursor-pointer flex-col items-center justify-center gap-1 rounded-md border px-1 py-2 text-center ${value === score ? 'border-calm-600 bg-calm-50 text-calm-900 shadow-sm' : 'border-slate-200 bg-white text-slate-700'}`}>
+          <label key={score} className={`focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-calm-700 flex min-h-12 cursor-pointer flex-col items-center justify-center gap-0.5 border-r border-slate-200 px-1 text-center last:border-r-0 ${value === score ? 'bg-calm-700 text-white' : 'bg-white text-slate-700'}`}>
             <input type="radio" name={name} value={score} checked={value === score} onChange={() => onChange(score)} className="sr-only" />
-            <span className="text-xl font-black leading-none">{score}</span>
-            <span className="text-[11px] font-semibold leading-tight">{label}</span>
+            <span className="text-base font-black leading-none">{score}</span>
+            <span className="truncate text-[10px] font-semibold leading-tight">{label}</span>
           </label>
         );
       })}

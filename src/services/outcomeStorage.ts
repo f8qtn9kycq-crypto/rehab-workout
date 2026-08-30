@@ -10,7 +10,7 @@ function generateId(): string {
 
 const OUTCOME_KEY = 'rehab.functionalOutcomes.v1';
 const MAX_OUTCOMES = 200;
-const OUTCOME_SCORES = [1, 2, 3, 4, 5] as const;
+const OUTCOME_SCORES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 export const OUTCOME_QUESTION_IDS: Record<BodyArea, string> = {
   shoulder: 'function-shoulder',

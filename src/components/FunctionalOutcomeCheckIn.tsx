@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import BodyAreaIcon from './BodyAreaIcon';
-import FivePointScale from './FivePointScale';
+import PainScale from './PainScale';
 import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
 
-const OUTCOME_SCORES = [1, 2, 3, 4, 5] as const;
+const OUTCOME_SCORES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 interface FunctionalOutcomeCheckInProps {
   outcomes: FunctionalOutcomeEntry[];
@@ -14,7 +14,7 @@ interface FunctionalOutcomeCheckInProps {
 export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: FunctionalOutcomeCheckInProps) {
   const { language, t } = useI18n();
   const [bodyArea, setBodyArea] = useState<BodyArea>('shoulder');
-  const [score, setScore] = useState<OutcomeScore>(3);
+  const [score, setScore] = useState<OutcomeScore>(5);
   const [note, setNote] = useState('');
 
   const latestForBodyArea = outcomes
@@ -74,7 +74,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
         <fieldset>
           <legend className="font-semibold text-slate-800">{t('outcomes.scoreLabel')}</legend>
           <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.scoreHelper')}</p>
-          <div className="mt-3"><FivePointScale name="outcome-score" value={score} labels={OUTCOME_SCORES.map((value) => t(`outcomes.scoreLabels.${value}`))} onChange={(value) => setScore(value as OutcomeScore)} /></div>
+          <div className="mt-3"><PainScale label={t('outcomes.scoreLabel')} value={score} levelDescriptions={Object.fromEntries(OUTCOME_SCORES.map((value) => [value, t(`outcomes.scoreLabels.${value}`)]))} onChange={(value) => setScore(value as OutcomeScore)} /></div>
         </fieldset>
 
         <label className="block">

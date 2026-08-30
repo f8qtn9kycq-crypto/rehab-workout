@@ -2,7 +2,7 @@ export const BODY_AREAS = ['shoulder', 'hip', 'shoulder_neck', 'knee', 'ankle'] 
 
 export type BodyArea = (typeof BODY_AREAS)[number];
 
-export type OutcomeScore = 1 | 2 | 3 | 4 | 5;
+export type OutcomeScore = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type Joint = BodyArea;
 

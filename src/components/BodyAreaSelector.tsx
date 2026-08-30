@@ -1,5 +1,14 @@
+import { Accessibility, Activity, Footprints, PersonStanding, ScanFace } from 'lucide-react';
 import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
+
+const bodyAreaIcons = {
+  shoulder: PersonStanding,
+  hip: Accessibility,
+  shoulder_neck: ScanFace,
+  knee: Activity,
+  ankle: Footprints,
+} as const;
 
 export default function BodyAreaSelector({
   selected,
@@ -23,7 +32,12 @@ export default function BodyAreaSelector({
               : 'border-slate-200 bg-white text-slate-700'
           }`}
         >
-          <span className="block text-xl font-bold">{t(`bodyAreas.${area}.label`)}</span>
+          <span className="flex items-center gap-3">
+            <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-calm-100 text-calm-700" aria-hidden="true">
+              {(() => { const Icon = bodyAreaIcons[area]; return <Icon size={24} />; })()}
+            </span>
+            <span className="block text-xl font-bold">{t(`bodyAreas.${area}.label`)}</span>
+          </span>
           <span className="mt-1 block text-sm">{t(`bodyAreas.${area}.hint`)}</span>
         </button>
       ))}

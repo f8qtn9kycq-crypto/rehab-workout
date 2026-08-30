@@ -40,11 +40,7 @@ export default function AssessmentPage() {
         </div>
         <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} />
         <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
-        <fieldset>
-          <legend className="font-semibold text-slate-800">{t('assessment.confidenceLabel')}</legend>
-          <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.scoreHelper')}</p>
-          <div className="mt-3"><FivePointScale name="assessment-confidence" value={confidence} labels={[1, 2, 3, 4, 5].map((value) => t(`outcomes.scoreLabels.${value}`))} onChange={setConfidence} /></div>
-        </fieldset>
+        <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
         <div>
           <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">

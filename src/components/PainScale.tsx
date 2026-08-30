@@ -5,11 +5,13 @@ export default function PainScale({
   value,
   onChange,
   zeroLabel,
+  levelDescriptions,
 }: {
   label: string;
   value: number | null;
   onChange: (value: number) => void;
   zeroLabel?: string;
+  levelDescriptions?: Record<number, string>;
 }) {
   const id = useId();
   const displayValue = value === null ? '--' : value;
@@ -36,6 +38,7 @@ export default function PainScale({
           className="h-11 w-full accent-calm-500"
         />
       </label>
+      {levelDescriptions?.[value ?? 0] ? <p className="mt-1 text-sm text-slate-600" aria-live="polite">{displayValue} / 10 · {levelDescriptions[value ?? 0]}</p> : null}
       {zeroLabel ? (
         <button
           type="button"

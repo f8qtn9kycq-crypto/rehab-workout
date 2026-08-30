@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BodyAreaSelector from '../components/BodyAreaSelector';
+import FivePointScale from '../components/FivePointScale';
 import PainScale from '../components/PainScale';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';
@@ -39,7 +40,7 @@ export default function AssessmentPage() {
         </div>
         <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} />
         <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
-        <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} />
+        <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
         <div>
           <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">

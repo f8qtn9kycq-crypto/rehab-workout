@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from 'react';
+import BodyAreaIcon from './BodyAreaIcon';
+import FivePointScale from './FivePointScale';
 import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
 
@@ -48,7 +50,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
                 }`}
                 aria-pressed={area === bodyArea}
               >
-                {t(`bodyAreas.${area}.label`)}
+                <span className="flex items-center gap-2"><BodyAreaIcon area={area} size={20} />{t(`bodyAreas.${area}.label`)}</span>
               </button>
             ))}
           </div>
@@ -72,24 +74,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
         <fieldset>
           <legend className="font-semibold text-slate-800">{t('outcomes.scoreLabel')}</legend>
           <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.scoreHelper')}</p>
-          <div className="mt-3 grid grid-cols-5 gap-2 sm:gap-3">
-            {OUTCOME_SCORES.map((value) => (
-              <label key={value} className={`focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-calm-700 flex min-h-[84px] cursor-pointer flex-col items-center justify-center gap-1 rounded-md border px-1 py-2 text-center ${
-                score === value ? 'border-calm-600 bg-calm-50 text-calm-900 shadow-sm' : 'border-slate-200 bg-white text-slate-700'
-              }`}>
-                <input
-                  type="radio"
-                  name="outcome-score"
-                  value={value}
-                  checked={score === value}
-                  onChange={() => setScore(value)}
-                  className="sr-only"
-                />
-                <span className="text-xl font-black leading-none">{value}</span>
-                <span className="text-[11px] font-semibold leading-tight">{t(`outcomes.scoreLabels.${value}`)}</span>
-              </label>
-            ))}
-          </div>
+          <div className="mt-3"><FivePointScale name="outcome-score" value={score} labels={OUTCOME_SCORES.map((value) => t(`outcomes.scoreLabels.${value}`))} onChange={(value) => setScore(value as OutcomeScore)} /></div>
         </fieldset>
 
         <label className="block">

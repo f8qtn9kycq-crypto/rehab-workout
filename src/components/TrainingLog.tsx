@@ -24,8 +24,8 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
           <article key={log.id} className="card bg-white/80 p-4">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <h2 className="text-lg font-black leading-tight text-ink">{getLocalizedTrainingLogTitle(log, language, fallbackTitle)}</h2>
-                <p className="mt-1 text-sm text-slate-600">{new Date(log.date).toLocaleString(language)}</p>
+                <h2 className="flex items-center gap-2 text-lg font-black leading-tight text-ink"><Dumbbell size={18} className="text-calm-700" aria-hidden="true" />{getLocalizedTrainingLogTitle(log, language, fallbackTitle)}</h2>
+                <p className="mt-1 flex items-center gap-1 text-sm text-slate-600"><CalendarDays size={14} aria-hidden="true" />{new Date(log.date).toLocaleString(language)}</p>
               </div>
               {log.stoppedEarly ? <span className="rounded-md bg-red-50 px-2 py-1 text-sm font-semibold text-red-700">{t('logs.stoppedEarly')}</span> : null}
             </div>
@@ -33,7 +33,7 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
               <div className="rounded-md bg-slate-50 p-3">{t(`bodyAreas.${log.bodyArea}.label`)}</div>
               <div className="rounded-md bg-slate-50 p-3">{t(`typeLabels.${log.type}`)}</div>
               <div className="rounded-md bg-slate-50 p-3">{t(`levelLabels.${log.level}`)}</div>
-              <div className="rounded-md bg-slate-50 p-3 font-semibold text-slate-800">{t('logs.pain', { before: log.painBefore, after: log.painAfter })}</div>
+              <div className="flex items-center gap-2 rounded-md bg-slate-50 p-3 font-semibold text-slate-800"><Activity size={16} aria-hidden="true" />{t('logs.pain', { before: log.painBefore, after: log.painAfter })}</div>
             </div>
             <div className="mt-2 grid gap-2 text-sm md:grid-cols-2">
               <div className="rounded-md bg-calm-50 p-3 font-semibold text-calm-700">
@@ -55,3 +55,4 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
     </div>
   );
 }
+import { Activity, CalendarDays, Dumbbell } from 'lucide-react';

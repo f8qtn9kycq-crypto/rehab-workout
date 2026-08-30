@@ -12,6 +12,7 @@ import LogsPage from './pages/LogsPage';
 import OnboardingPage from './pages/OnboardingPage';
 import SafetyPage from './pages/SafetyPage';
 import SessionPage from './pages/SessionPage';
+import ScrollToTop from './components/ScrollToTop';
 import { I18nProvider } from './services/i18n';
 import './styles.css';
 
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <I18nProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<AppShell />}>
             <Route path="/" element={<HomePage />} />

@@ -20,6 +20,9 @@ export default {
         outcomeMeta: 'Saved on {date}',
         trainingEmpty: 'Complete one session and it will appear here.',
         outcomeEmpty: 'Add a recovery check-in to compare daily movement over time.',
+        baselineLabel: 'Assessment baseline',
+        baselineValue: '{score}/10 functional baseline',
+        noBaseline: 'No baseline yet',
       },
       progress: {
         title: 'Weekly recovery trend',
@@ -217,6 +220,9 @@ export default {
         outcomeMeta: '{date} 儲存',
         trainingEmpty: '完成一次訓練後，會出現在這裡。',
         outcomeEmpty: '新增恢復狀態確認後，可以比較日常動作變化。',
+        baselineLabel: '評估基準',
+        baselineValue: '功能基準 {score}/10',
+        noBaseline: '尚未建立基準',
       },
       progress: {
         title: '本週恢復趨勢',

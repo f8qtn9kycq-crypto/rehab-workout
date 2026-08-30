@@ -13,6 +13,7 @@ export default function AssessmentPage() {
   const [bodyArea, setBodyArea] = useState<BodyArea>('shoulder');
   const [pain, setPain] = useState(0);
   const [confidence, setConfidence] = useState(3);
+  const [functionalBaseline, setFunctionalBaseline] = useState(5);
   const [sessionLength, setSessionLength] = useState(10);
   const [equipment, setEquipment] = useState<Equipment[]>(['bodyweight']);
 
@@ -28,7 +29,7 @@ export default function AssessmentPage() {
   }
 
   function save(): void {
-    saveAssessment({ bodyArea, pain, confidence, equipment, sessionLength, mode, completedAt: new Date().toISOString() });
+    saveAssessment({ bodyArea, pain, confidence, functionalBaseline, equipment, sessionLength, mode, completedAt: new Date().toISOString() });
   }
 
   return (
@@ -41,6 +42,7 @@ export default function AssessmentPage() {
         <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} />
         <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
         <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
+        <PainScale label={t('assessment.functionalLabel')} value={functionalBaseline} onChange={setFunctionalBaseline} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`outcomes.scoreLabels.${value}`)]))} />
         <div>
           <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">

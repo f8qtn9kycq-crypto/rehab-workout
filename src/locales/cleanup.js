@@ -100,6 +100,9 @@ export default {
       save: 'Save assessment',
     },
     education: {
+      badge: 'Start with one clear lesson',
+      recommended: 'Start here',
+      categories: { safety: 'Safety', recovery: 'Recovery', progress: 'Progress', habit: 'Routine' },
       title: 'Rehab Learning',
       subtitle: 'Understand safety, knee relief, ankle stability, and shoulder-neck training with simple guidance.',
       anklePillarsTitle: 'Four pillars of ankle stability',
@@ -294,6 +297,9 @@ export default {
       save: '儲存評估',
     },
     education: {
+      badge: '先從一課開始',
+      recommended: '建議先看',
+      categories: { safety: '安全', recovery: '恢復', progress: '進步', habit: '習慣' },
       title: '復健學習',
       subtitle: '用簡單方式理解安全、膝痛舒緩、踝關節支柱與肩頸肩髖訓練節奏。',
       anklePillarsTitle: '踝關節穩定四支柱',

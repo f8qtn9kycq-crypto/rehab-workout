@@ -1,4 +1,5 @@
 import { useI18n } from '../services/i18n';
+import BodyAreaIcon from './BodyAreaIcon';
 import { BODY_AREAS } from '../types/rehab';
 import type { TrendDirection, WeeklyProgressSummary } from '../utils/progressSummary';
 
@@ -84,7 +85,7 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
             const outcome = summary.latestOutcomeByArea[bodyArea];
             return (
               <div key={bodyArea} className="min-h-[76px] rounded-md bg-slate-50 p-3">
-                <div className="text-sm font-semibold text-slate-700">{t(`bodyAreas.${bodyArea}.label`)}</div>
+                <div className="flex items-center gap-2 text-sm font-semibold text-slate-700"><BodyAreaIcon area={bodyArea} size={18} />{t(`bodyAreas.${bodyArea}.label`)}</div>
                 <div className="mt-1 text-sm text-slate-600">
                   {outcome
                     ? t('progress.latestOutcomeValue', {

@@ -38,7 +38,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const [completedSets, setCompletedSets] = useState(0);
   const [resting, setResting] = useState(false);
   const [restTimerKey, setRestTimerKey] = useState(0);
-  const [difficultyRating, setDifficultyRating] = useState(3);
+  const [difficultyRating, setDifficultyRating] = useState(5);
   const [notes, setNotes] = useState('');
   const [stoppedEarly, setStoppedEarly] = useState(false);
   const [stopReason, setStopReason] = useState('');
@@ -339,8 +339,8 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           ) : null}
           <label className="block">
             <span className="mb-2 block font-semibold text-slate-800">{t('session.difficulty')}</span>
-            <input className="h-11 w-full accent-calm-500" type="range" min="1" max="5" value={difficultyRating} onChange={(event) => setDifficultyRating(Number(event.target.value))} aria-valuetext={t('session.currentDifficulty', { value: difficultyRating })} />
-            <span className="text-sm text-slate-600">{t('session.currentDifficulty', { value: difficultyRating })}</span>
+            <input className="h-11 w-full accent-calm-500" type="range" min="0" max="10" value={difficultyRating} onChange={(event) => setDifficultyRating(Number(event.target.value))} aria-valuetext={t('session.currentDifficulty', { value: difficultyRating })} />
+            <span className="text-sm text-slate-600" aria-live="polite">{t('session.currentDifficulty', { value: difficultyRating })} · {t(`session.difficultyLabels.${difficultyRating}`)}</span>
           </label>
           <label className="block">
             <span className="mb-2 block font-semibold text-slate-800">{t('session.notes')}</span>

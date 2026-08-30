@@ -2,6 +2,7 @@ import { useI18n } from '../services/i18n';
 import type { TrainingLogEntry } from '../types/rehab';
 import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import { getLocalizedStopReasonLabel } from '../utils/trainingLogStopReasons';
+import BodyAreaIcon from './BodyAreaIcon';
 
 export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
   const { language, t } = useI18n();
@@ -30,7 +31,7 @@ export default function TrainingLog({ logs }: { logs: TrainingLogEntry[] }) {
               {log.stoppedEarly ? <span className="rounded-md bg-red-50 px-2 py-1 text-sm font-semibold text-red-700">{t('logs.stoppedEarly')}</span> : null}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm md:grid-cols-4">
-              <div className="rounded-md bg-slate-50 p-3">{t(`bodyAreas.${log.bodyArea}.label`)}</div>
+              <div className="flex items-center gap-2 rounded-md bg-slate-50 p-3"><BodyAreaIcon area={log.bodyArea} size={18} />{t(`bodyAreas.${log.bodyArea}.label`)}</div>
               <div className="rounded-md bg-slate-50 p-3">{t(`typeLabels.${log.type}`)}</div>
               <div className="rounded-md bg-slate-50 p-3">{t(`levelLabels.${log.level}`)}</div>
               <div className="flex items-center gap-2 rounded-md bg-slate-50 p-3 font-semibold text-slate-800"><Activity size={16} aria-hidden="true" />{t('logs.pain', { before: log.painBefore, after: log.painAfter })}</div>

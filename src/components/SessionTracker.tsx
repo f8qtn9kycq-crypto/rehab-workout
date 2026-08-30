@@ -18,6 +18,7 @@ interface SessionTrackerProps {
 type SessionPhase = 'before' | 'active' | 'finish' | 'outcomePrompt';
 
 const recentOutcomeWindowMs = 1000 * 60 * 60 * 24 * 14;
+const DIFFICULTY_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 function hasRecentOutcomeForBodyArea(outcomes: FunctionalOutcomeEntry[], bodyArea: BodyArea, today = new Date()): boolean {
   return outcomes.some((outcome) => {
@@ -337,11 +338,14 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               {t('session.painAfterWarning')}
             </div>
           ) : null}
-          <label className="block">
-            <span className="mb-2 block font-semibold text-slate-800">{t('session.difficulty')}</span>
-            <input className="h-11 w-full accent-calm-500" type="range" min="0" max="10" value={difficultyRating} onChange={(event) => setDifficultyRating(Number(event.target.value))} aria-valuetext={t('session.currentDifficulty', { value: difficultyRating })} />
-            <span className="text-sm text-slate-600" aria-live="polite">{t('session.currentDifficulty', { value: difficultyRating })} · {t(`session.difficultyLabels.${difficultyRating}`)}</span>
-          </label>
+          <PainScale
+            label={t('session.difficulty')}
+            value={difficultyRating}
+            onChange={setDifficultyRating}
+            levelDescriptions={Object.fromEntries(
+              DIFFICULTY_LEVELS.map((value) => [value, t(`session.difficultyLabels.${value}`)]),
+            )}
+          />
           <label className="block">
             <span className="mb-2 block font-semibold text-slate-800">{t('session.notes')}</span>
             <textarea value={notes} onChange={(event) => setNotes(event.target.value)} className="focus-ring min-h-24 w-full rounded-md border border-slate-200 p-3" placeholder={t('session.notesPlaceholder')} />

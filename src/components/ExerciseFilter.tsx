@@ -4,6 +4,7 @@ import {
   type ExerciseFilterMode,
   type ExerciseFilters,
 } from '../types/rehab';
+import BodyAreaIcon from './BodyAreaIcon';
 import { useI18n } from '../services/i18n';
 
 export interface FilterAvailability {
@@ -106,7 +107,7 @@ export default function ExerciseFilter({
                       : 'border border-slate-200 bg-slate-100 text-slate-700'
                 }`}
               >
-                <span className="block leading-5">{label}</span>
+                <span className="flex items-center justify-center gap-2 leading-5"><BodyAreaIcon area={bodyArea} size={18} />{label}</span>
                 <span className={`mt-1 inline-flex rounded px-1.5 py-0.5 text-xs ${filters.bodyArea === bodyArea ? 'bg-white/20' : 'bg-white/70'}`}>
                   {getCountLabel(count)}
                 </span>

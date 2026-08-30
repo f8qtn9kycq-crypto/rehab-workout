@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import BodyAreaIcon from './BodyAreaIcon';
 import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
 
@@ -48,7 +49,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
                 }`}
                 aria-pressed={area === bodyArea}
               >
-                {t(`bodyAreas.${area}.label`)}
+                <span className="flex items-center gap-2"><BodyAreaIcon area={area} size={20} />{t(`bodyAreas.${area}.label`)}</span>
               </button>
             ))}
           </div>

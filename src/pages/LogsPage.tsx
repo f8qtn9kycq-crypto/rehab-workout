@@ -4,6 +4,7 @@ import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
+import { getSavedAssessment } from '../services/assessmentStorage';
 import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, FunctionalOutcomeEntry, OutcomeScore, TrainingLogEntry } from '../types/rehab';
@@ -27,6 +28,7 @@ export default function LogsPage() {
   const { language, t } = useI18n();
   const [logs, setLogs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
+  const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const fallbackTitle = t('logs.savedExerciseFallback');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
@@ -93,6 +95,10 @@ export default function LogsPage() {
                 ? t('records.latest.outcomeMeta', { date: formatDate(latestOutcome.date) })
                 : t('records.latest.outcomeEmpty')}
             </p>
+          </article>
+          <article className="card p-5">
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><ClipboardCheck size={16} aria-hidden="true" />{t('records.latest.baselineLabel')}</div>
+            <p className="mt-3 text-lg font-black leading-tight text-ink">{savedAssessment?.functionalBaseline !== undefined ? t('records.latest.baselineValue', { score: savedAssessment.functionalBaseline }) : t('records.latest.noBaseline')}</p>
           </article>
         </div>
       </section>

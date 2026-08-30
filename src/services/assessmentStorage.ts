@@ -44,6 +44,7 @@ function normalizeAssessment(rawAssessment: Partial<SaveAssessmentInput>): Saved
     : undefined;
   const mode = isAssessmentMode(rawAssessment.mode) ? rawAssessment.mode : undefined;
   const pain = normalizePain(rawAssessment.pain);
+  const functionalBaseline = normalizePain(rawAssessment.functionalBaseline);
 
   if (!bodyArea && !equipment?.length && !mode && pain === undefined) return null;
 
@@ -52,6 +53,7 @@ function normalizeAssessment(rawAssessment: Partial<SaveAssessmentInput>): Saved
     equipment,
     mode,
     pain,
+    functionalBaseline,
   };
 }
 

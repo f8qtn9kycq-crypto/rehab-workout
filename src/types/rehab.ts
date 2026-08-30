@@ -131,6 +131,7 @@ export interface SavedAssessment {
   equipment?: Equipment[];
   mode?: AssessmentMode;
   pain?: number;
+  functionalBaseline?: number;
 }
 
 export interface ExerciseFilters {

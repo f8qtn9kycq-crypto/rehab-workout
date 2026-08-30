@@ -160,6 +160,7 @@ export default {
     subtitle: 'This is not a diagnosis. It only helps choose a safer training level for today.',
     painLabel: 'Current pain level',
     confidenceLabel: 'Movement confidence today',
+    functionalLabel: 'How easy does daily movement feel today?',
     painLevels: { 0: 'No pain', 1: 'Very mild', 2: 'Mild', 3: 'Mild', 4: 'Moderate', 5: 'Moderate', 6: 'Moderate', 7: 'Strong', 8: 'Strong', 9: 'Very strong', 10: 'Worst pain' },
     confidenceLevels: { 0: 'No confidence', 1: 'Very low', 2: 'Low', 3: 'Limited', 4: 'Limited', 5: 'Manageable', 6: 'Steady', 7: 'Steady', 8: 'Strong', 9: 'Very strong', 10: 'Very confident' },
     equipmentLabel: 'Available equipment',

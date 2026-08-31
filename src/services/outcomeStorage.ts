@@ -1,5 +1,5 @@
 import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type OutcomeScore } from '../types/rehab';
-import { safeReadJson, safeSetItem } from './localStorageService';
+import { safeGetItem, safeReadJson, safeSetItem } from './localStorageService';
 
 function generateId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -8,9 +8,10 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-const OUTCOME_KEY = 'rehab.functionalOutcomes.v1';
+const LEGACY_OUTCOME_KEY = 'rehab.functionalOutcomes.v1';
+const OUTCOME_KEY = 'rehab.functionalOutcomes.v2';
 const MAX_OUTCOMES = 200;
-const OUTCOME_SCORES = [1, 2, 3, 4, 5] as const;
+const OUTCOME_SCORES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 export const OUTCOME_QUESTION_IDS: Record<BodyArea, string> = {
   shoulder: 'function-shoulder',
@@ -29,14 +30,15 @@ function normalizeScore(value: unknown): OutcomeScore | null {
   return OUTCOME_SCORES.includes(score as OutcomeScore) ? (score as OutcomeScore) : null;
 }
 
-function normalizeOutcome(rawOutcome: Partial<FunctionalOutcomeEntry>): FunctionalOutcomeEntry | null {
+function normalizeOutcome(rawOutcome: Partial<FunctionalOutcomeEntry>, legacyFivePoint = false): FunctionalOutcomeEntry | null {
   if (!rawOutcome || typeof rawOutcome !== 'object') return null;
   if (!rawOutcome.id || !isBodyArea(rawOutcome.bodyArea)) return null;
 
-  const score = normalizeScore(rawOutcome.score);
+  const rawScore = Number(rawOutcome.score);
+  const score = normalizeScore(legacyFivePoint && rawScore >= 1 && rawScore <= 5 ? rawScore * 2 : rawScore);
   const date = String(rawOutcome.date ?? '');
 
-  if (!score || Number.isNaN(Date.parse(date))) return null;
+  if (score === null || Number.isNaN(Date.parse(date))) return null;
 
   return {
     id: String(rawOutcome.id),
@@ -49,11 +51,14 @@ function normalizeOutcome(rawOutcome: Partial<FunctionalOutcomeEntry>): Function
 }
 
 export function getOutcomeEntries(): FunctionalOutcomeEntry[] {
-  const parsed = safeReadJson<unknown>(OUTCOME_KEY, []);
+  const hasV2Data = safeGetItem(OUTCOME_KEY) !== null;
+  const parsed = safeReadJson<unknown>(hasV2Data ? OUTCOME_KEY : LEGACY_OUTCOME_KEY, []);
   if (!Array.isArray(parsed)) return [];
-  return parsed
-    .map((entry) => normalizeOutcome(entry))
+  const outcomes = parsed
+    .map((entry) => normalizeOutcome(entry, !hasV2Data))
     .filter((entry): entry is FunctionalOutcomeEntry => Boolean(entry));
+  if (!hasV2Data) safeSetItem(OUTCOME_KEY, JSON.stringify(outcomes));
+  return outcomes;
 }
 
 export function createOutcomeEntry(input: {

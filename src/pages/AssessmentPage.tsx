@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BodyAreaSelector from '../components/BodyAreaSelector';
-import FivePointScale from '../components/FivePointScale';
 import PainScale from '../components/PainScale';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';

@@ -267,8 +267,12 @@ export default {
     painAfter: 'Pain level after finishing',
     painRequiredAfter: 'Choose pain level after training before saving the log.',
     painAfterWarning: 'Pain rose noticeably or reached 6 or higher. Stop this exercise next time and consider professional guidance.',
-    difficulty: 'Effort level 1 to 5',
-    currentDifficulty: 'Current: {value}',
+    difficulty: 'How effortful did this feel today? (0–10)',
+    currentDifficulty: 'Current: {value} / 10',
+    difficultyLabels: {
+      0: 'No effort', 1: 'Very easy', 2: 'Easy', 3: 'Light', 4: 'A little light',
+      5: 'Just right', 6: 'A little hard', 7: 'Hard', 8: 'Very hard', 9: 'Extremely hard', 10: 'Max effort',
+    },
     notes: 'Notes',
     notesPlaceholder: 'Example: right side felt tighter; reduced one set today',
     stopReason: 'Reason for stopping',
@@ -303,7 +307,7 @@ export default {
     stoppedEarly: 'Stopped early',
     pain: 'Pain {before} → {after}',
     volume: 'Completed {sets}/{plannedSets} sets, {reps}/{plannedReps} reps',
-    effort: 'Effort: {value}/5',
+    effort: 'Effort: {value}/10',
   },
   video: {
     fallback: 'The video is temporarily unavailable. Please follow the written steps and safety reminders first.',

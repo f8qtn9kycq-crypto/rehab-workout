@@ -26,10 +26,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/" element={<HomePage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/safety" element={<SafetyPage />} />
+            <Route path="/exercises" element={<ExercisesPage />} />
+            <Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />
             <Route element={<SafetyRouteGuard />}>
               <Route path="/assessment" element={<AssessmentPage />} />
-              <Route path="/exercises" element={<ExercisesPage />} />
-              <Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />
               <Route path="/session/:exerciseId" element={<SessionPage />} />
             </Route>
             <Route path="/logs" element={<LogsPage />} />

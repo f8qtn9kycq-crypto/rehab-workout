@@ -30,6 +30,10 @@ export default function SafetyGate() {
         <h1 className="text-2xl font-bold text-ink">{t('safety.title')}</h1>
         <p className="mt-2 text-slate-600">{t('safety.subtitle')}</p>
       </div>
+      <div className="rounded-lg border border-calm-100 bg-calm-50 p-3">
+        <h2 className="font-bold text-calm-800">{t('safety.whyTitle')}</h2>
+        <p className="mt-1 text-sm leading-6 text-calm-700">{t('safety.whyBody')}</p>
+      </div>
       <RedFlagChecklist
         selected={selected}
         noneSelected={noneSelected}

@@ -1,15 +1,20 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import BodyAreaSelector from '../components/BodyAreaSelector';
 import PainScale from '../components/PainScale';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import type { BodyArea, Equipment } from '../types/rehab';
+import { isBodyArea } from '../utils/exerciseModel';
 
 export default function AssessmentPage() {
   const { t } = useI18n();
-  const [bodyArea, setBodyArea] = useState<BodyArea>('shoulder');
+  const [searchParams] = useSearchParams();
+  const [bodyArea, setBodyArea] = useState<BodyArea>(() => {
+    const bodyAreaParam = searchParams.get('bodyArea');
+    return isBodyArea(bodyAreaParam) ? bodyAreaParam : 'shoulder';
+  });
   const [pain, setPain] = useState(0);
   const [confidence, setConfidence] = useState(3);
   const [functionalBaseline, setFunctionalBaseline] = useState(5);
@@ -38,7 +43,7 @@ export default function AssessmentPage() {
           <h1 className="text-2xl font-bold text-ink">{t('assessment.title')}</h1>
           <p className="mt-2 text-slate-600">{t('assessment.subtitle')}</p>
         </div>
-        <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} />
+        <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('assessment.bodyAreaLabel')} />
         <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
         <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
         <PainScale label={t('assessment.functionalLabel')} value={functionalBaseline} onChange={setFunctionalBaseline} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`outcomes.scoreLabels.${value}`)]))} />

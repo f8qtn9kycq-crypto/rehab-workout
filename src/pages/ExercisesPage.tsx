@@ -195,6 +195,14 @@ export default function ExercisesPage() {
         <h1 className="text-3xl font-bold text-ink">{t('exercises.title')}</h1>
         <p className="mt-2 text-slate-600">{t('exercises.subtitle')}</p>
       </div>
+      {filters.mode === 'recommended' && assessment?.bodyArea ? (
+        <section className="rounded-lg border border-calm-100 bg-calm-50 p-4" aria-labelledby="starting-choices-title">
+          <h2 id="starting-choices-title" className="text-lg font-bold text-calm-800">{t('exercises.startingTitle')}</h2>
+          <p className="mt-1 text-sm leading-6 text-calm-700">
+            {t('exercises.startingReason', { bodyArea: t(`bodyAreas.${assessment.bodyArea}.label`) })}
+          </p>
+        </section>
+      ) : null}
       {showHighPainWarning ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 p-4 font-semibold text-amber-900" role="alert">
           {t('exercises.painStopEmpty')}

@@ -174,7 +174,8 @@ export default {
     recoveryMode: '恢復模式',
     beginnerPlan: '初學者計畫',
     standardPlan: '標準計畫',
-    saveAndChoose: '看今天可以從哪些動作開始',
+    saveAndChoose: '儲存評估並查看動作',
+    saveNotice: '評估資料會保存在這台裝置的瀏覽器，可到「紀錄」清除。共用裝置請留意。',
   },
   safety: {
     title: '開始前安全確認',

@@ -174,7 +174,8 @@ export default {
     recoveryMode: 'Recovery mode',
     beginnerPlan: 'Beginner plan',
     standardPlan: 'Standard plan',
-    saveAndChoose: 'See exercises to start with today',
+    saveAndChoose: 'Save assessment and see exercises',
+    saveNotice: 'Assessment data is stored in this browser on this device. You can clear it in Logs. Take care on shared devices.',
   },
   safety: {
     title: 'Pre-training safety check',

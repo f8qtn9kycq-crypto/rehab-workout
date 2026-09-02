@@ -70,7 +70,8 @@ export default function AssessmentPage() {
         <div className="rounded-lg bg-calm-100 p-4 text-calm-700">
           {t('assessment.recommendation', { mode: modeLabel })}
         </div>
-        <Link onClick={save} to={`/exercises?mode=recommended&bodyArea=${bodyArea}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
+        <p id="assessment-save-notice" className="text-sm leading-6 text-slate-600">{t('assessment.saveNotice')}</p>
+        <Link aria-describedby="assessment-save-notice" onClick={save} to={`/exercises?mode=recommended&bodyArea=${bodyArea}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
           {t('assessment.saveAndChoose')}
         </Link>
       </section>

@@ -27,9 +27,6 @@ const files = {
   localizedExercise: 'src/utils/localizedExercise.ts',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
-  routinePage: 'src/pages/RoutinePage.tsx',
-  mobileNav: 'src/components/MobileBottomNav.tsx',
-  desktopNav: 'src/components/DesktopNav.tsx',
   onboardingFlow: 'src/components/OnboardingFlow.tsx',
   weeklyRoutineBuilder: 'src/components/WeeklyRoutineBuilder.tsx',
   educationPage: 'src/pages/EducationPage.tsx',
@@ -211,14 +208,17 @@ section('first-run onboarding stays focused on safe start basics', () => {
   const englishOnboarding = source.localeEn.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
   const zhOnboarding = source.localeZh.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
 
-  assertIncludes(source.onboardingFlow, '<ol', 'onboarding presents the original ordered steps');
-  assertIncludes(source.onboardingFlow, "navigate('/safety')", 'onboarding starts with safety');
-  assertIncludes(source.onboardingFlow, "t('onboarding.steps')", 'steps remain localized');
-  if (source.onboardingFlow.includes('BodyAreaSelector')) fail('onboarding should not require an early body-area choice');
-  assertIncludes(source.safetyGate, "t('safety.whyBody')", 'safety explains why questions are required');
-  assertIncludes(source.sessionPage, 'isSafetyGateCurrentForToday(safety)', 'session checks current safety');
-  assertIncludes(englishOnboarding, 'Start safety check', 'English single CTA');
-  assertIncludes(zhOnboarding, '開始安全確認', 'zh-TW single CTA');
+  assertIncludes(source.onboardingFlow, 'compact', 'onboarding shows compact body-area choices');
+  assertIncludes(source.onboardingFlow, "ariaLabel={t('onboarding.bodyAreaTitle')}", 'onboarding body-area group has an accessible label');
+  assertIncludes(source.onboardingFlow, "navigate('/safety', { state: { from: `/assessment?bodyArea=${bodyArea}` } })", 'selected body area continues through safety');
+  assertIncludes(source.onboardingFlow, "navigate('/exercises?mode=all')", 'secondary browse path opens the library');
+  assertIncludes(source.onboardingFlow, 'disabled={bodyArea === \'all\'}', 'guided start requires a body-area choice');
+  assertIncludes(source.safetyGate, "t('safety.whyBody')", 'safety check explains why questions are required');
+  assertIncludes(source.sessionPage, 'isSafetyGateCurrentForToday(safety)', 'direct session entry checks current safety status');
+  assertIncludes(englishOnboarding, 'See where to start today', 'English onboarding leads to guided start');
+  assertIncludes(zhOnboarding, '看今天可以從哪裡開始', 'zh-TW onboarding leads to guided start');
+  assertIncludes(englishOnboarding, 'Browse all exercises first', 'English onboarding offers secondary browse');
+  assertIncludes(zhOnboarding, '先瀏覽所有動作', 'zh-TW onboarding offers secondary browse');
   ['Pick level', 'Log result'].forEach((outdatedStep) => {
     if (englishOnboarding.includes(outdatedStep)) {
       fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);
@@ -232,12 +232,7 @@ section('first-run onboarding stays focused on safe start basics', () => {
 });
 
 section('routine builder and education pages remain reachable', () => {
-  assertIncludes(source.routinePage, '<WeeklyRoutineBuilder />', 'dedicated page renders unchanged routine builder');
-  assertIncludes(source.main, '<Route path="/routine" element={<RoutinePage />} />', 'routine route exists');
-  assertIncludes(source.mobileNav, "to: '/routine'", 'routine reachable from mobile More');
-  assertIncludes(source.desktopNav, "to: '/routine'", 'routine reachable on desktop');
-  if (source.homePage.includes('WeeklyRoutineBuilder') || source.homePage.includes('home.summaryLabel')) fail('home must not render routine or summary clutter');
-  if ((source.homePage.match(/<Link\s/g) ?? []).length !== 1) fail('home must have exactly one primary link');
+  assertIncludes(source.homePage, '<WeeklyRoutineBuilder />', 'home renders weekly routine builder');
   assertIncludes(source.weeklyRoutineBuilder, 'weeklyRoutines', 'routine definitions');
   assertIncludes(source.weeklyRoutineBuilder, "to={`/session/${exercise.id}`}", 'routine starts existing session route');
   assertIncludes(source.weeklyRoutineBuilder, "t('weeklyRoutine.sessionGuardHint')", 'routine includes safety guard hint');

@@ -1,4 +1,4 @@
-import { Activity, BookOpen, CalendarDays, ClipboardCheck, Home, ListChecks, Menu, ShieldCheck, X } from 'lucide-react';
+import { Activity, BookOpen, ClipboardCheck, Home, ListChecks, Menu, ShieldCheck, X } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
@@ -11,7 +11,6 @@ const primaryItems = [
 ];
 
 const secondaryItems = [
-  { to: '/routine', labelKey: 'nav.routine', icon: CalendarDays },
   { to: '/assessment', labelKey: 'nav.assessment', icon: ClipboardCheck },
   { to: '/education', labelKey: 'nav.education', icon: BookOpen },
 ];

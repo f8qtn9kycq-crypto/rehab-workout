@@ -9,7 +9,6 @@ import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import ExercisesPage from './pages/ExercisesPage';
 import HomePage from './pages/HomePage';
 import LogsPage from './pages/LogsPage';
-import RoutinePage from './pages/RoutinePage';
 import OnboardingPage from './pages/OnboardingPage';
 import SafetyPage from './pages/SafetyPage';
 import SessionPage from './pages/SessionPage';
@@ -34,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/session/:exerciseId" element={<SessionPage />} />
             </Route>
             <Route path="/logs" element={<LogsPage />} />
-            <Route path="/routine" element={<RoutinePage />} />
             <Route path="/education" element={<EducationPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

@@ -1,27 +1,16 @@
-import { ArrowRight, Eye, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { onboardingStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
 import { safeSetItem } from '../services/localStorageService';
-import type { BodyArea } from '../types/rehab';
-import BodyAreaSelector from './BodyAreaSelector';
 
 export default function OnboardingFlow() {
   const navigate = useNavigate();
   const { t } = useI18n();
-  const [bodyArea, setBodyArea] = useState<BodyArea | 'all'>('all');
 
-  function beginGuidedPath(): void {
-    if (bodyArea === 'all') return;
-
+  function finish(): void {
     safeSetItem(onboardingStorageKey, JSON.stringify(true));
-    navigate('/safety', { state: { from: `/assessment?bodyArea=${bodyArea}` } });
-  }
-
-  function browseExercises(): void {
-    safeSetItem(onboardingStorageKey, JSON.stringify(true));
-    navigate('/exercises?mode=all');
+    navigate('/safety');
   }
 
   return (
@@ -34,35 +23,18 @@ export default function OnboardingFlow() {
         <h1 className="text-2xl font-bold text-ink min-[640px]:text-3xl">{t('onboarding.title')}</h1>
         <p className="mt-3 text-base leading-7 text-slate-600 min-[640px]:text-lg">{t('onboarding.subtitle')}</p>
       </div>
-      <div>
-        <h2 className="mb-3 text-lg font-bold text-ink">{t('onboarding.bodyAreaTitle')}</h2>
-        <BodyAreaSelector
-          selected={bodyArea}
-          onChange={setBodyArea}
-          compact
-          ariaLabel={t('onboarding.bodyAreaTitle')}
-        />
-      </div>
-      <div className="space-y-2">
-        <button
-          type="button"
-          onClick={beginGuidedPath}
-          disabled={bodyArea === 'all'}
-          className="focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300"
-        >
-          {t('onboarding.start')}
-          <ArrowRight size={20} />
-        </button>
-        {bodyArea === 'all' ? <p className="text-center text-sm text-slate-500">{t('onboarding.selectBodyArea')}</p> : null}
-        <button
-          type="button"
-          onClick={browseExercises}
-          className="focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-4 font-bold text-calm-700"
-        >
-          <Eye size={19} />
-          {t('onboarding.browse')}
-        </button>
-      </div>
+      <ol className="grid gap-2" aria-label={t('onboarding.stepsLabel')}>
+        {(t('onboarding.steps') as string[]).map((item, index) => (
+          <li key={item} className="flex items-center gap-3 rounded-md bg-slate-50 p-3 font-semibold text-slate-700">
+            <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-calm-100 text-sm font-black text-calm-800">{index + 1}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ol>
+      <button type="button" onClick={finish} className="focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-calm-700 px-4 py-3 font-bold text-white md:w-auto">
+        {t('onboarding.start')}
+        <ArrowRight size={20} />
+      </button>
     </section>
   );
 }

@@ -146,10 +146,15 @@ section('active session keeps one primary action and progressive safety details'
   assertIncludes(source.activeSessionPanel, 'session-action-dock', 'session actions use the shared mobile navigation offset');
   assertIncludes(source.styles, '--mobile-bottom-nav-offset', 'mobile navigation exposes a shared offset token');
   assertIncludes(source.mobileNav, "root.style.setProperty('--mobile-more-nav-panel-height'", 'expanded More navigation publishes its measured panel height');
+  assertIncludes(source.mobileNav, "root.classList.add('mobile-more-nav-open')", 'expanded More navigation exposes its open state without relying on :has support');
+  assertIncludes(source.mobileNav, "root.classList.remove('mobile-more-nav-open')", 'expanded More navigation clears its open state');
   assertIncludes(source.mobileNav, 'new ResizeObserver(updatePanelHeight)', 'expanded More navigation tracks responsive panel height changes');
   assertIncludes(source.styles, '--mobile-more-nav-panel-height', 'expanded More navigation height uses a shared token');
-  assertIncludes(source.styles, ':root:has(#mobile-more-nav) .session-action-dock', 'expanded More navigation lifts session actions above the panel');
-  assertIncludes(source.styles, ':root:has(#mobile-more-nav) .page', 'expanded More navigation reserves scroll space for session and form content');
+  assertIncludes(source.styles, '--mobile-page-padding-bottom: 104px', 'mobile page spacing uses a named shared token');
+  assertIncludes(source.styles, ':root.mobile-more-nav-open .session-action-dock', 'expanded More navigation lifts session actions above the panel');
+  assertIncludes(source.styles, ':root.mobile-more-nav-open .page', 'expanded More navigation reserves scroll space for session and form content');
+  assertNotIncludes(source.styles, ':has(', 'expanded More navigation does not depend on Safari :has support');
+  assertNotIncludes(source.styles, '.desktop-nav a,\n.desktop-nav button,\n.mobile-bottom-nav a,', 'mobile navigation height does not alter desktop navigation');
   assertNotIncludes(source.activeSessionPanel, '64px', 'session action offset is not duplicated as a magic number');
 });
 

@@ -27,6 +27,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
     const panel = morePanelRef.current;
 
     if (!moreOpen || !panel) {
+      root.classList.remove('mobile-more-nav-open');
       root.style.removeProperty('--mobile-more-nav-panel-height');
       return;
     }
@@ -36,11 +37,13 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
     };
     const observer = new ResizeObserver(updatePanelHeight);
 
+    root.classList.add('mobile-more-nav-open');
     updatePanelHeight();
     observer.observe(panel);
 
     return () => {
       observer.disconnect();
+      root.classList.remove('mobile-more-nav-open');
       root.style.removeProperty('--mobile-more-nav-panel-height');
     };
   }, [moreOpen]);

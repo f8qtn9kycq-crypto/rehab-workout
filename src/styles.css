@@ -8,6 +8,7 @@
   --mobile-bottom-nav-padding-bottom: 4px;
   --mobile-bottom-nav-border-height: 1px;
   --mobile-more-nav-panel-height: 0px;
+  --mobile-page-padding-bottom: 104px;
   --mobile-bottom-nav-offset: calc(
     var(--mobile-bottom-nav-item-height) +
     var(--mobile-bottom-nav-padding-top) +
@@ -86,8 +87,6 @@ button,
   padding-bottom: var(--mobile-bottom-nav-padding-bottom);
 }
 
-.desktop-nav a,
-.desktop-nav button,
 .mobile-bottom-nav a,
 .mobile-bottom-nav button {
   min-height: var(--mobile-bottom-nav-item-height);
@@ -98,12 +97,12 @@ button,
 }
 
 /* Keep session controls above the two-row More panel while it is expanded. */
-:root:has(#mobile-more-nav) .session-action-dock {
+:root.mobile-more-nav-open .session-action-dock {
   bottom: calc(var(--mobile-bottom-nav-offset) + var(--mobile-more-nav-panel-height));
 }
 
-:root:has(#mobile-more-nav) .page {
-  padding-bottom: calc(104px + var(--mobile-more-nav-panel-height));
+:root.mobile-more-nav-open .page {
+  padding-bottom: calc(var(--mobile-page-padding-bottom) + var(--mobile-more-nav-panel-height));
 }
 
 .safe-top {
@@ -119,7 +118,7 @@ button,
   max-width: 1120px;
   margin: 0 auto;
   overflow-x: clip;
-  padding: 18px 16px 104px;
+  padding: 18px 16px var(--mobile-page-padding-bottom);
 }
 
 /*

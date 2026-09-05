@@ -50,6 +50,12 @@ function assertIncludes(source, value, label) {
   }
 }
 
+function assertNotIncludes(source, value, label) {
+  if (source.includes(value)) {
+    fail(`${label}: expected not to find ${JSON.stringify(value)}`);
+  }
+}
+
 function assertMatch(source, pattern, label) {
   if (!pattern.test(source)) {
     fail(`${label}: expected ${pattern}`);
@@ -83,12 +89,18 @@ section('app shell and routed pages are present', () => {
   assertIncludes(source.main, '<Route path="*" element={<Navigate to="/" replace />} />', 'fallback route');
 });
 
-section('SafetyRouteGuard protects assessment, library, detail, and session routes', () => {
+section('SafetyRouteGuard protects assessment and session while browse remains readable', () => {
+  const guardStart = source.main.indexOf('<Route element={<SafetyRouteGuard />}>');
+  const guardEnd = source.main.indexOf('</Route>', guardStart);
+  const guardedRoutes = source.main.slice(guardStart, guardEnd);
+
   assertIncludes(source.main, '<Route element={<SafetyRouteGuard />}>', 'guard wrapper');
-  assertIncludes(source.main, '<Route path="/assessment" element={<AssessmentPage />} />', 'assessment route inside guard');
-  assertIncludes(source.main, '<Route path="/exercises" element={<ExercisesPage />} />', 'exercise library route inside guard');
-  assertIncludes(source.main, '<Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />', 'exercise detail route inside guard');
-  assertIncludes(source.main, '<Route path="/session/:exerciseId" element={<SessionPage />} />', 'session route inside guard');
+  assertIncludes(guardedRoutes, '<Route path="/assessment" element={<AssessmentPage />} />', 'assessment route inside guard');
+  assertIncludes(source.main, '<Route path="/exercises" element={<ExercisesPage />} />', 'exercise library route remains available for browsing');
+  assertIncludes(source.main, '<Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />', 'exercise detail route remains available for browsing');
+  assertNotIncludes(guardedRoutes, '<Route path="/exercises" element={<ExercisesPage />} />', 'exercise library route stays outside guard');
+  assertNotIncludes(guardedRoutes, '<Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />', 'exercise detail route stays outside guard');
+  assertIncludes(guardedRoutes, '<Route path="/session/:exerciseId" element={<SessionPage />} />', 'session route inside guard');
   assertIncludes(source.safetyRouteGuard, 'isSafetyGateCurrentForToday(safety)', 'today safety check');
   assertIncludes(source.safetyRouteGuard, 'canEnterSession(safety)', 'blocked safety check');
   assertIncludes(source.safetyRouteGuard, 'to="/safety"', 'unsafe redirect target');
@@ -196,11 +208,17 @@ section('first-run onboarding stays focused on safe start basics', () => {
   const englishOnboarding = source.localeEn.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
   const zhOnboarding = source.localeZh.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
 
-  assertIncludes(source.onboardingFlow, "t('onboarding.stepsLabel')", 'onboarding step list has accessible label');
-  assertIncludes(englishOnboarding, 'Pain before and after', 'English onboarding covers pain before and after');
-  assertIncludes(zhOnboarding, '記錄前後疼痛', 'zh-TW onboarding covers pain before and after');
-  assertIncludes(englishOnboarding, 'Start suitable exercise', 'English onboarding leads to suitable exercise start');
-  assertIncludes(zhOnboarding, '開始合適動作', 'zh-TW onboarding leads to suitable exercise start');
+  assertIncludes(source.onboardingFlow, 'compact', 'onboarding shows compact body-area choices');
+  assertIncludes(source.onboardingFlow, "ariaLabel={t('onboarding.bodyAreaTitle')}", 'onboarding body-area group has an accessible label');
+  assertIncludes(source.onboardingFlow, "navigate('/safety', { state: { from: `/assessment?bodyArea=${bodyArea}` } })", 'selected body area continues through safety');
+  assertIncludes(source.onboardingFlow, "navigate('/exercises?mode=all')", 'secondary browse path opens the library');
+  assertIncludes(source.onboardingFlow, 'disabled={bodyArea === \'all\'}', 'guided start requires a body-area choice');
+  assertIncludes(source.safetyGate, "t('safety.whyBody')", 'safety check explains why questions are required');
+  assertIncludes(source.sessionPage, 'isSafetyGateCurrentForToday(safety)', 'direct session entry checks current safety status');
+  assertIncludes(englishOnboarding, 'See where to start today', 'English onboarding leads to guided start');
+  assertIncludes(zhOnboarding, '看今天可以從哪裡開始', 'zh-TW onboarding leads to guided start');
+  assertIncludes(englishOnboarding, 'Browse all exercises first', 'English onboarding offers secondary browse');
+  assertIncludes(zhOnboarding, '先瀏覽所有動作', 'zh-TW onboarding offers secondary browse');
   ['Pick level', 'Log result'].forEach((outdatedStep) => {
     if (englishOnboarding.includes(outdatedStep)) {
       fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);

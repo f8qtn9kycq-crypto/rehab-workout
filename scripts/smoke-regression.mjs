@@ -13,6 +13,7 @@ const files = {
   safetyUtils: 'src/utils/safety.ts',
   painRules: 'src/utils/painRules.ts',
   sessionTracker: 'src/components/SessionTracker.tsx',
+  activeSessionPanel: 'src/components/ActiveSessionPanel.tsx',
   sessionPage: 'src/pages/SessionPage.tsx',
   logService: 'src/services/logService.ts',
   outcomeStorage: 'src/services/outcomeStorage.ts',
@@ -130,6 +131,31 @@ section('pain rules and required pain inputs are preserved', () => {
   assertIncludes(source.sessionTracker, "t('session.painRequiredBefore')", 'pain-before required copy');
   assertIncludes(source.sessionTracker, "t('session.painRequiredAfter')", 'pain-after required copy');
   assertIncludes(source.sessionTracker, 'shouldWarnForPainIncrease(painBefore, painAfter)', 'pain-after increase warning');
+});
+
+section('active session keeps one primary action and progressive safety details', () => {
+  assertIncludes(source.sessionTracker, '<ActiveSessionPanel', 'session tracker delegates presentation without changing its state machine');
+  assertIncludes(source.activeSessionPanel, "resting ? onNextSet : onCompleteSet", 'resting state switches the primary action');
+  assertNotIncludes(source.activeSessionPanel, 'disabled={resting}', 'resting state does not show a disabled completion action');
+  assertIncludes(source.activeSessionPanel, '<details', 'full instructions use a native disclosure');
+  assertIncludes(source.activeSessionPanel, 'exercise.steps[0]', 'one current cue stays visible');
+  assertIncludes(source.activeSessionPanel, 'exercise.cautions.map', 'cautions remain available during training');
+  assertIncludes(source.activeSessionPanel, 'exercise.stopRules.map', 'stop rules remain available during training');
+  assertIncludes(source.activeSessionPanel, 'min-h-12', 'primary action meets the mobile touch target');
+  assertIncludes(source.activeSessionPanel, "t('session.stopSession')", 'stop training remains visible');
+  assertIncludes(source.activeSessionPanel, 'session-action-dock', 'session actions use the shared mobile navigation offset');
+  assertIncludes(source.styles, '--mobile-bottom-nav-offset', 'mobile navigation exposes a shared offset token');
+  assertIncludes(source.mobileNav, "root.style.setProperty('--mobile-more-nav-panel-height'", 'expanded More navigation publishes its measured panel height');
+  assertIncludes(source.mobileNav, "root.classList.add('mobile-more-nav-open')", 'expanded More navigation exposes its open state without relying on :has support');
+  assertIncludes(source.mobileNav, "root.classList.remove('mobile-more-nav-open')", 'expanded More navigation clears its open state');
+  assertIncludes(source.mobileNav, 'new ResizeObserver(updatePanelHeight)', 'expanded More navigation tracks responsive panel height changes');
+  assertIncludes(source.styles, '--mobile-more-nav-panel-height', 'expanded More navigation height uses a shared token');
+  assertIncludes(source.styles, '--mobile-page-padding-bottom: 104px', 'mobile page spacing uses a named shared token');
+  assertIncludes(source.styles, ':root.mobile-more-nav-open .session-action-dock', 'expanded More navigation lifts session actions above the panel');
+  assertIncludes(source.styles, ':root.mobile-more-nav-open .page', 'expanded More navigation reserves scroll space for session and form content');
+  assertNotIncludes(source.styles, ':has(', 'expanded More navigation does not depend on Safari :has support');
+  assertNotIncludes(source.styles, '.desktop-nav a,\n.desktop-nav button,\n.mobile-bottom-nav a,', 'mobile navigation height does not alter desktop navigation');
+  assertNotIncludes(source.activeSessionPanel, '64px', 'session action offset is not duplicated as a magic number');
 });
 
 section('LocalStorage readers fail soft and preserve app keys', () => {
@@ -265,6 +291,11 @@ section('required i18n keys for smoke-covered flows exist', () => {
     'session.painRequiredAfter',
     'session.painAfterWarning',
     'session.saveLog',
+    'session.currentCue',
+    'session.instructionsAndSafety',
+    'session.stepsTitle',
+    'session.cautionsTitle',
+    'session.stopRulesTitle',
     'safety.blocked',
     'safety.noneOfAbove',
     'logs.title',

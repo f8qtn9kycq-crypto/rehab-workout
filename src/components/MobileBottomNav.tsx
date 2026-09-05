@@ -1,5 +1,5 @@
 import { Activity, BookOpen, CalendarDays, ClipboardCheck, Home, ListChecks, Menu, ShieldCheck, X } from 'lucide-react';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 
@@ -19,7 +19,34 @@ const secondaryItems = [
 export default function MobileBottomNav({ currentPath }: { currentPath: string }) {
   const { t } = useI18n();
   const [moreOpen, setMoreOpen] = useState(false);
+  const morePanelRef = useRef<HTMLDivElement>(null);
   const moreActive = secondaryItems.some(({ to }) => currentPath === to || currentPath.startsWith(to));
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const panel = morePanelRef.current;
+
+    if (!moreOpen || !panel) {
+      root.classList.remove('mobile-more-nav-open');
+      root.style.removeProperty('--mobile-more-nav-panel-height');
+      return;
+    }
+
+    const updatePanelHeight = () => {
+      root.style.setProperty('--mobile-more-nav-panel-height', `${panel.getBoundingClientRect().height}px`);
+    };
+    const observer = new ResizeObserver(updatePanelHeight);
+
+    root.classList.add('mobile-more-nav-open');
+    updatePanelHeight();
+    observer.observe(panel);
+
+    return () => {
+      observer.disconnect();
+      root.classList.remove('mobile-more-nav-open');
+      root.style.removeProperty('--mobile-more-nav-panel-height');
+    };
+  }, [moreOpen]);
 
   function isActive(to: string): boolean {
     return currentPath === to || (to !== '/' && currentPath.startsWith(to));
@@ -28,7 +55,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
   return (
     <nav className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 backdrop-blur" aria-label={t('nav.mobilePrimary')}>
       {moreOpen ? (
-        <div id="mobile-more-nav" className="border-b border-slate-200 px-3 py-3">
+        <div ref={morePanelRef} id="mobile-more-nav" className="border-b border-slate-200 px-3 py-3">
           <div className="grid grid-cols-2 gap-2">
             {secondaryItems.map(({ to, labelKey, icon: Icon }) => (
               <NavLink
@@ -46,7 +73,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
           </div>
         </div>
       ) : null}
-      <div className="mobile-bottom-nav-inner grid grid-cols-5 px-1 pt-1">
+      <div className="mobile-bottom-nav-inner grid grid-cols-5 px-1">
         {primaryItems.map(({ to, labelKey, icon: Icon }) => {
           const active = isActive(to);
           return (
@@ -54,7 +81,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
               key={to}
               to={to}
               onClick={() => setMoreOpen(false)}
-              className={`focus-ring flex min-h-[58px] flex-col items-center justify-center rounded-md text-[12px] font-semibold ${
+              className={`focus-ring flex flex-col items-center justify-center rounded-md text-[12px] font-semibold ${
                 active ? 'text-calm-700' : 'text-slate-500'
               }`}
             >
@@ -69,7 +96,7 @@ export default function MobileBottomNav({ currentPath }: { currentPath: string }
           aria-expanded={moreOpen}
           aria-label={moreOpen ? t('nav.closeMore') : t('nav.openMore')}
           onClick={() => setMoreOpen((open) => !open)}
-          className={`focus-ring flex min-h-[58px] flex-col items-center justify-center rounded-md text-[12px] font-semibold ${
+          className={`focus-ring flex flex-col items-center justify-center rounded-md text-[12px] font-semibold ${
             moreActive || moreOpen ? 'text-calm-700' : 'text-slate-500'
           }`}
         >

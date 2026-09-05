@@ -1,4 +1,4 @@
-import type { FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
+import type { BodyArea, FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
 
 type NextAction = {
   titleKey: string;
@@ -10,10 +10,23 @@ type NextAction = {
 
 const recentOutcomeWindowMs = 1000 * 60 * 60 * 24 * 14;
 
-export function hasRecentOutcome(outcomes: FunctionalOutcomeEntry[], today = new Date()): boolean {
+export function hasRecentOutcome(
+  outcomes: FunctionalOutcomeEntry[],
+  bodyArea: BodyArea | undefined,
+  today = new Date(),
+): boolean {
+  if (!bodyArea) return false;
+
   return outcomes.some((outcome) => {
     const outcomeDate = new Date(outcome.date);
-    return !Number.isNaN(outcomeDate.getTime()) && today.getTime() - outcomeDate.getTime() <= recentOutcomeWindowMs;
+    const elapsedMs = today.getTime() - outcomeDate.getTime();
+
+    return (
+      outcome.bodyArea === bodyArea &&
+      !Number.isNaN(outcomeDate.getTime()) &&
+      elapsedMs >= 0 &&
+      elapsedMs <= recentOutcomeWindowMs
+    );
   });
 }
 

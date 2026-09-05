@@ -45,10 +45,15 @@ for (const safetyReady of [false, true]) {
   }
 }
 const today = new Date('2026-09-03T12:00:00Z');
-assert.equal(hasRecentOutcome([], today), false);
-assert.equal(hasRecentOutcome([{ date: 'bad-date' }], today), false);
-assert.equal(hasRecentOutcome([{ date: today.toISOString() }], today), true);
+const outcome = (date, bodyArea = 'knee') => ({ date, bodyArea });
+
+assert.equal(hasRecentOutcome([], 'knee', today), false);
+assert.equal(hasRecentOutcome([outcome('bad-date')], 'knee', today), false);
+assert.equal(hasRecentOutcome([outcome(today.toISOString())], 'knee', today), true);
+assert.equal(hasRecentOutcome([outcome(today.toISOString(), 'shoulder')], 'knee', today), false);
+assert.equal(hasRecentOutcome([outcome(new Date(today.getTime() + 1).toISOString())], 'knee', today), false);
+assert.equal(hasRecentOutcome([outcome(today.toISOString())], undefined, today), false);
 const boundary = today.getTime() - 14 * 24 * 60 * 60 * 1000;
-assert.equal(hasRecentOutcome([{ date: new Date(boundary).toISOString() }], today), true);
-assert.equal(hasRecentOutcome([{ date: new Date(boundary - 1).toISOString() }], today), false);
+assert.equal(hasRecentOutcome([outcome(new Date(boundary).toISOString())], 'knee', today), true);
+assert.equal(hasRecentOutcome([outcome(new Date(boundary - 1).toISOString())], 'knee', today), false);
 console.log(`Home entry regression passed: ${cases} state combinations, locale coverage, immutable inputs and outcome date boundaries.`);

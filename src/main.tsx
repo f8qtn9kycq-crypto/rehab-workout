@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import EntryDemoPage from './pages/EntryDemoPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import SafetyRouteGuard from './components/SafetyRouteGuard';
@@ -9,6 +10,7 @@ import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import ExercisesPage from './pages/ExercisesPage';
 import HomePage from './pages/HomePage';
 import LogsPage from './pages/LogsPage';
+import RoutinePage from './pages/RoutinePage';
 import OnboardingPage from './pages/OnboardingPage';
 import SafetyPage from './pages/SafetyPage';
 import SessionPage from './pages/SessionPage';
@@ -23,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ScrollToTop />
         <Routes>
           <Route element={<AppShell />}>
+            {__ENTRY_DEMO__ && <Route path="/demo-entry" element={<EntryDemoPage />} />}
             <Route path="/" element={<HomePage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/safety" element={<SafetyPage />} />
@@ -33,6 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/session/:exerciseId" element={<SessionPage />} />
             </Route>
             <Route path="/logs" element={<LogsPage />} />
+            <Route path="/routine" element={<RoutinePage />} />
             <Route path="/education" element={<EducationPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

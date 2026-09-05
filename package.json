@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke && npm run test:migration && npm run audit:visible-i18n",
+    "test": "npm run test:smoke && npm run test:migration && npm run test:home-entry && npm run audit:visible-i18n",
+    "test:home-entry": "node scripts/home-entry-regression.mjs",
     "test:smoke": "node scripts/smoke-regression.mjs",
     "test:migration": "node scripts/migration-regression.mjs",
     "audit:visible-i18n": "node scripts/audit-visible-i18n.mjs",

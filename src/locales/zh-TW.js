@@ -1,4 +1,10 @@
 export default {
+  entryDemo: {
+    label: '示範情境',
+    first: '首次使用',
+    returning: '回訪',
+    notice: '僅供驗收；切換不更動紀錄。回訪依目前安全狀態顯示。',
+  },
   app: {
     brand: '樂齡復健訓練',
     languageLabel: '語言',
@@ -16,6 +22,7 @@ export default {
     logs: '紀錄',
     education: '知識',
     more: '更多',
+    routine: '每週安排',
     primary: '主要導覽',
     mobilePrimary: '行動版導覽',
     openMore: '開啟更多導覽選項',
@@ -49,14 +56,14 @@ export default {
       label: '今天下一步',
       guardNote: '開始訓練仍會套用既有安全檢查與訓練流程。',
       safety: {
-        title: '先完成安全確認',
-        body: '選動作前，先確認今天是否有需要暫停訓練的紅旗狀況。',
-        cta: '前往安全確認',
+        title: '今天先確認一下身體狀況',
+        body: '開始前，確認今天有沒有需要留意的不適。',
+        cta: '開始安全確認',
       },
       assessment: {
-        title: '更新今天狀態',
-        body: '選今天想照顧的部位、疼痛程度與可用器材，讓動作庫維持保守。',
-        cta: '開始自我評估',
+        title: '今天活動起來感覺如何？',
+        body: '確認疼痛與動作信心，再挑選動作。',
+        cta: '確認今天狀況',
       },
       outcome: {
         title: '補一筆功能確認',
@@ -98,12 +105,11 @@ export default {
   },
   onboarding: {
     badge: '安全優先',
-    title: '今天想先照顧哪個部位？',
-    subtitle: '選一個部位，我們會先確認今天是否適合運動，再提供較容易控制的選擇。',
-    bodyAreaTitle: '選擇身體部位',
-    selectBodyArea: '請先選擇一個部位。',
-    start: '看今天可以從哪裡開始',
-    browse: '先瀏覽所有動作',
+    title: '今天先走一條安全開始路徑',
+    subtitle: '先完成安全確認，再選身體部位，了解訓練前後都要記錄疼痛程度。',
+    stepsLabel: '首次使用路徑',
+    steps: ['安全確認', '選身體部位', '記錄前後疼痛', '開始合適動作'],
+    start: '開始安全確認',
   },
   bodyAreas: {
     shoulder: { label: '肩部復健', hint: '活動度、旋轉肌、肩胛控制' },

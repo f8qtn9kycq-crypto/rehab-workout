@@ -8,7 +8,7 @@ import type { BodyArea, Exercise, FunctionalOutcomeEntry } from '../types/rehab'
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
 import PainScale from './PainScale';
-import RestTimer from './RestTimer';
+import ActiveSessionPanel from './ActiveSessionPanel';
 
 interface SessionTrackerProps {
   exercise: Exercise;
@@ -368,45 +368,16 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     <>
       {sessionHeader}
       {exitDialog}
-      <section className="card space-y-5 p-4">
-        <div>
-          <h1 className="text-2xl font-bold text-ink">{exercise.title}</h1>
-          <p className="mt-1 text-slate-600">{t('session.activeHint')}</p>
-        </div>
-        {useRecoveryMode ? (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 font-semibold text-amber-900">
-            {t('session.recoveryActive')}
-          </div>
-        ) : null}
-        <div className="rounded-lg bg-calm-100 p-5 text-center" role="status" aria-live="polite" aria-label={t('session.progressA11y', { set: currentSet, sets: exercise.sets, reps: exercise.reps })}>
-          <div className="text-sm font-semibold text-calm-700">{t('session.currentProgress')}</div>
-          <div className="mt-1 text-4xl font-bold text-calm-700">{t('session.setProgressText', { set: currentSet, sets: exercise.sets })}</div>
-          <div className="mt-1 text-lg font-semibold text-slate-800">{t('session.repInstruction', { reps: exercise.reps })}</div>
-          <div className="mt-1 text-slate-700">{t('session.targetText', { sets: exercise.sets, reps: exercise.reps })}</div>
-        </div>
-        <ol className="space-y-2">
-          {exercise.steps.map((step) => (
-            <li key={step} className="rounded-md bg-slate-50 p-3 text-slate-700">{step}</li>
-          ))}
-        </ol>
-        {resting ? (
-          <div className="space-y-3">
-            <RestTimer seconds={exercise.restSeconds} autoStartKey={restTimerKey} />
-            <button type="button" onClick={startNextSet} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
-              {t('session.nextSet')}
-            </button>
-          </div>
-        ) : null}
-        <div className="grid gap-3 md:grid-cols-2">
-          <button type="button" onClick={completeSet} disabled={resting} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
-            {currentSet >= exercise.sets ? t('session.completeSession') : t('session.completeSet')}
-          </button>
-          <button type="button" onClick={stopEarly} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-4 py-3 font-bold text-red-700">
-            <AlertTriangle size={18} />
-            {t('session.stopSession')}
-          </button>
-        </div>
-      </section>
+      <ActiveSessionPanel
+        exercise={exercise}
+        currentSet={currentSet}
+        resting={resting}
+        restTimerKey={restTimerKey}
+        useRecoveryMode={useRecoveryMode}
+        onCompleteSet={completeSet}
+        onNextSet={startNextSet}
+        onStop={stopEarly}
+      />
     </>
   );
 }

@@ -13,6 +13,7 @@ const files = {
   safetyUtils: 'src/utils/safety.ts',
   painRules: 'src/utils/painRules.ts',
   sessionTracker: 'src/components/SessionTracker.tsx',
+  activeSessionPanel: 'src/components/ActiveSessionPanel.tsx',
   sessionPage: 'src/pages/SessionPage.tsx',
   logService: 'src/services/logService.ts',
   outcomeStorage: 'src/services/outcomeStorage.ts',
@@ -130,6 +131,18 @@ section('pain rules and required pain inputs are preserved', () => {
   assertIncludes(source.sessionTracker, "t('session.painRequiredBefore')", 'pain-before required copy');
   assertIncludes(source.sessionTracker, "t('session.painRequiredAfter')", 'pain-after required copy');
   assertIncludes(source.sessionTracker, 'shouldWarnForPainIncrease(painBefore, painAfter)', 'pain-after increase warning');
+});
+
+section('active session keeps one primary action and progressive safety details', () => {
+  assertIncludes(source.sessionTracker, '<ActiveSessionPanel', 'session tracker delegates presentation without changing its state machine');
+  assertIncludes(source.activeSessionPanel, "resting ? onNextSet : onCompleteSet", 'resting state switches the primary action');
+  assertNotIncludes(source.activeSessionPanel, 'disabled={resting}', 'resting state does not show a disabled completion action');
+  assertIncludes(source.activeSessionPanel, '<details', 'full instructions use a native disclosure');
+  assertIncludes(source.activeSessionPanel, 'exercise.steps[0]', 'one current cue stays visible');
+  assertIncludes(source.activeSessionPanel, 'exercise.cautions.map', 'cautions remain available during training');
+  assertIncludes(source.activeSessionPanel, 'exercise.stopRules.map', 'stop rules remain available during training');
+  assertIncludes(source.activeSessionPanel, 'min-h-12', 'primary action meets the mobile touch target');
+  assertIncludes(source.activeSessionPanel, "t('session.stopSession')", 'stop training remains visible');
 });
 
 section('LocalStorage readers fail soft and preserve app keys', () => {
@@ -265,6 +278,11 @@ section('required i18n keys for smoke-covered flows exist', () => {
     'session.painRequiredAfter',
     'session.painAfterWarning',
     'session.saveLog',
+    'session.currentCue',
+    'session.instructionsAndSafety',
+    'session.stepsTitle',
+    'session.cautionsTitle',
+    'session.stopRulesTitle',
     'safety.blocked',
     'safety.noneOfAbove',
     'logs.title',

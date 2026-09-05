@@ -7,6 +7,7 @@
   --mobile-bottom-nav-padding-top: 4px;
   --mobile-bottom-nav-padding-bottom: 4px;
   --mobile-bottom-nav-border-height: 1px;
+  --mobile-more-nav-panel-height: 0px;
   --mobile-bottom-nav-offset: calc(
     var(--mobile-bottom-nav-item-height) +
     var(--mobile-bottom-nav-padding-top) +
@@ -94,6 +95,15 @@ button,
 
 .session-action-dock {
   bottom: var(--mobile-bottom-nav-offset);
+}
+
+/* Keep session controls above the two-row More panel while it is expanded. */
+:root:has(#mobile-more-nav) .session-action-dock {
+  bottom: calc(var(--mobile-bottom-nav-offset) + var(--mobile-more-nav-panel-height));
+}
+
+:root:has(#mobile-more-nav) .page {
+  padding-bottom: calc(104px + var(--mobile-more-nav-panel-height));
 }
 
 .safe-top {

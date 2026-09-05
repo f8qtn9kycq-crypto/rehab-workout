@@ -145,6 +145,11 @@ section('active session keeps one primary action and progressive safety details'
   assertIncludes(source.activeSessionPanel, "t('session.stopSession')", 'stop training remains visible');
   assertIncludes(source.activeSessionPanel, 'session-action-dock', 'session actions use the shared mobile navigation offset');
   assertIncludes(source.styles, '--mobile-bottom-nav-offset', 'mobile navigation exposes a shared offset token');
+  assertIncludes(source.mobileNav, "root.style.setProperty('--mobile-more-nav-panel-height'", 'expanded More navigation publishes its measured panel height');
+  assertIncludes(source.mobileNav, 'new ResizeObserver(updatePanelHeight)', 'expanded More navigation tracks responsive panel height changes');
+  assertIncludes(source.styles, '--mobile-more-nav-panel-height', 'expanded More navigation height uses a shared token');
+  assertIncludes(source.styles, ':root:has(#mobile-more-nav) .session-action-dock', 'expanded More navigation lifts session actions above the panel');
+  assertIncludes(source.styles, ':root:has(#mobile-more-nav) .page', 'expanded More navigation reserves scroll space for session and form content');
   assertNotIncludes(source.activeSessionPanel, '64px', 'session action offset is not duplicated as a magic number');
 });
 

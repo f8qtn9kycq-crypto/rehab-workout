@@ -4,12 +4,12 @@ import { onboardingStorageKey } from '../data/safety';
 import { useI18n } from '../services/i18n';
 import { safeSetItem } from '../services/localStorageService';
 
-export default function OnboardingFlow() {
+export default function OnboardingFlow({ demo = false }: { demo?: boolean }) {
   const navigate = useNavigate();
   const { t } = useI18n();
 
   function finish(): void {
-    safeSetItem(onboardingStorageKey, JSON.stringify(true));
+    if (!demo) safeSetItem(onboardingStorageKey, JSON.stringify(true));
     navigate('/safety');
   }
 

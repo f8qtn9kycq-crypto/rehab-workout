@@ -1,4 +1,10 @@
 export default {
+  entryDemo: {
+    label: 'Demo scenarios',
+    first: 'First visit',
+    returning: 'Returning',
+    notice: 'Demo only. Switching views does not change records. Returning uses your current safety status.',
+  },
   app: {
     brand: 'Senior Rehab Training',
     languageLabel: 'Language',

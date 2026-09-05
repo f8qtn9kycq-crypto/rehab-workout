@@ -1,4 +1,10 @@
 export default {
+  entryDemo: {
+    label: '示範情境',
+    first: '首次使用',
+    returning: '回訪',
+    notice: '僅供驗收；切換不更動紀錄。回訪依目前安全狀態顯示。',
+  },
   app: {
     brand: '樂齡復健訓練',
     languageLabel: '語言',

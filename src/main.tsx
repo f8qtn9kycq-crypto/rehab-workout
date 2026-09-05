@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import EntryDemoPage from './pages/EntryDemoPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import SafetyRouteGuard from './components/SafetyRouteGuard';
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ScrollToTop />
         <Routes>
           <Route element={<AppShell />}>
+            {__ENTRY_DEMO__ && <Route path="/demo-entry" element={<EntryDemoPage />} />}
             <Route path="/" element={<HomePage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/safety" element={<SafetyPage />} />

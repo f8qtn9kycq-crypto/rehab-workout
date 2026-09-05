@@ -9,10 +9,10 @@ import { getOutcomeEntries } from '../services/outcomeStorage';
 import { getNextAction, hasRecentOutcome } from '../utils/homeNextAction';
 import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '../utils/safety';
 
-export default function HomePage() {
+export default function HomePage({ demo = false }: { demo?: boolean }) {
   const { t } = useI18n();
   const seenOnboarding = safeGetItem(onboardingStorageKey);
-  if (!seenOnboarding) return <Navigate to="/onboarding" replace />;
+  if (!seenOnboarding && !demo) return <Navigate to="/onboarding" replace />;
 
   const safety = getSafetyStatus();
   const safetyReady = isSafetyGateCurrentForToday(safety) && canEnterSession(safety);

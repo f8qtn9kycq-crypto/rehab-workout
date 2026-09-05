@@ -86,7 +86,7 @@ export default function ActiveSessionPanel({
         </div>
       </details>
 
-      <div className="sticky bottom-[calc(64px+env(safe-area-inset-bottom))] z-20 -mx-1 grid gap-2 rounded-lg border border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur min-[769px]:static min-[769px]:mx-0 min-[769px]:grid-cols-2 min-[769px]:border-0 min-[769px]:bg-transparent min-[769px]:p-0 min-[769px]:shadow-none">
+      <div className="session-action-dock sticky z-20 -mx-1 grid gap-2 rounded-lg border border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur min-[769px]:static min-[769px]:mx-0 min-[769px]:grid-cols-2 min-[769px]:border-0 min-[769px]:bg-transparent min-[769px]:p-0 min-[769px]:shadow-none">
         <button
           type="button"
           onClick={resting ? onNextSet : onCompleteSet}

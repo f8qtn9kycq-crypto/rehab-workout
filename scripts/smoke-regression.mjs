@@ -143,6 +143,9 @@ section('active session keeps one primary action and progressive safety details'
   assertIncludes(source.activeSessionPanel, 'exercise.stopRules.map', 'stop rules remain available during training');
   assertIncludes(source.activeSessionPanel, 'min-h-12', 'primary action meets the mobile touch target');
   assertIncludes(source.activeSessionPanel, "t('session.stopSession')", 'stop training remains visible');
+  assertIncludes(source.activeSessionPanel, 'session-action-dock', 'session actions use the shared mobile navigation offset');
+  assertIncludes(source.styles, '--mobile-bottom-nav-offset', 'mobile navigation exposes a shared offset token');
+  assertNotIncludes(source.activeSessionPanel, '64px', 'session action offset is not duplicated as a magic number');
 });
 
 section('LocalStorage readers fail soft and preserve app keys', () => {

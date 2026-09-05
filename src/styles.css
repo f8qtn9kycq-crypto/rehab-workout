@@ -3,6 +3,17 @@
 @tailwind utilities;
 
 :root {
+  --mobile-bottom-nav-item-height: 58px;
+  --mobile-bottom-nav-padding-top: 4px;
+  --mobile-bottom-nav-padding-bottom: 4px;
+  --mobile-bottom-nav-border-height: 1px;
+  --mobile-bottom-nav-offset: calc(
+    var(--mobile-bottom-nav-item-height) +
+    var(--mobile-bottom-nav-padding-top) +
+    var(--mobile-bottom-nav-padding-bottom) +
+    var(--mobile-bottom-nav-border-height) +
+    env(safe-area-inset-bottom)
+  );
   color: #1e293b;
   background: #f8fafc;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Segoe UI", sans-serif;
@@ -70,14 +81,19 @@ button,
 
 .mobile-bottom-nav-inner {
   /* Keep this flat so safe-area padding is applied only by .mobile-bottom-nav. */
-  padding-bottom: 4px;
+  padding-top: var(--mobile-bottom-nav-padding-top);
+  padding-bottom: var(--mobile-bottom-nav-padding-bottom);
 }
 
 .desktop-nav a,
 .desktop-nav button,
 .mobile-bottom-nav a,
 .mobile-bottom-nav button {
-  min-height: 44px;
+  min-height: var(--mobile-bottom-nav-item-height);
+}
+
+.session-action-dock {
+  bottom: var(--mobile-bottom-nav-offset);
 }
 
 .safe-top {
@@ -108,6 +124,10 @@ button,
 
   .mobile-bottom-nav {
     display: none;
+  }
+
+  .session-action-dock {
+    bottom: auto;
   }
 
   .page {

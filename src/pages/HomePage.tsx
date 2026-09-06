@@ -24,7 +24,7 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
     safetyReady,
     hasAssessment,
     latestLog,
-    hasRecentOutcomeEntry: hasRecentOutcome(outcomes),
+    hasRecentOutcomeEntry: hasRecentOutcome(outcomes, latestLog?.bodyArea),
   });
 
   return (

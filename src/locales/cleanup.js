@@ -39,6 +39,9 @@ export default {
     },
     progress: {
       title: 'Weekly progress',
+      focusTitle: '{area} recent progress',
+      noFocusArea: 'No body area yet',
+      detailsTitle: 'View progress details',
       weekStart: 'Week of {date}',
       areaSeparator: ', ',
       noAreas: 'No body areas trained this week yet.',
@@ -245,6 +248,9 @@ export default {
     },
     progress: {
       title: '本週進度',
+      focusTitle: '{area}近期進度',
+      noFocusArea: '尚無訓練部位',
+      detailsTitle: '查看進度細節',
       weekStart: '{date} 這週',
       areaSeparator: '、',
       noAreas: '本週還沒有訓練部位紀錄。',

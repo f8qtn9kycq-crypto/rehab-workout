@@ -200,7 +200,12 @@ section('session logs persist with required fields and refresh-safe readers', ()
   assertIncludes(source.trainingLogStopReasons, 'legacyEarlyStopReasonLabels.has(stopReason)', 'legacy translated early-stop labels are localized at render time');
   assertIncludes(source.sessionTracker, 'normalizeStopReasonForSave(stopReason, stoppedEarly, notes)', 'session save normalizes built-in stop reason while preserving notes fallback');
   assertIncludes(source.trainingLog, 'getLocalizedStopReasonLabel(log, t)', 'training history localizes built-in stop reasons');
-  assertIncludes(source.sessionTracker, 'saveLog(log)', 'session completion saves log');
+  assertIncludes(source.sessionTracker, 'if (!saveLog(log))', 'session confirmation requires a successful local save');
+  assertIncludes(source.sessionTracker, "t('session.saveError')", 'session exposes local save failure without claiming success');
+  assertIncludes(source.sessionTracker, "setPhase('saved')", 'session completion confirms the saved state before navigation');
+  assertIncludes(source.sessionTracker, 'hasRecentOutcome(getOutcomeEntries(), log.bodyArea)', 'saved next step uses same-area recent outcome rules');
+  assertIncludes(source.sessionTracker, "savedLog.stoppedEarly ? 'session.savedStoppedEarly' : 'session.savedCompleted'", 'saved confirmation distinguishes completed and stopped-early sessions');
+  assertIncludes(source.sessionTracker, "needsOutcomeCheckIn ? addOutcomeNow : returnHome", 'saved confirmation exposes one contextual primary action');
   assertIncludes(source.sessionTracker, "navigate('/logs')", 'saved session routes to logs');
 });
 

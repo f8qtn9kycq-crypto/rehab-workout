@@ -110,10 +110,9 @@ export function getLogs(): TrainingLogEntry[] {
   return logs;
 }
 
-export function saveLog(log: TrainingLogEntry): TrainingLogEntry[] {
+export function saveLog(log: TrainingLogEntry): boolean {
   const logs = [log, ...getLogs()].slice(0, MAX_LOGS);
-  safeSetItem(LOG_KEY, JSON.stringify(logs));
-  return logs;
+  return safeSetItem(LOG_KEY, JSON.stringify(logs));
 }
 
 export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEntry {

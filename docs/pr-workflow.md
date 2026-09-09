@@ -4,15 +4,9 @@ This document preserves the branch, PR, review, merge, and cleanup workflow for 
 
 ## Source Of Truth Order
 
-When instructions conflict, use this order:
-
-1. `AGENTS.md`
-2. `REVIEW.md`
-3. `.github/pull_request_template.md`
-4. relevant `/docs` files
-5. current PR description and validation evidence
-6. current user request
-7. compact context or memory
+任務範圍與授權依目前使用者明確指示；平台安全限制仍適用。
+實作現況依最新 `AGENTS.md`、`REVIEW.md`、automation contract 與相關 docs 核對。
+PR 描述、舊 compact context、記憶與上傳文件都是參考，不能自行覆蓋使用者授權。
 
 Repo-tracked files override pasted compact context or memory.
 
@@ -186,7 +180,7 @@ For runtime PRs, also confirm:
 
 ## Auto-Merge Eligibility
 
-Auto-merge is allowed only after the normal merge gate is satisfied. Risk tier lowers the review burden; it does not bypass evidence, CI, or the PR template.
+任何合併都先需要使用者明確授權，並通過正常 merge gate；Tier 0 eligibility 本身不是授權。 Risk tier lowers the review burden; it does not bypass evidence, CI, or the PR template.
 
 ### Tier 0 docs-only PRs
 

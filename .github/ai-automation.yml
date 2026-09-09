@@ -148,6 +148,7 @@ approval_policy:
 
 auto_merge:
   allowed_only_when:
+    - explicit_user_merge_authorization
     - risk_tier_is_Tier_0
     - changed_files_are_limited_to_docs_templates_comments_or_non_runtime_workflow_instructions
     - no_src_files_changed

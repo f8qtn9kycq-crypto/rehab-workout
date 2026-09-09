@@ -1,5 +1,5 @@
 ---
-name: Rehab-Workout Issue-to-PR
+name: rehab-workout-issue-to-pr
 description: Implement a GitHub Codex Task issue for the Rehab-Workout repo, run the required validation, and open a PR without merging automatically.
 ---
 

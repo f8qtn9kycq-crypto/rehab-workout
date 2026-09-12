@@ -1,4 +1,6 @@
 const APP_STORAGE_KEYS = [
+  'rehab.activities.v1',
+  'rehab.weeklyActivityPlan.v1',
   'rehab.trainingLogs.v1',
   'rehab.trainingLogs.v2',
   'rehab.functionalOutcomes.v1',

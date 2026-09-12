@@ -1,4 +1,79 @@
 export default {
+  activities: {
+
+  "exerciseRecords": "{count} exercise records",
+  "feedback": "Worse symptoms / red flags: {worse}; next-day responses missing: {missing}."
+,
+
+  "plan": "Seven-day plan",
+  "planHint": "Adjust days as needed. Lower/push/pull are flexible focuses, not exercise prescriptions. Scheduling never marks an activity complete.",
+  "rest": "Rest",
+  "editPlan": "Edit schedule",
+  "days": {
+    "0": "Monday",
+    "1": "Tuesday",
+    "2": "Wednesday",
+    "3": "Thursday",
+    "4": "Friday",
+    "5": "Saturday",
+    "6": "Sunday"
+  },
+  "planNames": {
+    "lower": "Resistance (lower focus)",
+    "push": "Resistance (push focus)",
+    "pull": "Resistance (pull focus)",
+    "cycling": "Cycling 15 minutes"
+  }
+,
+  "title": "Today and this week",
+  "summary": "Resistance {resistance}/3 · Cycling {cycling}/4 rides, {minutes} minutes",
+  "legacy": "Existing logs are preserved. Ungrouped exercise logs do not count as resistance sessions.",
+  "resistance": "Record resistance",
+  "cycling": "Record cycling",
+  "recordOnly": "Record an activity that already happened, including incomplete attempts.",
+  "startSafely": "Start guided training: safety check first",
+  "date": "Activity date",
+  "focus": "Primary focus (mixed exercises allowed)",
+  "linkLogs": "Link same-day exercise logs (optional, multiple allowed)",
+  "completed": "Completed",
+  "incomplete": "Incomplete",
+  "minutes": "Actual minutes",
+  "response": "Shoulder, hip or other symptoms compared with before",
+  "choose": "Choose a response",
+  "warning": "Stop if pain increases, numbness, weakness or instability occurs. Consider checking with a physician or physical therapist. Stopped exercises and pain records are included conservatively.",
+  "save": "Save activity",
+  "cancel": "Cancel",
+  "history": "Activities and next-day feedback",
+  "minuteUnit": "minutes",
+  "logUnit": "exercise logs",
+  "nextDay": "Next-day response (optional, enter the following day)",
+  "unknown": "Not reported",
+  "share": "Copyable weekly summary",
+  "localOnly": "Select summary text to copy. Data stays in this browser and does not sync to ChatGPT.",
+  "saved": "Saved",
+  "error": "Unable to read or save activities. Existing data was not overwritten. Check browser storage and permissions.",
+  "focuses": {
+    "lower": "Lower body",
+    "push": "Push",
+    "pull": "Pull",
+    "mixed": "Mixed"
+  },
+  "responses": {
+    "same": "Unchanged",
+    "better": "Better",
+    "worse": "Worse / poor recovery",
+    "red_flag": "Pain at least 6 or red flags"
+  },
+  "recommendations": {
+    "consistency": "Build consistency toward 3 resistance sessions and 4 rides weekly. Do not make up missed activities with extra volume.",
+    "stop": "Stop training and consider checking with a physician or physical therapist. Completion does not replace a safety check.",
+    "reduce": "Symptoms worsened or training stopped early. Maintain or use an easier option following your physical therapist’s guidance; do not add volume.",
+    "missing": "Targets met, but next-day responses are missing. Maintain; do not assume good recovery.",
+    "baseline": "Responses are stable but prior-week minutes are missing. Maintain and build a baseline.",
+    "volume": "Minutes increased for at least one activity type. Maintain without adding another progression.",
+    "small": "Consistency and responses are stable; minutes have not increased. Minutes do not measure load or sets. Only if those have not increased and your physical therapist’s guidance allows it, consider one extra rep per set in one familiar exercise; keep everything else unchanged."
+  }
+},
   entryDemo: {
     label: 'Demo scenarios',
     first: 'First visit',

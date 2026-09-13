@@ -2,7 +2,7 @@ export default {
   activities: {
 
   "exerciseRecords": "{count} exercise records",
-  "feedback": "Worse symptoms / red flags: {worse}; next-day responses missing: {missing}."
+  "feedback": "Worse symptoms / red flags: {worse}; next-day responses missing: {missing}; awaiting tomorrow: {pending}."
 ,
 
   "plan": "Seven-day plan",
@@ -65,6 +65,7 @@ export default {
     "red_flag": "Pain at least 6 or red flags"
   },
   "recommendations": {
+    "waiting": "Targets met. Today’s activities are awaiting next-day observation. Maintain and record the response tomorrow.",
     "consistency": "Build consistency toward 3 resistance sessions and 4 rides weekly. Do not make up missed activities with extra volume.",
     "stop": "Stop training and consider checking with a physician or physical therapist. Completion does not replace a safety check.",
     "reduce": "Symptoms worsened or training stopped early. Maintain or use an easier option following your physical therapist’s guidance; do not add volume.",

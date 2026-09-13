@@ -40,7 +40,7 @@ export default function ActivityTracking() {
     refresh(ok);
     if (ok) { setKind(null); setId(activityId()); setLinks([]); setResponse(''); setMinutes(''); }
   }
-  const feedbackText = t('activities.feedback', { worse: summary.current.filter(a => ['worse', 'red_flag'].includes(a.symptomResponse) || ['worse', 'red_flag'].includes(a.nextDayResponse ?? '')).length, missing: summary.current.filter(a => !a.nextDayResponse).length });
+  const feedbackText = t('activities.feedback', { worse: summary.current.filter(a => ['worse', 'red_flag'].includes(a.symptomResponse) || ['worse', 'red_flag'].includes(a.nextDayResponse ?? '')).length, missing: summary.missingNextDay, pending: summary.pendingNextDay });
   const copyText = t('activities.summary', { resistance: summary.resistance, cycling: summary.cycling, minutes: summary.cyclingMinutes }) + ' ' + feedbackText + ' ' + t(`activities.recommendations.${summary.recommendation}`);
   return <section className="card mx-auto w-full max-w-xl space-y-4 p-5" aria-labelledby="activities-title">
     <h2 id="activities-title" className="text-xl font-bold">{t('activities.title')}</h2>

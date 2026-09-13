@@ -105,3 +105,14 @@ for (const key of ['consistency', 'stop', 'reduce', 'missing', 'baseline', 'volu
   assert.equal(typeof zh.activities.recommendations[key], 'string');
 }
 console.log('Activity locale keys and dynamic recommendation coverage passed.');
+
+const withToday = [...recovered, ...prior, { ...base, id: 'today', date: localDate(today), exerciseLogIds: [] }];
+assert.equal(weeklyActivities(withToday, today).recommendation, 'waiting');
+assert.equal(weeklyActivities(withToday, today).missingNextDay, 0);
+assert.equal(weeklyActivities(withToday, today).pendingNextDay, 1);
+assert.equal(weeklyActivities([...withToday, { ...base, id: 'overdue', exerciseLogIds: [] }], today).recommendation, 'missing');
+assert.equal(weeklyActivities(withToday.map(a => a.id === 'today' ? { ...a, symptomResponse: 'red_flag' } : a), today).recommendation, 'stop');
+assert.equal(weeklyActivities(withToday.map(a => a.id === 'today' ? { ...a, symptomResponse: 'worse' } : a), today).recommendation, 'reduce');
+assert.equal(typeof en.activities.recommendations.waiting, 'string');
+assert.equal(typeof zh.activities.recommendations.waiting, 'string');
+console.log('Next-day timing regression passed: pending today differs from overdue feedback and never implies recovery.');

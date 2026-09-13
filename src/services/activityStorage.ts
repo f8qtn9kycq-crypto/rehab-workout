@@ -63,6 +63,8 @@ export function weeklyActivities(activities: Activity[], today = new Date()) {
   const previous = new Date(monday);
   previous.setDate(previous.getDate() - 7);
   const current = activities.filter(a => a.date >= start && a.date <= localDate(today));
+  const missingNextDay = current.filter(a => a.date < localDate(today) && !a.nextDayResponse).length;
+  const pendingNextDay = current.filter(a => a.date === localDate(today) && !a.nextDayResponse).length;
   const prior = activities.filter(a => a.date >= localDate(previous) && a.date < start);
   const resistance = current.filter(a => a.kind === 'resistance' && a.completed).length;
   const cycling = current.filter(a => a.kind === 'cycling' && a.completed).length;
@@ -72,12 +74,13 @@ export function weeklyActivities(activities: Activity[], today = new Date()) {
   if (current.some(a => a.symptomResponse === 'red_flag' || a.nextDayResponse === 'red_flag')) recommendation = 'stop';
   else if (current.some(a => a.symptomResponse === 'worse' || a.nextDayResponse === 'worse')) recommendation = 'reduce';
   else if (resistance >= 3 && cycling >= 4) {
-    if (current.some(a => !a.nextDayResponse)) recommendation = 'missing';
+    if (missingNextDay > 0) recommendation = 'missing';
+    else if (pendingNextDay > 0) recommendation = 'waiting';
     else if (['resistance', 'cycling'].some(kind => minutes(prior, kind as Activity['kind']) === 0)) recommendation = 'baseline';
     else if (['resistance', 'cycling'].some(kind => minutes(current, kind as Activity['kind']) > minutes(prior, kind as Activity['kind']))) recommendation = 'volume';
     else recommendation = 'small';
   }
-  return { resistance, cycling, cyclingMinutes: minutes(current, 'cycling'), recommendation, start, current };
+  return { resistance, cycling, cyclingMinutes: minutes(current, 'cycling'), recommendation, start, current, missingNextDay, pendingNextDay };
 }
 
 export const PLAN_KEY = 'rehab.weeklyActivityPlan.v1';

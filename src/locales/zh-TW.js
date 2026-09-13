@@ -2,7 +2,7 @@ export default {
   activities: {
 
   "exerciseRecords": "{count} 筆動作紀錄",
-  "feedback": "症狀加劇／警訊 {worse} 筆；隔天待回報 {missing} 筆。"
+  "feedback": "症狀加劇／警訊 {worse} 筆；隔天待補 {missing} 筆；今天尚待觀察 {pending} 筆。"
 ,
 
   "plan": "七日安排",
@@ -65,6 +65,7 @@ export default {
     "red_flag": "疼痛達 6 分或出現警訊"
   },
   "recommendations": {
+    "waiting": "已達目標；今天的活動尚待隔天觀察，先維持，明天再記錄反應。",
     "consistency": "先維持規律，目標每週 3 次阻力與 4 趟騎車；不因漏做補加訓練量。",
     "stop": "停止訓練，建議諮詢醫師或物理治療師；完成率不能取代安全檢查。",
     "reduce": "症狀加劇或曾中止，先維持或降階，依物理治療師指示調整，不增加訓練量。",

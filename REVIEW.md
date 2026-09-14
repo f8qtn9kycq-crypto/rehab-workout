@@ -31,10 +31,12 @@ Should fix in this PR.
 
 Use for:
 - confusing mobile UX
-- incomplete QA evidence
+- incomplete QA evidence for changed behavior
 - i18n inconsistency
 - accessibility issue on primary action
 - edge case likely to affect normal users
+
+Do not classify the mere absence of a manual walkthrough, physical-device run, or authenticated preview as P1 when the changed behavior has reliable automated or scripted evidence and no acceptance criterion explicitly requires that environment.
 
 ### P2
 
@@ -51,23 +53,29 @@ Backlog only. Do not block merge.
 - Confirm the PR template includes risk tier, safety impact, QA evidence, AI review routing, merge readiness, and post-merge cleanup.
 - Do not request Claude / ChatGPT PM synthesis for Tier 0 or Tier 1 PRs unless findings conflict or safety/session/routing risk appears.
 - For Tier 2+ PRs, explicitly verify SafetyGate, pain rules, red-flag blocking, session route guards, LocalStorage compatibility, and iOS Safari / SPA routing risk.
+- Treat iOS Safari / physical-device testing as a targeted gate, not a blanket gate. Require it only when the changed behavior depends on device/browser behavior that cannot be covered reliably by automated or scripted QA, or when an explicit acceptance criterion requires it.
 
-## Sole-contributor approval exception
+## Draft and ready-for-review policy
 
-When the live repository collaborator list contains exactly one contributor and
-the PR author is that contributor, GitHub may reject formal self-approval. In
-that case, a human walkthrough comment on the exact current head may satisfy the
-human-approval evidence requirement, provided that:
+Draft means implementation or required automated evidence is incomplete. Once implementation is complete, current-head required checks pass, and there is no known blocking P0/P1, mark the PR Ready for review.
 
-- Claude review is formally recorded for Tier 3 work.
-- ChatGPT PM synthesis is recorded where required.
-- Required checks, review threads, mergeability, Draft state, and acceptance
-  criteria are clean.
-- The comment explicitly says it is human approval evidence and not a GitHub
-  `APPROVE` review.
+Do not keep a PR in Draft solely because:
+- a human walkthrough has not occurred,
+- an authenticated Vercel preview cannot be opened by an automation agent,
+- a physical iPhone Safari run is absent,
+- formal self-approval is unavailable to the sole contributor.
 
-Re-check collaborator count before each delivery decision. This exception is
-disabled as soon as a second contributor is present.
+Those items may still be recorded as evidence gaps, but they block merge only when a changed behavior or explicit acceptance criterion genuinely depends on them.
+
+## Sole-contributor approval policy
+
+When the live repository collaborator list contains exactly one contributor and the PR author is that contributor, formal GitHub self-approval is not required as a default merge-readiness gate.
+
+For Tier 0-2 work, current-head checks, required AI review routing, clean mergeability, no active requested changes, no unresolved blocking review threads, and satisfied acceptance criteria are sufficient unless manual evidence is specifically required by the changed behavior.
+
+For Tier 3 work, retain required Claude review and ChatGPT PM synthesis. Add a human walkthrough only when the change includes safety logic, destructive/irreversible data migration, security-sensitive behavior, or another acceptance criterion that cannot be validated reliably by automation.
+
+Never claim a formal GitHub `APPROVE` when none exists.
 
 ## Final output
 

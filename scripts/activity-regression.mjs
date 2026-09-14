@@ -41,23 +41,33 @@ async function loadService(entry) {
 }
 
 const service = await loadService('src/services/activityStorage.ts');
-const { ACTIVITY_KEY, saveActivity, readActivities, weeklyActivities, localDate, readActivityPlan, saveActivityPlan } = service;
+const { ACTIVITY_KEY, saveActivity, readActivities, weeklyActivities, localDate, readActivityPlan, saveActivityPlan, exerciseDecision, exerciseQuality } = service;
 const today = new Date('2026-09-13T12:00:00');
 const base = { id: 'session', kind: 'resistance', primaryFocus: 'mixed', exerciseLogIds: ['a', 'b', 'c'], date: '2026-09-08', completed: true, actualMinutes: 60, symptomResponse: 'same' };
 localStorage.setItem('rehab.trainingLogs.v2', 'original bytes');
 assert.equal(saveActivity(base), true);
 const unified = { ...base, id: 'unified', exerciseLogIds: ['prep', 'squat', 'press'], segments: [
-  { phase: 'prep', exerciseLogIds: ['prep'], performanceQuality: 'controlled' },
-  { phase: 'main', exerciseLogIds: ['squat'], performanceQuality: 'no_reps' },
-  { phase: 'accessory', exerciseLogIds: ['press'], performanceQuality: 'controlled' },
+  { phase: 'prep', exerciseLogIds: ['prep'], exerciseResults: [{ exerciseLogId: 'prep', performanceQuality: 'controlled' }] },
+  { phase: 'main', exerciseLogIds: ['squat', 'press'], exerciseResults: [
+    { exerciseLogId: 'squat', performanceQuality: 'no_reps' },
+    { exerciseLogId: 'press', performanceQuality: 'controlled' },
+  ] },
 ] };
 assert.equal(saveActivity(unified), true);
-assert.equal(readActivities().activities.find((activity) => activity.id === 'unified').segments.length, 3);
+assert.equal(readActivities().activities.find((activity) => activity.id === 'unified').segments.length, 2);
+assert.equal(exerciseQuality(unified, 'squat'), 'no_reps');
+assert.equal(exerciseQuality(unified, 'press'), 'controlled');
+assert.equal(exerciseDecision(unified, 'squat'), 'hold', 'no-reps hold this exercise without penalizing the full phase');
+assert.equal(exerciseDecision(unified, 'press'), 'tolerated', 'controlled exercise can be tolerated in the same phase');
+assert.equal(exerciseDecision({ ...unified, nextDayResponse: 'worse' }, 'press'), 'reduce', 'next-day worsening overrides tolerated quality');
+assert.equal(exerciseDecision({ ...unified, nextDayResponse: 'red_flag' }, 'press'), 'stop', 'next-day red flag overrides exercise quality');
 assert.equal(saveActivity({ ...base, id: 'bad-phase', segments: [{ phase: 'invalid', exerciseLogIds: [] }] }), false);
 assert.equal(saveActivity({ ...base, id: 'duplicate-phase', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a'] }, { phase: 'main', exerciseLogIds: [] }] }), false);
 assert.equal(saveActivity({ ...base, id: 'duplicate-segment-log', exerciseLogIds: ['a'], segments: [{ phase: 'prep', exerciseLogIds: ['a'] }, { phase: 'main', exerciseLogIds: ['a'] }] }), false);
 assert.equal(saveActivity({ ...base, id: 'missing-segment-log', exerciseLogIds: ['a', 'b'], segments: [{ phase: 'main', exerciseLogIds: ['a'] }] }), false);
 assert.equal(saveActivity({ ...base, id: 'extra-segment-log', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a', 'b'] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'missing-result', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a'], exerciseResults: [] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'bad-result-quality', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a'], exerciseResults: [{ exerciseLogId: 'a', performanceQuality: 'invalid' }] }] }), false);
 const legacyDuplicateSegments = { ...base, id: 'legacy-segments', exerciseLogIds: ['legacy'], segments: [{ phase: 'prep', exerciseLogIds: ['legacy'] }, { phase: 'main', exerciseLogIds: ['legacy'] }] };
 localStorage.setItem(ACTIVITY_KEY, JSON.stringify([legacyDuplicateSegments]));
 assert.equal(readActivities().error, false);
@@ -112,8 +122,9 @@ window.localStorage = { getItem() { throw new Error('blocked'); } };
 assert.equal(readActivities().error, true);
 assert.equal(saveActivity(base), false);
 window.localStorage = { getItem() { return null; }, setItem() { throw new Error('quota'); } };
+assert.equal(readActivities().error, true);
 assert.equal(saveActivity(base), false);
-console.log('Activity regression passed: aggregates, same-day rides, duplicates, dates, feedback, recommendations, legacy preservation, corrupt/blocked storage and clear-data integration.');
+console.log('Activity regression passed: exercise-level quality/decisions, aggregates, same-day rides, duplicates, dates, feedback, legacy preservation, corrupt/blocked storage and clear-data integration.');
 const { default: en } = await import('../src/locales/en.js');
 const { default: zh } = await import('../src/locales/zh-TW.js');
 function leafKeys(object, prefix = '') {

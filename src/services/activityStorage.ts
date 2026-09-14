@@ -8,9 +8,17 @@ export const PERFORMANCE_QUALITIES = ['controlled', 'no_reps', 'pain_limited'] a
 export type Response = typeof RESPONSES[number];
 export type SessionPhase = typeof SESSION_PHASES[number];
 export type PerformanceQuality = typeof PERFORMANCE_QUALITIES[number];
+export type ExerciseDecision = 'stop' | 'reduce' | 'hold' | 'tolerated';
+export interface ExerciseResult {
+  exerciseLogId: string;
+  performanceQuality: PerformanceQuality;
+}
 export interface SessionSegment {
   phase: SessionPhase;
   exerciseLogIds: string[];
+  /** Per-exercise quality for new unified sessions. */
+  exerciseResults?: ExerciseResult[];
+  /** Legacy phase-level quality; kept readable for existing records. */
   performanceQuality?: PerformanceQuality;
 }
 interface ActivityBase {
@@ -34,6 +42,15 @@ export type Activity = ResistanceSession | CyclingActivity;
 export function localDate(date = new Date()): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
+function validExerciseResults(segment: SessionSegment): boolean {
+  if (segment.exerciseResults === undefined) return true;
+  if (!Array.isArray(segment.exerciseResults)) return false;
+  const ids = segment.exerciseResults.map(result => result.exerciseLogId);
+  return segment.exerciseResults.every(result => typeof result.exerciseLogId === 'string' && PERFORMANCE_QUALITIES.includes(result.performanceQuality))
+    && new Set(ids).size === ids.length
+    && ids.length === segment.exerciseLogIds.length
+    && ids.every(id => segment.exerciseLogIds.includes(id));
+}
 function validActivity(value: unknown): value is Activity {
   if (!value || typeof value !== 'object') return false;
   const a = value as Activity;
@@ -45,7 +62,11 @@ function validActivity(value: unknown): value is Activity {
   if (a.kind === 'cycling') return true;
   if (!(FOCUSES.includes(a.primaryFocus) && Array.isArray(a.exerciseLogIds) && a.exerciseLogIds.every(id => typeof id === 'string') && new Set(a.exerciseLogIds).size === a.exerciseLogIds.length)) return false;
   if (a.segments === undefined) return true;
-  return Array.isArray(a.segments) && a.segments.every(segment => SESSION_PHASES.includes(segment.phase) && Array.isArray(segment.exerciseLogIds) && segment.exerciseLogIds.every(id => typeof id === 'string') && (segment.performanceQuality === undefined || PERFORMANCE_QUALITIES.includes(segment.performanceQuality)));
+  return Array.isArray(a.segments) && a.segments.every(segment => SESSION_PHASES.includes(segment.phase)
+    && Array.isArray(segment.exerciseLogIds)
+    && segment.exerciseLogIds.every(id => typeof id === 'string')
+    && (segment.performanceQuality === undefined || PERFORMANCE_QUALITIES.includes(segment.performanceQuality))
+    && validExerciseResults(segment));
 }
 function validSegmentsForWrite(activity: ResistanceSession): boolean {
   if (activity.segments === undefined) return true;
@@ -55,7 +76,8 @@ function validSegmentsForWrite(activity: ResistanceSession): boolean {
   return new Set(phases).size === phases.length
     && new Set(segmentLogIds).size === segmentLogIds.length
     && segmentLogIds.length === activity.exerciseLogIds.length
-    && segmentLogIds.every(id => activity.exerciseLogIds.includes(id));
+    && segmentLogIds.every(id => activity.exerciseLogIds.includes(id))
+    && activity.segments.every(validExerciseResults);
 }
 export function readActivities(): { activities: Activity[]; error: boolean } {
   try {
@@ -83,6 +105,21 @@ export function saveActivity(activity: Activity): boolean {
 }
 export function activityId(): string {
   return typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+export function exerciseQuality(activity: ResistanceSession, exerciseLogId: string): PerformanceQuality {
+  const segment = activity.segments?.find(item => item.exerciseLogIds.includes(exerciseLogId));
+  return segment?.exerciseResults?.find(result => result.exerciseLogId === exerciseLogId)?.performanceQuality
+    ?? segment?.performanceQuality
+    ?? 'controlled';
+}
+export function exerciseDecision(activity: ResistanceSession, exerciseLogId: string): ExerciseDecision {
+  const response = activity.nextDayResponse ?? activity.symptomResponse;
+  if (response === 'red_flag') return 'stop';
+  if (response === 'worse') return 'reduce';
+  const quality = exerciseQuality(activity, exerciseLogId);
+  if (quality === 'pain_limited') return 'reduce';
+  if (quality === 'no_reps') return 'hold';
+  return 'tolerated';
 }
 export function weeklyActivities(activities: Activity[], today = new Date()) {
   const monday = new Date(today);

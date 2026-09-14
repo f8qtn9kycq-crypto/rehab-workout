@@ -3,7 +3,16 @@ import { safeSetItem } from './localStorageService';
 export const ACTIVITY_KEY = 'rehab.activities.v1';
 export const FOCUSES = ['lower', 'push', 'pull', 'mixed'] as const;
 export const RESPONSES = ['same', 'better', 'worse', 'red_flag'] as const;
+export const SESSION_PHASES = ['prep', 'main', 'accessory', 'conditioning', 'cooldown'] as const;
+export const PERFORMANCE_QUALITIES = ['controlled', 'no_reps', 'pain_limited'] as const;
 export type Response = typeof RESPONSES[number];
+export type SessionPhase = typeof SESSION_PHASES[number];
+export type PerformanceQuality = typeof PERFORMANCE_QUALITIES[number];
+export interface SessionSegment {
+  phase: SessionPhase;
+  exerciseLogIds: string[];
+  performanceQuality?: PerformanceQuality;
+}
 interface ActivityBase {
   id: string;
   date: string;
@@ -16,6 +25,8 @@ export interface ResistanceSession extends ActivityBase {
   kind: 'resistance';
   primaryFocus: typeof FOCUSES[number];
   exerciseLogIds: string[];
+  /** Optional unified-session detail; legacy activity records remain valid. */
+  segments?: SessionSegment[];
 }
 export interface CyclingActivity extends ActivityBase { kind: 'cycling' }
 export type Activity = ResistanceSession | CyclingActivity;
@@ -31,7 +42,10 @@ function validActivity(value: unknown): value is Activity {
   if (!Number.isFinite(date.getTime()) || localDate(date) !== a.date) return false;
   if (typeof a.completed !== 'boolean' || !Number.isFinite(a.actualMinutes) || a.actualMinutes < 0 || a.actualMinutes > 1440 || (a.completed && a.actualMinutes === 0)) return false;
   if (!RESPONSES.includes(a.symptomResponse) || (a.nextDayResponse !== undefined && !RESPONSES.includes(a.nextDayResponse))) return false;
-  return a.kind === 'cycling' || (a.kind === 'resistance' && FOCUSES.includes(a.primaryFocus) && Array.isArray(a.exerciseLogIds) && a.exerciseLogIds.every(id => typeof id === 'string') && new Set(a.exerciseLogIds).size === a.exerciseLogIds.length);
+  if (a.kind === 'cycling') return true;
+  if (!(FOCUSES.includes(a.primaryFocus) && Array.isArray(a.exerciseLogIds) && a.exerciseLogIds.every(id => typeof id === 'string') && new Set(a.exerciseLogIds).size === a.exerciseLogIds.length)) return false;
+  if (a.segments === undefined) return true;
+  return Array.isArray(a.segments) && a.segments.every(segment => SESSION_PHASES.includes(segment.phase) && Array.isArray(segment.exerciseLogIds) && segment.exerciseLogIds.every(id => typeof id === 'string') && (segment.performanceQuality === undefined || PERFORMANCE_QUALITIES.includes(segment.performanceQuality)));
 }
 export function readActivities(): { activities: Activity[]; error: boolean } {
   try {

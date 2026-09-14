@@ -34,6 +34,9 @@ export default {
   "startSafely": "開始引導訓練：先做安全檢查",
   "date": "活動日期",
   "focus": "主要方向（允許混合動作）",
+  "unifiedSessionHint": "一次訓練可以包含準備／復健、主要力量、輔助與體能；請連結這次訓練的動作紀錄。",
+  "phase": "訓練部分",
+  "quality": "完成品質",
   "linkLogs": "連結當天動作紀錄（選填，可多選）",
   "completed": "已完成",
   "incomplete": "未完成",
@@ -58,6 +61,8 @@ export default {
     "pull": "拉",
     "mixed": "混合"
   },
+  "phases": { "prep": "準備／復健", "main": "主要力量", "accessory": "輔助", "conditioning": "體能", "cooldown": "收操" },
+  "qualities": { "controlled": "動作受控", "no_reps": "有未完成次數", "pain_limited": "受疼痛限制" },
   "responses": {
     "same": "沒有變化",
     "better": "改善",

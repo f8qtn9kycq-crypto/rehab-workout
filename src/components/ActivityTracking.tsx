@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
-import { activityId, FOCUSES, localDate, readActivities, RESPONSES, saveActivity, weeklyActivities, type Activity, type Response } from '../services/activityStorage';
+import { activityId, FOCUSES, localDate, PERFORMANCE_QUALITIES, readActivities, RESPONSES, saveActivity, SESSION_PHASES, weeklyActivities, type Activity, type PerformanceQuality, type Response, type SessionPhase } from '../services/activityStorage';
 import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 export default function ActivityTracking() {
@@ -17,6 +17,8 @@ export default function ActivityTracking() {
   const [completed, setCompleted] = useState(true);
   const [response, setResponse] = useState<Response | ''>('');
   const [links, setLinks] = useState<string[]>([]);
+  const [phases, setPhases] = useState<SessionPhase[]>(['main']);
+  const [quality, setQuality] = useState<PerformanceQuality>('controlled');
   const [message, setMessage] = useState('');
   const summary = weeklyActivities(state.activities);
   const usedIds = state.activities.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
@@ -32,13 +34,13 @@ export default function ActivityTracking() {
     if (ok) setState(readActivities());
   }
   function save() {
-    if (!kind || !response || minutes.trim() === '') return;
+    if (!kind || !response || minutes.trim() === '' || (kind === 'resistance' && phases.length === 0)) return;
     const symptomResponse = selected.some(log => log.painAfter >= 6 || log.painBefore >= 6) ? 'red_flag' : logWarning && response !== 'red_flag' ? 'worse' : response;
     const base = { id, date, actualMinutes: Number(minutes), completed, symptomResponse };
-    const activity: Activity = kind === 'cycling' ? { ...base, kind } : { ...base, kind, primaryFocus: focus, exerciseLogIds: links };
+    const activity: Activity = kind === 'cycling' ? { ...base, kind } : { ...base, kind, primaryFocus: focus, exerciseLogIds: links, segments: phases.map(selectedPhase => ({ phase: selectedPhase, exerciseLogIds: links, performanceQuality: quality })) };
     const ok = saveActivity(activity);
     refresh(ok);
-    if (ok) { setKind(null); setId(activityId()); setLinks([]); setResponse(''); setMinutes(''); }
+    if (ok) { setKind(null); setId(activityId()); setLinks([]); setResponse(''); setMinutes(''); setPhases(['main']); setQuality('controlled'); }
   }
   const feedbackText = t('activities.feedback', { worse: summary.current.filter(a => ['worse', 'red_flag'].includes(a.symptomResponse) || ['worse', 'red_flag'].includes(a.nextDayResponse ?? '')).length, missing: summary.missingNextDay, pending: summary.pendingNextDay });
   const copyText = t('activities.summary', { resistance: summary.resistance, cycling: summary.cycling, minutes: summary.cyclingMinutes }) + ' ' + feedbackText + ' ' + t(`activities.recommendations.${summary.recommendation}`);
@@ -58,7 +60,10 @@ export default function ActivityTracking() {
       {kind === 'resistance' && <Link className={button + ' block text-center'} to="/safety">{t('activities.startSafely')}</Link>}
       <label className="block">{t('activities.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={e => { setDate(e.target.value); setLinks([]); }} /></label>
       {kind === 'resistance' && <>
+        <p className="rounded-md bg-calm-50 p-3 text-sm">{t('activities.unifiedSessionHint')}</p>
         <label className="block">{t('activities.focus')}<select className={control} value={focus} onChange={e => setFocus(e.target.value as typeof focus)}>{FOCUSES.map(f => <option key={f} value={f}>{t(`activities.focuses.${f}`)}</option>)}</select></label>
+        <fieldset><legend>{t('activities.phase')}</legend><div className="grid gap-2 sm:grid-cols-2">{SESSION_PHASES.map(value => <label key={value} className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={phases.includes(value)} onChange={event => setPhases(current => event.target.checked ? [...current, value] : current.filter(item => item !== value))} />{t(`activities.phases.${value}`)}</label>)}</div></fieldset>
+        <label className="block">{t('activities.quality')}<select className={control} value={quality} onChange={e => setQuality(e.target.value as PerformanceQuality)}>{PERFORMANCE_QUALITIES.map(value => <option key={value} value={value}>{t(`activities.qualities.${value}`)}</option>)}</select></label>
         <fieldset><legend>{t('activities.linkLogs')}</legend>{available.map(log => <label key={log.id} className="flex min-h-11 items-center gap-3 py-2"><input type="checkbox" checked={links.includes(log.id)} onChange={e => setLinks(e.target.checked ? [...links, log.id] : links.filter(id => id !== log.id))} />{getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback'))}</label>)}</fieldset>
       </>}
       <label className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={completed} onChange={e => setCompleted(e.target.checked)} />{t('activities.completed')}</label>
@@ -71,7 +76,7 @@ export default function ActivityTracking() {
     <details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.history')}</summary>
       <div className="space-y-4">{[...state.activities].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} className="space-y-2 border-t pt-3">
         <p>{a.date} · {t(`activities.${a.kind}`)} · {a.actualMinutes} {t('activities.minuteUnit')} · {t(a.completed ? 'activities.completed' : 'activities.incomplete')}</p>
-        {a.kind === 'resistance' && <p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}</p>}
+        {a.kind === 'resistance' && <p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}{a.segments?.[0] ? ` · ${t(`activities.phases.${a.segments[0].phase}`)} · ${t(`activities.qualities.${a.segments[0].performanceQuality ?? 'controlled'}`)}` : ''}</p>}
         <p>{t('activities.response')}: {t(`activities.responses.${a.symptomResponse}`)}</p>
         {a.date < localDate() && <label className="block">{t('activities.nextDay')}<select className={control} value={a.nextDayResponse ?? ''} onChange={e => { const updated = { ...a }; if (e.target.value) updated.nextDayResponse = e.target.value as Response; else delete updated.nextDayResponse; refresh(saveActivity(updated)); }}><option value="">{t('activities.unknown')}</option>{RESPONSES.map(r => <option key={r} value={r}>{t(`activities.responses.${r}`)}</option>)}</select></label>}
       </article>)}</div>

@@ -46,17 +46,25 @@ const today = new Date('2026-09-13T12:00:00');
 const base = { id: 'session', kind: 'resistance', primaryFocus: 'mixed', exerciseLogIds: ['a', 'b', 'c'], date: '2026-09-08', completed: true, actualMinutes: 60, symptomResponse: 'same' };
 localStorage.setItem('rehab.trainingLogs.v2', 'original bytes');
 assert.equal(saveActivity(base), true);
-assert.equal(weeklyActivities(readActivities().activities, today).resistance, 1);
+const unified = { ...base, id: 'unified', exerciseLogIds: ['prep', 'squat', 'press'], segments: [
+  { phase: 'prep', exerciseLogIds: ['prep'], performanceQuality: 'controlled' },
+  { phase: 'main', exerciseLogIds: ['squat'], performanceQuality: 'no_reps' },
+  { phase: 'accessory', exerciseLogIds: ['press'], performanceQuality: 'controlled' },
+] };
+assert.equal(saveActivity(unified), true);
+assert.equal(readActivities().activities.find((activity) => activity.id === 'unified').segments.length, 3);
+assert.equal(saveActivity({ ...base, id: 'bad-phase', segments: [{ phase: 'invalid', exerciseLogIds: [] }] }), false);
+assert.equal(weeklyActivities(readActivities().activities, today).resistance, 2);
 assert.equal(localStorage.getItem('rehab.trainingLogs.v2'), 'original bytes');
 assert.equal(saveActivity({ ...base, id: 'duplicate' }), false);
 assert.equal(saveActivity(base), true);
-assert.equal(readActivities().activities.length, 1);
+assert.equal(readActivities().activities.length, 2);
 for (let i = 0; i < 4; i++) assert.equal(saveActivity({ id: `ride${i}`, kind: 'cycling', date: '2026-09-08', completed: true, actualMinutes: 15, symptomResponse: 'same' }), true);
 let summary = weeklyActivities(readActivities().activities, today);
 assert.equal(summary.cycling, 4);
 assert.equal(summary.cyclingMinutes, 60);
 assert.equal(saveActivity({ ...base, id: 'unfinished', exerciseLogIds: [], completed: false, actualMinutes: 0 }), true);
-assert.equal(weeklyActivities(readActivities().activities, today).resistance, 1);
+assert.equal(weeklyActivities(readActivities().activities, today).resistance, 2);
 assert.equal(saveActivity({ ...base, actualMinutes: Infinity }), false);
 assert.equal(saveActivity({ ...base, date: '2026-02-30' }), false);
 assert.equal(saveActivity({ ...base, date: '2999-01-01' }), false);

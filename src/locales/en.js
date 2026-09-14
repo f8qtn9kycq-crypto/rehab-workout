@@ -34,6 +34,9 @@ export default {
   "startSafely": "Start guided training: safety check first",
   "date": "Activity date",
   "focus": "Primary focus (mixed exercises allowed)",
+  "unifiedSessionHint": "One session can combine prep, main strength, accessories and conditioning. Link the exercise logs from this visit.",
+  "phase": "Session part",
+  "quality": "Performance quality",
   "linkLogs": "Link same-day exercise logs (optional, multiple allowed)",
   "completed": "Completed",
   "incomplete": "Incomplete",
@@ -58,6 +61,8 @@ export default {
     "pull": "Pull",
     "mixed": "Mixed"
   },
+  "phases": { "prep": "Prep / rehab", "main": "Main strength", "accessory": "Accessory", "conditioning": "Conditioning", "cooldown": "Cool-down" },
+  "qualities": { "controlled": "Controlled", "no_reps": "No-reps noted", "pain_limited": "Pain-limited" },
   "responses": {
     "same": "Unchanged",
     "better": "Better",

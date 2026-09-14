@@ -54,6 +54,18 @@ const unified = { ...base, id: 'unified', exerciseLogIds: ['prep', 'squat', 'pre
 assert.equal(saveActivity(unified), true);
 assert.equal(readActivities().activities.find((activity) => activity.id === 'unified').segments.length, 3);
 assert.equal(saveActivity({ ...base, id: 'bad-phase', segments: [{ phase: 'invalid', exerciseLogIds: [] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'duplicate-phase', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a'] }, { phase: 'main', exerciseLogIds: [] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'duplicate-segment-log', exerciseLogIds: ['a'], segments: [{ phase: 'prep', exerciseLogIds: ['a'] }, { phase: 'main', exerciseLogIds: ['a'] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'missing-segment-log', exerciseLogIds: ['a', 'b'], segments: [{ phase: 'main', exerciseLogIds: ['a'] }] }), false);
+assert.equal(saveActivity({ ...base, id: 'extra-segment-log', exerciseLogIds: ['a'], segments: [{ phase: 'main', exerciseLogIds: ['a', 'b'] }] }), false);
+const legacyDuplicateSegments = { ...base, id: 'legacy-segments', exerciseLogIds: ['legacy'], segments: [{ phase: 'prep', exerciseLogIds: ['legacy'] }, { phase: 'main', exerciseLogIds: ['legacy'] }] };
+localStorage.setItem(ACTIVITY_KEY, JSON.stringify([legacyDuplicateSegments]));
+assert.equal(readActivities().error, false);
+assert.equal(saveActivity({ ...legacyDuplicateSegments, nextDayResponse: 'same' }), true);
+localStorage.clear();
+localStorage.setItem('rehab.trainingLogs.v2', 'original bytes');
+assert.equal(saveActivity(base), true);
+assert.equal(saveActivity(unified), true);
 assert.equal(weeklyActivities(readActivities().activities, today).resistance, 2);
 assert.equal(localStorage.getItem('rehab.trainingLogs.v2'), 'original bytes');
 assert.equal(saveActivity({ ...base, id: 'duplicate' }), false);

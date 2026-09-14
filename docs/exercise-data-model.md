@@ -212,6 +212,7 @@ Audit output should help identify:
 
 - 共用欄位：`id`、本機日期 `date`、`completed`、`actualMinutes`、`symptomResponse`、選填 `nextDayResponse`。
 - 阻力場次另有 `kind: resistance`、`primaryFocus: lower | push | pull | mixed` 與 `exerciseLogIds`。同一動作紀錄只能歸入一個場次；UI 僅提供當天尚未歸組的紀錄。既有 log 保留上限可能使舊連結無法展開，場次本身仍保留。
+- 阻力場次可用選填 `segments` 記錄多個訓練部分。新寫入的 phase 必須唯一，每筆 `exerciseLogId` 只能歸入一個 segment，且各 segment 的 log 聯集必須等於場次頂層 `exerciseLogIds`；每個 segment 可各自記錄 `performanceQuality`。舊版已保存的 segment 仍可讀取及補填隔天回饋，不因新驗證規則失效。
 - 騎車使用 `kind: cycling`，不偽造 Exercise 或 bodyArea。同日多趟可分別保存。
 - 週範圍為瀏覽器本機週一至今日，完成阻力目標 3 次、騎車目標 4 趟。未完成與未歸組動作不計次；歷史動作不依日期自動合併。
 - 回饋為 `same | better | worse | red_flag`，缺少隔天反應不視為正常。隔天回饋於活動日期之後開放。連結動作中的停止／疼痛加劇會保守納入活動回饋。

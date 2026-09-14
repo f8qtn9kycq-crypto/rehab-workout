@@ -47,6 +47,16 @@ function validActivity(value: unknown): value is Activity {
   if (a.segments === undefined) return true;
   return Array.isArray(a.segments) && a.segments.every(segment => SESSION_PHASES.includes(segment.phase) && Array.isArray(segment.exerciseLogIds) && segment.exerciseLogIds.every(id => typeof id === 'string') && (segment.performanceQuality === undefined || PERFORMANCE_QUALITIES.includes(segment.performanceQuality)));
 }
+function validSegmentsForWrite(activity: ResistanceSession): boolean {
+  if (activity.segments === undefined) return true;
+  if (activity.segments.length === 0) return false;
+  const phases = activity.segments.map(segment => segment.phase);
+  const segmentLogIds = activity.segments.flatMap(segment => segment.exerciseLogIds);
+  return new Set(phases).size === phases.length
+    && new Set(segmentLogIds).size === segmentLogIds.length
+    && segmentLogIds.length === activity.exerciseLogIds.length
+    && segmentLogIds.every(id => activity.exerciseLogIds.includes(id));
+}
 export function readActivities(): { activities: Activity[]; error: boolean } {
   try {
     const raw = window.localStorage.getItem(ACTIVITY_KEY);
@@ -65,6 +75,10 @@ export function saveActivity(activity: Activity): boolean {
   if (activity.nextDayResponse !== undefined && activity.date >= localDate()) return false;
   const others = state.activities.filter(a => a.id !== activity.id);
   if (activity.kind === 'resistance' && others.some(a => a.kind === 'resistance' && a.exerciseLogIds.some(id => activity.exerciseLogIds.includes(id)))) return false;
+  if (activity.kind === 'resistance' && !validSegmentsForWrite(activity)) {
+    const existing = state.activities.find((a): a is ResistanceSession => a.id === activity.id && a.kind === 'resistance');
+    if (!existing || JSON.stringify(existing.segments) !== JSON.stringify(activity.segments)) return false;
+  }
   return safeSetItem(ACTIVITY_KEY, JSON.stringify([activity, ...others]));
 }
 export function activityId(): string {

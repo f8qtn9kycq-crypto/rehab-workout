@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
-import { activityId, FOCUSES, localDate, PERFORMANCE_QUALITIES, readActivities, RESPONSES, saveActivity, SESSION_PHASES, weeklyActivities, type Activity, type PerformanceQuality, type Response, type SessionSegment } from '../services/activityStorage';
+import { activityId, exerciseDecision, exerciseQuality, FOCUSES, localDate, PERFORMANCE_QUALITIES, readActivities, RESPONSES, saveActivity, SESSION_PHASES, weeklyActivities, type Activity, type PerformanceQuality, type Response, type SessionPhase, type SessionSegment } from '../services/activityStorage';
 import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
+
+const newSegment = (phase: SessionPhase = 'main'): SessionSegment => ({ phase, exerciseLogIds: [], exerciseResults: [] });
 
 export default function ActivityTracking() {
   const { t, language } = useI18n();
@@ -16,7 +18,7 @@ export default function ActivityTracking() {
   const [focus, setFocus] = useState<typeof FOCUSES[number]>('mixed');
   const [completed, setCompleted] = useState(true);
   const [response, setResponse] = useState<Response | ''>('');
-  const [segments, setSegments] = useState<SessionSegment[]>([{ phase: 'main', exerciseLogIds: [], performanceQuality: 'controlled' }]);
+  const [segments, setSegments] = useState<SessionSegment[]>([newSegment()]);
   const [message, setMessage] = useState('');
   const summary = weeklyActivities(state.activities);
   const links = segments.flatMap(segment => segment.exerciseLogIds);
@@ -36,6 +38,21 @@ export default function ActivityTracking() {
     setMessage(ok ? 'saved' : 'error');
     if (ok) setState(readActivities());
   }
+  function updateExerciseQuality(phase: SessionPhase, logId: string, performanceQuality: PerformanceQuality) {
+    setSegments(current => current.map(segment => segment.phase === phase ? {
+      ...segment,
+      exerciseResults: (segment.exerciseResults ?? []).map(result => result.exerciseLogId === logId ? { ...result, performanceQuality } : result),
+    } : segment));
+  }
+  function toggleExercise(phase: SessionPhase, logId: string, checked: boolean) {
+    setSegments(current => current.map(segment => segment.phase === phase ? {
+      ...segment,
+      exerciseLogIds: checked ? [...segment.exerciseLogIds, logId] : segment.exerciseLogIds.filter(id => id !== logId),
+      exerciseResults: checked
+        ? [...(segment.exerciseResults ?? []), { exerciseLogId: logId, performanceQuality: 'controlled' }]
+        : (segment.exerciseResults ?? []).filter(result => result.exerciseLogId !== logId),
+    } : segment));
+  }
   function save() {
     if (!kind || !response || minutes.trim() === '' || (kind === 'resistance' && segments.length === 0)) return;
     const symptomResponse = selected.some(log => log.painAfter >= 6 || log.painBefore >= 6) ? 'red_flag' : logWarning && response !== 'red_flag' ? 'worse' : response;
@@ -43,7 +60,7 @@ export default function ActivityTracking() {
     const activity: Activity = kind === 'cycling' ? { ...base, kind } : { ...base, kind, primaryFocus: focus, exerciseLogIds: links, segments };
     const ok = saveActivity(activity);
     refresh(ok);
-    if (ok) { setKind(null); setId(activityId()); setResponse(''); setMinutes(''); setSegments([{ phase: 'main', exerciseLogIds: [], performanceQuality: 'controlled' }]); }
+    if (ok) { setKind(null); setId(activityId()); setResponse(''); setMinutes(''); setSegments([newSegment()]); }
   }
   const feedbackText = t('activities.feedback', { worse: summary.current.filter(a => ['worse', 'red_flag'].includes(a.symptomResponse) || ['worse', 'red_flag'].includes(a.nextDayResponse ?? '')).length, missing: summary.missingNextDay, pending: summary.pendingNextDay });
   const copyText = t('activities.summary', { resistance: summary.resistance, cycling: summary.cycling, minutes: summary.cyclingMinutes }) + ' ' + feedbackText + ' ' + t(`activities.recommendations.${summary.recommendation}`);
@@ -55,20 +72,27 @@ export default function ActivityTracking() {
     <p className="rounded-md bg-amber-50 p-3">{t(`activities.recommendations.${summary.recommendation}`)}</p>
     <div className="grid gap-2 sm:grid-cols-2">
       <button className={button} onClick={() => { setKind('resistance'); setMinutes(''); }}>{t('activities.resistance')}</button>
-      <button className={button} onClick={() => { setKind('cycling'); setSegments([{ phase: 'main', exerciseLogIds: [], performanceQuality: 'controlled' }]); setMinutes('15'); }}>{t('activities.cycling')}</button>
+      <button className={button} onClick={() => { setKind('cycling'); setSegments([newSegment()]); setMinutes('15'); }}>{t('activities.cycling')}</button>
     </div>
     {state.error && <p role="alert">{t('activities.error')}</p>}
     {kind && <form className="space-y-4" onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{t('activities.recordOnly')}</p>
       {kind === 'resistance' && <Link className={button + ' block text-center'} to="/safety">{t('activities.startSafely')}</Link>}
-      <label className="block">{t('activities.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={e => { setDate(e.target.value); setSegments(current => current.map(segment => ({ ...segment, exerciseLogIds: [] }))); }} /></label>
+      <label className="block">{t('activities.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={e => { setDate(e.target.value); setSegments(current => current.map(segment => ({ ...segment, exerciseLogIds: [], exerciseResults: [] }))); }} /></label>
       {kind === 'resistance' && <>
         <p className="rounded-md bg-calm-50 p-3 text-sm">{t('activities.unifiedSessionHint')}</p>
         <label className="block">{t('activities.focus')}<select className={control} value={focus} onChange={e => setFocus(e.target.value as typeof focus)}>{FOCUSES.map(f => <option key={f} value={f}>{t(`activities.focuses.${f}`)}</option>)}</select></label>
-        <fieldset><legend>{t('activities.phase')}</legend><div className="grid gap-2 sm:grid-cols-2">{SESSION_PHASES.map(value => <label key={value} className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={segments.some(segment => segment.phase === value)} onChange={event => setSegments(current => event.target.checked ? [...current, { phase: value, exerciseLogIds: [], performanceQuality: 'controlled' }] : current.filter(segment => segment.phase !== value))} />{t(`activities.phases.${value}`)}</label>)}</div></fieldset>
+        <fieldset><legend>{t('activities.phase')}</legend><div className="grid gap-2 sm:grid-cols-2">{SESSION_PHASES.map(value => <label key={value} className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={segments.some(segment => segment.phase === value)} onChange={event => setSegments(current => event.target.checked ? [...current, newSegment(value)] : current.filter(segment => segment.phase !== value))} />{t(`activities.phases.${value}`)}</label>)}</div></fieldset>
         {segments.map(segment => <fieldset key={segment.phase} className="space-y-3 rounded-md border border-slate-200 p-3"><legend className="px-1 font-bold">{t(`activities.phases.${segment.phase}`)}</legend>
-          <label className="block">{t('activities.quality')}<select className={control} value={segment.performanceQuality ?? 'controlled'} onChange={e => setSegments(current => current.map(item => item.phase === segment.phase ? { ...item, performanceQuality: e.target.value as PerformanceQuality } : item))}>{PERFORMANCE_QUALITIES.map(value => <option key={value} value={value}>{t(`activities.qualities.${value}`)}</option>)}</select></label>
-          <fieldset><legend>{t('activities.linkLogs')}</legend>{available.map(log => { const assignedElsewhere = segments.some(item => item.phase !== segment.phase && item.exerciseLogIds.includes(log.id)); return <label key={log.id} className="flex min-h-11 items-center gap-3 py-2"><input type="checkbox" disabled={assignedElsewhere} checked={segment.exerciseLogIds.includes(log.id)} onChange={e => setSegments(current => current.map(item => item.phase === segment.phase ? { ...item, exerciseLogIds: e.target.checked ? [...item.exerciseLogIds, log.id] : item.exerciseLogIds.filter(id => id !== log.id) } : item))} />{getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback'))}</label>; })}</fieldset>
+          <fieldset><legend>{t('activities.linkLogs')}</legend>{available.map(log => {
+            const assignedElsewhere = segments.some(item => item.phase !== segment.phase && item.exerciseLogIds.includes(log.id));
+            const checked = segment.exerciseLogIds.includes(log.id);
+            const quality = segment.exerciseResults?.find(result => result.exerciseLogId === log.id)?.performanceQuality ?? 'controlled';
+            return <div key={log.id} className="border-b border-slate-100 py-2 last:border-0">
+              <label className="flex min-h-11 items-center gap-3"><input type="checkbox" disabled={assignedElsewhere} checked={checked} onChange={e => toggleExercise(segment.phase, log.id, e.target.checked)} />{getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback'))}</label>
+              {checked && <label className="mt-2 block pl-7">{t('activities.quality')}<select className={control} value={quality} onChange={e => updateExerciseQuality(segment.phase, log.id, e.target.value as PerformanceQuality)}>{PERFORMANCE_QUALITIES.map(value => <option key={value} value={value}>{t(`activities.qualities.${value}`)}</option>)}</select></label>}
+            </div>;
+          })}</fieldset>
         </fieldset>)}
       </>}
       <label className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={completed} onChange={e => setCompleted(e.target.checked)} />{t('activities.completed')}</label>
@@ -81,7 +105,7 @@ export default function ActivityTracking() {
     <details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.history')}</summary>
       <div className="space-y-4">{[...state.activities].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} className="space-y-2 border-t pt-3">
         <p>{a.date} · {t(`activities.${a.kind}`)} · {a.actualMinutes} {t('activities.minuteUnit')} · {t(a.completed ? 'activities.completed' : 'activities.incomplete')}</p>
-        {a.kind === 'resistance' && <><p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}</p>{a.segments && <ul className="space-y-2 pl-5">{a.segments.map((segment, index) => <li key={`${segment.phase}-${index}`} className="list-disc">{t(`activities.phases.${segment.phase}`)} · {t(`activities.qualities.${segment.performanceQuality ?? 'controlled'}`)} · {segment.exerciseLogIds.length} {t('activities.logUnit')}{segment.exerciseLogIds.length > 0 && <ul className="pl-5">{segment.exerciseLogIds.map(logId => <li key={logId} className="list-[circle]">{linkedLogTitle(logId)}</li>)}</ul>}</li>)}</ul>}</>}
+        {a.kind === 'resistance' && <><p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}</p>{a.segments && <ul className="space-y-2 pl-5">{a.segments.map((segment, index) => <li key={`${segment.phase}-${index}`} className="list-disc">{t(`activities.phases.${segment.phase}`)} · {segment.exerciseLogIds.length} {t('activities.logUnit')}{segment.exerciseLogIds.length > 0 && <ul className="pl-5">{segment.exerciseLogIds.map(logId => <li key={logId} className="list-[circle]">{linkedLogTitle(logId)} · {t(`activities.qualities.${exerciseQuality(a, logId)}`)} · → {exerciseDecision(a, logId).toUpperCase()}</li>)}</ul>}</li>)}</ul>}</>}
         <p>{t('activities.response')}: {t(`activities.responses.${a.symptomResponse}`)}</p>
         {a.date < localDate() && <label className="block">{t('activities.nextDay')}<select className={control} value={a.nextDayResponse ?? ''} onChange={e => { const updated = { ...a }; if (e.target.value) updated.nextDayResponse = e.target.value as Response; else delete updated.nextDayResponse; refresh(saveActivity(updated)); }}><option value="">{t('activities.unknown')}</option>{RESPONSES.map(r => <option key={r} value={r}>{t(`activities.responses.${r}`)}</option>)}</select></label>}
       </article>)}</div>

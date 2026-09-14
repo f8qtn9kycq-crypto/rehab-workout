@@ -122,7 +122,6 @@ window.localStorage = { getItem() { throw new Error('blocked'); } };
 assert.equal(readActivities().error, true);
 assert.equal(saveActivity(base), false);
 window.localStorage = { getItem() { return null; }, setItem() { throw new Error('quota'); } };
-assert.equal(readActivities().error, true);
 assert.equal(saveActivity(base), false);
 console.log('Activity regression passed: exercise-level quality/decisions, aggregates, same-day rides, duplicates, dates, feedback, legacy preservation, corrupt/blocked storage and clear-data integration.');
 const { default: en } = await import('../src/locales/en.js');

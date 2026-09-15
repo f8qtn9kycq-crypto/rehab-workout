@@ -6,6 +6,7 @@ import {
   type Exercise,
   type ExerciseLevel,
   type ExerciseType,
+  type TrainingSet,
   type TrainingLogEntry,
 } from '../types/rehab';
 import { safeGetItem, safeReadJson, safeRemoveItem, safeSetItem } from './localStorageService';
@@ -25,6 +26,25 @@ interface CreateTrainingLogInput {
   recoveryMode: boolean;
   notes: string;
   stopReason: string;
+  sets?: TrainingSet[];
+}
+
+const MAX_TRAINING_SETS = 20;
+
+function normalizeTrainingSets(value: unknown): TrainingSet[] | undefined {
+  if (!Array.isArray(value) || value.length === 0 || value.length > MAX_TRAINING_SETS) return undefined;
+  const sets = value.map((item): TrainingSet | null => {
+    if (!item || typeof item !== 'object') return null;
+    const raw = item as Partial<TrainingSet>;
+    if (typeof raw.completed !== 'boolean') return null;
+    const weightKg = raw.weightKg === undefined ? undefined : Number(raw.weightKg);
+    const reps = raw.reps === undefined ? undefined : Number(raw.reps);
+    if (weightKg !== undefined && (!Number.isFinite(weightKg) || weightKg < 0 || weightKg > 1000)) return null;
+    if (reps !== undefined && (!Number.isInteger(reps) || reps < 0 || reps > 1000)) return null;
+    if (weightKg === undefined && reps === undefined) return null;
+    return { ...(weightKg === undefined ? {} : { weightKg }), ...(reps === undefined ? {} : { reps }), completed: raw.completed };
+  });
+  return sets.every((set): set is TrainingSet => set !== null) ? sets : undefined;
 }
 
 function isBodyArea(value: unknown): value is BodyArea {
@@ -73,6 +93,7 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>, legacyFivePoint = false
   if ([setsCompleted, repsCompleted, painBefore, painAfter, difficultyRating].some((value) => Number.isNaN(value))) return null;
   if (difficultyRating < 0 || difficultyRating > 10) return null;
 
+  const sets = normalizeTrainingSets(rawLog.sets);
   return {
     id: String(rawLog.id),
     date,
@@ -96,6 +117,7 @@ function normalizeLog(rawLog: Partial<TrainingLogEntry>, legacyFivePoint = false
     notes: String(rawLog.notes ?? ''),
     stopReason: String(rawLog.stopReason ?? ''),
     painDelta: painAfter - painBefore,
+    ...(sets ? { sets } : {}),
   };
 }
 
@@ -116,10 +138,22 @@ export function saveLog(log: TrainingLogEntry): TrainingLogEntry[] {
   return logs;
 }
 
+export function updateTrainingLogSets(logId: string, sets: TrainingSet[]): TrainingLogEntry[] | null {
+  const logs = getLogs();
+  if (!logs.some(log => log.id === logId)) return null;
+  const normalizedSets = sets.length === 0 ? undefined : normalizeTrainingSets(sets);
+  if (sets.length > 0 && !normalizedSets) return null;
+  const updated = logs.map(log => log.id === logId
+    ? { ...log, sets: normalizedSets }
+    : log);
+  return safeSetItem(LOG_KEY, JSON.stringify(updated)) ? updated : null;
+}
+
 export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEntry {
   const completedAt = new Date().toISOString();
   const painDelta = input.painAfter - input.painBefore;
 
+  const sets = normalizeTrainingSets(input.sets);
   return {
     id: typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
       ? crypto.randomUUID()
@@ -145,6 +179,7 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
     notes: input.notes,
     stopReason: input.stopReason,
     painDelta,
+    ...(sets ? { sets } : {}),
   };
 }
 

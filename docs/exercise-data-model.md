@@ -130,8 +130,23 @@ Each saved log entry should preserve:
   notes,
   stoppedEarly,
   stopReason
+  sets? // optional per-set detail
 }
 ```
+
+Optional strength details use this additive shape without migrating or replacing the aggregate fields:
+
+```js
+sets: [
+  { weightKg?: number, reps?: number, completed: boolean }
+]
+```
+
+- `setsCompleted` and `repsCompleted` remain readable for every legacy and new log.
+- Set details are optional and capped at 20 rows. Weight is kilograms when supplied; reps are whole numbers.
+- Mobility, bodyweight, and cycling flows do not require weight. Strength logs may omit the entire `sets` field.
+- Malformed optional set details are ignored while the otherwise-valid training log remains readable.
+- Editing or removing set details updates the existing log ID in `rehab.trainingLogs.v2`; it does not create a duplicate log or change linked `ResistanceSession.exerciseLogIds`.
 
 Preserve LocalStorage compatibility unless a migration is explicitly requested.
 

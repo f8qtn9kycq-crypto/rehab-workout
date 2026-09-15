@@ -220,8 +220,10 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle)', 'latest training summary uses localized saved-log title');
   assertIncludes(source.logsPage, '<ProgressSummary summary={summary} />', 'progress summary renders');
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
-  assertIncludes(source.logsPage, '<TrainingLog logs={logs} />', 'training log renders');
+  assertIncludes(source.logsPage, '<TrainingLog logs={logs} onLogsChange={setLogs} />', 'training log renders and refreshes after set-detail edits');
   assertIncludes(source.trainingLog, 'getLocalizedTrainingLogTitle(log, language, fallbackTitle)', 'training history uses localized saved-log title');
+  assertIncludes(source.logService, 'updateTrainingLogSets', 'set-detail edits update an existing training log');
+  assertIncludes(source.sessionTracker, "item === 'dumbbell' || item === 'kettlebell'", 'set details are optional and limited to loadable strength sessions');
 });
 
 section('clear local data is explicit and confirmed', () => {

@@ -92,6 +92,12 @@ export interface SessionLog {
   notes: string;
 }
 
+export interface TrainingSet {
+  weightKg?: number;
+  reps?: number;
+  completed: boolean;
+}
+
 export type SessionCompletionStatus = 'completed' | 'stopped_early';
 
 export interface TrainingLogEntry extends SessionLog {
@@ -108,6 +114,8 @@ export interface TrainingLogEntry extends SessionLog {
   completionStatus: SessionCompletionStatus;
   stopReason: string;
   painDelta: number;
+  /** Optional per-set detail; legacy aggregate fields remain readable. */
+  sets?: TrainingSet[];
 }
 
 export interface FunctionalOutcomeEntry {

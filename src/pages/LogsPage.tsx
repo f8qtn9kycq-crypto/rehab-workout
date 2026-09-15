@@ -119,7 +119,7 @@ export default function LogsPage() {
 
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />
-        <TrainingLog logs={logs} />
+        <TrainingLog logs={logs} onLogsChange={setLogs} />
       </section>
 
       <section className="card space-y-3 border-amber-100 bg-amber-50/60 p-5" aria-labelledby="records-local-data-title">

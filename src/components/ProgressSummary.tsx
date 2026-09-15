@@ -60,7 +60,7 @@ export default function ProgressSummary({ summary }: { summary: WeeklyProgressSu
 
         <article className="card p-5">
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><CalendarCheck size={16} aria-hidden="true" />{t('progress.thisWeek')}</div>
-          <p className="mt-3 text-2xl font-black leading-tight text-ink">{t('progress.sessionsCompleted', { count: summary.sessionsThisWeek })}</p>
+          <p className="mt-3 text-2xl font-black leading-tight text-ink">{t('activities.exerciseRecords', { count: summary.sessionsThisWeek })}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">{t('progress.trainedAreas', { areas: trainedAreas })}</p>
         </article>
       </div>

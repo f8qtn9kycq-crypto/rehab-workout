@@ -43,6 +43,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const exitButtonRef = useRef<HTMLButtonElement>(null);
   const continueSessionButtonRef = useRef<HTMLButtonElement>(null);
   const lastExitTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const saveInProgressRef = useRef(false);
 
   const painBlocksStart = shouldStopForPain(painBefore);
   const recoveryModeSuggested = shouldUseRecoveryMode(painBefore);
@@ -130,8 +131,12 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function persistAndConfirm(log: TrainingLogEntry): void {
+    if (saveInProgressRef.current) return;
+    saveInProgressRef.current = true;
     setSaveError(false);
+
     if (!saveLog(log)) {
+      saveInProgressRef.current = false;
       setSaveError(true);
       return;
     }

@@ -112,6 +112,6 @@ export default function ActivityTracking() {
     </details>
     <ActivityPlan />
     <details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.share')}</summary><textarea aria-label={t('activities.share')} readOnly value={copyText} className={control + ' min-h-32'} /><p className="text-sm">{t('activities.localOnly')}</p></details>
-    {message && <p role="status">{t(`activities.${message}`)}</p>}
+    {message && <p role={message === 'error' ? 'alert' : 'status'}>{t(`activities.${message}`)}</p>}
   </section>;
 }

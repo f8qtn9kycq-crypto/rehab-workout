@@ -84,11 +84,12 @@ export function readActivities(): { activities: Activity[]; error: boolean } {
     const raw = window.localStorage.getItem(ACTIVITY_KEY);
     if (raw === null) return { activities: [], error: false };
     const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed) || !parsed.every(validActivity)) return { activities: [], error: true };
-    const ids = parsed.map(a => a.id);
-    const links = parsed.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
+    if (!Array.isArray(parsed)) return { activities: [], error: true };
+    const activities = parsed.filter(validActivity);
+    const ids = activities.map(a => a.id);
+    const links = activities.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
     if (new Set(ids).size !== ids.length || new Set(links).size !== links.length) return { activities: [], error: true };
-    return { activities: parsed, error: false };
+    return { activities, error: false };
   } catch { return { activities: [], error: true }; }
 }
 export function saveActivity(activity: Activity): boolean {

@@ -10,7 +10,7 @@ export default function OnboardingFlow({ demo = false }: { demo?: boolean }) {
 
   function finish(): void {
     if (!demo) safeSetItem(onboardingStorageKey, JSON.stringify(true));
-    navigate('/safety');
+    navigate('/start');
   }
 
   return (

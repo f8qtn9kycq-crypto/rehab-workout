@@ -28,6 +28,8 @@ const files = {
   localizedExercise: 'src/utils/localizedExercise.ts',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
+  bodyFirstEntryPage: 'src/pages/BodyFirstEntryPage.tsx',
+  bodyFirstEntry: 'src/utils/bodyFirstEntry.ts',
   routinePage: 'src/pages/RoutinePage.tsx',
   mobileNav: 'src/components/MobileBottomNav.tsx',
   desktopNav: 'src/components/DesktopNav.tsx',
@@ -88,9 +90,25 @@ section('app shell and routed pages are present', () => {
   assertIncludes(source.main, '<BrowserRouter>', 'SPA router');
   assertIncludes(source.main, '<Route path="/" element={<HomePage />} />', 'home route');
   assertIncludes(source.main, '<Route path="/safety" element={<SafetyPage />} />', 'safety route');
+  assertIncludes(source.main, '<Route path="/start" element={<BodyFirstEntryPage />} />', 'body-first route');
   assertIncludes(source.main, '<Route path="/logs" element={<LogsPage />} />', 'logs route');
   assertIncludes(source.main, '<Route path="/education" element={<EducationPage />} />', 'education route');
   assertIncludes(source.main, '<Route path="*" element={<Navigate to="/" replace />} />', 'fallback route');
+});
+
+section('body-first entry reuses the existing safety and assessment flows', () => {
+  assertIncludes(source.homePage, 'to="/start"', 'home primary action opens body-first entry');
+  assertIncludes(source.bodyFirstEntryPage, '<BodyAreaSelector', 'existing body-area selector is reused');
+  assertIncludes(source.bodyFirstEntryPage, "(['train', 'discomfort'] as const)", 'both required intents are visible');
+  assertIncludes(source.bodyFirstEntryPage, 'getSafetyStatus()', 'training intent reads current safety status');
+  assertIncludes(source.bodyFirstEntryPage, 'isSafetyGateCurrentForToday(safety)', 'training intent requires today safety status');
+  assertIncludes(source.bodyFirstEntryPage, 'canEnterSession(safety)', 'blocked safety status cannot continue directly');
+  assertIncludes(source.bodyFirstEntry, "intent === 'train' && safetyReady", 'only safe training intent can continue directly');
+  assertIncludes(source.bodyFirstEntry, "pathname: '/safety'", 'unsafe and discomfort paths use existing safety route');
+  assertIncludes(source.bodyFirstEntry, "pathname: '/assessment'", 'safe training path uses existing assessment route');
+  assertIncludes(source.bodyFirstEntry, 'state: { from: assessmentPath }', 'body-area context survives the safety route');
+  assertIncludes(source.bodyFirstEntryPage, 'destination.state ? { state: destination.state } : undefined', 'router receives safety return state as navigation options');
+  assertIncludes(source.bodyFirstEntryPage, 'disabled={bodyArea === \'all\' || !intent}', 'single primary CTA waits for both choices');
 });
 
 section('SafetyRouteGuard protects assessment and session while browse remains readable', () => {
@@ -235,18 +253,18 @@ section('clear local data is explicit and confirmed', () => {
 });
 
 
-section('first-run onboarding stays focused on safe start basics', () => {
+section('first-run onboarding stays focused on the body-first safe-start path', () => {
   const englishOnboarding = source.localeEn.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
   const zhOnboarding = source.localeZh.match(/onboarding:\s*\{[\s\S]*?\n  \},/)?.[0] ?? '';
 
-  assertIncludes(source.onboardingFlow, '<ol', 'onboarding presents the original ordered steps');
-  assertIncludes(source.onboardingFlow, "navigate('/safety')", 'onboarding starts with safety');
+  assertIncludes(source.onboardingFlow, '<ol', 'onboarding presents the ordered steps');
+  assertIncludes(source.onboardingFlow, "navigate('/start')", 'onboarding starts with body-area selection');
   assertIncludes(source.onboardingFlow, "t('onboarding.steps')", 'steps remain localized');
-  if (source.onboardingFlow.includes('BodyAreaSelector')) fail('onboarding should not require an early body-area choice');
+  if (source.onboardingFlow.includes('BodyAreaSelector')) fail('onboarding should explain the path without duplicating the selector');
   assertIncludes(source.safetyGate, "t('safety.whyBody')", 'safety explains why questions are required');
   assertIncludes(source.sessionPage, 'isSafetyGateCurrentForToday(safety)', 'session checks current safety');
-  assertIncludes(englishOnboarding, 'Start safety check', 'English single CTA');
-  assertIncludes(zhOnboarding, '開始安全確認', 'zh-TW single CTA');
+  assertIncludes(englishOnboarding, 'Choose a body area', 'English single CTA');
+  assertIncludes(zhOnboarding, '選擇身體部位', 'zh-TW single CTA');
   ['Pick level', 'Log result'].forEach((outdatedStep) => {
     if (englishOnboarding.includes(outdatedStep)) {
       fail(`onboarding should not expose outdated first-run step ${JSON.stringify(outdatedStep)}`);

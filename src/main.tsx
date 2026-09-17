@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import SafetyRouteGuard from './components/SafetyRouteGuard';
 import AssessmentPage from './pages/AssessmentPage';
+import BodyFirstEntryPage from './pages/BodyFirstEntryPage';
 import EducationPage from './pages/EducationPage';
 import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import ExercisesPage from './pages/ExercisesPage';
@@ -29,6 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="/" element={<HomePage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/safety" element={<SafetyPage />} />
+            <Route path="/start" element={<BodyFirstEntryPage />} />
             <Route path="/exercises" element={<ExercisesPage />} />
             <Route path="/exercise/:exerciseId" element={<ExerciseDetailPage />} />
             <Route element={<SafetyRouteGuard />}>

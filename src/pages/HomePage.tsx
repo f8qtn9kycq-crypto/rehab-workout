@@ -1,3 +1,4 @@
+import ActivityTracking from '../components/ActivityTracking';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { Navigate, Link } from 'react-router-dom';
 import { onboardingStorageKey } from '../data/safety';
@@ -28,7 +29,7 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
   });
 
   return (
-    <div className="page">
+    <div className="page space-y-5">
       <section className="card mx-auto max-w-xl space-y-6 p-5 sm:p-6" aria-labelledby="home-next-action-title">
         <div className="inline-flex min-h-11 items-center gap-2 rounded-md bg-calm-100 px-3 font-semibold text-calm-700">
           <ShieldCheck size={20} aria-hidden="true" />
@@ -41,6 +42,7 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
           <ArrowRight size={20} aria-hidden="true" />
         </Link>
       </section>
+      {!demo && <ActivityTracking />}
     </div>
   );
 }

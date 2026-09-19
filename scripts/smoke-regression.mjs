@@ -12,6 +12,7 @@ const files = {
   redFlagChecklist: 'src/components/RedFlagChecklist.tsx',
   safetyUtils: 'src/utils/safety.ts',
   painRules: 'src/utils/painRules.ts',
+  sessionSave: 'src/utils/sessionSave.ts',
   sessionTracker: 'src/components/SessionTracker.tsx',
   activeSessionPanel: 'src/components/ActiveSessionPanel.tsx',
   sessionPage: 'src/pages/SessionPage.tsx',
@@ -200,7 +201,9 @@ section('session logs persist with required fields and refresh-safe readers', ()
   assertIncludes(source.trainingLogStopReasons, 'legacyEarlyStopReasonLabels.has(stopReason)', 'legacy translated early-stop labels are localized at render time');
   assertIncludes(source.sessionTracker, 'normalizeStopReasonForSave(stopReason, stoppedEarly, notes)', 'session save normalizes built-in stop reason while preserving notes fallback');
   assertIncludes(source.trainingLog, 'getLocalizedStopReasonLabel(log, t)', 'training history localizes built-in stop reasons');
-  assertIncludes(source.sessionTracker, 'if (!saveLog(log))', 'session confirmation requires a successful local save');
+  assertIncludes(source.sessionTracker, 'persistSessionLogOnce(saveInProgressRef, log, saveLog)', 'session confirmation uses the behavioral duplicate-save guard');
+  assertIncludes(source.sessionSave, "if (lock.current) return 'duplicate'", 'duplicate session save activation is blocked synchronously');
+  assertIncludes(source.sessionSave, "return 'failed'", 'failed session persistence is reported for retry');
   assertIncludes(source.sessionTracker, "t('session.saveError')", 'session exposes local save failure without claiming success');
   assertIncludes(source.sessionTracker, "setPhase('saved')", 'session completion confirms the saved state before navigation');
   assertIncludes(source.sessionTracker, 'hasRecentOutcome(getOutcomeEntries(), log.bodyArea)', 'saved next step uses same-area recent outcome rules');

@@ -8,6 +8,7 @@ import type { Exercise, TrainingLogEntry, TrainingSet } from '../types/rehab';
 import { hasRecentOutcome } from '../utils/homeNextAction';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
+import { persistSessionLogOnce } from '../utils/sessionSave';
 import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
 import TrainingSetEditor from './TrainingSetEditor';
@@ -145,12 +146,11 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function persistAndConfirm(log: TrainingLogEntry): void {
-    if (saveInProgressRef.current) return;
-    saveInProgressRef.current = true;
     setSaveError(false);
 
-    if (!saveLog(log)) {
-      saveInProgressRef.current = false;
+    const saveResult = persistSessionLogOnce(saveInProgressRef, log, saveLog);
+    if (saveResult === 'duplicate') return;
+    if (saveResult === 'failed') {
       setSaveError(true);
       return;
     }

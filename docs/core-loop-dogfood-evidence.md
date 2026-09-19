@@ -29,6 +29,17 @@
 同一筆證據可同時屬於多個類別，例如「真人 walkthrough + 實體裝置 + Preview」。
 不得推論未實際觀察的類別。
 
+## 既有基準證據（不計入 Day 1–7）
+
+- PR #143 exact head `16f8c3597dd764d94687155797b7cab1b9b68d0c`：owner 回報真人
+  walkthrough `Pass`，裝置為 iPhone 13、iOS 27、Safari。證據記錄見
+  [PR #143 comment](https://github.com/f8qtn9kycq-crypto/rehab-workout/pull/143#issuecomment-5743832011)
+  與 [Goal #152 comment](https://github.com/f8qtn9kycq-crypto/rehab-workout/issues/152#issuecomment-5743833413)。
+- 此基準證據沒有提供儲存前後紀錄數、三秒回答或逐項 friction，這些欄位維持
+  `Not supplied`，不得推測或補填。
+- 這是合併前 exact-head walkthrough 的歷史證據，不自動算成一週 dogfood 的 Day 1，
+  也不代表 production 或目前 `main` release evidence。
+
 ## 一週執行索引
 
 每次嘗試都保留一列，包括失敗或中止的嘗試。

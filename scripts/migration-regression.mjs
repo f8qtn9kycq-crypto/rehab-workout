@@ -3,13 +3,19 @@ import { build } from 'vite';
 
 class MemoryStorage {
   #values = new Map();
+  #failWrites = false;
 
   getItem(key) {
     return this.#values.has(key) ? this.#values.get(key) : null;
   }
 
   setItem(key, value) {
+    if (this.#failWrites) throw new Error('storage unavailable');
     this.#values.set(key, String(value));
+  }
+
+  setFailWrites(value) {
+    this.#failWrites = value;
   }
 
   removeItem(key) {
@@ -42,7 +48,7 @@ async function loadService(entry) {
 
 try {
   const { getOutcomeEntries } = await loadService('src/services/outcomeStorage.ts');
-  const { getLogs } = await loadService('src/services/logService.ts');
+  const { getLogs, saveLog } = await loadService('src/services/logService.ts');
   const date = '2026-08-30T12:00:00.000Z';
 
   localStorage.setItem('rehab.functionalOutcomes.v1', JSON.stringify([{
@@ -97,8 +103,13 @@ try {
     painDelta: 0,
   }]));
 
-  assert.equal(getLogs()[0].difficultyRating, 6, 'legacy effort 3/5 migrates to 6/10');
+  const migratedLog = getLogs()[0];
+  assert.equal(migratedLog.difficultyRating, 6, 'legacy effort 3/5 migrates to 6/10');
   assert.equal(getLogs()[0].difficultyRating, 6, 'training-log migration is idempotent on repeated reads');
+
+  localStorage.setFailWrites(true);
+  assert.equal(saveLog(migratedLog), false, 'training-log save reports unavailable browser storage');
+  localStorage.setFailWrites(false);
 
   localStorage.removeItem('rehab.trainingLogs.v2');
   localStorage.setItem('rehab.trainingLogs.v1', '{malformed');

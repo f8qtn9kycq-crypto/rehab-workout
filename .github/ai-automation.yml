@@ -126,25 +126,46 @@ risk_tiers:
       chatgpt_pm_synthesis: required_before_merge
     auto_merge_eligible: false
 
+pull_request_state_policy:
+  draft_means:
+    - implementation_incomplete
+    - required_current_head_automated_evidence_incomplete
+  mark_ready_for_review_when:
+    - implementation_complete
+    - required_current_head_checks_pass
+    - no_known_blocking_P0
+    - P1_findings_are_fixed_or_explicitly_deferred
+  do_not_keep_draft_only_because:
+    - human_walkthrough_is_absent
+    - authenticated_preview_is_unavailable_to_automation
+    - physical_iPhone_Safari_evidence_is_absent
+    - sole_contributor_cannot_formally_self_approve
+  manual_evidence_blocks_only_when:
+    - changed_behavior_cannot_be_validated_reliably_by_automation
+    - explicit_acceptance_criterion_requires_the_environment
+    - unresolved_P0_or_P1_requires_human_confirmation
+    - Tier_3_change_includes_safety_logic_destructive_migration_or_security_sensitive_behavior
+
 approval_policy:
-  sole_contributor_exception:
-    enabled: true
-    verification:
-      - live_repository_collaborator_count_is_exactly_one
-      - pull_request_author_is_that_collaborator
-      - github_self_approval_is_rejected_or_unavailable
-    substitute_evidence:
-      - exact_head_human_walkthrough_comment
-    required_alongside_substitute:
+  sole_contributor:
+    formal_self_approval_required: false
+    merge_readiness_default:
+      - required_AI_review_routing_complete
+      - current_head_required_checks_pass
+      - no_active_requested_changes_review
+      - no_unresolved_blocking_review_threads
+      - clean_mergeability
+      - product_safety_and_acceptance_gates_pass
+    tier_3_additional_requirements:
       - Claude_Tier_3_review
       - ChatGPT_PM_synthesis
-      - current_head_required_checks
-      - no_unresolved_review_threads
-      - clean_mergeability
-      - product_safety_and_acceptance_gates
+    conditional_human_walkthrough:
+      - safety_logic_change_not_reliably_covered_by_automation
+      - destructive_or_irreversible_data_migration
+      - security_sensitive_behavior
+      - explicit_acceptance_criterion_requires_manual_or_physical_device_evidence
     constraints:
-      - never_claim_formal_github_approve
-      - disable_when_collaborator_count_changes
+      - never_claim_formal_github_approve_when_none_exists
 
 auto_merge:
   allowed_only_when:

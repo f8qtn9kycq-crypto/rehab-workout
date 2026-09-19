@@ -36,8 +36,8 @@ What user problem this addresses:
 - [ ] Build passed
 - [ ] Tests passed if available
 - [ ] `npm run audit:exercise-coverage` passed if exercise data, filters, recommendations, or coverage docs changed
-- [ ] Mobile layout checked
-- [ ] iOS Safari / SPA routing risk considered
+- [ ] Mobile layout checked when UI changed
+- [ ] iOS Safari / SPA routing risk considered; automated evidence is acceptable unless the changed behavior specifically requires physical-device verification
 - [ ] LocalStorage compatibility considered
 
 ## AI review routing
@@ -51,7 +51,11 @@ What user problem this addresses:
 - [ ] No P0
 - [ ] P1 either fixed or explicitly deferred
 - [ ] Acceptance criteria met
-- [ ] Human approval recorded, or sole-contributor exact-head walkthrough evidence recorded when the repository has exactly one contributor and GitHub rejects self-approval
+- [ ] Current-head required checks passed
+- [ ] No active requested-changes review or unresolved blocking review thread
+- [ ] Manual walkthrough required only when a P0/P1, explicit acceptance criterion, or changed behavior cannot be validated reliably by automation
+
+A PR should be marked **Ready for review** once implementation is complete and required automated evidence is green. Do not keep a PR in Draft solely because human/iPhone/preview evidence is absent.
 
 ## Post-merge cleanup
 

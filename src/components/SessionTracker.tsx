@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
 import { getOutcomeEntries } from '../services/outcomeStorage';
-import type { Exercise, TrainingLogEntry } from '../types/rehab';
+import type { Exercise, TrainingLogEntry, TrainingSet } from '../types/rehab';
 import { hasRecentOutcome } from '../utils/homeNextAction';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
 import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
+import TrainingSetEditor from './TrainingSetEditor';
 
 interface SessionTrackerProps {
   exercise: Exercise;
@@ -38,10 +39,12 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const [savedLog, setSavedLog] = useState<TrainingLogEntry | null>(null);
   const [needsOutcomeCheckIn, setNeedsOutcomeCheckIn] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [trainingSets, setTrainingSets] = useState<TrainingSet[]>([]);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const backButtonRef = useRef<HTMLButtonElement>(null);
   const exitButtonRef = useRef<HTMLButtonElement>(null);
   const continueSessionButtonRef = useRef<HTMLButtonElement>(null);
+  const savedTitleRef = useRef<HTMLHeadingElement>(null);
   const lastExitTriggerRef = useRef<HTMLButtonElement | null>(null);
   const saveInProgressRef = useRef(false);
 
@@ -53,6 +56,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const hasStartedExercise = phase === 'active' || phase === 'finish';
   const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
+  const supportsSetDetails = exercise.type === 'strength' && exercise.equipment.some(item => item === 'dumbbell' || item === 'kettlebell');
 
   useEffect(() => {
     if (exitDialogOpen) {
@@ -63,6 +67,13 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     lastExitTriggerRef.current?.focus();
   }, [exitDialogOpen]);
 
+  useEffect(() => {
+    if (phase !== 'saved') return;
+
+    const focusFrame = window.requestAnimationFrame(() => savedTitleRef.current?.focus());
+    return () => window.cancelAnimationFrame(focusFrame);
+  }, [phase]);
+
   function completedRepCount(): number {
     return completedSets > 0 ? exercise.reps : 0;
   }
@@ -72,6 +83,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     setCompletedSets(nextCompletedSets);
 
     if (currentSet >= exercise.sets) {
+      if (supportsSetDetails) setTrainingSets(Array.from({ length: nextCompletedSets }, () => ({ reps: exercise.reps, completed: true })));
       setResting(false);
       setPhase('finish');
       return;
@@ -87,6 +99,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function stopEarly(): void {
+    if (supportsSetDetails) setTrainingSets(Array.from({ length: completedSets }, () => ({ reps: exercise.reps, completed: true })));
     setStoppedEarly(true);
     setStopReason('');
     setPhase('finish');
@@ -106,6 +119,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       recoveryMode: useRecoveryMode,
       notes,
       stopReason: normalizeStopReasonForSave(stopReason, stoppedEarly, notes),
+      sets: trainingSets.length > 0 ? trainingSets : undefined,
     });
 
     persistAndConfirm(log);
@@ -312,9 +326,9 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
         <section className="card space-y-5 p-4" aria-labelledby="session-saved-title">
           <div className="flex items-center gap-2 text-calm-700">
             <ClipboardCheck size={24} />
-            <h1 id="session-saved-title" className="text-2xl font-bold text-ink">{t('session.savedTitle')}</h1>
+            <h1 ref={savedTitleRef} id="session-saved-title" tabIndex={-1} className="focus-ring text-2xl font-bold text-ink">{t('session.savedTitle')}</h1>
           </div>
-          <p className="leading-7 text-slate-700">{t('session.savedLocally')}</p>
+          <p role="status" aria-live="polite" className="leading-7 text-slate-700">{t('session.savedLocally')}</p>
           <div className="rounded-lg border border-calm-100 bg-calm-50 p-4">
             <p className="text-lg font-black text-ink">
               {t('session.savedPain', { before: savedLog.painBefore, after: savedLog.painAfter })}
@@ -377,6 +391,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               DIFFICULTY_LEVELS.map((value) => [value, t(`session.difficultyLabels.${value}`)]),
             )}
           />
+          {supportsSetDetails ? <TrainingSetEditor sets={trainingSets} plannedReps={exercise.reps} onChange={setTrainingSets} /> : null}
           <label className="block">
             <span className="mb-2 block font-semibold text-slate-800">{t('session.notes')}</span>
             <textarea value={notes} onChange={(event) => setNotes(event.target.value)} className="focus-ring min-h-24 w-full rounded-md border border-slate-200 p-3" placeholder={t('session.notesPlaceholder')} />

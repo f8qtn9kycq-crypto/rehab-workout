@@ -113,6 +113,17 @@ Expected evidence:
 - no diagnosis/cure claims
 - stricter merge gate
 
+Tier 3 PRs automatically receive one exact-head AI review request on open,
+reopen, synchronization, and transition to ready-for-review. The trusted
+`pull_request_target` workflow reads only GitHub metadata, never checks out or
+executes PR code, and deduplicates requests by head SHA. The request mentions
+Claude and records the ChatGPT PM synthesis requirement; it is not itself a
+completed review, synthesis result, approval, or merge authorization.
+
+If the automatic request workflow fails, fix or rerun the request path and keep
+the PR blocked. Do not treat a required-review checkbox or request comment as
+evidence that either reviewer completed its work.
+
 ## Sole-contributor approval policy
 
 For this repository, the default human-approval path is conditional on the live

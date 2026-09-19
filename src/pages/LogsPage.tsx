@@ -1,3 +1,4 @@
+import ActivityTracking from '../components/ActivityTracking';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
@@ -30,6 +31,7 @@ export default function LogsPage() {
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
+  const [activityRevision, setActivityRevision] = useState(0);
   const fallbackTitle = t('logs.savedExerciseFallback');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
   const latestLog = useMemo<TrainingLogEntry | null>(() => latestByDate(logs), [logs]);
@@ -49,6 +51,7 @@ export default function LogsPage() {
     if (!window.confirm(t('logs.clearLocalDataConfirm'))) return;
 
     const result = clearRehabLocalData();
+    setActivityRevision(value => value + 1);
     setLogs([]);
     setOutcomes([]);
     setClearStatus(result.failedKeys.length > 0 ? 'partial' : 'success');
@@ -105,6 +108,7 @@ export default function LogsPage() {
 
       <section className="space-y-4" aria-labelledby="records-progress-title">
         <SectionHeader id="records-progress-title" title={t('records.progress.title')} subtitle={t('records.progress.subtitle')} icon={TrendingUp} />
+        <ActivityTracking key={activityRevision} />
         <ProgressSummary summary={summary} />
       </section>
 
@@ -115,7 +119,7 @@ export default function LogsPage() {
 
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />
-        <TrainingLog logs={logs} />
+        <TrainingLog logs={logs} onLogsChange={setLogs} />
       </section>
 
       <section className="card space-y-3 border-amber-100 bg-amber-50/60 p-5" aria-labelledby="records-local-data-title">

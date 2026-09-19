@@ -8,213 +8,146 @@ For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo
 2. Read `REVIEW.md` before reviewing or preparing a PR for review.
 3. Read `.github/pull_request_template.md` before opening or updating a PR.
 4. Read `.github/ai-automation.yml` before scheduled automation, issue selection, PR gating, or any GitHub mutation when the file exists.
-5. Treat repo-tracked workflow files as the source of truth over pasted chat context when they conflict.
-6. Classify the task risk tier before implementation:
+5. Treat repo-tracked workflow files as source of truth over pasted chat context or memory.
+6. Classify risk tier before implementation:
    - Tier 0: docs / copy / small CSS
    - Tier 1: mobile UX / i18n / navigation
    - Tier 2: safety / session / storage / routing
    - Tier 3: architecture / data migration / security
-7. Keep the change scoped to the selected risk tier.
-8. If the requested work is broad, split it into the smallest safe PR.
-9. Do not rely on memory alone for workflow, safety, or review requirements.
+7. Keep changes minimal and localized. Split broad work into the smallest safe PR.
 
-## Detailed repo docs
+## Product and safety contract
 
-Use root workflow files as the contract and `/docs` files as detailed handbooks:
-
-- `.github/ai-automation.yml`: repo-owned automation contract for scheduled runners, repo preflight, issue/PR selection, validation, review routing, and merge gating.
-- `docs/chatgpt-project-instructions-compact.md`: paste-ready compact ChatGPT Project Instructions under 8,000 characters.
-- `docs/ai-workflow.md`: AI tool roles, source-of-truth order, risk tiers, validation, merge gates, and cleanup.
-- `docs/project-source-hygiene.md`: ChatGPT Project uploaded-source cleanup, stale-source handling, and active/archive naming rules.
-- `docs/pr-workflow.md`: branch naming, risk tier evidence, review contract, merge gate, and post-merge cleanup.
-- `docs/product-scope.md`: product mission, supported rehab areas, platform priority, journey, and roadmap priorities.
-- `docs/architecture.md`: React/Vite/Router structure, routes, component responsibilities, LocalStorage, media embed rules, and validation.
-- `docs/exercise-data-model.md`: exercise schema, bodyArea/type enums, equipment taxonomy, training log schema, and content data rules.
-- `docs/safety-rules.md`: pain rules, red flags, joint-specific safety, prohibited claims, and safety review checks.
-- `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
-- `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
-
-Do not duplicate the full product spec inside ChatGPT Project Instructions. Keep ChatGPT compact and route detailed rules to repo docs.
-
-## External Project sources
-
-ChatGPT Project uploaded files, branch compact contexts, and one-time implementation prompts are reference material only unless they explicitly match current repo docs.
-
-Use `docs/project-source-hygiene.md` when auditing or cleaning Project sources. Archive or remove stale uploaded sources instead of letting old prompts override current repo workflow, safety, risk tier, or validation rules.
-
-## Product context
-
-This is a mobile-first Active Aging / rehab-oriented web app.
-
-Primary users:
-- adults returning to exercise
-- beginners
-- users with minor shoulder, hip, knee, or back limitations
-
-## Safety rules
+This is a mobile-first Active Aging / rehab-oriented web app for adults returning to exercise, beginners, and users with minor shoulder, hip, knee, or back limitations.
 
 - Pain 0-3: allow normal or modified training.
 - Pain >3: recommend regression, recovery, or easier movement.
 - Pain >=6: stop training.
 - Red flags must block training.
-- Do not make diagnosis, cure, or medical certainty claims.
+- Do not make diagnosis, cure, or medical-certainty claims.
 - Shoulder: avoid aggressive overhead defaults.
 - Hip: avoid high-impact and deep-flexion defaults.
 - Back: avoid heavy hinge defaults.
 
-## Engineering rules
+Preserve existing user data, LocalStorage compatibility, iOS Safari compatibility, mobile-first layout, and existing safety gates unless the selected task explicitly changes them.
 
-- Keep changes minimal and localized.
-- Do not rewrite the app unless explicitly requested.
-- Preserve existing user data.
-- Preserve LocalStorage compatibility.
-- Preserve iOS Safari compatibility.
-- Preserve mobile-first layout.
-- Prefer tests or explicit QA evidence for changed behavior.
+## Detailed repo docs
 
-## Workflow docs
-
-Detailed workflow rules live in repo docs:
+Use root workflow files as the contract and `/docs` as detailed handbooks:
 
 - `.github/ai-automation.yml`
 - `docs/ai-workflow.md`
 - `docs/pr-workflow.md`
 - `docs/codex-issue-workflow.md`
+- `docs/product-scope.md`
+- `docs/architecture.md`
+- `docs/exercise-data-model.md`
+- `docs/safety-rules.md`
+- `docs/mobile-ux-guidelines.md`
+- `docs/localization-style-guide.md`
 - `docs/project-source-hygiene.md`
 - `docs/chatgpt-project-instructions-compact.md`
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`
 
-Use repo-tracked workflow files as source of truth over pasted compact context or prior chat memory.
+Uploaded Project files, branch contexts, and one-time prompts are reference material only and must not override current repo-tracked workflow or safety rules.
 
 ## AI execution rules
 
-Scheduled automation runners must:
-- read `.github/ai-automation.yml` before selecting issues, gating PRs, or mutating GitHub.
-- verify the local git remote, queried GitHub repo, and repo-tracked instructions match this repository.
-- stop with `repo-mismatch blocker` before mutation when identity or product instructions do not match.
-- execute at most one issue/PR unit of work per scheduled run.
+Scheduled automation runners must verify repo identity, read `.github/ai-automation.yml`, stop on repo mismatch, and execute at most one issue/PR unit per run.
 
 Codex must:
-- sync from latest `main` before creating an implementation branch.
-- create a branch for changes instead of committing directly to `main`.
-- keep PRs small and reviewable.
-- fill the PR template with concrete QA evidence.
-- run `npm run build` before reporting completion.
-- run `npm run audit:exercise-coverage` when exercise data, filters, recommendations, or coverage docs may be affected.
-- avoid changing safety, session, storage, or routing behavior unless the task explicitly asks for it.
 
-## GitHub Projects V2 automation
+- sync latest `main` before creating a branch;
+- never commit directly to `main`;
+- keep PRs small and reviewable;
+- fill the PR template with concrete QA evidence;
+- run `npm run build` for implementation work;
+- run `npm run audit:exercise-coverage` when exercise data, filters, recommendations, or coverage docs may be affected;
+- avoid changing safety, session, storage, or routing behavior unless explicitly scoped.
 
-The repo uses `.github/workflows/project-auto-add.yml` to add issues and pull requests to Project #2, populate project fields, and sync Project Status from GitHub lifecycle state.
+ChatGPT must inspect the repo workflow contract before generating Codex prompts, PR reviews, merge gates, or workflow recommendations. Review agents follow `REVIEW.md`, avoid duplicate findings, and include file, behavior, risk, and acceptance criterion for every P0/P1.
 
-This workflow requires:
+## PR Draft and readiness policy
 
-- A repo secret named `PROJECTS_TOKEN`.
-- A PAT value with GitHub Projects V2 read/write access, including the `project` OAuth scope or equivalent fine-grained Projects read/write permission.
+Draft means implementation or required current-head automated evidence is incomplete.
 
-`GITHUB_TOKEN` cannot access Projects V2 fields. The workflow must not fall back to `github.token` for project field writes.
+Mark a PR **Ready for review** when:
 
-The workflow tracks:
+- implementation is complete;
+- required current-head automated checks pass;
+- no known blocking P0 remains;
+- P1 findings are fixed or explicitly deferred according to the review contract.
 
-- Issues: opened / reopened / edited / labeled / closed.
-- Pull requests: opened / reopened / edited / synchronize / ready_for_review / labeled / closed.
+Do **not** keep a PR in Draft solely because:
 
-Lifecycle status rules:
+- a human walkthrough has not occurred;
+- an automation agent cannot authenticate to a Vercel preview;
+- physical iPhone Safari evidence is absent;
+- the sole contributor cannot formally self-approve.
 
-- Open or reopened issues sync to `Backlog`.
-- Issues closed as completed sync to `Done`.
-- Open pull requests sync to `Ready to Merge` only when strict readiness is verifiable: the PR is open, not draft, mergeable with clean merge state, has a successful current-head Build check, and has no active requested-changes review.
-- Open pull requests that are not strictly ready sync to `Review` when available, otherwise `In Progress` when available.
-- If `Ready to Merge` does not exist as a Project Status option, the workflow logs the fallback and keeps using `Review` / `In Progress`.
-- Merged pull requests sync to `Done`.
-- Pull requests closed without merge must not be marked `Done`.
-- Merged pull requests with `Closes #N`, `Fixes #N`, or `Resolves #N` also sync linked issue `#N` to `Done`.
-
-If `Project auto-add` fails:
-
-1. Check whether `PROJECTS_TOKEN` exists in repo Actions secrets.
-2. If it is missing, report it as the blocker.
-3. Do not work around the failure by using `github.token`.
-
-After the secret is set, missed issues and pull requests can be backfilled by running:
-
-```bash
-gh workflow run project-auto-add.yml -f target_type=issue -f target_number=<N>
-gh workflow run project-auto-add.yml -f target_type=pull_request -f target_number=<N>
-```
-
-ChatGPT must:
-- check repo workflow files before generating Codex prompts or PR reviews when repo access is available.
-- use `AGENTS.md`, `REVIEW.md`, and the PR template as the workflow contract.
-- use detailed docs under `/docs` for safety, mobile UX, localization, workflow specifics, and Project source hygiene.
-- avoid broad refactor prompts unless explicitly requested.
-- provide Codex-ready prompts with changed-file targets, acceptance criteria, QA checks, and merge gates.
-
-Review agents must:
-- follow `REVIEW.md` severity definitions.
-- avoid duplicate findings.
-- include file, behavior, risk, and acceptance criterion for every P0/P1.
+Those are evidence gaps, not default Draft gates. They block merge only when the changed behavior cannot be validated reliably by automation, an explicit acceptance criterion requires that environment, or an unresolved P0/P1 requires human confirmation.
 
 ## Sole-contributor approval policy
 
-This repository currently has one collaborator with repository access. Until that
-changes, use this default approval exception when GitHub rejects the PR author's
-self-approval:
+While this repository has one collaborator and the PR author is that collaborator, formal GitHub self-approval is not a default merge-readiness requirement.
 
-- Verify the live collaborator list still contains exactly one repository
-  contributor and that the PR author is that contributor.
-- Record a human walkthrough result in a PR comment against the exact current
-  head SHA.
-- Keep the required Claude Tier 3 review, ChatGPT PM synthesis, current-head
-  checks, review-thread check, mergeability check, safety gates, and acceptance
-  criteria unchanged.
-- Treat the recorded walkthrough as human approval evidence only; do not claim
-  that GitHub recorded a formal `APPROVE` review.
-- If another collaborator is added, or the PR author is not the sole
-  contributor, this exception is disabled and a formal independent human review
-  is required.
+For Tier 0-2 work, the default gate is:
+
+- required AI review routing complete;
+- current-head required checks pass;
+- no active requested-changes review;
+- no unresolved blocking review threads;
+- clean mergeability;
+- product safety and acceptance criteria pass.
+
+For Tier 3 work, keep required Claude Tier 3 review and ChatGPT PM synthesis. Add a human walkthrough only when the change includes safety logic, destructive or irreversible data migration, security-sensitive behavior, or another acceptance criterion that cannot be validated reliably by automation.
+
+Never claim a formal GitHub `APPROVE` when none exists. If collaborators are added, follow actual branch-protection and requested-review rules rather than inventing an extra blanket manual gate.
+
+## GitHub Projects V2 automation
+
+`.github/workflows/project-auto-add.yml` adds issues and PRs to Project #2 and synchronizes lifecycle status. `PROJECTS_TOKEN` remains required for Projects V2 field writes; do not fall back to `github.token`.
+
+Lifecycle semantics:
+
+- open/reopened issue -> `Backlog`;
+- completed issue -> `Done`;
+- open PR -> `Ready to Merge` only when open, not draft, clean/mergeable, current-head Build succeeds, and no active requested-changes review exists;
+- otherwise open PR -> `Review` or `In Progress`;
+- merged PR -> `Done`;
+- closed-unmerged PR must not be marked `Done`.
 
 ## P0 blockers
 
-Flag as P0 only when:
-- build fails
-- core user flow is broken
-- safety gate can be bypassed
-- pain >=6 can start training
-- red flag does not block training
-- required session state is lost
-- iOS Safari / SPA routing breaks core use
-- existing stored user data may be lost
+Use P0 only when:
+
+- build fails;
+- core user flow is broken;
+- safety gate can be bypassed;
+- pain >=6 can start training;
+- red flag does not block training;
+- required session state is lost;
+- iOS Safari / SPA routing breaks core use;
+- existing stored user data may be lost.
 
 ## P1 improvements
 
-Flag as P1 when:
-- mobile navigation is confusing
-- important controls are hidden on mobile
-- user-facing copy is too dense
-- i18n is mixed or broken
-- primary controls lack accessibility labels
-- changed behavior lacks test or QA evidence
+Use P1 for material merge-scope issues such as confusing mobile navigation, hidden important controls, dense user-facing copy, broken i18n, missing accessibility labels on primary controls, or changed behavior lacking test/QA evidence.
+
+Do not classify the mere absence of manual or physical-device evidence as P1 when reliable automated/scripted evidence covers the changed behavior and no acceptance criterion explicitly requires that environment.
 
 ## Post-merge cleanup
 
-After a PR is merged:
-- Confirm the PR is merged into `main`.
-- Confirm no open follow-up work depends on the branch.
-- Delete the remote branch, or verify GitHub auto-deleted it.
-- Delete any temporary local branch or worktree if it exists.
-- Do not touch unrelated local edits.
-
-Prefer GitHub's built-in automatic head-branch deletion after merge when available. It is the lowest-HBC path because GitHub handles routine remote branch cleanup without extra manual steps.
+After merge, confirm the PR is merged into `main`, confirm no open follow-up depends on the branch, verify/delete the remote branch, and remove only safe temporary local branches/worktrees. Do not touch unrelated local edits.
 
 ## Output contract
 
 Return:
+
 1. Verdict: Pass / Partial Pass / Fail
 2. P0 blockers
 3. P1 improvements
 4. Exact files to change
 5. Acceptance criteria
 
-Do not include P2 wishlist items unless explicitly requested.
-Do not suggest broad rewrites.
+Do not include P2 wishlist items unless explicitly requested. Do not suggest broad rewrites.

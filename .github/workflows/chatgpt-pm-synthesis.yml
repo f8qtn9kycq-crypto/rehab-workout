@@ -71,31 +71,53 @@ jobs:
               echo "PR #$PR_NUMBER is not marked Tier 3; no AI review request created."
               exit 0
             fi
+
+            marker="<!-- tier3-ai-review-request: head_sha=$head_sha -->"
+            request_kind="tier3"
+          else
+            marker="<!-- chatgpt-pm-synthesis-request: head_sha=$head_sha -->"
+            request_kind="synthesis"
           fi
 
-          marker="<!-- tier3-ai-review-request: head_sha=$head_sha -->"
           existing="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -n 1)"
           if [[ -n "$existing" ]]; then
-            echo "Exact-head AI review request already exists for $head_sha."
+            echo "Exact-head $request_kind request already exists for $head_sha."
             exit 0
           fi
 
-          body="$(jq -rn --arg marker "$marker" --arg sha "$head_sha" --arg pr "$PR_NUMBER" --arg event "$GITHUB_EVENT_NAME" '
-            [
-              $marker,
-              "@claude Please perform the required Tier 3 review for PR #\($pr) at exact head `\($sha)`.",
-              "",
-              "ChatGPT PM synthesis requested for PR #\($pr).",
-              "",
-              "- Exact head SHA: `\($sha)`",
-              "- Trigger: \($event)",
-              "- Claude scope: full current diff, safety/session/storage/routing risk, regressions, and P0/P1 findings.",
-              "- ChatGPT scope: product impact, validation, current-head checks, review/thread state, mergeability, blockers, and recommendation.",
-              "- Result publication: use the exact-head publish path; reject the result if the head changes.",
-              "",
-              "This request is not merge authorization or a formal GitHub approval."
-            ] | join("\n")
-          ')"
+          if [[ "$request_kind" == "tier3" ]]; then
+            body="$(jq -rn --arg marker "$marker" --arg sha "$head_sha" --arg pr "$PR_NUMBER" --arg event "$GITHUB_EVENT_NAME" '
+              [
+                $marker,
+                "@claude Please perform the required Tier 3 review for PR #\($pr) at exact head `\($sha)`.",
+                "",
+                "ChatGPT PM synthesis requested for PR #\($pr).",
+                "",
+                "- Exact head SHA: `\($sha)`",
+                "- Trigger: \($event)",
+                "- Claude scope: full current diff, safety/session/storage/routing risk, regressions, and P0/P1 findings.",
+                "- ChatGPT scope: product impact, validation, current-head checks, review/thread state, mergeability, blockers, and recommendation.",
+                "- Result publication: use the exact-head publish path; reject the result if the head changes.",
+                "",
+                "This request is not merge authorization or a formal GitHub approval."
+              ] | join("\n")
+            ')"
+          else
+            body="$(jq -rn --arg marker "$marker" --arg sha "$head_sha" --arg pr "$PR_NUMBER" '
+              [
+                $marker,
+                "ChatGPT PM synthesis requested for PR #\($pr).",
+                "",
+                "- Exact head SHA: `\($sha)`",
+                "- Trigger: explicit PR comment containing `ChatGPT PM synthesis`",
+                "- Result publication: use the exact-head publish path; reject the result if the head changes.",
+                "",
+                "ChatGPT must return scope, risk tier, product impact, validation, current-head checks, review/thread state, mergeability, blockers, and recommendation.",
+                "",
+                "This request is not merge authorization or a formal GitHub approval."
+              ] | join("\n")
+            ')"
+          fi
 
           jq -n --arg body "$body" '{body: $body}' |
             gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --input - >/dev/null

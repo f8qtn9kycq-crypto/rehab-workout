@@ -188,6 +188,19 @@ auto_merge:
     - post_merge_runtime_validation_is_listed_when_behavior_depends_on_real_GitHub_events
 
 control_plane:
+  tier_3_ai_review_request:
+    automatic_events:
+      - pull_request_target.opened
+      - pull_request_target.reopened
+      - pull_request_target.synchronize
+      - pull_request_target.ready_for_review
+    requirements:
+      - use_trusted_default_branch_workflow_only
+      - never_checkout_or_execute_pull_request_code
+      - require_risk_tier_3_label_or_checked_template_field
+      - request_Claude_and_ChatGPT_PM_for_exact_head
+      - deduplicate_by_exact_head_sha
+      - treat_request_as_pending_until_attributable_results_exist
   chatgpt_pm_synthesis:
     request_triggers:
       - PR body or label requires synthesis by risk tier or conflicting findings

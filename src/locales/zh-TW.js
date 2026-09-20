@@ -428,6 +428,8 @@ export default {
     saveSetDetails: '儲存每組細節',
     setDetailsSaved: '每組細節已儲存。',
     setDetailsError: '無法儲存每組細節；原有紀錄已保留。',
+    setLimitReached: '已達 20 組上限',
+    setSummaryLabel: '每組重量與次數',
     noWeight: '未記重量',
     weightValue: '{value} 公斤',
     completedSet: '完成',

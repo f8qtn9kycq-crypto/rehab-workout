@@ -8,6 +8,23 @@ export default {
       equipmentTooNarrowEmpty: 'No exercises match the selected equipment. Try clearing equipment filters or choosing bodyweight support.',
     },
     records: {
+      recent: {
+        title: 'Recent activity',
+        subtitle: 'Guided sessions and activity records appear together without double-counting linked exercises.',
+        empty: 'No activity has been recorded yet.',
+        trainingMeta: '{date} · pain {painBefore} → {painAfter}',
+        activityMeta: '{date} · {minutes} minutes',
+      },
+      week: {
+        title: 'This week',
+        subtitle: 'A single count across guided sessions and standalone activities.',
+        count: '{count} activities',
+        helper: 'Linked exercise logs count once; invalid and future dates are excluded.',
+      },
+      recovery: {
+        title: 'Recovery status',
+        subtitle: 'Pain and functional check-ins stay separate from completed activity history.',
+      },
       latest: {
         title: 'Today / latest summary',
         subtitle: 'Start here for the most recent training and check-in snapshot.',
@@ -33,9 +50,16 @@ export default {
         subtitle: 'Update one daily movement signal when you have a moment.',
       },
       history: {
-        title: 'Training history',
-        subtitle: 'Detailed saved sessions remain below for review.',
+        title: 'Detailed history',
+        subtitle: 'Open one place to add activity details, review sessions, or update next-day feedback.',
+        open: 'Open detailed history and activity entry',
       },
+    },
+    exerciseVisual: {
+      alt: '{exercise} exercise illustration with {area} highlighted',
+      fallbackAlt: '{exercise} exercise visual unavailable; icon fallback shown',
+      targetArea: 'Target area: {area}',
+      equipment: 'Equipment: {equipment}',
     },
     progress: {
       title: 'Weekly progress',
@@ -217,6 +241,23 @@ export default {
       equipmentTooNarrowEmpty: '目前選擇的器材沒有符合動作。可以清除器材篩選，或改選徒手支撐動作。',
     },
     records: {
+      recent: {
+        title: '最近活動',
+        subtitle: '引導訓練與活動紀錄整合顯示；已連結的動作不重複計算。',
+        empty: '目前還沒有活動紀錄。',
+        trainingMeta: '{date}・疼痛 {painBefore} → {painAfter}',
+        activityMeta: '{date}・{minutes} 分鐘',
+      },
+      week: {
+        title: '本週進度',
+        subtitle: '整合引導訓練與獨立活動，只顯示一個一致的計數。',
+        count: '{count} 次活動',
+        helper: '已連結的動作只計一次；無效或未來日期不納入。',
+      },
+      recovery: {
+        title: '恢復狀態',
+        subtitle: '疼痛與功能確認獨立於已完成的活動歷史。',
+      },
       latest: {
         title: '今日 / 最近摘要',
         subtitle: '先看最近一次訓練與功能確認，快速掌握目前狀態。',
@@ -242,9 +283,16 @@ export default {
         subtitle: '有空時更新一個日常動作感覺。',
       },
       history: {
-        title: '訓練歷史紀錄',
-        subtitle: '詳細訓練紀錄仍保留在下方，方便回顧。',
+        title: '詳細歷史紀錄',
+        subtitle: '在同一個入口補記活動、回顧訓練或更新隔天反應。',
+        open: '開啟詳細紀錄與活動補記',
       },
+    },
+    exerciseVisual: {
+      alt: '{exercise} 動作示意圖，標示 {area}',
+      fallbackAlt: '{exercise} 動作圖片無法顯示，改用圖示',
+      targetArea: '目標部位：{area}',
+      equipment: '器材：{equipment}',
     },
     progress: {
       title: '本週進度',

@@ -24,6 +24,7 @@ async function loadService(entry) {
 
 try {
   const { createTrainingLog, getLogs, saveLog, updateTrainingLogSets } = await loadService('src/services/logService.ts');
+  const { appendCopiedTrainingSet } = await loadService('src/utils/trainingSets.ts');
   const exercise = { id: 'loaded-squat', title: 'Loaded squat', bodyArea: 'hip', type: 'strength', level: 'beginner', sets: 3, reps: 8 };
   const baseInput = { exercise, setsCompleted: 2, repsCompleted: 8, painBefore: 1, painAfter: 1, difficultyRating: 5, stoppedEarly: false, recoveryMode: false, notes: '', stopReason: '' };
 
@@ -45,6 +46,11 @@ try {
   ]);
   assert.equal(edited?.[0].sets?.length, 3, 'sets can be added and edited on the existing log');
   assert.deepEqual(getLogs()[0].sets, edited?.[0].sets, 'edited set details survive reload');
+
+  const copied = appendCopiedTrainingSet([{ weightKg: 12.5, reps: 8, completed: true }], 10);
+  assert.deepEqual(copied[1], { weightKg: 12.5, reps: 8, completed: false }, 'new set copies prior load and reps but starts incomplete');
+  const twenty = Array.from({ length: 20 }, () => ({ weightKg: 5, reps: 8, completed: true }));
+  assert.equal(appendCopiedTrainingSet(twenty, 8), twenty, '20-set limit is a stable no-op');
 
   assert.ok(updateTrainingLogSets(detailed.id, []), 'all set details can be removed');
   assert.equal(getLogs()[0].sets, undefined, 'removing all sets preserves the aggregate log');

@@ -27,6 +27,8 @@ const files = {
   functionalOutcomeCheckIn: 'src/components/FunctionalOutcomeCheckIn.tsx',
   trainingLog: 'src/components/TrainingLog.tsx',
   localizedExercise: 'src/utils/localizedExercise.ts',
+  recordsPresentation: 'src/utils/recordsPresentation.ts',
+  exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
@@ -225,11 +227,16 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');
   assertIncludes(source.localizedExercise, 'getLocalizedTrainingLogTitle(', 'localized saved-log title helper exists');
   assertIncludes(source.localizedExercise, 'getExerciseById(log.exerciseId)', 'saved logs localize from stable exercise id');
-  assertIncludes(source.logsPage, 'getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle)', 'latest training summary uses localized saved-log title');
+  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes)', 'Records unifies guided logs and activities through the presentation adapter');
+  assertIncludes(source.recordsPresentation, "source: 'training'", 'presentation adapter includes guided sessions');
+  assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
+  assertIncludes(source.recordsPresentation, 'activity.exerciseLogIds.some(logId => validLogIds.has(logId))', 'linked activity aggregates are not duplicated');
+  assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
+  assertIncludes(source.exerciseIdentityVisual, 'onError={() => setFailed(true)}', 'exercise visual has an image failure fallback');
   assertIncludes(source.logsPage, '<ProgressSummary summary={summary} />', 'progress summary renders');
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
   assertIncludes(source.logsPage, '<TrainingLog logs={logs} onLogsChange={setLogs} />', 'training log renders and refreshes after set-detail edits');
-  assertIncludes(source.trainingLog, 'getLocalizedTrainingLogTitle(log, language, fallbackTitle)', 'training history uses localized saved-log title');
+  assertIncludes(source.trainingLog, '<ExerciseIdentityVisual log={log} compact />', 'training history uses the shared localized exercise identity');
   assertIncludes(source.logService, 'updateTrainingLogSets', 'set-detail edits update an existing training log');
   assertIncludes(source.sessionTracker, "item === 'dumbbell' || item === 'kettlebell'", 'set details are optional and limited to loadable strength sessions');
 });

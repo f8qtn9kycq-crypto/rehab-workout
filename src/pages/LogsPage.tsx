@@ -3,18 +3,17 @@ import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
+import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
+import TrainingSetSummary from '../components/TrainingSetSummary';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
+import { readActivities } from '../services/activityStorage';
 import { getSavedAssessment } from '../services/assessmentStorage';
 import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
-import type { BodyArea, FunctionalOutcomeEntry, OutcomeScore, TrainingLogEntry } from '../types/rehab';
-import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
+import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
-
-function latestByDate<T extends { date: string }>(entries: T[]): T | null {
-  return [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0] ?? null;
-}
+import { buildRecordsPresentation } from '../utils/recordsPresentation';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
   return (
@@ -29,13 +28,12 @@ export default function LogsPage() {
   const { language, t } = useI18n();
   const [logs, setLogs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
+  const [activities, setActivities] = useState(() => readActivities().activities);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
-  const [activityRevision, setActivityRevision] = useState(0);
-  const fallbackTitle = t('logs.savedExerciseFallback');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
-  const latestLog = useMemo<TrainingLogEntry | null>(() => latestByDate(logs), [logs]);
-  const latestOutcome = useMemo<FunctionalOutcomeEntry | null>(() => latestByDate(outcomes), [outcomes]);
+  const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes), [logs, activities, outcomes]);
+  const latestOutcome = presentation.validOutcomes[0] ?? null;
 
   function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(language);
@@ -51,7 +49,7 @@ export default function LogsPage() {
     if (!window.confirm(t('logs.clearLocalDataConfirm'))) return;
 
     const result = clearRehabLocalData();
-    setActivityRevision(value => value + 1);
+    setActivities([]);
     setLogs([]);
     setOutcomes([]);
     setClearStatus(result.failedKeys.length > 0 ? 'partial' : 'success');
@@ -64,62 +62,61 @@ export default function LogsPage() {
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
 
-      <section className="space-y-4" aria-labelledby="records-latest-title">
-        <SectionHeader id="records-latest-title" title={t('records.latest.title')} subtitle={t('records.latest.subtitle')} icon={ClipboardCheck} />
-        <div className="grid gap-3 md:grid-cols-2">
-          <article className="card border-calm-200 bg-calm-50/80 p-5">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-calm-700"><Dumbbell size={16} aria-hidden="true" />{t('records.latest.trainingLabel')}</div>
-            <p className="mt-3 text-2xl font-black leading-tight text-ink">
-              {latestLog ? getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle) : t('records.latest.noTraining')}
-            </p>
-            <p className="mt-3 text-sm font-semibold leading-6 text-calm-800">
-              {latestLog
-                ? t('records.latest.trainingMeta', {
-                  date: formatDate(latestLog.date),
-                  painBefore: latestLog.painBefore,
-                  painAfter: latestLog.painAfter,
-                })
-                : t('records.latest.trainingEmpty')}
-            </p>
-          </article>
+      <section className="space-y-4" aria-labelledby="records-recent-title">
+        <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
+        {presentation.hasActivityHistory ? (
+          <div className="space-y-3">
+            {presentation.recentActivities.slice(0, 5).map(item => item.source === 'training' ? (
+              <article key={item.id} className="card space-y-3 p-4">
+                <ExerciseIdentityVisual log={item.log} compact />
+                <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
+                <TrainingSetSummary sets={item.log.sets} />
+              </article>
+            ) : (
+              <article key={item.id} className="card p-4">
+                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-calm-700"><Activity size={16} aria-hidden="true" />{t(`activities.${item.activity.kind}`)}</div>
+                <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
+                {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
+              </article>
+            ))}
+          </div>
+        ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
+      </section>
 
+      <section className="space-y-4" aria-labelledby="records-week-title">
+        <SectionHeader id="records-week-title" title={t('records.week.title')} subtitle={t('records.week.subtitle')} icon={TrendingUp} />
+        <article className="card border-calm-200 bg-calm-50/80 p-5">
+          <p className="text-3xl font-black text-ink">{t('records.week.count', { count: presentation.weeklyActivityCount })}</p>
+          <p className="mt-2 text-sm leading-6 text-calm-800">{t('records.week.helper')}</p>
+        </article>
+      </section>
+
+      <section className="space-y-4" aria-labelledby="records-recovery-title">
+        <SectionHeader id="records-recovery-title" title={t('records.recovery.title')} subtitle={t('records.recovery.subtitle')} icon={ClipboardCheck} />
+        <ProgressSummary summary={summary} />
+        <div className="grid gap-3 md:grid-cols-2">
           <article className="card p-5">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><Activity size={16} aria-hidden="true" />{t('records.latest.outcomeLabel')}</div>
-            <p className="mt-3 text-2xl font-black leading-tight text-ink">
-              {latestOutcome
-                ? t('records.latest.outcomeValue', {
-                  area: t(`bodyAreas.${latestOutcome.bodyArea}.label`),
-                  score: latestOutcome.score,
-                })
-                : t('records.latest.noOutcome')}
-            </p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              {latestOutcome
-                ? t('records.latest.outcomeMeta', { date: formatDate(latestOutcome.date) })
-                : t('records.latest.outcomeEmpty')}
-            </p>
+            <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('records.latest.outcomeLabel')}</div>
+            <p className="mt-3 text-lg font-black text-ink">{latestOutcome ? t('records.latest.outcomeValue', { area: t(`bodyAreas.${latestOutcome.bodyArea}.label`), score: latestOutcome.score }) : t('records.latest.noOutcome')}</p>
+            <p className="mt-2 text-sm text-slate-600">{latestOutcome ? t('records.latest.outcomeMeta', { date: formatDate(latestOutcome.date) }) : t('records.latest.outcomeEmpty')}</p>
           </article>
           <article className="card p-5">
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-slate-500"><ClipboardCheck size={16} aria-hidden="true" />{t('records.latest.baselineLabel')}</div>
-            <p className="mt-3 text-lg font-black leading-tight text-ink">{savedAssessment?.functionalBaseline !== undefined ? t('records.latest.baselineValue', { score: savedAssessment.functionalBaseline }) : t('records.latest.noBaseline')}</p>
+            <div className="text-xs font-black uppercase tracking-wide text-slate-500">{t('records.latest.baselineLabel')}</div>
+            <p className="mt-3 text-lg font-black text-ink">{savedAssessment?.functionalBaseline !== undefined ? t('records.latest.baselineValue', { score: savedAssessment.functionalBaseline }) : t('records.latest.noBaseline')}</p>
           </article>
         </div>
-      </section>
-
-      <section className="space-y-4" aria-labelledby="records-progress-title">
-        <SectionHeader id="records-progress-title" title={t('records.progress.title')} subtitle={t('records.progress.subtitle')} icon={TrendingUp} />
-        <ActivityTracking key={activityRevision} />
-        <ProgressSummary summary={summary} />
-      </section>
-
-      <section className="space-y-4" aria-labelledby="records-outcomes-title">
-        <SectionHeader id="records-outcomes-title" title={t('records.outcomes.title')} subtitle={t('records.outcomes.subtitle')} icon={ClipboardCheck} />
         <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
       </section>
 
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />
-        <TrainingLog logs={logs} onLogsChange={setLogs} />
+        <details className="card p-3">
+          <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
+          <div className="mt-4 space-y-5">
+            <ActivityTracking onActivitiesChange={() => setActivities(readActivities().activities)} />
+            {logs.length > 0 ? <TrainingLog logs={logs} onLogsChange={setLogs} /> : null}
+          </div>
+        </details>
       </section>
 
       <section className="card space-y-3 border-amber-100 bg-amber-50/60 p-5" aria-labelledby="records-local-data-title">
@@ -143,4 +140,4 @@ export default function LogsPage() {
     </div>
   );
 }
-import { Activity, ClipboardCheck, Dumbbell, History, Trash2, TrendingUp } from 'lucide-react';
+import { Activity, ClipboardCheck, History, Trash2, TrendingUp } from 'lucide-react';

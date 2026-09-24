@@ -41,19 +41,18 @@ export function buildRecordsPresentation(
 ): RecordsPresentation {
   const validLogs = logs.filter(log => validDate(log.date ?? log.completedAt, today));
   const validActivities = activities.filter(activity => activityDate(activity.date, today));
-  const validLogIds = new Set(validLogs.map(log => log.id));
+  const linkedLogIds = new Set(validActivities.flatMap(activity => activity.kind === 'resistance' ? activity.exerciseLogIds : []));
 
-  const trainingItems: RecordsActivityItem[] = validLogs.map(log => ({
-    id: `training:${log.id}`,
-    source: 'training',
-    date: log.date ?? log.completedAt,
-    log,
-  }));
+  const trainingItems: RecordsActivityItem[] = validLogs
+    .filter(log => !linkedLogIds.has(log.id))
+    .map(log => ({
+      id: `training:${log.id}`,
+      source: 'training',
+      date: log.date ?? log.completedAt,
+      log,
+    }));
 
-  const activityItems: RecordsActivityItem[] = validActivities
-    .filter(activity => activity.kind === 'cycling'
-      || !activity.exerciseLogIds.some(logId => validLogIds.has(logId)))
-    .map(activity => ({
+  const activityItems: RecordsActivityItem[] = validActivities.map(activity => ({
       id: `activity:${activity.id}`,
       source: 'activity',
       date: `${activity.date}T12:00:00`,

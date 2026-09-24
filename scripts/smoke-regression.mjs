@@ -231,7 +231,7 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes)', 'Records unifies guided logs and activities through the presentation adapter');
   assertIncludes(source.recordsPresentation, "source: 'training'", 'presentation adapter includes guided sessions');
   assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
-  assertIncludes(source.recordsPresentation, 'activity.exerciseLogIds.some(logId => validLogIds.has(logId))', 'linked activity aggregates are not duplicated');
+  assertIncludes(source.recordsPresentation, '.filter(log => !linkedLogIds.has(log.id))', 'logs linked to a resistance aggregate are not duplicated');
   assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
   assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');
   assertIncludes(source.exerciseIdentityVisual, "{ kind: 'pose'", 'supported resistance visual distinguishes the side-view pose');

@@ -28,7 +28,12 @@ const outcome = { id: 'outcome-1', date: '2026-09-19T08:00:00Z', bodyArea: 'hip'
 assert.deepEqual(buildRecordsPresentation([], [resistance], [], today).recentActivities.map(item => item.source), ['activity'], 'legacy activity-only history is visible');
 assert.deepEqual(buildRecordsPresentation([log], [], [], today).recentActivities.map(item => item.source), ['training'], 'guided session-only history is visible');
 assert.equal(buildRecordsPresentation([log], [resistance, cycling], [], today).recentActivities.length, 3, 'independent training and activities are unified');
-assert.deepEqual(buildRecordsPresentation([log], [{ ...resistance, exerciseLogIds: [log.id], segments: [{ phase: 'main', exerciseLogIds: [log.id] }] }], [], today).recentActivities.map(item => item.id), [`training:${log.id}`], 'linked aggregate and segment do not duplicate the guided log');
+assert.deepEqual(buildRecordsPresentation([log], [{ ...resistance, exerciseLogIds: [log.id], segments: [{ phase: 'main', exerciseLogIds: [log.id] }] }], [], today).recentActivities.map(item => item.id), [`activity:${resistance.id}`], 'linked resistance aggregate represents the session once');
+const secondLog = { ...log, id: 'log-2', date: '2026-09-19T10:05:00Z', completedAt: '2026-09-19T10:05:00Z' };
+const linkedSession = { ...resistance, exerciseLogIds: [log.id, secondLog.id], segments: [{ phase: 'main', exerciseLogIds: [log.id, secondLog.id] }] };
+const linkedResult = buildRecordsPresentation([log, secondLog], [linkedSession], [], today);
+assert.deepEqual(linkedResult.recentActivities.map(item => item.id), [`activity:${resistance.id}`], 'multiple linked exercise logs do not inflate one resistance session');
+assert.equal(linkedResult.weeklyActivityCount, 1, 'one linked resistance session counts once for the week');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).recentActivities.length, 0, 'assessment-only state has no fake activity');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).validOutcomes.length, 1, 'assessment-only recovery data remains available');
 assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], weeklyActivityCount: 0, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');

@@ -8,7 +8,7 @@ import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 const newSegment = (phase: SessionPhase = 'main'): SessionSegment => ({ phase, exerciseLogIds: [], exerciseResults: [] });
 
-export default function ActivityTracking() {
+export default function ActivityTracking({ onActivitiesChange = () => {} }: { onActivitiesChange?: () => void }) {
   const { t, language } = useI18n();
   const [state, setState] = useState(readActivities);
   const [kind, setKind] = useState<Activity['kind'] | null>(null);
@@ -36,7 +36,10 @@ export default function ActivityTracking() {
 
   function refresh(ok: boolean) {
     setMessage(ok ? 'saved' : 'error');
-    if (ok) setState(readActivities());
+    if (ok) {
+      setState(readActivities());
+      onActivitiesChange();
+    }
   }
   function updateExerciseQuality(phase: SessionPhase, logId: string, performanceQuality: PerformanceQuality) {
     setSegments(current => current.map(segment => segment.phase === phase ? {

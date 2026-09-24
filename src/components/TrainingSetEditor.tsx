@@ -1,5 +1,6 @@
 import { useI18n } from '../services/i18n';
 import type { TrainingSet } from '../types/rehab';
+import { appendCopiedTrainingSet, MAX_TRAINING_SETS } from '../utils/trainingSets';
 
 interface Props {
   sets: TrainingSet[];
@@ -10,7 +11,7 @@ interface Props {
 export default function TrainingSetEditor({ sets, plannedReps, onChange }: Props) {
   const { t } = useI18n();
   const control = 'focus-ring min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
-  const addSet = () => sets.length < 20 && onChange([...sets, { reps: plannedReps, completed: true }]);
+  const addSet = () => onChange(appendCopiedTrainingSet(sets, plannedReps));
   const updateSet = (index: number, update: Partial<TrainingSet>) => onChange(sets.map((set, i) => i === index ? { ...set, ...update } : set));
   const updateNumber = (index: number, field: 'weightKg' | 'reps', value: string) => {
     const next = { ...sets[index] };
@@ -30,6 +31,6 @@ export default function TrainingSetEditor({ sets, plannedReps, onChange }: Props
       </div>
       <label className="mt-2 flex min-h-11 items-center gap-3 font-semibold"><input type="checkbox" checked={set.completed} onChange={event => updateSet(index, { completed: event.target.checked })} />{t('logs.setCompleted')}</label>
     </div>)}
-    <button type="button" disabled={sets.length >= 20} onClick={addSet} className="focus-ring min-h-11 w-full rounded-md border border-calm-300 bg-white px-4 font-bold text-calm-800 disabled:text-slate-400">{t('logs.addSet')}</button>
+    <button type="button" disabled={sets.length >= MAX_TRAINING_SETS} onClick={addSet} className="focus-ring min-h-11 w-full rounded-md border border-calm-300 bg-white px-4 font-bold text-calm-800 disabled:text-slate-400">{t(sets.length >= MAX_TRAINING_SETS ? 'logs.setLimitReached' : 'logs.addSet')}</button>
   </fieldset>;
 }

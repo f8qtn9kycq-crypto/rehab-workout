@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-labelledby="title desc">
+  <title id="title">Front and back muscle map for sit to stand</title><desc id="desc">Front and back silhouettes use labelled patterns to distinguish primary glute and front-thigh regions from secondary trunk and back-thigh regions.</desc>
+  <defs><pattern id="primary" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#0f766e"/><path d="M0 0v8" stroke="#fff" stroke-width="2"/></pattern><pattern id="secondary" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#f59e0b"/><circle cx="4" cy="4" r="1.8" fill="#fff"/></pattern></defs>
+  <rect width="320" height="240" rx="28" fill="#f8fafc"/>
+  <g fill="#cbd5e1" stroke="#64748b" stroke-width="3"><circle cx="92" cy="35" r="17"/><path d="M70 58h44l8 71-17 4-4 79H83l-4-79-17-4z"/><circle cx="228" cy="35" r="17"/><path d="M206 58h44l8 71-17 4-4 79h-18l-4-79-17-4z"/></g>
+  <g fill="url(#primary)" stroke="#134e4a" stroke-width="2"><path d="M73 126h18l-2 64H76z"/><path d="M93 126h18l-3 64H95z"/><path d="M209 113h38l5 22-20 10-20-10z"/></g>
+  <g fill="url(#secondary)" stroke="#92400e" stroke-width="2"><path d="M78 66h28l5 48H73z"/><path d="M210 66h36l5 45h-46z"/><path d="M213 139h16l-2 52h-13z"/><path d="M231 139h16l-3 52h-13z"/></g>
+  <g font-family="sans-serif" font-weight="800" font-size="14" text-anchor="middle"><text x="92" y="160" fill="#fff">P</text><text x="228" y="128" fill="#fff">P</text><text x="92" y="94" fill="#78350f">S</text><text x="228" y="94" fill="#78350f">S</text></g>
+</svg>

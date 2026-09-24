@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { Activity, CalendarDays } from 'lucide-react';
 import { useI18n } from '../services/i18n';
 import { updateTrainingLogSets } from '../services/logService';
 import type { TrainingLogEntry, TrainingSet } from '../types/rehab';
-import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import { getLocalizedStopReasonLabel } from '../utils/trainingLogStopReasons';
 import { getExerciseById } from '../utils/exerciseModel';
 import TrainingSetEditor from './TrainingSetEditor';
+import ExerciseIdentityVisual from './ExerciseIdentityVisual';
+import TrainingSetSummary from './TrainingSetSummary';
 
 function TrainingSetLogEditor({ log, onSaved }: { log: TrainingLogEntry; onSaved: (logs: TrainingLogEntry[]) => void }) {
   const { t } = useI18n();
@@ -34,7 +36,6 @@ function TrainingSetLogEditor({ log, onSaved }: { log: TrainingLogEntry; onSaved
 
 export default function TrainingLog({ logs, onLogsChange = () => {} }: { logs: TrainingLogEntry[]; onLogsChange?: (logs: TrainingLogEntry[]) => void }) {
   const { language, t } = useI18n();
-  const fallbackTitle = t('logs.savedExerciseFallback');
 
   if (logs.length === 0) {
     return <div className="card p-5 text-sm leading-6 text-slate-600">{t('logs.empty')}</div>;
@@ -51,11 +52,9 @@ export default function TrainingLog({ logs, onLogsChange = () => {} }: { logs: T
 
         return (
           <article key={log.id} className="card bg-white/80 p-4">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <h2 className="flex items-center gap-2 text-lg font-black leading-tight text-ink"><Dumbbell size={18} className="text-calm-700" aria-hidden="true" />{getLocalizedTrainingLogTitle(log, language, fallbackTitle)}</h2>
-                <p className="mt-1 flex items-center gap-1 text-sm text-slate-600"><CalendarDays size={14} aria-hidden="true" />{new Date(log.date).toLocaleString(language)}</p>
-              </div>
+            <ExerciseIdentityVisual log={log} compact />
+            <div className="mt-3 flex flex-wrap items-start justify-between gap-2">
+              <p className="flex items-center gap-1 text-sm text-slate-600"><CalendarDays size={14} aria-hidden="true" />{new Date(log.date).toLocaleString(language)}</p>
               {log.stoppedEarly ? <span className="rounded-md bg-red-50 px-2 py-1 text-sm font-semibold text-red-700">{t('logs.stoppedEarly')}</span> : null}
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2 text-sm md:grid-cols-4">
@@ -77,7 +76,7 @@ export default function TrainingLog({ logs, onLogsChange = () => {} }: { logs: T
                 {t('logs.effort', { value: log.difficultyRating })}
               </div>
             </div>
-            {log.sets?.length ? <ol className="mt-3 space-y-1 rounded-md bg-slate-50 p-3 text-sm">{log.sets.map((set, index) => <li key={index}>{t('logs.setSummary', { number: index + 1, weight: set.weightKg === undefined ? t('logs.noWeight') : t('logs.weightValue', { value: set.weightKg }), reps: set.reps ?? 0, status: t(set.completed ? 'logs.completedSet' : 'logs.partialSet') })}</li>)}</ol> : null}
+            <div className="mt-3"><TrainingSetSummary sets={log.sets} /></div>
             <TrainingSetLogEditor log={log} onSaved={onLogsChange} />
             {stopReasonLabel ? <p className="mt-3 text-sm leading-6 text-slate-700">{stopReasonLabel}</p> : null}
           </article>
@@ -86,4 +85,3 @@ export default function TrainingLog({ logs, onLogsChange = () => {} }: { logs: T
     </div>
   );
 }
-import { Activity, CalendarDays, Dumbbell } from 'lucide-react';

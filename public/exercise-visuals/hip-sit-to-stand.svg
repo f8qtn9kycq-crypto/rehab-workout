@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title desc">
+  <title id="title">Side-view sit-to-stand exercise pose</title>
+  <desc id="desc">A neutral side-view figure leaning forward to stand from a sturdy chair.</desc>
+  <rect width="240" height="240" rx="28" fill="#f0fdfa"/>
+  <path d="M32 150h69v14H48v54H34v-68Z" fill="#64748b"/><path d="M48 164h14v54H48z" fill="#475569"/>
+  <circle cx="134" cy="45" r="17" fill="#0f766e"/>
+  <g fill="none" stroke="#0f766e" stroke-linecap="round" stroke-linejoin="round"><path d="m128 65-19 48 34 29" stroke-width="20"/><path d="m116 85 32 24 30-4" stroke-width="11"/><path d="m141 143-42 19 28 45" stroke-width="18"/><path d="m143 143 40 30 14 38" stroke-width="18"/></g>
+  <path d="M193 62v66" stroke="#334155" stroke-width="6" stroke-linecap="round"/><path d="m180 80 13-18 13 18" fill="none" stroke="#334155" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

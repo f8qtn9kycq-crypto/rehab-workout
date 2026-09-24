@@ -12,6 +12,8 @@ import { persistSessionLogOnce } from '../utils/sessionSave';
 import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
 import TrainingSetEditor from './TrainingSetEditor';
+import ExerciseIdentityVisual from './ExerciseIdentityVisual';
+import TrainingSetSummary from './TrainingSetSummary';
 
 interface SessionTrackerProps {
   exercise: Exercise;
@@ -140,6 +142,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       recoveryMode: useRecoveryMode,
       notes,
       stopReason: USER_EXIT_REASON_CODE,
+      sets: trainingSets.length > 0 ? trainingSets : undefined,
     });
 
     persistAndConfirm(log);
@@ -329,6 +332,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             <h1 ref={savedTitleRef} id="session-saved-title" tabIndex={-1} className="focus-ring text-2xl font-bold text-ink">{t('session.savedTitle')}</h1>
           </div>
           <p role="status" aria-live="polite" className="leading-7 text-slate-700">{t('session.savedLocally')}</p>
+          <ExerciseIdentityVisual exercise={exercise} />
           <div className="rounded-lg border border-calm-100 bg-calm-50 p-4">
             <p className="text-lg font-black text-ink">
               {t('session.savedPain', { before: savedLog.painBefore, after: savedLog.painAfter })}
@@ -340,6 +344,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               })}
             </p>
           </div>
+          <TrainingSetSummary sets={savedLog.sets} />
           {painAfterWarning ? (
             <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
               {t('session.painAfterWarning')}
@@ -372,6 +377,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             <CheckCircle2 className="text-calm-700" />
             <h1 className="text-2xl font-bold text-ink">{t('session.finishTitle')}</h1>
           </div>
+          <ExerciseIdentityVisual exercise={exercise} />
           <PainScale label={t('session.painAfter')} value={painAfter} onChange={setPainAfter} zeroLabel={t('session.confirmNoPain')} />
           {!hasPainValue(painAfter) ? (
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-700">

@@ -428,6 +428,8 @@ export default {
     saveSetDetails: 'Save set details',
     setDetailsSaved: 'Set details saved.',
     setDetailsError: 'Set details could not be saved. Your existing log was kept.',
+    setLimitReached: '20-set limit reached',
+    setSummaryLabel: 'Weight and reps by set',
     noWeight: 'No weight',
     weightValue: '{value} kg',
     completedSet: 'completed',

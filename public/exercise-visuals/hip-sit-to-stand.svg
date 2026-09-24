@@ -1,12 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title desc">
-  <title id="title">Sit-to-stand exercise</title>
-  <desc id="desc">A side-view figure rising from a chair with the hip area highlighted.</desc>
+  <title id="title">Side-view sit-to-stand exercise pose</title>
+  <desc id="desc">A neutral side-view figure leaning forward to stand from a sturdy chair.</desc>
   <rect width="240" height="240" rx="28" fill="#f0fdfa"/>
-  <path d="M42 151h61v14H55v50H42z" fill="#94a3b8"/>
-  <circle cx="132" cy="44" r="19" fill="#334155"/>
-  <path d="M126 66c-18 12-26 36-18 57l15 34 20-8-13-34 18-30 27 34 17-13-34-44c-8-10-21-11-32-4z" fill="#475569"/>
-  <path d="M123 153l-29 48 18 10 31-45 31 45 18-11-35-54z" fill="#334155"/>
-  <ellipse cx="139" cy="112" rx="28" ry="24" fill="#0f766e" opacity=".9"/>
-  <path d="M185 55v73" stroke="#14b8a6" stroke-width="7" stroke-linecap="round"/>
-  <path d="m171 72 14-17 14 17" fill="none" stroke="#14b8a6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M32 150h69v14H48v54H34v-68Z" fill="#64748b"/><path d="M48 164h14v54H48z" fill="#475569"/>
+  <circle cx="134" cy="45" r="17" fill="#0f766e"/>
+  <g fill="none" stroke="#0f766e" stroke-linecap="round" stroke-linejoin="round"><path d="m128 65-19 48 34 29" stroke-width="20"/><path d="m116 85 32 24 30-4" stroke-width="11"/><path d="m141 143-42 19 28 45" stroke-width="18"/><path d="m143 143 40 30 14 38" stroke-width="18"/></g>
+  <path d="M193 62v66" stroke="#334155" stroke-width="6" stroke-linecap="round"/><path d="m180 80 13-18 13 18" fill="none" stroke="#334155" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

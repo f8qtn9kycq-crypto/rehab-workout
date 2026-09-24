@@ -29,6 +29,7 @@ const files = {
   localizedExercise: 'src/utils/localizedExercise.ts',
   recordsPresentation: 'src/utils/recordsPresentation.ts',
   exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
+  activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
@@ -232,7 +233,16 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
   assertIncludes(source.recordsPresentation, 'activity.exerciseLogIds.some(logId => validLogIds.has(logId))', 'linked activity aggregates are not duplicated');
   assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
-  assertIncludes(source.exerciseIdentityVisual, 'onError={() => setFailed(true)}', 'exercise visual has an image failure fallback');
+  assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');
+  assertIncludes(source.exerciseIdentityVisual, "{ kind: 'pose'", 'supported resistance visual distinguishes the side-view pose');
+  assertIncludes(source.exerciseIdentityVisual, 'onError={() => markFailed(item.kind)}', 'each exercise image has an independent failure fallback');
+  assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.primaryLabel')", 'exercise visual keeps a textual primary-region label');
+  assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.secondaryLabel')", 'exercise visual keeps a textual secondary-region label');
+  assertIncludes(source.activityIdentityVisual, 'const Icon = isCycling ? Bike : Dumbbell', 'cycling uses one dedicated cycling icon mapping');
+  assertIncludes(source.activityIdentityVisual, "'activityVisual.cyclingAlt'", 'cycling icon has a localized accessible name');
+  assertNotIncludes(source.activityIdentityVisual, 'muscleMap', 'cycling activity visual does not render a muscle map');
+  assertIncludes(source.logsPage, '<ActivityIdentityVisual activity={item.activity} />', 'Records uses the unified standalone activity visual');
+  assertIncludes(source.sessionTracker, '<ExerciseIdentityVisual exercise={exercise} />', 'record input and saved confirmation share the exercise visual');
   assertIncludes(source.logsPage, '<ProgressSummary summary={summary} />', 'progress summary renders');
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
   assertIncludes(source.logsPage, '<TrainingLog logs={logs} onLogsChange={setLogs} />', 'training log renders and refreshes after set-detail edits');

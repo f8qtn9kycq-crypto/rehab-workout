@@ -4,6 +4,7 @@ import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
+import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import TrainingSetSummary from '../components/TrainingSetSummary';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
@@ -74,7 +75,7 @@ export default function LogsPage() {
               </article>
             ) : (
               <article key={item.id} className="card p-4">
-                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-calm-700"><Activity size={16} aria-hidden="true" />{t(`activities.${item.activity.kind}`)}</div>
+                <ActivityIdentityVisual activity={item.activity} />
                 <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
                 {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
               </article>

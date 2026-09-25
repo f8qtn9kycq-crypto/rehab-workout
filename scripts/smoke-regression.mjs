@@ -259,10 +259,15 @@ section('functional outcomes persist and progress renders from stored data', () 
 section('body entry separates training goals from sore-area guidance', () => {
   assertIncludes(source.bodyTrainingEntry, "t('bodyEntry.modeLabel')", 'body entry exposes an accessible goal group label');
   assertIncludes(source.bodyTrainingEntry, 't(`bodyEntry.${kind}Hint`)', 'body entry explains the selected goal before the body map');
-  assertIncludes(source.localeZh, "rehab: '這裡不舒服'", 'zh-TW labels the sore-area path by user intent');
-  assertIncludes(source.localeZh, "resistance: '我要訓練'", 'zh-TW labels the training path by user intent');
-  assertIncludes(source.localeEn, "rehab: 'An area feels sore'", 'English labels the sore-area path by user intent');
-  assertIncludes(source.localeEn, "resistance: 'I want to train'", 'English labels the training path by user intent');
+  assertIncludes(source.localeZh, "rehab: '復健'", 'zh-TW uses concise rehab mode copy');
+  assertIncludes(source.localeZh, "resistance: '重訓'", 'zh-TW uses concise strength mode copy');
+  assertIncludes(source.localeZh, "cycling: '騎車'", 'zh-TW uses concise cycling mode copy');
+  assertIncludes(source.localeEn, "rehab: 'Rehab'", 'English uses concise rehab mode copy');
+  assertIncludes(source.localeEn, "resistance: 'Strength'", 'English uses concise strength mode copy');
+  assertIncludes(source.localeEn, "cycling: 'Cycling'", 'English uses concise cycling mode copy');
+  assertIncludes(source.localeZh, "legs: '下肢'", 'zh-TW names the combined hip and leg region as lower body');
+  assertIncludes(source.localeEn, "legs: 'Lower body'", 'English names the combined hip and leg region as lower body');
+  assertIncludes(source.muscleMapSelector, 'M101 205 Q140 220 179 205', 'lower-body highlight includes the hip region');
 });
 
 section('assessment and exercise library reuse the interactive body map', () => {

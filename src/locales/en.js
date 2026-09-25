@@ -1,16 +1,16 @@
 export default {
   muscleEntry: {
-    map: 'Resistance training muscle map', choose: 'Select muscles: chest, shoulders and legs on front; back and legs on rear',
-    chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Legs',
+    map: 'Resistance training muscle map', choose: 'Select muscles: chest, shoulders and lower body on front; back and lower body on rear',
+    chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Lower body',
     chestHint: 'Movement type: bench press', shouldersHint: 'Movement type: shoulder press',
-    backHint: 'Movement type: pull / row', legsHint: 'Movement type: squats and other leg training',
+    backHint: 'Movement type: pull / row', legsHint: 'Movement type: hips, glutes, legs, knees and ankles',
     catalogNote: 'Related exercises currently available are listed below. Bench and shoulder presses are not yet in the catalog.',
     empty: 'No exercise is available for this muscle group yet.',
   },
   bodyEntry: {
     title: 'What would you like to do today?', front: 'Front', back: 'Back',
     intro: 'Choose your goal first, then find the area on the body image.', modeLabel: "Choose today's goal",
-    rehab: 'An area feels sore', resistance: 'I want to train', cycling: 'I want to cycle',
+    rehab: 'Rehab', resistance: 'Strength', cycling: 'Cycling',
     choose: 'Select an area on the body image', selected: 'Selected: {area}',
     rehabHint: 'Select the area that feels sore to see relevant rehab exercises. Safety checks still apply before training.',
     resistanceHint: 'Select the muscle group you want to train to see available resistance exercises.',

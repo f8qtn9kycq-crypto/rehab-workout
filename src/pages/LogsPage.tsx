@@ -1,5 +1,4 @@
 import ActivityTracking from '../components/ActivityTracking';
-import BodyTrainingEntry from '../components/BodyTrainingEntry';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
@@ -7,6 +6,7 @@ import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import TrainingSetSummary from '../components/TrainingSetSummary';
+import { Link } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { readActivities } from '../services/activityStorage';
@@ -64,7 +64,15 @@ export default function LogsPage() {
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
 
-      <BodyTrainingEntry onActivitiesChange={() => setActivities(readActivities().activities)} />
+      <section className="card space-y-3 border-calm-200 bg-calm-50/80 p-5" aria-labelledby="records-start-title">
+        <div>
+          <h2 id="records-start-title" className="text-xl font-black text-ink">{t('logs.startTraining')}</h2>
+          <p className="mt-1 text-sm leading-6 text-calm-800">{t('logs.startTrainingHint')}</p>
+        </div>
+        <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-12 w-full items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white sm:w-auto">
+          {t('logs.startTraining')}
+        </Link>
+      </section>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />

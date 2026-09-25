@@ -4,7 +4,7 @@ export default {
     chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Lower body',
     chestHint: 'Movement type: bench press', shouldersHint: 'Movement type: shoulder press',
     backHint: 'Movement type: pull / row', legsHint: 'Movement type: hips, glutes, legs, knees and ankles',
-    catalogNote: 'Related exercises currently available are listed below. Bench and shoulder presses are not yet in the catalog.',
+    catalogNote: 'Related exercises are listed here; some resistance movements are searchable only in All exercises.',
     empty: 'No exercise is available for this muscle group yet.',
   },
   bodyEntry: {
@@ -428,6 +428,8 @@ export default {
   logs: {
     title: 'Training Logs',
     subtitle: 'Pain levels, completion status, and notes are saved on this device.',
+    startTraining: 'Start today’s training',
+    startTrainingHint: 'Choose an exercise in the library, then follow the safety, movement, and save flow to complete one session.',
     empty: 'No training logs yet. Finished trainings will appear here.',
     savedExerciseFallback: 'Saved exercise',
     stoppedEarly: 'Stopped early',

@@ -32,6 +32,7 @@ const files = {
   activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
   bodyTrainingEntry: 'src/components/BodyTrainingEntry.tsx',
   bodyMapSelector: 'src/components/BodyMapSelector.tsx',
+  muscleMapSelector: 'src/components/MuscleMapSelector.tsx',
   assessmentPage: 'src/pages/AssessmentPage.tsx',
   exerciseFilter: 'src/components/ExerciseFilter.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
@@ -270,6 +271,8 @@ section('assessment and exercise library reuse the interactive body map', () => 
   assertIncludes(source.exerciseFilter, 'availability={availability.bodyArea}', 'exercise body map keeps count-aware availability');
   assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
   assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
+  assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');
+  assertIncludes(source.muscleMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'resistance muscle map keeps the front/back switch');
 });
 
 section('clear local data is explicit and confirmed', () => {

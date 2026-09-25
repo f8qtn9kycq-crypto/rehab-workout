@@ -1,8 +1,8 @@
 # Exercise Coverage Audit
 
-Generated: 2026-09-25T07:11:43.927Z
+Generated: 2026-09-25T07:14:02.014Z
 
-Source commit: 4ed266f
+Source commit: b330be2
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 

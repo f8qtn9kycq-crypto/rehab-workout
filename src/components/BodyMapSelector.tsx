@@ -46,10 +46,10 @@ export default function BodyMapSelector({ selected, onChange, ariaLabel, availab
           const active = selected === area;
           return <path key={area} d={regionPaths[area]}
             fill={active ? '#17695d' : disabled ? '#d7dee5' : '#a7d4c8'}
-            stroke={active ? '#102f2a' : disabled ? '#94a3b8' : '#39796c'}
-            strokeWidth={active ? 5 : 3}
+            stroke={active ? 'none' : disabled ? '#94a3b8' : '#39796c'}
+            strokeWidth={active ? 0 : 3}
             role="button" tabIndex={disabled ? -1 : 0} aria-disabled={disabled} aria-label={accessibleLabel} aria-pressed={active}
-            className={disabled ? 'cursor-not-allowed' : 'cursor-pointer focus:outline focus:outline-4 focus:outline-calm-700'}
+            className={disabled ? 'cursor-not-allowed' : 'cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-4 focus-visible:outline-calm-700'}
             onClick={() => selectArea(area, disabled)}
             onKeyDown={event => { if (!disabled && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onChange(area); } }} />;
         })}

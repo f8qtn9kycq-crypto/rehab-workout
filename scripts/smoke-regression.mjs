@@ -30,6 +30,7 @@ const files = {
   recordsPresentation: 'src/utils/recordsPresentation.ts',
   exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
   activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
+  bodyTrainingEntry: 'src/components/BodyTrainingEntry.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
@@ -249,6 +250,15 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.trainingLog, '<ExerciseIdentityVisual log={log} compact />', 'training history uses the shared localized exercise identity');
   assertIncludes(source.logService, 'updateTrainingLogSets', 'set-detail edits update an existing training log');
   assertIncludes(source.sessionTracker, "item === 'dumbbell' || item === 'kettlebell'", 'set details are optional and limited to loadable strength sessions');
+});
+
+section('body entry separates training goals from sore-area guidance', () => {
+  assertIncludes(source.bodyTrainingEntry, "t('bodyEntry.modeLabel')", 'body entry exposes an accessible goal group label');
+  assertIncludes(source.bodyTrainingEntry, 't(`bodyEntry.${kind}Hint`)', 'body entry explains the selected goal before the body map');
+  assertIncludes(source.localeZh, "rehab: '這裡不舒服'", 'zh-TW labels the sore-area path by user intent');
+  assertIncludes(source.localeZh, "resistance: '我要訓練'", 'zh-TW labels the training path by user intent');
+  assertIncludes(source.localeEn, "rehab: 'An area feels sore'", 'English labels the sore-area path by user intent');
+  assertIncludes(source.localeEn, "resistance: 'I want to train'", 'English labels the training path by user intent');
 });
 
 section('clear local data is explicit and confirmed', () => {

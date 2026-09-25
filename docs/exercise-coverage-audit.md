@@ -1,14 +1,15 @@
 # Exercise Coverage Audit
 
-Generated: 2026-09-25T15:31:49.407Z
+Generated: 2026-09-25T15:43:13.832Z
 
-Source commit: 8ed5f56
+Source commit: 426b365
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
 ## 1. Executive summary
 
 - Total exercises audited: 42
+- Catalog-only entries included in coverage counts: 7. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
 - Audit body areas: shoulder_hip, shoulder_neck, knee, ankle
 - App body area enums: shoulder, hip, shoulder_neck, knee, ankle
 - Canonical equipment ids: bodyweight, dumbbell, kettlebell, chair, wall, resistance_band, foam_roller

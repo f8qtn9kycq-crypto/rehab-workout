@@ -348,6 +348,7 @@ export default {
     regressions: 'Easier option',
     progressions: 'Progressions',
     startSession: 'Start training',
+    catalogOnlyNotice: 'This exercise is for reference only; guided training is not available yet.',
     equipment: 'Equipment',
     defaultStopRule: 'Stop if pain rises above 3/10, numbness or tingling appears, or movement quality drops. Use an easier version next time.',
   },

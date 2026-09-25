@@ -348,6 +348,7 @@ export default {
     regressions: '較簡單版本',
     progressions: '進階選項',
     startSession: '開始訓練',
+    catalogOnlyNotice: '此動作目前僅供查詢，尚未開放引導訓練。',
     equipment: '器材',
     defaultStopRule: '若疼痛超過 3/10、出現麻木刺痛或動作品質明顯下降，請停止並改做較簡單版本。',
   },

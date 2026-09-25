@@ -964,7 +964,7 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'catalog-bench-press', title: '啞鈴胸推', joint: 'shoulder', bodyArea: 'shoulder', condition: '胸部肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
-    description: '躺在穩固平面，以輕啞鈴控制推起與放下。', detail: '可查詢的重訓動作範例；開始前請先完成安全檢查。',
+    description: '躺在穩固平面，以輕啞鈴控制推起與放下。', detail: '可查詢的重訓動作範例；目前未開放引導訓練。',
     steps: ['躺在穩固平面，雙腳踩地', '啞鈴從胸側緩慢推起', '手肘不要過度向外張', '控制啞鈴回到胸側'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供胸部與上肢推力訓練參考。',
     cautions: ['使用能完整控制的輕重量', '肩膀不舒服時不要勉強下放幅度'], stopRules: ['肩部或胸部尖銳疼痛', '頭暈、胸悶或呼吸不適'], regressions: ['減輕重量', '改做牆面推牆並縮小幅度'], progressions: ['動作穩定且無症狀後再逐步增加重量'], equipment: ['dumbbell'], requiredEquipment: ['dumbbell'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=dumbbell+bench+press+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
   },

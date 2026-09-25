@@ -181,6 +181,28 @@ export default {
       },
     },
   },
+  bodyFirst: {
+    stepLabel: 'Start with your body',
+    homeTitle: 'Which body area needs your attention today?',
+    homeBody: 'Choose one area first. Then tell us whether you want to train or feel discomfort today.',
+    homeCta: 'Choose a body area',
+    title: 'Choose one body area',
+    subtitle: 'We will use your choice to continue through the existing safety check and training flow.',
+    areaLegend: 'Where do you want to focus today?',
+    intentLegend: 'How does {bodyArea} feel today?',
+    intents: {
+      train: {
+        label: 'I want to train',
+        hint: 'Continue to today’s guided training setup. A current safety check is still required.',
+      },
+      discomfort: {
+        label: 'I feel discomfort',
+        hint: 'Start with the existing safety and red-flag check before choosing any exercise.',
+      },
+    },
+    continue: 'Continue safely',
+    safetyNote: 'Discomfort always returns to the safety check. Red flags or pain 6/10 or higher still stop training.',
+  },
   weeklyRoutine: {
     title: 'Weekly training plan',
     subtitle: 'Choose a short plan built from existing gentle exercises. Starting an exercise still goes through the safety check.',
@@ -205,10 +227,10 @@ export default {
   onboarding: {
     badge: 'Safety first',
     title: 'Start with one safe path today',
-    subtitle: 'First confirm safety, then choose a body area and learn when to check pain before and after training.',
+    subtitle: 'Choose a body area first, then follow the existing safety and pain checks before training.',
     stepsLabel: 'First-run path',
-    steps: ['Safety check', 'Choose body area', 'Pain before and after', 'Start suitable exercise'],
-    start: 'Start safety check',
+    steps: ['Choose body area', 'Choose train or discomfort', 'Safety and pain checks', 'Start suitable exercise'],
+    start: 'Choose a body area',
   },
   bodyAreas: {
     shoulder: { label: 'Shoulder Rehab', hint: 'Mobility, rotator cuff, scapular control' },

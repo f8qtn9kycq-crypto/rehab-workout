@@ -47,6 +47,8 @@ const files = {
   localeZh: 'src/locales/zh-TW.js',
   localDataLocale: 'src/locales/localData.js',
   rehabTypes: 'src/types/rehab.ts',
+  exercisesData: 'src/data/exercises.ts',
+  recommendationEngine: 'src/utils/recommendationEngine.ts',
 };
 
 function readSource(filePath) {
@@ -268,6 +270,16 @@ section('body entry separates training goals from sore-area guidance', () => {
   assertIncludes(source.localeZh, "legs: '下肢'", 'zh-TW names the combined hip and leg region as lower body');
   assertIncludes(source.localeEn, "legs: 'Lower body'", 'English names the combined hip and leg region as lower body');
   assertIncludes(source.muscleMapSelector, 'M101 205 Q140 220 179 205', 'lower-body highlight includes the hip region');
+});
+
+section('Records keeps one clear start action and catalog-only exercises stay out of recommendations', () => {
+  assertIncludes(source.logsPage, "t('logs.startTraining')", 'Records exposes one localized start-training CTA');
+  assertIncludes(source.logsPage, 'to="/exercises?mode=all"', 'Records sends exercise discovery to the library');
+  assertNotIncludes(source.logsPage, '<BodyTrainingEntry', 'Records does not duplicate the full exercise discovery surface');
+  assertIncludes(source.rehabTypes, 'catalogOnly?: boolean', 'exercise schema marks catalog-only content explicitly');
+  assertIncludes(source.exercisesData, "sourceRef: 'catalog-only: reviewed-content-needed'", 'catalog-only exercise content is traceable');
+  assertIncludes(source.exercisesData, 'catalogOnly: true', 'catalog-only exercises are marked in data');
+  assertIncludes(source.recommendationEngine, 'if (exercise.catalogOnly) return false', 'recommendations exclude catalog-only exercises');
 });
 
 section('assessment and exercise library reuse the interactive body map', () => {

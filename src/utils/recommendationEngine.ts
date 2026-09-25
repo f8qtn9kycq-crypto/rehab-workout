@@ -143,6 +143,7 @@ function rankExercises(
 
   return exerciseList
     .filter((exercise) => {
+      if (exercise.catalogOnly) return false;
       if (!isConservativeDefault(exercise)) return false;
       if (targetBodyArea && exercise.bodyArea !== targetBodyArea) return false;
       if (hasRecentSafetyRegression(exercise, context.logs)) return false;

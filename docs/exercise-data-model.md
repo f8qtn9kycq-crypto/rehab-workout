@@ -32,6 +32,7 @@ Every exercise should follow this shape:
   youtubeEmbedUrl,
   youtubeSearchUrl,
   sourceRef
+  catalogOnly? // searchable in All exercises; excluded from recommendations
 }
 ```
 
@@ -201,6 +202,8 @@ Detailed safety rules live in `docs/safety-rules.md`. Data edits should preserve
 - ankle balance defaults include chair or wall support
 
 Do not add random advanced exercises just to fill coverage matrices. Conservative gaps are acceptable when safer for users.
+
+`catalogOnly: true` is reserved for content that users may search and read in All exercises but cannot start as a guided session. It remains excluded from conservative recommendations and Today defaults until a separate safety/content decision is made.
 
 ## Audit Expectations
 

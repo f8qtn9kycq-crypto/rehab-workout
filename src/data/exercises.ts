@@ -961,6 +961,36 @@ export const exercises: Exercise[] = [
     youtubeEmbedUrl: '',
     youtubeSearchUrl: 'https://www.youtube.com/results?search_query=single+leg+reach+ankle+proprioception',
     sourceRef: '互動式踝關節穩定性指南.txt'
+  },
+  {
+    id: 'catalog-bench-press', title: '啞鈴胸推', joint: 'shoulder', bodyArea: 'shoulder', condition: '胸部肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '躺在穩固平面，以輕啞鈴控制推起與放下。', detail: '可查詢的重訓動作範例；目前未開放引導訓練。',
+    steps: ['躺在穩固平面，雙腳踩地', '啞鈴從胸側緩慢推起', '手肘不要過度向外張', '控制啞鈴回到胸側'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供胸部與上肢推力訓練參考。',
+    cautions: ['使用能完整控制的輕重量', '肩膀不舒服時不要勉強下放幅度'], stopRules: ['肩部或胸部尖銳疼痛', '頭暈、胸悶或呼吸不適'], regressions: ['減輕重量', '改做牆面推牆並縮小幅度'], progressions: ['動作穩定且無症狀後再逐步增加重量'], equipment: ['dumbbell'], requiredEquipment: ['dumbbell'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=dumbbell+bench+press+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-shoulder-press', title: '啞鈴肩推', joint: 'shoulder', bodyArea: 'shoulder', condition: '肩部推力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '坐姿以輕啞鈴進行受控的肩部推舉。', detail: '可查詢的重訓動作範例，不會進入保守推薦。', steps: ['坐在有靠背的穩固椅子上', '啞鈴從肩膀旁開始', '只在舒適範圍內向上推', '緩慢回到肩膀旁'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供肩部與上肢推力訓練參考。', cautions: ['避免疼痛或夾擠感', '不要追求過頭高度或重量'], stopRules: ['肩部尖銳疼痛', '手臂麻木、無力或胸悶'], regressions: ['減輕重量', '改做無重量肩部活動度'], progressions: ['無症狀且穩定時增加一到兩次'], equipment: ['dumbbell', 'chair'], requiredEquipment: ['dumbbell', 'chair'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['aggressive_overhead_loading', 'loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=seated+dumbbell+shoulder+press+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-squat', title: '椅子深蹲', joint: 'hip', bodyArea: 'hip', condition: '下肢肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '以穩固椅子作為支援，練習受控下蹲與站起。', detail: '可查詢的下肢重訓動作；深度應依疼痛與控制能力調整。', steps: ['站在穩固椅子前方', '臀部向後坐，膝蓋與腳尖同向', '輕觸椅面後站起', '使用可控制的深度'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供髖部與腿部功能性肌力訓練參考。', cautions: ['避免超過可控制深度', '椅子需穩固'], stopRules: ['膝或髖部疼痛增加', '失去平衡或頭暈'], regressions: ['提高坐面', '改做坐到站'], progressions: ['控制穩定後增加次數'], equipment: ['chair'], requiredEquipment: ['chair'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['deep_knee_flexion'], supportRequired: true, avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=chair+squat+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-pull-up', title: '引體向上', joint: 'shoulder', bodyArea: 'shoulder', condition: '上肢拉力訓練（動作庫）', type: 'strength', level: 'advanced',
+    description: '以固定單槓進行自體重量拉起。', detail: '可查詢的進階動作，不是 Active Aging 預設推薦。', steps: ['確認單槓固定且高度安全', '雙手握槓並穩定肩胛', '以受控方式拉起', '慢慢放下，不要跳下'], sets: 2, reps: 3, holdSeconds: 0, restSeconds: 90, durationText: '2 組，每組 3 次', benefits: '提供背部與上肢拉力訓練參考。', cautions: ['需要穩固單槓與足夠握力', '不要甩動或跳下'], stopRules: ['肩部、手肘或背部疼痛', '失去握力或頭暈'], regressions: ['使用支援式拉力器材或彈力帶'], progressions: ['動作穩定後增加次數'], equipment: ['bodyweight'], requiredEquipment: ['bodyweight'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=assisted+pull+up+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-dip', title: '雙槓撐體', joint: 'shoulder', bodyArea: 'shoulder', condition: '上肢推力訓練（動作庫）', type: 'strength', level: 'advanced',
+    description: '以固定雙槓進行受控的上肢推力動作。', detail: '可查詢的進階動作，不是 Active Aging 預設推薦。', steps: ['確認雙槓穩固', '支撐身體並穩定肩膀', '只下降到可控制範圍', '受控推回起始位置'], sets: 2, reps: 3, holdSeconds: 0, restSeconds: 90, durationText: '2 組，每組 3 次', benefits: '提供上肢推力訓練參考。', cautions: ['避免肩膀過度下沉', '需要穩定雙槓'], stopRules: ['肩部或胸部尖銳疼痛', '失去支撐或頭暈'], regressions: ['使用支援式器材並縮小幅度'], progressions: ['無症狀且穩定後增加次數'], equipment: ['bodyweight'], requiredEquipment: ['bodyweight'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=assisted+dip+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-lat-pulldown', title: '彈力帶下拉', joint: 'shoulder', bodyArea: 'shoulder', condition: '背部拉力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '以固定彈力帶練習向下拉回的背部控制。', detail: '可查詢的拉力動作；固定點與阻力必須安全可靠。', steps: ['將彈力帶固定在頭部上方', '保持軀幹穩定', '手肘向下拉並靠近身體', '慢慢放回'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供背部與肩胛控制訓練參考。', cautions: ['固定點不可鬆脫', '不要後仰甩動'], stopRules: ['肩部或背部疼痛', '彈力帶滑脫'], regressions: ['降低阻力或改做低位划船'], progressions: ['動作穩定後增加阻力'], equipment: ['resistance_band'], requiredEquipment: ['resistance_band'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=resistance+band+lat+pulldown', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-seated-row', title: '坐姿划船', joint: 'shoulder', bodyArea: 'shoulder', condition: '背部拉力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '坐姿使用彈力帶練習受控划船。', detail: '可查詢的拉力動作；保持肩膀放鬆並使用輕阻力。', steps: ['坐穩並固定彈力帶', '雙手向身體方向拉', '肩胛骨向後下方移動', '慢慢放回'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供上背與肩胛控制訓練參考。', cautions: ['固定點不可鬆脫', '不要聳肩或過度拱腰'], stopRules: ['肩頸或背部疼痛增加', '彈力帶失去控制'], regressions: ['降低阻力或縮短距離'], progressions: ['動作穩定後增加阻力'], equipment: ['resistance_band'], requiredEquipment: ['resistance_band'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=resistance+band+seated+row', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
   }
 ];
 

@@ -1,4 +1,12 @@
 export default {
+  muscleEntry: {
+    map: '阻力訓練肌群圖', choose: '點選肌群：正面胸、肩、腿；背面背、腿',
+    chest: '胸', shoulders: '肩', back: '背', legs: '腿',
+    chestHint: '動作類型：臥推', shouldersHint: '動作類型：肩推',
+    backHint: '動作類型：拉／划船', legsHint: '動作類型：深蹲等腿部訓練',
+    catalogNote: '以下為已收錄的相關動作；臥推與肩推尚未收錄。',
+    empty: '此肌群尚無已收錄的動作。',
+  },
   bodyEntry: {
     title: '選部位，開始訓練與記錄', front: '正面', back: '背面',
     rehab: '復健運動', resistance: '阻力訓練', cycling: '騎車',

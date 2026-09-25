@@ -1,4 +1,12 @@
 export default {
+  muscleEntry: {
+    map: 'Resistance training muscle map', choose: 'Select muscles: chest, shoulders and legs on front; back and legs on rear',
+    chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Legs',
+    chestHint: 'Movement type: bench press', shouldersHint: 'Movement type: shoulder press',
+    backHint: 'Movement type: pull / row', legsHint: 'Movement type: squats and other leg training',
+    catalogNote: 'Related exercises currently available are listed below. Bench and shoulder presses are not yet in the catalog.',
+    empty: 'No exercise is available for this muscle group yet.',
+  },
   bodyEntry: {
     title: 'Choose an area to train and log', front: 'Front', back: 'Back',
     rehab: 'Rehab', resistance: 'Resistance', cycling: 'Cycling',

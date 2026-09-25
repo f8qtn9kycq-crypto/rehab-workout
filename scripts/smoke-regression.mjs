@@ -30,6 +30,11 @@ const files = {
   recordsPresentation: 'src/utils/recordsPresentation.ts',
   exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
   activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
+  bodyTrainingEntry: 'src/components/BodyTrainingEntry.tsx',
+  bodyMapSelector: 'src/components/BodyMapSelector.tsx',
+  muscleMapSelector: 'src/components/MuscleMapSelector.tsx',
+  assessmentPage: 'src/pages/AssessmentPage.tsx',
+  exerciseFilter: 'src/components/ExerciseFilter.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
@@ -249,6 +254,34 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.trainingLog, '<ExerciseIdentityVisual log={log} compact />', 'training history uses the shared localized exercise identity');
   assertIncludes(source.logService, 'updateTrainingLogSets', 'set-detail edits update an existing training log');
   assertIncludes(source.sessionTracker, "item === 'dumbbell' || item === 'kettlebell'", 'set details are optional and limited to loadable strength sessions');
+});
+
+section('body entry separates training goals from sore-area guidance', () => {
+  assertIncludes(source.bodyTrainingEntry, "t('bodyEntry.modeLabel')", 'body entry exposes an accessible goal group label');
+  assertIncludes(source.bodyTrainingEntry, 't(`bodyEntry.${kind}Hint`)', 'body entry explains the selected goal before the body map');
+  assertIncludes(source.localeZh, "rehab: '復健'", 'zh-TW uses concise rehab mode copy');
+  assertIncludes(source.localeZh, "resistance: '重訓'", 'zh-TW uses concise strength mode copy');
+  assertIncludes(source.localeZh, "cycling: '騎車'", 'zh-TW uses concise cycling mode copy');
+  assertIncludes(source.localeEn, "rehab: 'Rehab'", 'English uses concise rehab mode copy');
+  assertIncludes(source.localeEn, "resistance: 'Strength'", 'English uses concise strength mode copy');
+  assertIncludes(source.localeEn, "cycling: 'Cycling'", 'English uses concise cycling mode copy');
+  assertIncludes(source.localeZh, "legs: '下肢'", 'zh-TW names the combined hip and leg region as lower body');
+  assertIncludes(source.localeEn, "legs: 'Lower body'", 'English names the combined hip and leg region as lower body');
+  assertIncludes(source.muscleMapSelector, 'M101 205 Q140 220 179 205', 'lower-body highlight includes the hip region');
+});
+
+section('assessment and exercise library reuse the interactive body map', () => {
+  assertIncludes(source.assessmentPage, '<BodyMapSelector selected={bodyArea}', 'assessment selects the saved body area with the shared body map');
+  assertIncludes(source.exerciseFilter, '<BodyMapSelector', 'exercise library filters with the shared body map');
+  assertIncludes(source.exerciseFilter, 'availability={availability.bodyArea}', 'exercise body map keeps count-aware availability');
+  assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
+  assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
+  assertIncludes(source.bodyMapSelector, 'd={regionPaths[area]}', 'rehab body map highlights selectable body regions directly');
+  assertIncludes(source.bodyMapSelector, "stroke={active ? 'none'", 'selected rehab region does not show a border line');
+  assertIncludes(source.bodyMapSelector, 'focus-visible:outline', 'keyboard focus remains visible without showing a pointer-click border');
+  assertNotIncludes(source.bodyMapSelector, 'className={`focus-ring absolute', 'rehab body map does not overlay text boxes on the body');
+  assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');
+  assertIncludes(source.muscleMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'resistance muscle map keeps the front/back switch');
 });
 
 section('clear local data is explicit and confirmed', () => {

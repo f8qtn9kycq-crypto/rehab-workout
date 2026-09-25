@@ -1,4 +1,22 @@
 export default {
+  muscleEntry: {
+    map: '阻力訓練肌群圖', choose: '點選肌群：正面胸、肩、下肢；背面背、下肢',
+    chest: '胸', shoulders: '肩', back: '背', legs: '下肢',
+    chestHint: '動作類型：臥推', shouldersHint: '動作類型：肩推',
+    backHint: '動作類型：拉／划船', legsHint: '動作類型：臀髖、腿部、膝踝訓練',
+    catalogNote: '以下為已收錄的相關動作；臥推與肩推尚未收錄。',
+    empty: '此肌群尚無已收錄的動作。',
+  },
+  bodyEntry: {
+    title: '今天想做什麼？', front: '正面', back: '背面',
+    intro: '先選目的，再從身體圖找到位置。', modeLabel: '選擇今天的目的',
+    rehab: '復健', resistance: '重訓', cycling: '騎車',
+    choose: '點選身體圖上的部位', selected: '已選擇：{area}',
+    rehabHint: '點選不舒服的位置，查看相應的復健動作。開始訓練前仍會進行安全檢查。',
+    resistanceHint: '點選今天想訓練的肌群，查看已收錄的阻力動作。',
+    recordHint: '選擇動作並完成訓練後，可記錄疼痛、每組重量與次數。',
+    empty: '此部位目前尚無可用的阻力動作，可切換至復健運動。',
+  },
   activities: {
 
   "exerciseRecords": "{count} 筆動作紀錄",

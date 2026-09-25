@@ -22,7 +22,8 @@ function activityDate(value: string, today: Date): Date | null {
   const date = new Date(`${value}T12:00:00`);
   if (!Number.isFinite(date.getTime())) return null;
   const normalized = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  return normalized === value && date <= today ? date : null;
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  return normalized === value && value <= todayKey ? date : null;
 }
 
 function startOfWeek(today: Date): Date {

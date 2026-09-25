@@ -1,4 +1,12 @@
 export default {
+  bodyEntry: {
+    title: '選部位，開始訓練與記錄', front: '正面', back: '背面',
+    rehab: '復健運動', resistance: '阻力訓練', cycling: '騎車',
+    choose: '點選身體圖上的部位', selected: '已選擇：{area}',
+    hint: '選擇身體部位，再查看動作。開始訓練時會進行安全檢查。',
+    recordHint: '選擇動作並完成訓練後，可記錄疼痛、每組重量與次數。',
+    empty: '此部位目前尚無可用的阻力動作，可切換至復健運動。',
+  },
   activities: {
 
   "exerciseRecords": "{count} 筆動作紀錄",

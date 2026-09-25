@@ -1,4 +1,12 @@
 export default {
+  bodyEntry: {
+    title: 'Choose an area to train and log', front: 'Front', back: 'Back',
+    rehab: 'Rehab', resistance: 'Resistance', cycling: 'Cycling',
+    choose: 'Select an area on the body image', selected: 'Selected: {area}',
+    hint: 'Choose a body area, then view an exercise. Safety checks apply when starting training.',
+    recordHint: 'After training, log pain, weight and repetitions for each set.',
+    empty: 'No resistance exercise is available for this area yet. Try Rehab.',
+  },
   activities: {
 
   "exerciseRecords": "{count} exercise records",

@@ -39,4 +39,13 @@ assert.equal(buildRecordsPresentation([], [], [outcome], today).validOutcomes.le
 assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], weeklyActivityCount: 0, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');
 assert.equal(buildRecordsPresentation([{ ...log, id: 'bad', date: 'bad' }, { ...log, id: 'future', date: '2999-01-01T00:00:00Z' }], [{ ...resistance, id: 'bad-date', date: '2026-02-30' }, { ...cycling, id: 'future-activity', date: '2999-01-01' }], [{ ...outcome, date: 'bad' }, { ...outcome, id: 'future-outcome', date: '2999-01-01T00:00:00Z' }], today).recentActivities.length, 0, 'invalid and future activity dates are excluded');
 
+for (const hour of ['00:01', '09:00', '23:59']) {
+  const morning = new Date(`2026-09-21T${hour}:00`);
+  const result = buildRecordsPresentation([], [
+    { ...cycling, date: '2026-09-21' },
+    { ...cycling, id: 'tomorrow', date: '2026-09-22' },
+  ], [], morning);
+  assert.equal(result.recentActivities.length, 1, 'today is visible before noon; tomorrow stays excluded');
+  assert.equal(result.weeklyActivityCount, 1, 'Monday morning activity counts in the new week');
+}
 console.log('Records presentation regression passed: activity-only, guided-only, both, assessment-only, empty, date boundaries, and linked dedupe.');

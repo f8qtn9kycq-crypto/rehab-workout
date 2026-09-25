@@ -1,4 +1,5 @@
 import ActivityTracking from '../components/ActivityTracking';
+import BodyTrainingEntry from '../components/BodyTrainingEntry';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
@@ -62,6 +63,8 @@ export default function LogsPage() {
         <h1 className="text-3xl font-black leading-tight text-ink">{t('logs.title')}</h1>
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
+
+      <BodyTrainingEntry onActivitiesChange={() => setActivities(readActivities().activities)} />
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />

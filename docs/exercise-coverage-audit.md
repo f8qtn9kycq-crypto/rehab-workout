@@ -1,8 +1,8 @@
 # Exercise Coverage Audit
 
-Generated: 2026-08-22T16:24:29.817Z
+Generated: 2026-09-25T07:01:39.493Z
 
-Source commit: db3fe69
+Source commit: 5c2d1cc
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
@@ -211,7 +211,7 @@ This section models live filter compatibility, including bodyweight-required exe
 | --- | --- | --- |
 | No assessment + Recommended mode + all body areas | Yes | ExercisesPage returns [] and uses exercises.chooseBodyArea. |
 | Pain >= 6 | Yes | ExercisesPage shows painStopEmpty and recommendationEngine returns [] at stop threshold. |
-| Unavailable visible filters | Yes | ExercisesPage computes body-area availability; ExerciseFilter shows counts and disables unavailable body-area chips. |
+| Unavailable visible filters | Yes | ExercisesPage computes body-area availability; the shared body map shows counts and disables unavailable areas. |
 | Recovery mode has no match | Yes | ExercisesPage uses recoveryNoMatchEmpty for recovery recommendation misses. |
 | Mobile filter fatigue | Yes | ExerciseFilter uses a compact mode/body-area control set with active summary chips and one-tap clear. |
 

@@ -13,6 +13,7 @@ const sourceFiles = {
   types: 'src/types/rehab.ts',
   exercisesPage: 'src/pages/ExercisesPage.tsx',
   exerciseFilter: 'src/components/ExerciseFilter.tsx',
+  bodyMapSelector: 'src/components/BodyMapSelector.tsx',
   exerciseModel: 'src/utils/exerciseModel.ts',
   recommendationEngine: 'src/utils/recommendationEngine.ts',
   logService: 'src/services/logService.ts',
@@ -131,6 +132,7 @@ const exercisesSource = readSource(sourceFiles.exercises);
 const equipmentOptionsSource = readSource(sourceFiles.equipmentOptions);
 const exercisesPageSource = readSource(sourceFiles.exercisesPage);
 const exerciseFilterSource = readSource(sourceFiles.exerciseFilter);
+const bodyMapSelectorSource = readSource(sourceFiles.bodyMapSelector);
 const exerciseModelSource = readSource(sourceFiles.exerciseModel);
 const recommendationEngineSource = readSource(sourceFiles.recommendationEngine);
 const logServiceSource = readSource(sourceFiles.logService);
@@ -277,10 +279,10 @@ const emptyStateChecks = [
     scenario: 'Unavailable visible filters',
     handled: exercisesPageSource.includes('availability') &&
       exercisesPageSource.includes('countFor({ ...filters, bodyArea: bodyAreaOption })') &&
-      exerciseFilterSource.includes('getBodyAreaDisabled') &&
-      exerciseFilterSource.includes('exercises.unavailableFilter') &&
-      exerciseFilterSource.includes('exercises.countBadge'),
-    evidence: 'ExercisesPage computes body-area availability; ExerciseFilter shows counts and disables unavailable body-area chips.',
+      exerciseFilterSource.includes('availability={availability.bodyArea}') &&
+      bodyMapSelectorSource.includes("t('exercises.unavailableFilter'") &&
+      bodyMapSelectorSource.includes("t('exercises.countBadge'"),
+    evidence: 'ExercisesPage computes body-area availability; the shared body map shows counts and disables unavailable areas.',
   },
   {
     scenario: 'Recovery mode has no match',

@@ -10,12 +10,15 @@ const regions: Record<BodyArea, { top: string; left: string; width: string }> = 
   ankle: { top: '88%', left: '30%', width: '40%' },
 };
 
-export default function BodyMapSelector({ selected, onChange }: {
-  selected: BodyArea | 'all'; onChange: (area: BodyArea) => void;
+export default function BodyMapSelector({ selected, onChange, ariaLabel, availability }: {
+  selected: BodyArea | 'all';
+  onChange: (area: BodyArea) => void;
+  ariaLabel?: string;
+  availability?: Record<BodyArea, number>;
 }) {
   const { t } = useI18n();
   const [back, setBack] = useState(false);
-  return <div className="space-y-3">
+  return <div className="space-y-3" role="group" aria-label={ariaLabel}>
     <div className="grid grid-cols-2 gap-2">
       {[false, true].map(value => <button key={String(value)} type="button" aria-pressed={back === value}
         onClick={() => setBack(value)} className={`focus-ring min-h-11 rounded-md border px-3 font-bold ${back === value ? 'bg-calm-700 text-white' : 'bg-white text-calm-800'}`}>
@@ -30,12 +33,23 @@ export default function BodyMapSelector({ selected, onChange }: {
           {back ? <path d="M140 85 V229 M114 108 L133 137 M166 108 L147 137" fill="none" /> : <path d="M114 112 Q140 122 166 112 M140 126 V210" fill="none" />}
         </g>
       </svg>
-      {BODY_AREAS.map(area => <button key={area} type="button" aria-pressed={selected === area}
-        aria-label={t(`bodyAreas.${area}.label`)} onClick={() => onChange(area)}
+      {BODY_AREAS.map(area => {
+        const count = availability?.[area];
+        const disabled = count === 0 && selected !== area;
+        const label = t(`bodyAreas.${area}.label`);
+        const accessibleLabel = count === undefined
+          ? label
+          : disabled
+            ? t('exercises.unavailableFilter', { label })
+            : `${label} ${t('exercises.countBadge', { count })}`;
+
+        return <button key={area} type="button" disabled={disabled} aria-pressed={selected === area}
+        aria-label={accessibleLabel} title={disabled ? accessibleLabel : undefined} onClick={() => onChange(area)}
         style={{ ...regions[area], transform: 'translateY(-50%)' }}
-        className={`focus-ring absolute min-h-11 rounded-lg border-2 px-1 text-xs font-bold ${selected === area ? 'border-calm-900 bg-calm-700 text-white' : 'border-calm-600 bg-white/90 text-calm-900'}`}>
-        {selected === area ? '✓ ' : ''}{t(`bodyAreas.${area}.label`)}
-      </button>)}
+        className={`focus-ring absolute min-h-11 rounded-lg border-2 px-1 text-xs font-bold ${selected === area ? 'border-calm-900 bg-calm-700 text-white' : disabled ? 'cursor-not-allowed border-slate-200 bg-slate-100/90 text-slate-400' : 'border-calm-600 bg-white/90 text-calm-900'}`}>
+        {selected === area ? '✓ ' : ''}{label}{count === undefined ? '' : ` · ${count}`}
+      </button>;
+      })}
     </div>
     <p role="status" className="text-sm font-semibold text-calm-800">{selected === 'all' ? t('bodyEntry.choose') : t('bodyEntry.selected', { area: t(`bodyAreas.${selected}.label`) })}</p>
   </div>;

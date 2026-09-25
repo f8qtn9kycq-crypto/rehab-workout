@@ -31,6 +31,9 @@ const files = {
   exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
   activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
   bodyTrainingEntry: 'src/components/BodyTrainingEntry.tsx',
+  bodyMapSelector: 'src/components/BodyMapSelector.tsx',
+  assessmentPage: 'src/pages/AssessmentPage.tsx',
+  exerciseFilter: 'src/components/ExerciseFilter.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
@@ -259,6 +262,14 @@ section('body entry separates training goals from sore-area guidance', () => {
   assertIncludes(source.localeZh, "resistance: '我要訓練'", 'zh-TW labels the training path by user intent');
   assertIncludes(source.localeEn, "rehab: 'An area feels sore'", 'English labels the sore-area path by user intent');
   assertIncludes(source.localeEn, "resistance: 'I want to train'", 'English labels the training path by user intent');
+});
+
+section('assessment and exercise library reuse the interactive body map', () => {
+  assertIncludes(source.assessmentPage, '<BodyMapSelector selected={bodyArea}', 'assessment selects the saved body area with the shared body map');
+  assertIncludes(source.exerciseFilter, '<BodyMapSelector', 'exercise library filters with the shared body map');
+  assertIncludes(source.exerciseFilter, 'availability={availability.bodyArea}', 'exercise body map keeps count-aware availability');
+  assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
+  assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
 });
 
 section('clear local data is explicit and confirmed', () => {

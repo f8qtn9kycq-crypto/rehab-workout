@@ -5,11 +5,13 @@ import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
+import ManualWorkoutCard from '../components/ManualWorkoutCard';
 import TrainingSetSummary from '../components/TrainingSetSummary';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { readActivities } from '../services/activityStorage';
+import { readManualWorkouts } from '../services/manualWorkoutStorage';
 import { getSavedAssessment } from '../services/assessmentStorage';
 import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
@@ -28,13 +30,17 @@ function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title:
 
 export default function LogsPage() {
   const { language, t } = useI18n();
+  const location = useLocation();
   const [logs, setLogs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const [activities, setActivities] = useState(() => readActivities().activities);
+  const [manualWorkouts, setManualWorkouts] = useState(() => readManualWorkouts().workouts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
-  const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes), [logs, activities, outcomes]);
+  const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts), [logs, activities, outcomes, manualWorkouts]);
+  const savedManualId = (location.state as { manualSavedId?: string } | null)?.manualSavedId;
+  const savedManualWorkout = manualWorkouts.find(workout => workout.id === savedManualId);
   const latestOutcome = presentation.validOutcomes[0] ?? null;
 
   function formatDate(date: string): string {
@@ -52,6 +58,7 @@ export default function LogsPage() {
 
     const result = clearRehabLocalData();
     setActivities([]);
+    setManualWorkouts(readManualWorkouts().workouts);
     setLogs([]);
     setOutcomes([]);
     setClearStatus(result.failedKeys.length > 0 ? 'partial' : 'success');
@@ -64,6 +71,8 @@ export default function LogsPage() {
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
 
+      {savedManualWorkout && <div role="status" className="space-y-2 rounded-md bg-calm-50 p-4"><p className="font-bold text-calm-800">{t('manualWorkout.saved')}</p><p className="text-sm">{savedManualWorkout.date} · {savedManualWorkout.exercises.map(exercise => exercise.name).join(t('progress.areaSeparator'))}</p></div>}
+
       <section className="card space-y-3 border-calm-200 bg-calm-50/80 p-5" aria-labelledby="records-start-title">
         <div>
           <h2 id="records-start-title" className="text-xl font-black text-ink">{t('logs.startTraining')}</h2>
@@ -73,6 +82,8 @@ export default function LogsPage() {
           {t('logs.startTraining')}
         </Link>
       </section>
+
+      <Link to="/logs/new" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.entry')}</Link>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
@@ -84,6 +95,8 @@ export default function LogsPage() {
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
                 <TrainingSetSummary sets={item.log.sets} />
               </article>
+            ) : item.source === 'manual' ? (
+              <ManualWorkoutCard key={item.id} workout={item.workout} />
             ) : (
               <article key={item.id} className="card p-4">
                 <ActivityIdentityVisual activity={item.activity} />
@@ -126,6 +139,7 @@ export default function LogsPage() {
           <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
           <div className="mt-4 space-y-5">
             <ActivityTracking onActivitiesChange={() => setActivities(readActivities().activities)} />
+            {manualWorkouts.length > 0 && <div className="space-y-3">{manualWorkouts.map(workout => <ManualWorkoutCard key={workout.id} workout={workout} />)}</div>}
             {logs.length > 0 ? <TrainingLog logs={logs} onLogsChange={setLogs} /> : null}
           </div>
         </details>

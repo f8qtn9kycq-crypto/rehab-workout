@@ -10,14 +10,14 @@ export default {
     records: {
       recent: {
         title: 'Recent activity',
-        subtitle: 'Guided sessions and activity records appear together without double-counting linked exercises.',
+        subtitle: 'Guided sessions, activities, and finished-workout entries appear together without double-counting linked exercises.',
         empty: 'No activity has been recorded yet.',
         trainingMeta: '{date} · pain {painBefore} → {painAfter}',
         activityMeta: '{date} · {minutes} minutes',
       },
       week: {
         title: 'This week',
-        subtitle: 'A single count across guided sessions and standalone activities.',
+        subtitle: 'One count across guided sessions, standalone activities, and finished-workout entries.',
         count: '{count} activities',
         helper: 'Linked exercise logs count once; invalid and future dates are excluded.',
       },
@@ -259,14 +259,14 @@ export default {
     records: {
       recent: {
         title: '最近活動',
-        subtitle: '引導訓練與活動紀錄整合顯示；已連結的動作不重複計算。',
+        subtitle: '引導訓練、活動與已完成訓練補記整合顯示；已連結的動作不重複計算。',
         empty: '目前還沒有活動紀錄。',
         trainingMeta: '{date}・疼痛 {painBefore} → {painAfter}',
         activityMeta: '{date}・{minutes} 分鐘',
       },
       week: {
         title: '本週進度',
-        subtitle: '整合引導訓練與獨立活動，只顯示一個一致的計數。',
+        subtitle: '整合引導訓練、獨立活動與補記訓練，只顯示一個一致的計數。',
         count: '{count} 次活動',
         helper: '已連結的動作只計一次；無效或未來日期不納入。',
       },

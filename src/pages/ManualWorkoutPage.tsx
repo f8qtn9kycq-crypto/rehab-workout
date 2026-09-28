@@ -1,7 +1,8 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, Layers3, MoveDown, MoveUp, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
+import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import BodyAreaIcon from '../components/BodyAreaIcon';
+import QuickMovementIcon, { type QuickMovementId } from '../components/QuickMovementIcon';
 import { exercises as catalog } from '../data/exercises';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
@@ -9,8 +10,8 @@ import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../serv
 import { getLocalizedExercise } from '../utils/localizedExercise';
 
 const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
-const quickExerciseIds = ['benchPress', 'shoulderPress', 'squat', 'pullUp', 'dip', 'latPulldown', 'seatedRow'];
-const quickIcons = [Dumbbell, MoveUp, PersonStanding, MoveUp, MoveDown, StretchHorizontal, Layers3];
+const quickExerciseIds: QuickMovementId[] = ['benchPress', 'shoulderPress', 'squat', 'pullUp', 'dip', 'latPulldown', 'seatedRow'];
+const isQuickExercise = (id: string): id is QuickMovementId => quickExerciseIds.some(quickId => quickId === id);
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
   { id: 'barbell', Icon: GripHorizontal }, { id: 'machine', Icon: Cable },
@@ -40,7 +41,7 @@ export default function ManualWorkoutPage() {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, value => ({ ...value, name: quickExerciseIds.includes(id) ? t(`manualWorkout.quickExercises.${id}`) : selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, value => ({ ...value, name: isQuickExercise(id) ? t(`manualWorkout.quickExercises.${id}`) : selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
   }
 
   function chooseEquipment(index: number, id: string) {
@@ -67,7 +68,7 @@ export default function ManualWorkoutPage() {
         const catalogExercise = catalog.find(item => item.id === id);
         return {
           ...exercise,
-          name: (quickExerciseIds.includes(id) ? t(`manualWorkout.quickExercises.${id}`) : catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
+          name: (isQuickExercise(id) ? t(`manualWorkout.quickExercises.${id}`) : catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
           equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '').trim(),
         };
       }),
@@ -88,10 +89,7 @@ export default function ManualWorkoutPage() {
         <div>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
           <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {quickExerciseIds.map((id, iconIndex) => {
-              const Icon = quickIcons[iconIndex];
-              return <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-sm font-bold ${selectedIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={25} aria-hidden="true" /><span>{t(`manualWorkout.quickExercises.${id}`)}</span></button>;
-            })}
+            {quickExerciseIds.map(id => <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-28 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-sm font-bold ${selectedIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><QuickMovementIcon id={id} /><span>{t(`manualWorkout.quickExercises.${id}`)}</span></button>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 p-3"><summary className="focus-ring cursor-pointer font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">{catalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-sm font-bold ${selectedIds[index] === item.id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><BodyAreaIcon area={item.bodyArea} size={25} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>

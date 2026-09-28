@@ -484,6 +484,7 @@ export default {
     save: '儲存這次訓練',
     saveError: '無法儲存，請先選擇每個動作並檢查日期與每組次數；原有紀錄未被覆寫。',
     storageError: '本機訓練資料無法讀取，這次未儲存，原資料也未覆寫。請先備份或尋求協助，勿直接清除本機資料。',
+    writeError: '此裝置目前無法寫入本機紀錄，這次訓練未儲存。請檢查瀏覽器儲存空間或權限後重試；原有紀錄未覆寫。',
     saved: '訓練已儲存。可在下方近期活動或詳細歷史查看。',
     recordTitle: '{date} · 補記訓練',
     setSummary: '第 {number} 組 {weight} × {reps} 次',

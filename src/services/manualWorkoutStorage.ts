@@ -7,7 +7,7 @@ export interface ManualExercise { name: string; equipment: string; sets: ManualS
 export interface ManualWorkout { id: string; date: string; createdAt: string; exercises: ManualExercise[]; cyclingMinutes?: number }
 
 function validDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value > localDate()) return false;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T12:00:00`);
   return Number.isFinite(date.getTime()) && localDate(date) === value;
 }
@@ -38,10 +38,13 @@ export function readManualWorkouts(): { workouts: ManualWorkout[]; error: boolea
   } catch { return { workouts: [], error: true }; }
 }
 
-export function saveManualWorkout(workout: ManualWorkout): boolean {
+export type ManualWorkoutSaveResult = 'ok' | 'corrupt' | 'invalid' | 'write-failed';
+
+export function saveManualWorkout(workout: ManualWorkout): ManualWorkoutSaveResult {
   const current = readManualWorkouts();
-  if (current.error || !validManualWorkout(workout) || current.workouts.some(item => item.id === workout.id)) return false;
-  return safeSetItem(MANUAL_WORKOUT_KEY, JSON.stringify([workout, ...current.workouts]));
+  if (current.error) return 'corrupt';
+  if (!validManualWorkout(workout) || workout.date > localDate() || current.workouts.some(item => item.id === workout.id)) return 'invalid';
+  return safeSetItem(MANUAL_WORKOUT_KEY, JSON.stringify([workout, ...current.workouts])) ? 'ok' : 'write-failed';
 }
 
 export function manualWorkoutId(): string {

@@ -5,7 +5,7 @@ import BodyAreaIcon from '../components/BodyAreaIcon';
 import { exercises as catalog } from '../data/exercises';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
-import { manualWorkoutId, readManualWorkouts, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
+import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 
 const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
@@ -27,7 +27,7 @@ export default function ManualWorkoutPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>(['']);
   const [equipmentIds, setEquipmentIds] = useState<string[]>(['']);
   const [cyclingMinutes, setCyclingMinutes] = useState('');
-  const [error, setError] = useState<'input' | 'storage' | null>(null);
+  const [error, setError] = useState<'input' | 'storage' | 'write' | null>(null);
   const saving = useRef(false);
   const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
 
@@ -73,7 +73,8 @@ export default function ManualWorkoutPage() {
       }),
       ...(cyclingMinutes === '' ? {} : { cyclingMinutes: Number(cyclingMinutes) }),
     };
-    if (!saveManualWorkout(workout)) { saving.current = false; setError(readManualWorkouts().error ? 'storage' : 'input'); return; }
+    const result = saveManualWorkout(workout);
+    if (result !== 'ok') { saving.current = false; setError(result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input'); return; }
     navigate('/logs', { state: { manualSavedId: workout.id } });
   }
 
@@ -115,7 +116,7 @@ export default function ManualWorkoutPage() {
       {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setExercises(current => [...current, emptyExercise()]); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
       <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" inputMode="numeric" min="1" max="1440" step="1" value={cyclingMinutes} onChange={event => setCyclingMinutes(event.target.value)} /></label>
       <p className="text-sm text-slate-600">{t('manualWorkout.cyclingHint')}</p>
-      {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : 'manualWorkout.saveError')}</p>}
+      {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
       <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>
     </form>
   </div>;

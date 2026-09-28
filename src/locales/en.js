@@ -484,6 +484,7 @@ export default {
     save: 'Save this workout',
     saveError: 'Could not save. Choose each exercise and check the date and reps for every set; existing records were not overwritten.',
     storageError: 'Local workout data could not be read. This workout was not saved and existing data was not overwritten. Back up your data or ask for help before clearing local data.',
+    writeError: 'This device cannot write to local storage right now. This workout was not saved. Check browser storage space or permissions and retry; existing records were not overwritten.',
     saved: 'Workout saved. Find it in recent activity or detailed history below.',
     recordTitle: '{date} · logged workout',
     setSummary: 'Set {number} {weight} × {reps} reps',

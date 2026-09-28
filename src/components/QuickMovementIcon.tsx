@@ -24,18 +24,18 @@ export default function QuickMovementIcon({ id }: { id: QuickMovementId }) {
     </>,
     dip: <>
       <g stroke="#64748b"><path d="M3 31h17m12 0h17M8 31v28m36-28v28M55 31h17m12 0h17M60 31v28m36-28v28" /></g>
-      <circle cx="26" cy="15" r="5"/><path d="M26 21v22m0 0-7 16m7-16 8 16m-12-32-8 5-6-1m22-4 8 5 6-1" />
-      <circle cx="78" cy="23" r="5"/><path d="M78 29v20m0 0-7 10m7-10 9 10m-12-25-9 8-6-11m21 3 9 8 6-11" />
+      <circle cx="26" cy="15" r="5"/><path d="M26 21v22m0 0-6 9 9 4m-3-13 8 9 8 4m-20-29-8 5-6-1m22-4 8 5 6-1" />
+      <circle cx="78" cy="23" r="5"/><path d="M78 29v20m0 0-7 5 8 4m-1-9 9 5 8 4m-20-24-9 8-6-11m21 3 9 8 6-11" />
     </>,
     latPulldown: <>
-      <g stroke="#64748b"><path d="M5 6h42M26 6v7M10 16h32M57 6h42M78 6v18M62 26h32M13 48h27m-14 0v11m39-11h27m-14 0v11" /></g>
+      <g stroke="#64748b"><path d="M26 6v8M10 16h32M78 6v18M62 26h32M14 48h24m-21 0v11m49-11h24m-21 0v11" /></g>
       <circle cx="26" cy="30" r="5"/><path d="M26 36v13m-9 10 9-10 9 10m-5-22 11-11V16m-19 21-11-11V16" />
       <circle cx="78" cy="36" r="5"/><path d="M78 42v8m-9 9 9-9 9 9m-13-17-12-6V26m20 16 12-6V26" />
     </>,
     seatedRow: <>
-      <g stroke="#64748b"><path d="M4 23v34m0-26h9M30 47h18m-12 0v12M56 23v34m0-26h9m17 16h18m-12 0 1 12" /></g>
-      <circle cx="38" cy="22" r="5"/><path d="m38 28-3 19-14 2-11 10m11-10 8 10m6-26-12 4-13-1" />
-      <circle cx="90" cy="22" r="5"/><path d="m90 28-2 19-14 2-11 10m11-10 8 10m14-26-10 4-8-1M56 36h22" />
+      <g stroke="#64748b"><path d="M30 47h18m-12 0v12m46-12h18m-12 0v12" /><circle cx="5" cy="36" r="2"/><circle cx="57" cy="36" r="2"/></g>
+      <circle cx="38" cy="22" r="5"/><path d="m38 28-3 19-14 2-11 10m11-10 8 10m6-26-12 4-13-1M7 36h3" />
+      <circle cx="90" cy="22" r="5"/><path d="m90 28-2 19-14 2-11 10m11-10 8 10m14-26-10 4-8-1M59 36h19" />
     </>,
   }[id];
 

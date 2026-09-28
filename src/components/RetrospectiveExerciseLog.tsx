@@ -49,7 +49,7 @@ export default function RetrospectiveExerciseLog({ onSaved }: { onSaved: (logs: 
       </div>
       <label className="block">{t('retro.effort')}<select className={control} required value={effort} onChange={e => setEffort(Number(e.target.value))}><option value="">{t('activities.choose')}</option>{Array.from({ length: 11 }, (_, n) => <option key={n} value={n}>{n}/10</option>)}</select></label>
       <label className="flex min-h-11 items-center gap-3"><input type="checkbox" checked={stoppedEarly} onChange={e => setStoppedEarly(e.target.checked)} />{t('retro.stoppedEarly')}</label>
-      {after !== '' && (after >= 6 || (before !== '' && after - before > 2)) && <p role="alert" className="rounded-md bg-red-50 p-3 text-red-800">{t('retro.warning')}</p>}
+      {after !== '' && (after > 3 || (before !== '' && after - before > 2)) && <p role="alert" className="rounded-md bg-red-50 p-3 text-red-800">{t(after >= 6 ? 'retro.stopWarning' : 'retro.warning')}</p>}
       <button className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('retro.save')}</button>
       {status !== 'idle' && <p role={status === 'error' ? 'alert' : 'status'}>{t(`retro.${status}`)}</p>}
     </form>

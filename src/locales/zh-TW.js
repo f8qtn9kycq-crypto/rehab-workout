@@ -4,7 +4,8 @@ export default {
     kind: '動作類型', strength: '重訓', rehab: '復健／活動度', exercise: '動作名稱', example: '例如：深蹲、YWT', area: '主要身體部位',
     before: '活動前疼痛', after: '活動後疼痛', effort: '自覺費力程度', stoppedEarly: '提早停止', save: '儲存動作紀錄', saved: '已儲存，可繼續補記下一個動作。',
     error: '無法儲存。請確認動作名稱、每組次數與疼痛分數；原資料未覆寫。',
-    warning: '若疼痛達 6 分或增加超過 2 分，請停止訓練並建議諮詢醫師或物理治療師。',
+    warning: '疼痛超過 3 分或較活動前增加超過 2 分，後續訓練請降階或調整；若持續加劇，建議諮詢醫師或物理治療師。',
+    stopWarning: '疼痛達 6 分，請停止訓練並建議諮詢醫師或物理治療師。',
   },
   muscleEntry: {
     map: '阻力訓練肌群圖', choose: '點選肌群：正面胸、肩、下肢；背面背、下肢',

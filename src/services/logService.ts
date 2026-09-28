@@ -37,12 +37,13 @@ function normalizeTrainingSets(value: unknown): TrainingSet[] | undefined {
     if (!item || typeof item !== 'object') return null;
     const raw = item as Partial<TrainingSet>;
     if (typeof raw.completed !== 'boolean') return null;
+    if (raw.warmup !== undefined && typeof raw.warmup !== 'boolean') return null;
     const weightKg = raw.weightKg === undefined ? undefined : Number(raw.weightKg);
     const reps = raw.reps === undefined ? undefined : Number(raw.reps);
     if (weightKg !== undefined && (!Number.isFinite(weightKg) || weightKg < 0 || weightKg > 1000)) return null;
     if (reps !== undefined && (!Number.isInteger(reps) || reps < 0 || reps > 1000)) return null;
     if (weightKg === undefined && reps === undefined) return null;
-    return { ...(weightKg === undefined ? {} : { weightKg }), ...(reps === undefined ? {} : { reps }), completed: raw.completed };
+    return { ...(weightKg === undefined ? {} : { weightKg }), ...(reps === undefined ? {} : { reps }), completed: raw.completed, ...(raw.warmup === undefined ? {} : { warmup: raw.warmup }) };
   });
   return sets.every((set): set is TrainingSet => set !== null) ? sets : undefined;
 }
@@ -133,6 +134,13 @@ export function getLogs(): TrainingLogEntry[] {
 }
 
 export function saveLog(log: TrainingLogEntry): boolean {
+  const raw = safeGetItem(LOG_KEY);
+  if (raw !== null) {
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (!Array.isArray(parsed) || parsed.length !== getLogs().length) return false;
+    } catch { return false; }
+  }
   const logs = [log, ...getLogs()].slice(0, MAX_LOGS);
   return safeSetItem(LOG_KEY, JSON.stringify(logs));
 }
@@ -179,6 +187,39 @@ export function createTrainingLog(input: CreateTrainingLogInput): TrainingLogEnt
     stopReason: input.stopReason,
     painDelta,
     ...(sets ? { sets } : {}),
+  };
+}
+
+export function createRetrospectiveLog(input: {
+  date: string;
+  title: string;
+  bodyArea: BodyArea;
+  type: ExerciseType;
+  sets: TrainingSet[];
+  painBefore: number;
+  painAfter: number;
+  difficultyRating: number;
+  stoppedEarly: boolean;
+}): TrainingLogEntry | null {
+  const title = input.title.trim();
+  const sets = normalizeTrainingSets(input.sets);
+  const date = new Date(`${input.date}T12:00:00`);
+  const today = new Date();
+  const localToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  if (!title || title.length > 100 || !sets || !isBodyArea(input.bodyArea) || !isExerciseType(input.type)
+    || !Number.isFinite(date.getTime()) || `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` !== input.date
+    || input.date > localToday || ![input.painBefore, input.painAfter, input.difficultyRating].every(value => Number.isInteger(value) && value >= 0 && value <= 10)) return null;
+  const completed = sets.filter(set => set.completed);
+  return {
+    id: typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    date: date.toISOString(), completedAt: date.toISOString(), exerciseId: 'manual', title, exerciseTitle: title,
+    bodyArea: input.bodyArea, type: input.type, level: 'beginner',
+    plannedSets: sets.length, plannedReps: sets.reduce((sum, set) => sum + (set.reps ?? 0), 0),
+    setsCompleted: completed.length, repsCompleted: completed.reduce((sum, set) => sum + (set.reps ?? 0), 0),
+    painBefore: input.painBefore, painAfter: input.painAfter, painDelta: input.painAfter - input.painBefore,
+    difficultyRating: input.difficultyRating, stoppedEarly: input.stoppedEarly, recoveryMode: false,
+    completionStatus: input.stoppedEarly ? 'stopped_early' : 'completed',
+    notes: '', stopReason: '', sets,
   };
 }
 

@@ -7,6 +7,7 @@ import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import TrainingSetSummary from '../components/TrainingSetSummary';
+import RetrospectiveExerciseLog from '../components/RetrospectiveExerciseLog';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { readActivities } from '../services/activityStorage';
@@ -64,13 +65,16 @@ export default function LogsPage() {
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
 
+      <RetrospectiveExerciseLog onSaved={setLogs} />
       <BodyTrainingEntry onActivitiesChange={() => setActivities(readActivities().activities)} />
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
         {presentation.hasActivityHistory ? (
           <div className="space-y-3">
-            {presentation.recentActivities.slice(0, 5).map(item => item.source === 'training' ? (
+            {presentation.days.slice(0, 5).map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
+              <h3 className="text-lg font-black text-ink">{day.date}</h3>
+              {day.items.map(item => item.source === 'training' ? (
               <article key={item.id} className="card space-y-3 p-4">
                 <ExerciseIdentityVisual log={item.log} compact />
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
@@ -81,8 +85,13 @@ export default function LogsPage() {
                 <ActivityIdentityVisual activity={item.activity} />
                 <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
                 {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
+                {item.activity.kind === 'resistance' && item.activity.exerciseLogIds.map(id => {
+                  const log = logs.find(row => row.id === id);
+                  return log ? <div key={id} className="mt-3 border-t border-slate-200 pt-3"><ExerciseIdentityVisual log={log} compact /><TrainingSetSummary sets={log.sets} /></div> : null;
+                })}
               </article>
-            ))}
+              ))}
+            </section>)}
           </div>
         ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
       </section>

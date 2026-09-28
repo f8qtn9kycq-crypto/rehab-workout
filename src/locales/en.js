@@ -1,4 +1,11 @@
 export default {
+  retro: {
+    title: 'Record an exercise you did', hint: 'Retrospective log only. This does not start a guided session. Save each exercise separately; use Cycling above for rides.',
+    kind: 'Exercise type', strength: 'Strength', rehab: 'Rehab / mobility', exercise: 'Exercise name', example: 'e.g. squat, YWT', area: 'Primary body area',
+    before: 'Pain before', after: 'Pain after', effort: 'Perceived effort', stoppedEarly: 'Stopped early', save: 'Save exercise record', saved: 'Saved. You can add another exercise.',
+    error: 'Could not save. Check the name, set details, and pain scores. Existing data was not overwritten.',
+    warning: 'If pain reaches 6 or increases by more than 2 points, stop training and consult a physician or physical therapist.',
+  },
   muscleEntry: {
     map: 'Resistance training muscle map', choose: 'Select muscles: chest, shoulders and lower body on front; back and lower body on rear',
     chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Lower body',
@@ -440,6 +447,7 @@ export default {
     weightKg: 'Weight (kg, optional)',
     repsPerSet: 'Reps',
     setCompleted: 'Set completed',
+    warmupSet: 'Warm-up set',
     addSet: 'Add set',
     removeSet: 'Remove',
     editSetDetails: 'Edit weight × reps',

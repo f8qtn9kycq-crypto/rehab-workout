@@ -1,4 +1,11 @@
 export default {
+  retro: {
+    title: '補記已做的動作', hint: '事後紀錄，不會開始引導訓練。每個動作儲存一次；騎車可使用上方騎車入口。',
+    kind: '動作類型', strength: '重訓', rehab: '復健／活動度', exercise: '動作名稱', example: '例如：深蹲、YWT', area: '主要身體部位',
+    before: '活動前疼痛', after: '活動後疼痛', effort: '自覺費力程度', stoppedEarly: '提早停止', save: '儲存動作紀錄', saved: '已儲存，可繼續補記下一個動作。',
+    error: '無法儲存。請確認動作名稱、每組次數與疼痛分數；原資料未覆寫。',
+    warning: '若疼痛達 6 分或增加超過 2 分，請停止訓練並建議諮詢醫師或物理治療師。',
+  },
   muscleEntry: {
     map: '阻力訓練肌群圖', choose: '點選肌群：正面胸、肩、下肢；背面背、下肢',
     chest: '胸', shoulders: '肩', back: '背', legs: '下肢',
@@ -440,6 +447,7 @@ export default {
     weightKg: '重量（公斤，選填）',
     repsPerSet: '次數',
     setCompleted: '本組已完成',
+    warmupSet: '暖身組',
     addSet: '新增一組',
     removeSet: '移除',
     editSetDetails: '編輯重量 × 次數',

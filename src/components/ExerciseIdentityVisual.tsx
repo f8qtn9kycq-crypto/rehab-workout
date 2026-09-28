@@ -28,7 +28,7 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
     <div className="min-w-0">
       <p className="break-words text-lg font-black leading-tight text-ink">{name}</p>
       {bodyArea ? <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-calm-800"><BodyAreaIcon area={bodyArea} size={18} /><span>{t('exerciseVisual.targetArea', { area: t(`bodyAreas.${bodyArea}.label`) })}</span></p> : null}
-      <p className="mt-1 flex items-start gap-2 break-words text-sm text-slate-600"><Dumbbell size={16} className="mt-0.5 shrink-0" aria-hidden="true" /><span>{t('exerciseVisual.equipment', { equipment: equipment.length > 0 ? equipment.map(item => t(`equipmentLabels.${item}`)).join(t('progress.areaSeparator')) : t('equipmentLabels.bodyweight') })}</span></p>
+      {log?.exerciseId !== 'manual' && <p className="mt-1 flex items-start gap-2 break-words text-sm text-slate-600"><Dumbbell size={16} className="mt-0.5 shrink-0" aria-hidden="true" /><span>{t('exerciseVisual.equipment', { equipment: equipment.length > 0 ? equipment.map(item => t(`equipmentLabels.${item}`)).join(t('progress.areaSeparator')) : t('equipmentLabels.bodyweight') })}</span></p>}
     </div>
     {visuals ? <>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">

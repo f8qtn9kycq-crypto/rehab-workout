@@ -36,7 +36,10 @@ assert.deepEqual(linkedResult.recentActivities.map(item => item.id), [`activity:
 assert.equal(linkedResult.weeklyActivityCount, 1, 'one linked resistance session counts once for the week');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).recentActivities.length, 0, 'assessment-only state has no fake activity');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).validOutcomes.length, 1, 'assessment-only recovery data remains available');
-assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], weeklyActivityCount: 0, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');
+assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], days: [], weeklyActivityCount: 0, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');
+const sameDay = buildRecordsPresentation([log], [resistance, { ...cycling, date: '2026-09-19' }, { ...cycling, id: 'ride-2', date: '2026-09-19' }], [], today);
+assert.deepEqual(sameDay.days.map(day => [day.date, day.items.length]), [['2026-09-19', 4]], 'mixed same-day exercise, resistance, and separate rides appear together');
+assert.equal(linkedResult.days[0].items.length, 1, 'linked logs do not appear as duplicate day items');
 assert.equal(buildRecordsPresentation([{ ...log, id: 'bad', date: 'bad' }, { ...log, id: 'future', date: '2999-01-01T00:00:00Z' }], [{ ...resistance, id: 'bad-date', date: '2026-02-30' }, { ...cycling, id: 'future-activity', date: '2999-01-01' }], [{ ...outcome, date: 'bad' }, { ...outcome, id: 'future-outcome', date: '2999-01-01T00:00:00Z' }], today).recentActivities.length, 0, 'invalid and future activity dates are excluded');
 
 for (const hour of ['00:01', '09:00', '23:59']) {

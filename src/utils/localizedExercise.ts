@@ -33,6 +33,7 @@ export function getLocalizedTrainingLogTitle(
 
   const storedTitle = String(log.title || log.exerciseTitle || '').trim();
   if (!storedTitle) return fallbackTitle;
+  if (log.exerciseId === 'manual') return storedTitle;
 
   return titleMatchesLanguage(storedTitle, language) ? storedTitle : fallbackTitle;
 }

@@ -29,7 +29,10 @@ export default function TrainingSetEditor({ sets, plannedReps, onChange }: Props
         <label className="block text-sm font-semibold">{t('logs.weightKg')}<input className={control} inputMode="decimal" type="number" min="0" max="1000" step="0.5" value={set.weightKg ?? ''} onChange={event => updateNumber(index, 'weightKg', event.target.value)} /></label>
         <label className="block text-sm font-semibold">{t('logs.repsPerSet')}<input className={control} inputMode="numeric" type="number" min="0" max="1000" step="1" value={set.reps ?? ''} onChange={event => updateNumber(index, 'reps', event.target.value)} /></label>
       </div>
-      <label className="mt-2 flex min-h-11 items-center gap-3 font-semibold"><input type="checkbox" checked={set.completed} onChange={event => updateSet(index, { completed: event.target.checked })} />{t('logs.setCompleted')}</label>
+      <div className="mt-2 grid gap-1 sm:grid-cols-2">
+        <label className="flex min-h-11 items-center gap-3 font-semibold"><input type="checkbox" checked={set.completed} onChange={event => updateSet(index, { completed: event.target.checked })} />{t('logs.setCompleted')}</label>
+        <label className="flex min-h-11 items-center gap-3 font-semibold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => updateSet(index, { warmup: event.target.checked })} />{t('logs.warmupSet')}</label>
+      </div>
     </div>)}
     <button type="button" disabled={sets.length >= MAX_TRAINING_SETS} onClick={addSet} className="focus-ring min-h-11 w-full rounded-md border border-calm-300 bg-white px-4 font-bold text-calm-800 disabled:text-slate-400">{t(sets.length >= MAX_TRAINING_SETS ? 'logs.setLimitReached' : 'logs.addSet')}</button>
   </fieldset>;

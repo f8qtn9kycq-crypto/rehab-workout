@@ -9,6 +9,7 @@ export default function TrainingSetSummary({ sets }: { sets?: TrainingSet[] }) {
     <ol className="space-y-1 rounded-md bg-slate-50 p-3 text-sm" aria-label={t('logs.setSummaryLabel')}>
       {sets.map((set, index) => (
         <li key={index} className="break-words">
+          {set.warmup ? `${t('logs.warmupSet')} · ` : ''}
           {t('logs.setSummary', {
             number: index + 1,
             weight: set.weightKg === undefined ? t('logs.noWeight') : t('logs.weightValue', { value: set.weightKg }),

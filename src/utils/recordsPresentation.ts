@@ -7,6 +7,7 @@ export type RecordsActivityItem =
 
 export interface RecordsPresentation {
   recentActivities: RecordsActivityItem[];
+  days: { date: string; items: RecordsActivityItem[] }[];
   weeklyActivityCount: number;
   hasActivityHistory: boolean;
   validOutcomes: FunctionalOutcomeEntry[];
@@ -62,10 +63,17 @@ export function buildRecordsPresentation(
 
   const recentActivities = [...trainingItems, ...activityItems]
     .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)));
+  const byDay = new Map<string, RecordsActivityItem[]>();
+  for (const item of recentActivities) {
+    const value = new Date(item.date);
+    const day = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
+    byDay.set(day, [...(byDay.get(day) ?? []), item]);
+  }
   const weekStart = startOfWeek(today);
 
   return {
     recentActivities,
+    days: [...byDay].map(([date, items]) => ({ date, items })),
     weeklyActivityCount: recentActivities.filter(item => new Date(item.date) >= weekStart).length,
     hasActivityHistory: recentActivities.length > 0,
     validOutcomes: outcomes

@@ -96,6 +96,7 @@ export interface TrainingSet {
   weightKg?: number;
   reps?: number;
   completed: boolean;
+  warmup?: boolean;
 }
 
 export type SessionCompletionStatus = 'completed' | 'stopped_early';

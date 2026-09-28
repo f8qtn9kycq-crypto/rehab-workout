@@ -138,7 +138,7 @@ Optional strength details use this additive shape without migrating or replacing
 
 ```js
 sets: [
-  { weightKg?: number, reps?: number, completed: boolean }
+  { weightKg?: number, reps?: number, completed: boolean, warmup?: boolean }
 ]
 ```
 

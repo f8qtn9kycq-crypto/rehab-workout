@@ -11,7 +11,7 @@ export default function RetrospectiveExerciseLog({ onSaved }: { onSaved: (logs: 
   const [title, setTitle] = useState('');
   const [bodyArea, setBodyArea] = useState<BodyArea | ''>('');
   const [kind, setKind] = useState<'strength' | 'mobility'>('strength');
-  const [sets, setSets] = useState<TrainingSet[]>([{ reps: 10, completed: true }]);
+  const [sets, setSets] = useState<TrainingSet[]>([{ completed: true }]);
   const [before, setBefore] = useState<number | ''>('');
   const [after, setAfter] = useState<number | ''>('');
   const [effort, setEffort] = useState<number | ''>('');
@@ -30,7 +30,7 @@ export default function RetrospectiveExerciseLog({ onSaved }: { onSaved: (logs: 
     if (before === '' || after === '' || effort === '' || !log || !saveLog(log)) { setStatus('error'); saving.current = false; return; }
     onSaved(getLogs());
     setTitle('');
-    setSets([{ reps: 10, completed: true }]);
+    setSets([{ completed: true }]);
     setBodyArea(''); setBefore(''); setAfter(''); setEffort(''); setStoppedEarly(false); setStatus('saved');
     // Release after React flushes the cleared form, so rapid double activation cannot duplicate this record.
     window.setTimeout(() => { saving.current = false; }, 0);
@@ -44,7 +44,7 @@ export default function RetrospectiveExerciseLog({ onSaved }: { onSaved: (logs: 
       <label className="block">{t('retro.kind')}<select className={control} value={kind} onChange={e => setKind(e.target.value as typeof kind)}><option value="strength">{t('retro.strength')}</option><option value="mobility">{t('retro.rehab')}</option></select></label>
       <label className="block">{t('retro.exercise')}<input className={control} required maxLength={100} value={title} onChange={e => setTitle(e.target.value)} placeholder={t('retro.example')} /></label>
       <label className="block">{t('retro.area')}<select className={control} required value={bodyArea} onChange={e => setBodyArea(e.target.value as BodyArea)}><option value="">{t('activities.choose')}</option>{BODY_AREAS.map(area => <option key={area} value={area}>{t(`bodyAreas.${area}.label`)}</option>)}</select></label>
-      <TrainingSetEditor sets={sets} plannedReps={10} onChange={setSets} />
+      <TrainingSetEditor sets={sets} plannedReps={0} onChange={setSets} hintKey="retro.setHint" />
       <div className="grid gap-3 sm:grid-cols-2">
         {(['before', 'after'] as const).map(point => <label key={point} className="block">{t(`retro.${point}`)}<select className={control} required value={point === 'before' ? before : after} onChange={e => (point === 'before' ? setBefore : setAfter)(Number(e.target.value))}><option value="">{t('activities.choose')}</option>{Array.from({ length: 11 }, (_, n) => <option key={n} value={n}>{n}/10</option>)}</select></label>)}
       </div>

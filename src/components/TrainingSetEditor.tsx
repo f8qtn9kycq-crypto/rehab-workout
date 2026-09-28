@@ -6,9 +6,10 @@ interface Props {
   sets: TrainingSet[];
   plannedReps: number;
   onChange: (sets: TrainingSet[]) => void;
+  hintKey?: string;
 }
 
-export default function TrainingSetEditor({ sets, plannedReps, onChange }: Props) {
+export default function TrainingSetEditor({ sets, plannedReps, onChange, hintKey = 'logs.setDetailsHint' }: Props) {
   const { t } = useI18n();
   const control = 'focus-ring min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
   const addSet = () => onChange(appendCopiedTrainingSet(sets, plannedReps));
@@ -22,7 +23,7 @@ export default function TrainingSetEditor({ sets, plannedReps, onChange }: Props
 
   return <fieldset className="space-y-3 rounded-lg border border-calm-100 bg-calm-50/50 p-3">
     <legend className="px-1 font-bold text-ink">{t('logs.setDetails')}</legend>
-    <p className="text-sm leading-6 text-slate-600">{t('logs.setDetailsHint')}</p>
+    <p className="text-sm leading-6 text-slate-600">{t(hintKey)}</p>
     {sets.map((set, index) => <div key={index} className="rounded-md border border-slate-200 bg-white p-3">
       <div className="mb-2 flex items-center justify-between gap-2"><span className="font-bold">{t('logs.setNumber', { number: index + 1 })}</span><button type="button" onClick={() => onChange(sets.filter((_, i) => i !== index))} className="focus-ring min-h-11 rounded-md px-3 font-bold text-red-700">{t('logs.removeSet')}</button></div>
       <div className="grid gap-3 sm:grid-cols-2">

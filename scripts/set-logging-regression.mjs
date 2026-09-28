@@ -48,6 +48,7 @@ try {
   assert.ok(saveLog(manual), 'valid retrospective log saves');
   assert.equal(getLogs()[0].sets[0].warmup, true, 'warm-up status survives reload');
   assert.equal(createRetrospectiveLog({ date: '2999-01-01', title: 'Future', bodyArea: 'hip', type: 'strength', sets: [{ reps: 5, completed: true }], painBefore: 0, painAfter: 0, difficultyRating: 5, stoppedEarly: false }), null, 'future retrospective date is rejected');
+  assert.equal(createRetrospectiveLog({ date: '2026-09-19', title: 'Blank', bodyArea: 'hip', type: 'strength', sets: [{ completed: true }], painBefore: 0, painAfter: 0, difficultyRating: 5, stoppedEarly: false }), null, 'empty default set cannot become a fabricated completed record');
 
   const edited = updateTrainingLogSets(detailed.id, [
     { weightKg: 15, reps: 8, completed: true },
@@ -59,6 +60,7 @@ try {
 
   const copied = appendCopiedTrainingSet([{ weightKg: 12.5, reps: 8, completed: true }], 10);
   assert.deepEqual(copied[1], { weightKg: 12.5, reps: 8, completed: false }, 'new set copies prior load and reps but starts incomplete');
+  assert.deepEqual(appendCopiedTrainingSet([{ completed: true }], 0)[1], { completed: false }, 'manual entry does not invent zero reps');
   const twenty = Array.from({ length: 20 }, () => ({ weightKg: 5, reps: 8, completed: true }));
   assert.equal(appendCopiedTrainingSet(twenty, 8), twenty, '20-set limit is a stable no-op');
 

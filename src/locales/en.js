@@ -2,6 +2,7 @@ export default {
   retro: {
     title: 'Record an exercise you did', hint: 'Retrospective log only. This does not start a guided session. Save each exercise separately; use Cycling above for rides.',
     kind: 'Exercise type', strength: 'Strength', rehab: 'Rehab / mobility', exercise: 'Exercise name', example: 'e.g. squat, YWT', area: 'Primary body area',
+    setHint: 'Enter the weight or reps you actually completed. For bodyweight or mobility work, reps alone are enough. Mark warm-up sets separately.',
     before: 'Pain before', after: 'Pain after', effort: 'Perceived effort', stoppedEarly: 'Stopped early', save: 'Save exercise record', saved: 'Saved. You can add another exercise.',
     error: 'Could not save. Check the name, set details, and pain scores. Existing data was not overwritten.',
     warning: 'If pain is over 3 or rises by more than 2 points, reduce or modify further activity. Consult a physician or physical therapist if it continues to worsen.',

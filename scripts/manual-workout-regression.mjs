@@ -1,5 +1,21 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { build } from 'vite';
+
+const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
+const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
+const referencePng = readFileSync('public/exercise-visuals/manual-workout-reference-all-seven.png');
+assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
+assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
+const quickChoiceList = pickerSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
+assert.ok(quickChoiceList, 'quick choice list exists');
+const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
+assert.equal(quickIds.length, 7, 'all seven approved choices remain available');
+for (const id of quickIds) assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
+assert.match(artSource, /manual-workout-reference-all-seven\.png/);
+assert.equal(referencePng.toString('hex', 0, 8), '89504e470d0a1a0a', 'reference asset is PNG');
+assert.equal(referencePng.readUInt32BE(16), 793, 'reference art width is unchanged');
+assert.equal(referencePng.readUInt32BE(20), 1981, 'reference art height is unchanged');
 
 async function loadModule(entry) {
   const result = await build({

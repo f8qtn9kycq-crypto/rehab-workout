@@ -17,6 +17,7 @@ export default function SessionPage() {
   }
 
   if (!exercise) return <Navigate to="/exercises" replace />;
+  if (exercise.catalogOnly) return <Navigate to={`/exercise/${exercise.id}?mode=all`} replace />;
 
   if (!isSafetyGateCurrentForToday(safety)) {
     return (

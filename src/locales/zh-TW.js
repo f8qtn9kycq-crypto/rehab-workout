@@ -4,7 +4,7 @@ export default {
     chest: '胸', shoulders: '肩', back: '背', legs: '下肢',
     chestHint: '動作類型：臥推', shouldersHint: '動作類型：肩推',
     backHint: '動作類型：拉／划船', legsHint: '動作類型：臀髖、腿部、膝踝訓練',
-    catalogNote: '以下為已收錄的相關動作；臥推與肩推尚未收錄。',
+    catalogNote: '以下為已收錄的相關動作；部分重訓動作僅可在動作庫的「所有動作」查詢。',
     empty: '此肌群尚無已收錄的動作。',
   },
   bodyEntry: {
@@ -348,6 +348,7 @@ export default {
     regressions: '較簡單版本',
     progressions: '進階選項',
     startSession: '開始訓練',
+    catalogOnlyNotice: '此動作目前僅供查詢，尚未開放引導訓練。',
     equipment: '器材',
     defaultStopRule: '若疼痛超過 3/10、出現麻木刺痛或動作品質明顯下降，請停止並改做較簡單版本。',
   },
@@ -428,6 +429,8 @@ export default {
   logs: {
     title: '訓練紀錄',
     subtitle: '疼痛前後、完成狀態與備註會儲存在這台裝置。',
+    startTraining: '開始今天的訓練',
+    startTrainingHint: '先到動作庫選擇動作，再依安全檢查、動作與儲存流程完成一次訓練。',
     empty: '還沒有訓練紀錄。完成一個訓練後會出現在這裡。',
     savedExerciseFallback: '已儲存動作',
     stoppedEarly: '提早停止',

@@ -78,6 +78,8 @@ export interface Exercise {
   youtubeEmbedUrl: string;
   youtubeSearchUrl: string;
   sourceRef: string;
+  /** Catalog-only content is searchable but never enters conservative recommendations. */
+  catalogOnly?: boolean;
 }
 
 export interface SessionLog {

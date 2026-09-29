@@ -514,6 +514,7 @@ Scope: audit only. This report does not add exercise content, change recommendat
 ## 1. Executive summary
 
 - Total exercises audited: ${exercises.length}
+- Catalog-only entries included in coverage counts: ${exercises.filter((exercise) => exercise.catalogOnly).length}. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
 - Audit body areas: ${auditBodyAreas.join(', ')}
 - App body area enums: ${appBodyAreas.join(', ')}
 - Canonical equipment ids: ${canonicalEquipment.join(', ')}

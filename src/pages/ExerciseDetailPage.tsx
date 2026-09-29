@@ -31,7 +31,7 @@ export default function ExerciseDetailPage() {
     ['steps', t('detail.sectionSteps')],
     ['safety', t('detail.sectionSafety')],
     ['adjustments', t('detail.sectionAdjustments')],
-    ['start', t('detail.sectionStart')],
+    ...(!exercise.catalogOnly ? [['start', t('detail.sectionStart')] as const] : []),
   ] as const;
 
   return (
@@ -65,6 +65,7 @@ export default function ExerciseDetailPage() {
         <div>
           <h1 className="text-3xl font-bold text-ink">{displayExercise.title}</h1>
           <p className="mt-2 text-lg text-slate-600">{displayExercise.description}</p>
+          {exercise.catalogOnly && <p className="mt-3 rounded-md bg-calm-100 p-3 font-semibold text-calm-800">{t('detail.catalogOnlyNotice')}</p>}
         </div>
         <YouTubeEmbed title={displayExercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
         <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
@@ -116,7 +117,7 @@ export default function ExerciseDetailPage() {
           </div>
         ) : null}
       </section>
-      <section id="start" className="card scroll-mt-40 space-y-4 p-4">
+      {!exercise.catalogOnly && <section id="start" className="card scroll-mt-40 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionStart')}</h2>
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <div className="rounded-md bg-slate-50 p-2"><strong className="block text-xl">{exercise.sets}</strong>{t('exercises.setsUnit')}</div>
@@ -134,7 +135,7 @@ export default function ExerciseDetailPage() {
         <Link to={`/session/${exercise.id}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
           {t('detail.startSession')}
         </Link>
-      </section>
+      </section>}
       <ExerciseDetailModal exercise={exercise} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );

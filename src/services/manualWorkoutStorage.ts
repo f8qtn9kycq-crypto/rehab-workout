@@ -3,7 +3,7 @@ import { safeSetItem } from './localStorageService';
 
 export const MANUAL_WORKOUT_KEY = 'rehab.manualWorkouts.v1';
 export interface ManualSet { weightKg?: number; reps: number }
-export interface ManualExercise { name: string; equipment: string; sets: ManualSet[] }
+export interface ManualExercise { name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string }
 export interface ManualWorkout { id: string; date: string; createdAt: string; exercises: ManualExercise[]; cyclingMinutes?: number }
 
 function validDate(value: unknown): value is string {
@@ -21,6 +21,8 @@ export function validManualWorkout(value: unknown): value is ManualWorkout {
     && Array.isArray(workout.exercises) && workout.exercises.length >= 1 && workout.exercises.length <= 12
     && workout.exercises.every(exercise => typeof exercise.name === 'string' && exercise.name.trim().length > 0 && exercise.name.length <= 100
       && typeof exercise.equipment === 'string' && exercise.equipment.length <= 100
+      && (exercise.exerciseId === undefined || (typeof exercise.exerciseId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.exerciseId)))
+      && (exercise.equipmentId === undefined || (typeof exercise.equipmentId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.equipmentId)))
       && Array.isArray(exercise.sets) && exercise.sets.length >= 1 && exercise.sets.length <= 20
       && exercise.sets.every(set => Number.isInteger(set.reps) && set.reps >= 1 && set.reps <= 1000
         && (set.weightKg === undefined || (Number.isFinite(set.weightKg) && set.weightKg >= 0 && set.weightKg <= 1000))));

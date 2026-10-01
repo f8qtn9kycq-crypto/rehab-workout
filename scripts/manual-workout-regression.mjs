@@ -3,10 +3,11 @@ import { readFileSync } from 'node:fs';
 import { build } from 'vite';
 
 const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
+const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
-const quickChoiceList = pickerSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
+const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
 assert.equal(quickIds.length, 7, 'all seven approved choices remain available');
@@ -44,13 +45,17 @@ const { clearRehabLocalData } = await loadModule('src/services/localStorageServi
 const today = new Date();
 const date = storage.localDate ? storage.localDate(today) : `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 const workout = { id: 'manual-1', date, createdAt: today.toISOString(), cyclingMinutes: 15, exercises: [
-  { name: 'Barbell squat', equipment: 'barbell', sets: [{ weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }] },
+  { name: 'Barbell squat', equipment: 'barbell', exerciseId: 'squat', equipmentId: 'barbell', sets: [{ weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }] },
   { name: 'Shoulder press', equipment: 'dumbbells', sets: [{ weightKg: 20, reps: 10 }] },
 ] };
 
 assert.equal(storage.saveManualWorkout(workout), 'ok');
 assert.equal(storage.readManualWorkouts().workouts.length, 1, 'one workout holds multiple exercises');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].sets[2].weightKg, 72);
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].exerciseId, 'squat', 'stable exercise id survives readback');
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].equipmentId, 'barbell', 'stable equipment id survives readback');
+assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], exerciseId: undefined, equipmentId: undefined }] }), true, 'legacy records without ids remain readable');
+assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], exerciseId: { invalid: true } }] }), false, 'invalid id does not enter storage');
 assert.equal(storage.readManualWorkouts().workouts[0].cyclingMinutes, 15, 'same workout can record cycling minutes without another activity');
 assert.equal(storage.saveManualWorkout(workout), 'invalid', 'same id cannot create a duplicate');
 assert.equal(buildRecordsPresentation([], [], [], today, [workout]).recentActivities.length, 1, 'Records shows one workout');

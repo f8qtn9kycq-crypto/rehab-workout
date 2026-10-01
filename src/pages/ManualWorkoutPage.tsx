@@ -2,17 +2,16 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import BodyAreaIcon from '../components/BodyAreaIcon';
-import type { QuickMovementId } from '../components/QuickMovementIcon';
 import ReferenceMovementArt from '../components/ReferenceMovementArt';
 import { exercises as catalog } from '../data/exercises';
+import { quickExerciseIds } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
 import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 
 const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
-const quickExerciseIds: QuickMovementId[] = ['benchPress', 'shoulderPress', 'squat', 'pullUp', 'dip', 'latPulldown', 'seatedRow'];
-const isQuickExercise = (id: string): id is QuickMovementId => quickExerciseIds.some(quickId => quickId === id);
+const isQuickExercise = (id: string) => quickExerciseIds.some(quickId => quickId === id);
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
   { id: 'barbell', Icon: GripHorizontal }, { id: 'machine', Icon: Cable },
@@ -69,6 +68,8 @@ export default function ManualWorkoutPage() {
         const catalogExercise = catalog.find(item => item.id === id);
         return {
           ...exercise,
+          ...(id === 'custom' ? {} : { exerciseId: id }),
+          ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
           name: (isQuickExercise(id) ? t(`manualWorkout.quickExercises.${id}`) : catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
           equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '').trim(),
         };

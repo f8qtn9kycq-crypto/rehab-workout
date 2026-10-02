@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { build } from 'vite';
+import en from '../src/locales/en.js';
+import zhTW from '../src/locales/zh-TW.js';
 
 const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
 const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
@@ -10,11 +12,18 @@ assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
-assert.equal(quickIds.length, 7, 'all seven approved choices remain available');
-for (const id of quickIds) assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
+assert.equal(quickIds.length, 8, 'all eight approved choices remain available');
+assert.ok(quickIds.includes('legExtension'), 'leg extension is a quick movement');
+for (const id of quickIds) {
+  assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
+  assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);
+}
+const equipmentIds = [...pickerSource.match(/const equipmentChoices = \[([\s\S]*?)\];/)?.[1].matchAll(/id: '([^']+)'/g) ?? []].map(match => match[1]);
+assert.ok(equipmentIds.includes('cable') && equipmentIds.includes('smith_machine'), 'gym equipment choices are available');
 assert.match(artSource, /manual-workout-reference-all-seven\.png/);
 assert.match(artSource, /id === 'pullUp'\) return '\/exercise-visuals\/manual-workout-reference-pullup-airborne\.png'/);
-assert.match(artSource, /id === 'benchPress' \|\| id === 'seatedRow'\) return '\/exercise-visuals\/manual-workout-reference-pose-corrected\.png'/);
+assert.match(artSource, /const poseCorrected: QuickMovementId\[\] = \['benchPress', 'seatedRow'\]/);
+assert.match(artSource, /poseCorrected\.includes\(id\)\) return '\/exercise-visuals\/manual-workout-reference-pose-corrected\.png'/);
 for (const sheet of ['all-seven', 'pose-corrected', 'pullup-airborne']) {
   const png = readFileSync(`public/exercise-visuals/manual-workout-reference-${sheet}.png`);
   assert.equal(png.toString('hex', 0, 8), '89504e470d0a1a0a', `${sheet} is PNG`);
@@ -45,6 +54,16 @@ const { buildRecordsPresentation } = await loadModule('src/utils/recordsPresenta
 const { clearRehabLocalData } = await loadModule('src/services/localStorageService.ts');
 const today = new Date();
 const date = storage.localDate ? storage.localDate(today) : `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+for (const id of equipmentIds) {
+  assert.ok(en.manualWorkout.equipmentChoices[id] && zhTW.manualWorkout.equipmentChoices[id], `${id} equipment is localized`);
+}
+const sheets = [...new Set([...artSource.matchAll(/\/exercise-visuals\/(manual-workout-reference-[\w-]+\.png)/g)].map(match => match[1]))];
+assert.equal(sheets.length, 4, 'all exercise art sheets are checked');
+for (const sheet of sheets) {
+  const png = readFileSync(`public/exercise-visuals/${sheet}`);
+  assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${sheet} is PNG`);
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [793, 1981], `${sheet} keeps the shared crop geometry`);
+}
 const workout = { id: 'manual-1', date, createdAt: today.toISOString(), cyclingMinutes: 15, exercises: [
   { name: 'Barbell squat', equipment: 'barbell', exerciseId: 'squat', equipmentId: 'barbell', sets: [{ weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }] },
   { name: 'Shoulder press', equipment: 'dumbbells', sets: [{ weightKg: 20, reps: 10 }] },
@@ -65,6 +84,14 @@ const detailed = { ...workout, id: 'manual-detailed', cyclingMinutes: undefined,
 assert.equal(storage.saveManualWorkout(detailed), 'ok');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].sets[0].warmup, true, 'warm-up and work sets survive readback');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[1].painAfter, 0, 'explicit zero pain survives readback');
+const gymEquipment = { ...workout, id: 'gym-equipment', cyclingMinutes: undefined, exercises: [
+  { name: zhTW.manualWorkout.quickExercises.legExtension, equipment: zhTW.manualWorkout.equipmentChoices.machine, sets: [{ weightKg: 41, reps: 10 }] },
+  { name: zhTW.manualWorkout.quickExercises.latPulldown, equipment: zhTW.manualWorkout.equipmentChoices.cable, sets: [{ weightKg: 40, reps: 10 }] },
+  { name: zhTW.manualWorkout.quickExercises.benchPress, equipment: zhTW.manualWorkout.equipmentChoices.smith_machine, sets: [{ weightKg: 66, reps: 10 }] },
+] };
+assert.equal(storage.saveManualWorkout(gymEquipment), 'ok');
+assert.deepEqual(storage.readManualWorkouts().workouts[0].exercises, gymEquipment.exercises, 'new movement and equipment survive readback');
+assert.equal(buildRecordsPresentation([], [], [], today, [gymEquipment]).days[0].items.length, 1, 'one saved gym workout stays one Records item');
 assert.equal(manualWorkoutPainNotice(6, 0), 'stop', 'pain before 6 still shows stop warning');
 assert.equal(manualWorkoutPainNotice(0, 6), 'stop', 'pain after 6 shows stop warning');
 assert.equal(manualWorkoutPainNotice(0, 3), 'warning', 'pain increase above 2 shows warning');
@@ -80,7 +107,7 @@ assert.equal(buildRecordsPresentation([], [], [], today, [workout]).weeklyActivi
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'future', date: '2999-01-01' }), 'invalid');
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'bad-set', exercises: [{ ...workout.exercises[0], sets: [{ weightKg: 72, reps: 0 }] }] }), 'invalid');
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'bad-cycling', cyclingMinutes: 0 }), 'invalid');
-assert.equal(storage.readManualWorkouts().workouts.length, 2, 'invalid saves preserve existing data');
+assert.equal(storage.readManualWorkouts().workouts.length, 3, 'invalid saves preserve existing data');
 const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 const tomorrowDate = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
 const futureRecord = { ...workout, id: 'clock-shifted', date: tomorrowDate };
@@ -100,4 +127,4 @@ assert.equal(storage.saveManualWorkout({ ...workout, id: 'manual-2' }), 'corrupt
 assert.equal(values.get(storage.MANUAL_WORKOUT_KEY), '{broken');
 assert.ok(clearRehabLocalData().clearedKeys.includes(storage.MANUAL_WORKOUT_KEY));
 assert.equal(values.has(storage.MANUAL_WORKOUT_KEY), false);
-console.log('Manual workout regression passed: one workout, sets, dedupe, date and clock shifts, invalid/corrupt/write-failed storage, Records count, and cleanup.');
+console.log('Manual workout regression passed: quick-picker art and locales, gym equipment readback, sets, dedupe, dates, corrupt/write-failed storage, Records count, and cleanup.');

@@ -1,6 +1,8 @@
-import type { QuickMovementId } from './QuickMovementIcon';
+import type { QuickMovementId as ExistingQuickMovementId } from './QuickMovementIcon';
 
-// Keep the approved reference sheets' two-pose crops together for the seven quick choices.
+export type QuickMovementId = ExistingQuickMovementId | 'legExtension';
+
+// Keep the approved reference sheets' two-pose crops together for the quick choices.
 const crop: Record<QuickMovementId, { left: string; top: string }> = {
   benchPress: { left: '-26.45%', top: '-492.1%' },
   shoulderPress: { left: '-132.25%', top: '-492.1%' },
@@ -9,11 +11,15 @@ const crop: Record<QuickMovementId, { left: string; top: string }> = {
   dip: { left: '-26.45%', top: '-714.6%' },
   latPulldown: { left: '-132.25%', top: '-714.6%' },
   seatedRow: { left: '-26.45%', top: '-825.9%' },
+  legExtension: { left: '-132.25%', top: '-825.9%' },
 };
+
+const poseCorrected: QuickMovementId[] = ['benchPress', 'seatedRow'];
 
 function artSource(id: QuickMovementId) {
   if (id === 'pullUp') return '/exercise-visuals/manual-workout-reference-pullup-airborne.png';
-  if (id === 'benchPress' || id === 'seatedRow') return '/exercise-visuals/manual-workout-reference-pose-corrected.png';
+  if (poseCorrected.includes(id)) return '/exercise-visuals/manual-workout-reference-pose-corrected.png';
+  if (id === 'legExtension') return '/exercise-visuals/manual-workout-reference-eight.png';
   return '/exercise-visuals/manual-workout-reference-all-seven.png';
 }
 

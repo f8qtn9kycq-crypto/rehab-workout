@@ -17,6 +17,7 @@ const isQuickExercise = (id: string) => quickExerciseIds.some(quickId => quickId
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
   { id: 'barbell', Icon: GripHorizontal }, { id: 'machine', Icon: Cable },
+  { id: 'cable', Icon: Cable }, { id: 'smith_machine', Icon: GripHorizontal },
   { id: 'resistance_band', Icon: StretchHorizontal }, { id: 'chair', Icon: Armchair },
   { id: 'wall', Icon: Hand }, { id: 'kettlebell', Icon: Weight },
   { id: 'foam_roller', Icon: Waves },

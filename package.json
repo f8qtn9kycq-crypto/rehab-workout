@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging",
+    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout",
+    "test:manual-workout": "node scripts/manual-workout-regression.mjs",
     "test:home-entry": "node scripts/home-entry-regression.mjs",
     "test:progress": "node scripts/progress-summary-regression.mjs",
     "test:records-presentation": "node scripts/records-presentation-regression.mjs",

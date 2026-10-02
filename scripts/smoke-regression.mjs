@@ -235,9 +235,10 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');
   assertIncludes(source.localizedExercise, 'getLocalizedTrainingLogTitle(', 'localized saved-log title helper exists');
   assertIncludes(source.localizedExercise, 'getExerciseById(log.exerciseId)', 'saved logs localize from stable exercise id');
-  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes)', 'Records unifies guided logs and activities through the presentation adapter');
+  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts)', 'Records unifies guided logs, activities, and manual workouts through the presentation adapter');
   assertIncludes(source.recordsPresentation, "source: 'training'", 'presentation adapter includes guided sessions');
   assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
+  assertIncludes(source.recordsPresentation, "source: 'manual'", 'presentation adapter includes retrospective workouts');
   assertIncludes(source.recordsPresentation, '.filter(log => !linkedLogIds.has(log.id))', 'logs linked to a resistance aggregate are not duplicated');
   assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
   assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');

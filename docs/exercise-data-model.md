@@ -151,6 +151,10 @@ sets: [
 
 Preserve LocalStorage compatibility unless a migration is explicitly requested.
 
+## Retrospective workout record
+
+`rehab.manualWorkouts.v1` is additive and separate from guided `rehab.trainingLogs.v2` and activity `rehab.activities.v1`. One saved workout has a local `YYYY-MM-DD` date, a stable ID, creation time, and 1–12 free-text exercises. Each exercise has its actual name, optional free-text equipment, and 1–20 completed sets with required positive integer reps and optional nonnegative weight in kg. An optional `cyclingMinutes` records time within that same workout; it does not create a separate cycling activity or affect weekly cycling recommendations. Records presents and counts the workout once. The form does not invent pain scores, body area, or an exercise prescription, and these records do not enter rehab recommendations or recovery trends. Invalid or corrupt stored data must not be overwritten by a new save; clear-local-data includes this key.
+
 ## Functional Outcome Schema
 
 Functional outcome check-ins use a separate LocalStorage key and must not change the training log key or shape.

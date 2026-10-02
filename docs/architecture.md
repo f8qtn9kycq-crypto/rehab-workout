@@ -29,6 +29,7 @@ This document preserves the default technical architecture for Rehab-Workout. Ke
 /exercise/:exerciseId
 /session/:exerciseId
 /logs
+/logs/new
 /education
 ```
 
@@ -52,6 +53,8 @@ This document preserves the default technical architecture for Rehab-Workout. Ke
 ## Persistence
 
 LocalStorage is the MVP persistence layer. Preserve existing stored keys unless a migration is explicitly requested.
+
+`/logs/new` is a retrospective workout form. It stores one workout with multiple exercises in a separate additive key; it does not enter guided-session routes or infer pain scores.
 
 ## Media Embed Rules
 

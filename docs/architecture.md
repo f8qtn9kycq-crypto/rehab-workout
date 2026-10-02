@@ -54,7 +54,7 @@ This document preserves the default technical architecture for Rehab-Workout. Ke
 
 LocalStorage is the MVP persistence layer. Preserve existing stored keys unless a migration is explicitly requested.
 
-`/logs/new` is a retrospective workout form. It stores one workout with multiple exercises in a separate additive key; it does not enter guided-session routes or infer pain scores.
+`/logs/new` is a retrospective workout form. It stores one workout with multiple exercises in a separate additive key; it does not enter guided-session routes or infer pain scores. Optional pain and effort are saved only when explicitly entered. Cycling is recorded separately through the existing activity key. Records groups workouts, guided logs, and activities by local day for display without changing their stored records.
 
 ## Media Embed Rules
 

@@ -40,6 +40,7 @@ globalThis.window = { localStorage: {
 } };
 
 const storage = await loadModule('src/services/manualWorkoutStorage.ts');
+const { manualWorkoutPainNotice } = await loadModule('src/utils/manualWorkoutPain.ts');
 const { buildRecordsPresentation } = await loadModule('src/utils/recordsPresentation.ts');
 const { clearRehabLocalData } = await loadModule('src/services/localStorageService.ts');
 const today = new Date();
@@ -57,13 +58,29 @@ assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].equipmentId, 
 assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], exerciseId: undefined, equipmentId: undefined }] }), true, 'legacy records without ids remain readable');
 assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], exerciseId: { invalid: true } }] }), false, 'invalid id does not enter storage');
 assert.equal(storage.readManualWorkouts().workouts[0].cyclingMinutes, 15, 'same workout can record cycling minutes without another activity');
+const detailed = { ...workout, id: 'manual-detailed', cyclingMinutes: undefined, exercises: [
+  { name: 'Squat', equipment: 'barbell', kind: 'strength', bodyArea: 'hip', painBefore: 0, painAfter: 2, effort: 8, sets: [{ weightKg: 40, reps: 6, warmup: true }, { weightKg: 72, reps: 5, warmup: false }] },
+  { name: 'YWT', equipment: '', kind: 'mobility', bodyArea: 'shoulder', painBefore: 0, painAfter: 0, effort: 3, sets: [{ reps: 16 }] },
+] };
+assert.equal(storage.saveManualWorkout(detailed), 'ok');
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].sets[0].warmup, true, 'warm-up and work sets survive readback');
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[1].painAfter, 0, 'explicit zero pain survives readback');
+assert.equal(manualWorkoutPainNotice(6, 0), 'stop', 'pain before 6 still shows stop warning');
+assert.equal(manualWorkoutPainNotice(0, 6), 'stop', 'pain after 6 shows stop warning');
+assert.equal(manualWorkoutPainNotice(0, 3), 'warning', 'pain increase above 2 shows warning');
+assert.equal(manualWorkoutPainNotice(0, 2), null, 'low pain without significant increase shows no warning');
+assert.equal(storage.saveManualWorkout({ ...detailed, id: 'partial-pain', exercises: [{ ...detailed.exercises[0], painAfter: undefined }] }), 'invalid', 'partial pain pair is not silently recorded');
 assert.equal(storage.saveManualWorkout(workout), 'invalid', 'same id cannot create a duplicate');
 assert.equal(buildRecordsPresentation([], [], [], today, [workout]).recentActivities.length, 1, 'Records shows one workout');
+const rides = [1, 2].map(number => ({ id: `ride-${number}`, kind: 'cycling', date, completed: true, actualMinutes: 15, symptomResponse: 'same' }));
+const day = buildRecordsPresentation([], rides, [], today, [detailed]);
+assert.equal(day.days.length, 1, 'workout and rides share one day heading');
+assert.equal(day.days[0].items.length, 3, 'two rides stay separate from one workout');
 assert.equal(buildRecordsPresentation([], [], [], today, [workout]).weeklyActivityCount, 1, 'weekly summary counts one workout');
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'future', date: '2999-01-01' }), 'invalid');
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'bad-set', exercises: [{ ...workout.exercises[0], sets: [{ weightKg: 72, reps: 0 }] }] }), 'invalid');
 assert.equal(storage.saveManualWorkout({ ...workout, id: 'bad-cycling', cyclingMinutes: 0 }), 'invalid');
-assert.equal(storage.readManualWorkouts().workouts.length, 1, 'invalid saves preserve existing data');
+assert.equal(storage.readManualWorkouts().workouts.length, 2, 'invalid saves preserve existing data');
 const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 const tomorrowDate = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
 const futureRecord = { ...workout, id: 'clock-shifted', date: tomorrowDate };

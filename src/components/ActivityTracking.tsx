@@ -9,7 +9,7 @@ import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 const newSegment = (phase: SessionPhase = 'main'): SessionSegment => ({ phase, exerciseLogIds: [], exerciseResults: [] });
 
-export default function ActivityTracking({ onActivitiesChange = () => {}, initialKind = null }: { onActivitiesChange?: () => void; initialKind?: Activity['kind'] | null }) {
+export default function ActivityTracking({ onActivitiesChange = () => {}, activities, initialKind = null, allowCycling = true }: { onActivitiesChange?: () => void; activities?: Activity[]; initialKind?: Activity['kind'] | null; allowCycling?: boolean }) {
   const { t, language } = useI18n();
   const titleId = useId();
   const [savedActivity, setSavedActivity] = useState<Activity | null>(null);
@@ -23,9 +23,10 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, initia
   const [response, setResponse] = useState<Response | ''>('');
   const [segments, setSegments] = useState<SessionSegment[]>([newSegment()]);
   const [message, setMessage] = useState('');
-  const summary = weeklyActivities(state.activities);
+  const currentActivities = activities ?? state.activities;
+  const summary = weeklyActivities(currentActivities);
   const links = segments.flatMap(segment => segment.exerciseLogIds);
-  const usedIds = state.activities.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
+  const usedIds = currentActivities.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
   const logs = getLogs();
   const available = logs.filter(log => localDate(new Date(log.date)) === date && !usedIds.includes(log.id));
   const linkedLogTitle = (logId: string) => {
@@ -80,7 +81,7 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, initia
     </>}
     <div className="grid gap-2 sm:grid-cols-2">
       {!initialKind && <button className={button} onClick={() => { setKind('resistance'); setMinutes(''); }}>{t('activities.resistance')}</button>}
-      {(!initialKind || !kind) && <button className={button} onClick={() => { setKind('cycling'); setSegments([newSegment()]); setMinutes('15'); setSavedActivity(null); }}>{t('activities.cycling')}</button>}
+      {allowCycling && (!initialKind || !kind) && <button className={button} onClick={() => { setKind('cycling'); setSegments([newSegment()]); setMinutes('15'); setSavedActivity(null); }}>{t('activities.cycling')}</button>}
     </div>
     {savedActivity && <ActivityIdentityVisual activity={savedActivity} />}
     {state.error && <p role="alert">{t('activities.error')}</p>}
@@ -112,7 +113,7 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, initia
       <button className={button} type="button" onClick={() => setKind(null)}>{t('activities.cancel')}</button>
     </form>}
     {!initialKind && <><details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.history')}</summary>
-      <div className="space-y-4">{[...state.activities].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} className="space-y-2 border-t pt-3">
+      <div className="space-y-4">{[...currentActivities].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} className="space-y-2 border-t pt-3">
         <p>{a.date} · {t(`activities.${a.kind}`)} · {a.actualMinutes} {t('activities.minuteUnit')} · {t(a.completed ? 'activities.completed' : 'activities.incomplete')}</p>
         {a.kind === 'resistance' && <><p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}</p>{a.segments && <ul className="space-y-2 pl-5">{a.segments.map((segment, index) => <li key={`${segment.phase}-${index}`} className="list-disc">{t(`activities.phases.${segment.phase}`)} · {segment.exerciseLogIds.length} {t('activities.logUnit')}{segment.exerciseLogIds.length > 0 && <ul className="pl-5">{segment.exerciseLogIds.map(logId => {
           const linkedLog = logs.find(log => log.id === logId);

@@ -75,21 +75,24 @@ export default function LogsPage() {
 
       <section className="card space-y-3 border-calm-200 bg-calm-50/80 p-5" aria-labelledby="records-start-title">
         <div>
-          <h2 id="records-start-title" className="text-xl font-black text-ink">{t('logs.startTraining')}</h2>
-          <p className="mt-1 text-sm leading-6 text-calm-800">{t('logs.startTrainingHint')}</p>
+          <h2 id="records-start-title" className="text-xl font-black text-ink">{t('manualWorkout.entry')}</h2>
+          <p className="mt-1 text-sm leading-6 text-calm-800">{t('manualWorkout.entryHint')}</p>
         </div>
-        <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-12 w-full items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white sm:w-auto">
-          {t('logs.startTraining')}
+        <Link to="/logs/new" className="focus-ring inline-flex min-h-12 w-full items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white sm:w-auto">
+          {t('manualWorkout.entry')}
         </Link>
+        <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('logs.startTraining')}</Link>
       </section>
 
-      <Link to="/logs/new" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.entry')}</Link>
+      <a href="#records-cycling" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('activities.cycling')}</a>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
         {presentation.hasActivityHistory ? (
           <div className="space-y-3">
-            {presentation.recentActivities.slice(0, 5).map(item => item.source === 'training' ? (
+            {presentation.days.slice(0, 5).map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
+              <h3 className="text-lg font-black text-ink">{day.date}</h3>
+              {day.items.map(item => item.source === 'training' ? (
               <article key={item.id} className="card space-y-3 p-4">
                 <ExerciseIdentityVisual log={item.log} compact />
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
@@ -102,8 +105,13 @@ export default function LogsPage() {
                 <ActivityIdentityVisual activity={item.activity} />
                 <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
                 {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
+                {item.activity.kind === 'resistance' && item.activity.exerciseLogIds.map(id => {
+                  const log = logs.find(row => row.id === id);
+                  return log ? <div key={id} className="mt-3 border-t border-slate-200 pt-3"><ExerciseIdentityVisual log={log} compact /><TrainingSetSummary sets={log.sets} /></div> : null;
+                })}
               </article>
-            ))}
+              ))}
+            </section>)}
           </div>
         ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
       </section>
@@ -133,12 +141,14 @@ export default function LogsPage() {
         <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
       </section>
 
+      <section id="records-cycling" className="space-y-4" aria-label={t('activities.cycling')}><ActivityTracking initialKind="cycling" activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} /></section>
+
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />
         <details className="card p-3">
           <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
           <div className="mt-4 space-y-5">
-            <ActivityTracking onActivitiesChange={() => setActivities(readActivities().activities)} />
+            <ActivityTracking allowCycling={false} activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} />
             {manualWorkouts.length > 0 && <div className="space-y-3">{manualWorkouts.map(workout => <ManualWorkoutCard key={workout.id} workout={workout} />)}</div>}
             {logs.length > 0 ? <TrainingLog logs={logs} onLogsChange={setLogs} /> : null}
           </div>

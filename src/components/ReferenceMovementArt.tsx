@@ -24,7 +24,7 @@ function artSource(id: QuickMovementId) {
 }
 
 export default function ReferenceMovementArt({ id }: { id: QuickMovementId }) {
-  return <span aria-hidden="true" className="relative block w-full overflow-hidden" style={{ aspectRatio: '155 / 89' }}>
+  return <span aria-hidden="true" className="relative block w-full overflow-hidden rounded-md bg-white ring-1 ring-inset ring-slate-200" style={{ aspectRatio: '155 / 89' }}>
     <img
       src={artSource(id)}
       alt=""

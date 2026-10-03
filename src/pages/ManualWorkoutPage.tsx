@@ -3,6 +3,7 @@ import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, Stretc
 import { Link, useNavigate } from 'react-router-dom';
 import LibraryMovementArt from '../components/LibraryMovementArt';
 import ReferenceMovementArt, { type QuickMovementId } from '../components/ReferenceMovementArt';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
 import { quickExerciseCatalogIds, quickExerciseIds } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
@@ -96,7 +97,7 @@ export default function ManualWorkoutPage() {
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
           {selectedIds[index] && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
-            {isQuickExercise(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><ReferenceMovementArt id={selectedIds[index]} /></div>}
+            {hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} /></div>}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>

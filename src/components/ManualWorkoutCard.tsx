@@ -3,6 +3,7 @@ import { equipmentChoiceIds, quickExerciseIds } from '../data/manualWorkoutOptio
 import { useI18n } from '../services/i18n';
 import type { ManualWorkout } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 
 export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout }) {
   const { t, language } = useI18n();
@@ -15,6 +16,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
       const equipmentId = equipmentChoiceIds.find(id => id === exercise.equipmentId);
       const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : exercise.equipment;
       return <div key={index} className="border-t border-slate-100 pt-2">
+        {hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
         <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => `${set.warmup ? `${t('manualWorkout.warmup')} · ` : ''}${t('manualWorkout.setSummary', { number: setIndex + 1, weight: set.weightKg === undefined ? t('manualWorkout.noWeight') : t('manualWorkout.weightValue', { value: set.weightKg }), reps: set.reps })}`).join(' · ')}</p>

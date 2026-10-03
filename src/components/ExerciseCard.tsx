@@ -4,6 +4,7 @@ import { useI18n } from '../services/i18n';
 import type { Exercise } from '../types/rehab';
 import { getExerciseEquipment } from '../utils/exerciseModel';
 import { getLocalizedExercise } from '../utils/localizedExercise';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const location = useLocation();
@@ -20,6 +21,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
         <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>
       </div>
+      {hasWorkoutMovementArt(exercise.id) && <div className="mt-3"><WorkoutMovementArt id={exercise.id} /></div>}
       <h3 className="mt-3 text-xl font-bold text-ink">{displayExercise.title}</h3>
       <p className="mt-2 flex-1 text-base text-slate-600">{displayExercise.description}</p>
       <div className="mt-3 flex flex-wrap gap-2">

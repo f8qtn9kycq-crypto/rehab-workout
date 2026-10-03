@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import BodyAreaIcon from '../components/BodyAreaIcon';
 import ReferenceMovementArt from '../components/ReferenceMovementArt';
 import { exercises as catalog } from '../data/exercises';
-import { quickExerciseIds } from '../data/manualWorkoutOptions';
+import { quickExerciseCatalogIds, quickExerciseIds } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
 import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
@@ -14,6 +14,7 @@ import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
 const isQuickExercise = (id: string) => quickExerciseIds.some(quickId => quickId === id);
+const moreExerciseCatalog = catalog.filter(exercise => !quickExerciseCatalogIds.has(exercise.id));
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
   { id: 'barbell', Icon: GripHorizontal }, { id: 'machine', Icon: Cable },
@@ -103,7 +104,7 @@ export default function ManualWorkoutPage() {
             </button>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 p-3"><summary className="focus-ring cursor-pointer font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">{catalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-sm font-bold ${selectedIds[index] === item.id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><BodyAreaIcon area={item.bodyArea} size={25} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-sm font-bold ${selectedIds[index] === item.id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><BodyAreaIcon area={item.bodyArea} size={25} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
           </details>
           <button type="button" aria-pressed={selectedIds[index] === 'custom'} onClick={() => chooseExercise(index, 'custom')} className={`focus-ring mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border p-2 font-bold ${selectedIds[index] === 'custom' ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-calm-800'}`}><Hand size={20} aria-hidden="true" />{t('manualWorkout.otherExercise')}</button>
           </>}

@@ -14,6 +14,12 @@ assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
 assert.equal(quickIds.length, 8, 'all eight approved choices remain available');
 assert.ok(quickIds.includes('legExtension'), 'leg extension is a quick movement');
+const quickCatalogList = optionsSource.match(/quickExerciseCatalogIds[^=]*= new Set\(\[([^\]]+)\]\)/);
+assert.ok(quickCatalogList, 'quick exercise catalog exclusions exist');
+const quickCatalogIds = [...quickCatalogList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
+assert.deepEqual(quickCatalogIds, ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-pull-up', 'catalog-dip', 'catalog-lat-pulldown', 'catalog-seated-row'], 'equivalent catalog exercises are excluded by stable id');
+assert.match(pickerSource, /const moreExerciseCatalog = catalog\.filter\(exercise => !quickExerciseCatalogIds\.has\(exercise\.id\)\)/, 'more exercises exclude quick-choice equivalents');
+assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises render the filtered catalog');
 for (const id of quickIds) {
   assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);

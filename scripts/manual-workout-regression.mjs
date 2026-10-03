@@ -7,28 +7,43 @@ import zhTW from '../src/locales/zh-TW.js';
 const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
 const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
+const libraryArtSource = readFileSync('src/components/LibraryMovementArt.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
+assert.match(pickerSource, /isQuickExercise\(selectedIds\[index\]\).*<ReferenceMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick exercise keeps the same reference art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
+assert.match(artSource, /rounded-md bg-white[^\"]*ring-1 ring-inset ring-slate-200/, 'quick choices use the shared visual frame');
+assert.match(artSource, /manual-workout-quick-line-art-v1\.png/, 'quick choices use the same reviewed hand-drawn style as the library');
+assert.match(artSource, /backgroundSize: '400% 200%'/, 'quick choices use the eight-cell sprite grid');
+assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
+assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
+assert.match(libraryArtSource, /aspectRatio: '155 \/ 89'/, 'library choices use the same framed visual ratio');
+assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-28[\s\S]*?p-1 text-center text-sm font-bold/, 'library choices use the same card geometry as quick choices');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
 assert.equal(quickIds.length, 8, 'all eight approved choices remain available');
 assert.ok(quickIds.includes('legExtension'), 'leg extension is a quick movement');
+const quickCatalogList = optionsSource.match(/quickExerciseCatalogIds[^=]*= new Set\(\[([^\]]+)\]\)/);
+assert.ok(quickCatalogList, 'quick exercise catalog exclusions exist');
+const quickCatalogIds = [...quickCatalogList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
+assert.deepEqual(quickCatalogIds, ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-pull-up', 'catalog-dip', 'catalog-lat-pulldown', 'catalog-seated-row'], 'equivalent catalog exercises are excluded by stable id');
+assert.match(pickerSource, /const moreExerciseCatalog = catalog\.filter\(exercise => !quickExerciseCatalogIds\.has\(exercise\.id\)\)/, 'more exercises exclude quick-choice equivalents');
+assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises render the filtered catalog');
+const libraryArtIds = [...libraryArtSource.matchAll(/'((?:shoulder|hip|glute|neck|pec|upper|knee|ankle)-[^']+)'/g)].map(([, id]) => id);
+const additionalCatalogIds = [...optionsSource.matchAll(/'catalog-[^']+'/g)].map(match => match[0].slice(1, -1));
+assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
+assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
+assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
+assert.match(libraryArtSource, /manual-workout-library-line-art-v1\.png/, 'library movement art uses the reviewed hand-drawn sprite sheet');
 for (const id of quickIds) {
-  assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
+  assert.match(artSource, new RegExp(`[' ]${id}[' ,]`), `${id} has a quick-art sprite position`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);
 }
 const equipmentIds = [...pickerSource.match(/const equipmentChoices = \[([\s\S]*?)\];/)?.[1].matchAll(/id: '([^']+)'/g) ?? []].map(match => match[1]);
 assert.ok(equipmentIds.includes('cable') && equipmentIds.includes('smith_machine'), 'gym equipment choices are available');
-assert.match(artSource, /manual-workout-reference-all-seven\.png/);
-assert.match(artSource, /id === 'pullUp'\) return '\/exercise-visuals\/manual-workout-reference-pullup-airborne\.png'/);
-assert.match(artSource, /const poseCorrected: QuickMovementId\[\] = \['benchPress', 'seatedRow'\]/);
-assert.match(artSource, /poseCorrected\.includes\(id\)\) return '\/exercise-visuals\/manual-workout-reference-pose-corrected\.png'/);
-for (const sheet of ['all-seven', 'pose-corrected', 'pullup-airborne']) {
-  const png = readFileSync(`public/exercise-visuals/manual-workout-reference-${sheet}.png`);
-  assert.equal(png.toString('hex', 0, 8), '89504e470d0a1a0a', `${sheet} is PNG`);
-  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [793, 1981], `${sheet} keeps crop geometry`);
-}
+const quickSprite = readFileSync('public/exercise-visuals/manual-workout-quick-line-art-v1.png');
+assert.equal(quickSprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'quick movement sprite is PNG');
+assert.deepEqual([quickSprite.readUInt32BE(16), quickSprite.readUInt32BE(20)], [1774, 887], 'quick movement sprite keeps the reviewed 4x2 geometry');
 
 async function loadModule(entry) {
   const result = await build({
@@ -56,13 +71,6 @@ const today = new Date();
 const date = storage.localDate ? storage.localDate(today) : `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 for (const id of equipmentIds) {
   assert.ok(en.manualWorkout.equipmentChoices[id] && zhTW.manualWorkout.equipmentChoices[id], `${id} equipment is localized`);
-}
-const sheets = [...new Set([...artSource.matchAll(/\/exercise-visuals\/(manual-workout-reference-[\w-]+\.png)/g)].map(match => match[1]))];
-assert.equal(sheets.length, 4, 'all exercise art sheets are checked');
-for (const sheet of sheets) {
-  const png = readFileSync(`public/exercise-visuals/${sheet}`);
-  assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${sheet} is PNG`);
-  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [793, 1981], `${sheet} keeps the shared crop geometry`);
 }
 const workout = { id: 'manual-1', date, createdAt: today.toISOString(), cyclingMinutes: 15, exercises: [
   { name: 'Barbell squat', equipment: 'barbell', exerciseId: 'squat', equipmentId: 'barbell', sets: [{ weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }, { weightKg: 72, reps: 5 }] },

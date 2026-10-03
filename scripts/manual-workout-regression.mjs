@@ -8,6 +8,7 @@ const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
 const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
+assert.match(pickerSource, /isQuickExercise\(selectedIds\[index\]\).*<ReferenceMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick exercise keeps the same reference art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');

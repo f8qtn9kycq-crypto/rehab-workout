@@ -8,6 +8,10 @@ const libraryArtIds = [
   'ankle-calf-raise', 'ankle-gastrocnemius-stretch', 'ankle-soleus-stretch', 'ankle-seated-soleus-raise', 'ankle-single-leg-reach',
 ] as const;
 
+export function hasLibraryMovementArt(id: string): boolean {
+  return libraryArtIds.some(libraryId => libraryId === id);
+}
+
 export default function LibraryMovementArt({ id }: { id: string }) {
   const index = libraryArtIds.indexOf(id as typeof libraryArtIds[number]);
   if (index < 0) return null;

@@ -4,6 +4,10 @@ export type QuickMovementId = ExistingQuickMovementId | 'legExtension';
 
 const quickArtIds: QuickMovementId[] = ['benchPress', 'shoulderPress', 'squat', 'pullUp', 'dip', 'latPulldown', 'seatedRow', 'legExtension'];
 
+export function hasReferenceMovementArt(id: string): id is QuickMovementId {
+  return quickArtIds.some(quickId => quickId === id);
+}
+
 export default function ReferenceMovementArt({ id }: { id: QuickMovementId }) {
   const index = quickArtIds.indexOf(id);
   const column = index % 4;

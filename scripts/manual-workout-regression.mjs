@@ -8,8 +8,11 @@ const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
 const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
 const libraryArtSource = readFileSync('src/components/LibraryMovementArt.tsx', 'utf8');
+const sharedArtSource = readFileSync('src/components/WorkoutMovementArt.tsx', 'utf8');
+const manualCardSource = readFileSync('src/components/ManualWorkoutCard.tsx', 'utf8');
+const exerciseCardSource = readFileSync('src/components/ExerciseCard.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
-assert.match(pickerSource, /isQuickExercise\(selectedIds\[index\]\).*<ReferenceMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick exercise keeps the same reference art in the form');
+assert.match(pickerSource, /hasWorkoutMovementArt\(selectedIds\[index\]\).*<WorkoutMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick or library exercise keeps the same art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
 assert.match(artSource, /rounded-md bg-white[^\"]*ring-1 ring-inset ring-slate-200/, 'quick choices use the shared visual frame');
 assert.match(artSource, /manual-workout-quick-line-art-v2\.png/, 'quick choices use the revised hand-drawn sprite');
@@ -36,6 +39,11 @@ assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have m
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
 assert.match(libraryArtSource, /manual-workout-library-line-art-v2\.png/, 'library movement art uses the revised hand-drawn sprite sheet');
+assert.match(sharedArtSource, /hasReferenceMovementArt\(id\).*<ReferenceMovementArt id=\{id\}/s, 'shared movement art routes quick ids to quick sprites');
+assert.match(sharedArtSource, /hasLibraryMovementArt\(id\).*<LibraryMovementArt id=\{id\}/s, 'shared movement art routes catalog ids to library sprites');
+assert.match(sharedArtSource, /return null/, 'unknown and legacy ids keep a text-only fallback');
+assert.match(manualCardSource, /hasWorkoutMovementArt\(exercise\.exerciseId\).*<WorkoutMovementArt id=\{exercise\.exerciseId\}/s, 'saved manual workout records reuse stable-id movement art');
+assert.match(exerciseCardSource, /hasWorkoutMovementArt\(exercise\.id\).*<WorkoutMovementArt id=\{exercise\.id\}/s, 'exercise-library cards reuse stable-id movement art');
 for (const id of quickIds) {
   assert.match(artSource, new RegExp(`[' ]${id}[' ,]`), `${id} has a quick-art sprite position`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);

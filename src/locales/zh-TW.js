@@ -181,6 +181,28 @@ export default {
       },
     },
   },
+  bodyFirst: {
+    stepLabel: '從身體部位開始',
+    homeTitle: '今天哪個部位需要你的注意？',
+    homeBody: '先選一個身體部位，再告訴我們今天想訓練，還是有不適。',
+    homeCta: '選擇身體部位',
+    title: '先選一個身體部位',
+    subtitle: '我們會依你的選擇，接回既有的安全檢查與訓練流程。',
+    areaLegend: '今天想照顧哪個部位？',
+    intentLegend: '今天「{bodyArea}」怎麼了？',
+    intents: {
+      train: {
+        label: '想訓練',
+        hint: '前往今天的訓練設定；仍須完成當日安全檢查。',
+      },
+      discomfort: {
+        label: '有不適',
+        hint: '選動作前，先進入既有安全與警訊檢查。',
+      },
+    },
+    continue: '安全地繼續',
+    safetyNote: '有不適時一定會重新進入安全檢查；出現警訊或疼痛達 6／10 以上仍會停止訓練。',
+  },
   weeklyRoutine: {
     title: '本週訓練計畫',
     subtitle: '選一個短計畫，從既有保守動作開始；開始訓練前仍會經過安全檢查。',
@@ -205,10 +227,10 @@ export default {
   onboarding: {
     badge: '安全優先',
     title: '今天先走一條安全開始路徑',
-    subtitle: '先完成安全確認，再選身體部位，了解訓練前後都要記錄疼痛程度。',
+    subtitle: '先選身體部位，再依既有安全與疼痛檢查開始訓練。',
     stepsLabel: '首次使用路徑',
-    steps: ['安全確認', '選身體部位', '記錄前後疼痛', '開始合適動作'],
-    start: '開始安全確認',
+    steps: ['選身體部位', '選擇想訓練或有不適', '安全與疼痛檢查', '開始合適動作'],
+    start: '選擇身體部位',
   },
   bodyAreas: {
     shoulder: { label: '肩部復健', hint: '活動度、旋轉肌、肩胛控制' },

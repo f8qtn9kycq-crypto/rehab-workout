@@ -7,11 +7,14 @@ import zhTW from '../src/locales/zh-TW.js';
 const pickerSource = readFileSync('src/pages/ManualWorkoutPage.tsx', 'utf8');
 const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
+const libraryArtSource = readFileSync('src/components/LibraryMovementArt.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
 assert.match(pickerSource, /isQuickExercise\(selectedIds\[index\]\).*<ReferenceMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick exercise keeps the same reference art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
 assert.match(artSource, /rounded-md bg-white ring-1 ring-inset ring-slate-200/, 'quick choices use the shared visual frame');
-assert.match(pickerSource, /style=\{\{ aspectRatio: '155 \/ 89' \}\}><BodyAreaIcon area=\{item\.bodyArea\} size=\{42\}/, 'library choices use the same framed visual ratio');
+assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
+assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
+assert.match(libraryArtSource, /aspectRatio: '155 \/ 89'/, 'library choices use the same framed visual ratio');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-28[\s\S]*?p-1 text-center text-sm font-bold/, 'library choices use the same card geometry as quick choices');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
@@ -24,6 +27,12 @@ const quickCatalogIds = [...quickCatalogList[1].matchAll(/'([^']+)'/g)].map(([, 
 assert.deepEqual(quickCatalogIds, ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-pull-up', 'catalog-dip', 'catalog-lat-pulldown', 'catalog-seated-row'], 'equivalent catalog exercises are excluded by stable id');
 assert.match(pickerSource, /const moreExerciseCatalog = catalog\.filter\(exercise => !quickExerciseCatalogIds\.has\(exercise\.id\)\)/, 'more exercises exclude quick-choice equivalents');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises render the filtered catalog');
+const libraryArtIds = [...libraryArtSource.matchAll(/'((?:shoulder|hip|glute|neck|pec|upper|knee|ankle)-[^']+)'/g)].map(([, id]) => id);
+const additionalCatalogIds = [...optionsSource.matchAll(/'catalog-[^']+'/g)].map(match => match[0].slice(1, -1));
+assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
+assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
+assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
+assert.match(libraryArtSource, /manual-workout-library-line-art-v1\.png/, 'library movement art uses the reviewed hand-drawn sprite sheet');
 for (const id of quickIds) {
   assert.match(artSource, new RegExp(`^  ${id}: \\{ left:`, 'm'), `${id} has a reference crop`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);

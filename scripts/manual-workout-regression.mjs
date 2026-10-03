@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { build } from 'vite';
 import en from '../src/locales/en.js';
 import zhTW from '../src/locales/zh-TW.js';
@@ -9,17 +9,17 @@ const optionsSource = readFileSync('src/data/manualWorkoutOptions.ts', 'utf8');
 const artSource = readFileSync('src/components/ReferenceMovementArt.tsx', 'utf8');
 const libraryArtSource = readFileSync('src/components/LibraryMovementArt.tsx', 'utf8');
 const sharedArtSource = readFileSync('src/components/WorkoutMovementArt.tsx', 'utf8');
+const registrySource = readFileSync('src/data/movementArtRegistry.ts', 'utf8');
+const artManifest = JSON.parse(readFileSync('src/data/movementArtManifest.json', 'utf8'));
 const manualCardSource = readFileSync('src/components/ManualWorkoutCard.tsx', 'utf8');
 const exerciseCardSource = readFileSync('src/components/ExerciseCard.tsx', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
 assert.match(pickerSource, /hasWorkoutMovementArt\(selectedIds\[index\]\).*<WorkoutMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick or library exercise keeps the same art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
-assert.match(artSource, /rounded-md bg-white[^\"]*ring-1 ring-inset ring-slate-200/, 'quick choices use the shared visual frame');
-assert.match(artSource, /manual-workout-quick-line-art-v2\.png/, 'quick choices use the revised hand-drawn sprite');
-assert.match(artSource, /backgroundSize: '400% 200%'/, 'quick choices use the eight-cell sprite grid');
+assert.match(artSource, /<WorkoutMovementArt id=\{id\} loading="eager"/, 'visible quick choices eagerly use the shared movement-art component');
 assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
 assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
-assert.match(libraryArtSource, /aspectRatio: '155 \/ 89'/, 'library choices use the same framed visual ratio');
+assert.match(libraryArtSource, /<WorkoutMovementArt id=\{id\}/, 'library choices use the shared movement-art component');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
 assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
@@ -33,29 +33,48 @@ const quickCatalogIds = [...quickCatalogList[1].matchAll(/'([^']+)'/g)].map(([, 
 assert.deepEqual(quickCatalogIds, ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-pull-up', 'catalog-dip', 'catalog-lat-pulldown', 'catalog-seated-row'], 'equivalent catalog exercises are excluded by stable id');
 assert.match(pickerSource, /const moreExerciseCatalog = catalog\.filter\(exercise => !quickExerciseCatalogIds\.has\(exercise\.id\)\)/, 'more exercises exclude quick-choice equivalents');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises render the filtered catalog');
-const libraryArtIds = [...libraryArtSource.matchAll(/'((?:shoulder|hip|glute|neck|pec|upper|knee|ankle)-[^']+)'/g)].map(([, id]) => id);
+const libraryArtIds = artManifest.filter(entry => entry.group === 'library').map(entry => entry.id);
+const quickArtIds = artManifest.filter(entry => entry.group === 'quick').map(entry => entry.id);
 const additionalCatalogIds = [...optionsSource.matchAll(/'catalog-[^']+'/g)].map(match => match[0].slice(1, -1));
 assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
-assert.match(libraryArtSource, /manual-workout-library-line-art-v2\.png/, 'library movement art uses the revised hand-drawn sprite sheet');
-assert.match(sharedArtSource, /hasReferenceMovementArt\(id\).*<ReferenceMovementArt id=\{id\}/s, 'shared movement art routes quick ids to quick sprites');
-assert.match(sharedArtSource, /hasLibraryMovementArt\(id\).*<LibraryMovementArt id=\{id\}/s, 'shared movement art routes catalog ids to library sprites');
-assert.match(sharedArtSource, /return null/, 'unknown and legacy ids keep a text-only fallback');
+assert.deepEqual(quickArtIds, quickIds, 'quick choices and canonical art registry stay in the same approved order');
+const allArtIds = artManifest.flatMap(entry => [entry.id, ...(entry.aliases ?? [])]);
+assert.equal(new Set(allArtIds).size, allArtIds.length, 'canonical ids and aliases are globally unique');
+assert.deepEqual(artManifest.find(entry => entry.id === 'pullUp').aliases, ['catalog-pull-up'], 'exact pull-up catalog equivalent reuses the approved art');
+assert.deepEqual(artManifest.find(entry => entry.id === 'dip').aliases, ['catalog-dip'], 'exact dip catalog equivalent reuses the approved art');
+assert.ok(!allArtIds.includes('catalog-bench-press') && !allArtIds.includes('catalog-squat'), 'equipment-specific catalog movements do not receive misleading aliases');
+assert.match(sharedArtSource, /getMovementArt\(id\)/, 'shared movement art resolves one canonical registry');
+assert.match(sharedArtSource, /loading=\{loading\}/, 'shared movement art supports native lazy loading');
+assert.match(sharedArtSource, /decoding="async"/, 'shared movement art decodes asynchronously');
+assert.match(sharedArtSource, /object-contain/, 'individual art keeps its source aspect without pose distortion');
+assert.doesNotMatch(sharedArtSource, /manual-workout-(?:quick|library)-line-art-v2/, 'runtime component does not reference a full sprite');
+assert.match(registrySource, /Duplicate movement-art id or alias/, 'registry rejects conflicting canonical ids and aliases');
 assert.match(manualCardSource, /hasWorkoutMovementArt\(exercise\.exerciseId\).*<WorkoutMovementArt id=\{exercise\.exerciseId\}/s, 'saved manual workout records reuse stable-id movement art');
 assert.match(exerciseCardSource, /hasWorkoutMovementArt\(exercise\.id\).*<WorkoutMovementArt id=\{exercise\.id\}/s, 'exercise-library cards reuse stable-id movement art');
 for (const id of quickIds) {
-  assert.match(artSource, new RegExp(`[' ]${id}[' ,]`), `${id} has a quick-art sprite position`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);
 }
 const equipmentIds = [...pickerSource.match(/const equipmentChoices = \[([\s\S]*?)\];/)?.[1].matchAll(/id: '([^']+)'/g) ?? []].map(match => match[1]);
 assert.ok(equipmentIds.includes('cable') && equipmentIds.includes('smith_machine'), 'gym equipment choices are available');
-const quickSprite = readFileSync('public/exercise-visuals/manual-workout-quick-line-art-v2.png');
+const quickSprite = readFileSync('scripts/assets/movement-art-sources/manual-workout-quick-line-art-v2.png');
 assert.equal(quickSprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'quick movement sprite is PNG');
 assert.deepEqual([quickSprite.readUInt32BE(16), quickSprite.readUInt32BE(20)], [1774, 887], 'quick movement sprite keeps the reviewed 4x2 geometry');
-const librarySprite = readFileSync('public/exercise-visuals/manual-workout-library-line-art-v2.png');
+const librarySprite = readFileSync('scripts/assets/movement-art-sources/manual-workout-library-line-art-v2.png');
 assert.equal(librarySprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'library movement sprite is PNG');
 assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1483, 1061], 'library movement sprite keeps the reviewed 5x7 geometry');
+for (const entry of artManifest) {
+  const image = readFileSync(`public/exercise-visuals/movements/${entry.id}.png`);
+  assert.equal(image.toString('hex', 0, 8), '89504e470d0a1a0a', `${entry.id} individual movement art is PNG`);
+  const sourceWidth = entry.sheet.includes('quick') ? 1774 : 1483;
+  const sourceHeight = entry.sheet.includes('quick') ? 887 : 1061;
+  const expectedWidth = entry.group === 'quick' ? 320 : Math.round(sourceWidth / entry.columns);
+  const expectedHeight = entry.group === 'quick' ? 320 : Math.round(sourceHeight / entry.rows);
+  assert.ok(Math.abs(image.readUInt32BE(16) - expectedWidth) <= 1, `${entry.id} keeps its source cell width`);
+  assert.ok(Math.abs(image.readUInt32BE(20) - expectedHeight) <= 1, `${entry.id} keeps its source cell height`);
+  assert.ok(statSync(`public/exercise-visuals/movements/${entry.id}.png`).size < statSync(`scripts/assets/movement-art-sources/${entry.sheet}`).size, `${entry.id} is smaller than its full source sprite`);
+}
 
 async function loadModule(entry) {
   const result = await build({

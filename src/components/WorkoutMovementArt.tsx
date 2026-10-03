@@ -1,12 +1,22 @@
-import LibraryMovementArt, { hasLibraryMovementArt } from './LibraryMovementArt';
-import ReferenceMovementArt, { hasReferenceMovementArt } from './ReferenceMovementArt';
+import { getMovementArt, hasMovementArt } from '../data/movementArtRegistry';
 
 export function hasWorkoutMovementArt(id: string | undefined): id is string {
-  return typeof id === 'string' && (hasReferenceMovementArt(id) || hasLibraryMovementArt(id));
+  return hasMovementArt(id);
 }
 
-export default function WorkoutMovementArt({ id }: { id: string }) {
-  if (hasReferenceMovementArt(id)) return <ReferenceMovementArt id={id} />;
-  if (hasLibraryMovementArt(id)) return <LibraryMovementArt id={id} />;
-  return null;
+export default function WorkoutMovementArt({ id, loading = 'lazy' }: { id: string; loading?: 'eager' | 'lazy' }) {
+  const art = getMovementArt(id);
+  if (!art) return null;
+
+  return <span aria-hidden="true" className="block aspect-[155/89] w-full overflow-hidden rounded-md bg-white ring-1 ring-inset ring-slate-200">
+    <img
+      src={art.src}
+      alt=""
+      width={art.width}
+      height={art.height}
+      loading={loading}
+      decoding="async"
+      className="h-full w-full object-contain"
+    />
+  </span>;
 }

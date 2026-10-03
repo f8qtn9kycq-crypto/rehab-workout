@@ -13,7 +13,7 @@ export default function ReferenceMovementArt({ id }: { id: QuickMovementId }) {
     className="block w-full overflow-hidden rounded-md bg-white bg-no-repeat ring-1 ring-inset ring-slate-200"
     style={{
       aspectRatio: '155 / 89',
-      backgroundImage: "url('/exercise-visuals/manual-workout-quick-line-art-v1.png')",
+      backgroundImage: "url('/exercise-visuals/manual-workout-quick-line-art-v2.png')",
       backgroundSize: '400% 200%',
       backgroundPosition: `${column * (100 / 3)}% ${row * 100}%`,
     }}

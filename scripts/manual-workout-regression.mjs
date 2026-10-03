@@ -12,12 +12,13 @@ assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use
 assert.match(pickerSource, /isQuickExercise\(selectedIds\[index\]\).*<ReferenceMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick exercise keeps the same reference art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
 assert.match(artSource, /rounded-md bg-white[^\"]*ring-1 ring-inset ring-slate-200/, 'quick choices use the shared visual frame');
-assert.match(artSource, /manual-workout-quick-line-art-v1\.png/, 'quick choices use the same reviewed hand-drawn style as the library');
+assert.match(artSource, /manual-workout-quick-line-art-v2\.png/, 'quick choices use the revised hand-drawn sprite');
 assert.match(artSource, /backgroundSize: '400% 200%'/, 'quick choices use the eight-cell sprite grid');
 assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
 assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
 assert.match(libraryArtSource, /aspectRatio: '155 \/ 89'/, 'library choices use the same framed visual ratio');
-assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-28[\s\S]*?p-1 text-center text-sm font-bold/, 'library choices use the same card geometry as quick choices');
+assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
+assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
@@ -34,16 +35,19 @@ const additionalCatalogIds = [...optionsSource.matchAll(/'catalog-[^']+'/g)].map
 assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
-assert.match(libraryArtSource, /manual-workout-library-line-art-v1\.png/, 'library movement art uses the reviewed hand-drawn sprite sheet');
+assert.match(libraryArtSource, /manual-workout-library-line-art-v2\.png/, 'library movement art uses the revised hand-drawn sprite sheet');
 for (const id of quickIds) {
   assert.match(artSource, new RegExp(`[' ]${id}[' ,]`), `${id} has a quick-art sprite position`);
   assert.ok(en.manualWorkout.quickExercises[id] && zhTW.manualWorkout.quickExercises[id], `${id} is localized`);
 }
 const equipmentIds = [...pickerSource.match(/const equipmentChoices = \[([\s\S]*?)\];/)?.[1].matchAll(/id: '([^']+)'/g) ?? []].map(match => match[1]);
 assert.ok(equipmentIds.includes('cable') && equipmentIds.includes('smith_machine'), 'gym equipment choices are available');
-const quickSprite = readFileSync('public/exercise-visuals/manual-workout-quick-line-art-v1.png');
+const quickSprite = readFileSync('public/exercise-visuals/manual-workout-quick-line-art-v2.png');
 assert.equal(quickSprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'quick movement sprite is PNG');
 assert.deepEqual([quickSprite.readUInt32BE(16), quickSprite.readUInt32BE(20)], [1774, 887], 'quick movement sprite keeps the reviewed 4x2 geometry');
+const librarySprite = readFileSync('public/exercise-visuals/manual-workout-library-line-art-v2.png');
+assert.equal(librarySprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'library movement sprite is PNG');
+assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1483, 1061], 'library movement sprite keeps the reviewed 5x7 geometry');
 
 async function loadModule(entry) {
   const result = await build({

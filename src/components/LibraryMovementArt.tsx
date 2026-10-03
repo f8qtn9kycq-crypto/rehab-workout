@@ -18,7 +18,7 @@ export default function LibraryMovementArt({ id }: { id: string }) {
     className="block w-full overflow-hidden rounded-md bg-white bg-no-repeat ring-1 ring-inset ring-slate-200"
     style={{
       aspectRatio: '155 / 89',
-      backgroundImage: "url('/exercise-visuals/manual-workout-library-line-art-v1.png')",
+      backgroundImage: "url('/exercise-visuals/manual-workout-library-line-art-v2.png')",
       backgroundSize: '500% 700%',
       backgroundPosition: `${column * 25}% ${row * (100 / 6)}%`,
     }}

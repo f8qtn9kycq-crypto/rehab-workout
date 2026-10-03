@@ -100,14 +100,14 @@ export default function ManualWorkoutPage() {
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
-          <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {quickExerciseIds.map(id => <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-28 flex-col items-center justify-center gap-1 rounded-lg p-1 text-center text-sm font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+          <div className="mt-2 grid grid-cols-1 gap-3">
+            {quickExerciseIds.map(id => <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
               <ReferenceMovementArt id={id} />
               <span>{t(`manualWorkout.quickExercises.${id}`)}</span>
             </button>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 p-3"><summary className="focus-ring cursor-pointer font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-28 flex-col items-center justify-center gap-1 rounded-lg p-1 text-center text-sm font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
+            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
           </details>
           <button type="button" aria-pressed={selectedIds[index] === 'custom'} onClick={() => chooseExercise(index, 'custom')} className={`focus-ring mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border p-2 font-bold ${selectedIds[index] === 'custom' ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-calm-800'}`}><Hand size={20} aria-hidden="true" />{t('manualWorkout.otherExercise')}</button>
           </>}

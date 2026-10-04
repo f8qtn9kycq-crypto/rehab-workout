@@ -13,6 +13,8 @@ const registrySource = readFileSync('src/data/movementArtRegistry.ts', 'utf8');
 const artManifest = JSON.parse(readFileSync('src/data/movementArtManifest.json', 'utf8'));
 const manualCardSource = readFileSync('src/components/ManualWorkoutCard.tsx', 'utf8');
 const exerciseCardSource = readFileSync('src/components/ExerciseCard.tsx', 'utf8');
+const extractorSource = readFileSync('scripts/extract-movement-art.mjs', 'utf8');
+const cropToolSource = readFileSync('scripts/crop-movement-art.swift', 'utf8');
 assert.match(pickerSource, /<ReferenceMovementArt id=\{id\}/, 'quick choices use approved reference art');
 assert.match(pickerSource, /hasWorkoutMovementArt\(selectedIds\[index\]\).*<WorkoutMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick or library exercise keeps the same art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
@@ -21,6 +23,7 @@ assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choic
 assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
 assert.match(libraryArtSource, /<WorkoutMovementArt id=\{id\}/, 'library choices use the shared movement-art component');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
+assert.match(pickerSource, /<details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3/, 'library art avoids duplicate horizontal padding so it matches quick-art width');
 assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/const quickExerciseIds: QuickMovementId\[\] = \[([^\]]+)\]/);
 assert.ok(quickChoiceList, 'quick choice list exists');
@@ -63,16 +66,22 @@ assert.equal(quickSprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'quick movem
 assert.deepEqual([quickSprite.readUInt32BE(16), quickSprite.readUInt32BE(20)], [1774, 887], 'quick movement sprite keeps the reviewed 4x2 geometry');
 const librarySprite = readFileSync('scripts/assets/movement-art-sources/manual-workout-library-line-art-v2.png');
 assert.equal(librarySprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'library movement sprite is PNG');
-assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1483, 1061], 'library movement sprite keeps the reviewed 5x7 geometry');
+assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1060, 1484], 'library movement sprite keeps square 5x7 cells for consistent proportions');
+assert.match(extractorSource, /libraryGridGuides/, 'library cells use reviewed guide coordinates instead of approximate equal slicing');
+assert.match(extractorSource, /fullBodyHeadRatio: '1:7'/, 'full-body movement art keeps the reviewed adult 1:7 anatomy contract');
+assert.match(extractorSource, /neckCrop: 'crown-to-waist'/, 'neck-focused movement art uses the shared upper-torso crop instead of a close-up');
+assert.match(extractorSource, /'296', '320'/, 'every movement is centered on the shared 320px canvas with a white safety edge');
+assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
+assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
+assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
+assert.match(cropToolSource, /func horizontalInkCenter/, 'movement-art generation measures each phase instead of applying a fixed offset');
+assert.match(cropToolSource, /Double\(canvasSize\) \/ 4 - horizontalInkCenter\(leftCrop\)/, 'the left phase center aligns with the left-half centerline');
+assert.match(cropToolSource, /Double\(canvasSize\) \* 3 \/ 4 - horizontalInkCenter\(rightCrop\)/, 'the right phase center aligns with the right-half centerline');
 for (const entry of artManifest) {
   const image = readFileSync(`public/exercise-visuals/movements/${entry.id}.png`);
   assert.equal(image.toString('hex', 0, 8), '89504e470d0a1a0a', `${entry.id} individual movement art is PNG`);
-  const sourceWidth = entry.sheet.includes('quick') ? 1774 : 1483;
-  const sourceHeight = entry.sheet.includes('quick') ? 887 : 1061;
-  const expectedWidth = entry.group === 'quick' ? 320 : Math.round(sourceWidth / entry.columns);
-  const expectedHeight = entry.group === 'quick' ? 320 : Math.round(sourceHeight / entry.rows);
-  assert.ok(Math.abs(image.readUInt32BE(16) - expectedWidth) <= 1, `${entry.id} keeps its source cell width`);
-  assert.ok(Math.abs(image.readUInt32BE(20) - expectedHeight) <= 1, `${entry.id} keeps its source cell height`);
+  assert.equal(image.readUInt32BE(16), 320, `${entry.id} uses the shared 320px canvas width`);
+  assert.equal(image.readUInt32BE(20), 320, `${entry.id} uses the shared 320px canvas height`);
   assert.ok(statSync(`public/exercise-visuals/movements/${entry.id}.png`).size < statSync(`scripts/assets/movement-art-sources/${entry.sheet}`).size, `${entry.id} is smaller than its full source sprite`);
 }
 

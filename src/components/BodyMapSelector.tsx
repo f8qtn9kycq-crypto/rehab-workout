@@ -2,11 +2,11 @@ import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 const regionPaths: Record<BodyArea, string> = {
-  shoulder_neck: 'M128 65 L128 78 L112 84 L121 102 Q140 112 159 102 L168 84 L152 78 L152 65 Z',
-  shoulder: 'M111 84 L96 90 Q79 94 75 116 L98 127 L108 105 L121 101 Z M159 101 L172 105 L182 127 L205 116 Q201 94 184 90 L169 84 Z',
-  hip: 'M101 210 Q140 226 179 210 L182 240 Q162 254 140 254 Q118 254 98 240 Z',
-  knee: 'M104 292 Q118 286 132 294 L130 320 Q117 326 105 318 Z M148 294 Q162 286 176 292 L175 318 Q163 326 150 320 Z',
-  ankle: 'M107 365 L126 365 L125 392 L99 392 Z M154 365 L173 365 L181 392 L155 392 Z',
+  shoulder_neck: 'M126 77 L126 88 C120 89 114 93 110 99 L120 105 C126 98 132 95 140 95 C148 95 154 98 160 105 L170 99 C166 93 160 89 154 88 L154 77 C147 82 133 82 126 77 Z',
+  shoulder: 'M112 96 C96 97 86 105 82 119 C86 124 91 127 98 129 C100 116 105 108 115 105 L121 101 Z M159 101 L165 105 C175 108 180 116 182 129 C189 127 194 124 198 119 C194 105 184 97 168 96 Z',
+  hip: 'M101 200 C108 207 116 211 126 213 L124 244 C116 247 106 244 99 239 Z M154 213 C164 211 172 207 179 200 L181 239 C174 244 164 247 156 244 Z',
+  knee: 'M101 276 C109 273 121 273 128 278 L127 301 C120 305 109 305 102 301 Z M152 278 C159 273 171 273 179 276 L178 301 C171 305 160 305 153 301 Z',
+  ankle: 'M100 344 C108 341 119 341 125 345 L124 366 C118 370 107 370 100 366 Z M155 345 C161 341 172 341 180 344 L180 366 C173 370 162 370 156 366 Z',
 };
 
 export default function BodyMapSelector({ selected, onChange, ariaLabel, availability }: {
@@ -35,23 +35,25 @@ export default function BodyMapSelector({ selected, onChange, ariaLabel, availab
   }
 
   return <div className="space-y-3" role="group" aria-label={ariaLabel}>
-    <svg viewBox="0 0 280 420" className="mx-auto max-h-[420px] w-full max-w-[280px] rounded-xl bg-slate-50">
-        <g fill="#e2e8f0" stroke="#64748b" strokeWidth="2" aria-hidden="true">
-          <circle cx="140" cy="38" r="24" />
-          <path d="M128 62 L128 78 L96 90 L76 112 L53 205 Q51 219 64 220 L79 211 L100 146 L106 209 L98 240 L104 299 L108 380 L96 400 L126 400 L138 274 L142 274 L154 400 L184 400 L172 380 L176 299 L182 240 L174 209 L180 146 L201 211 L216 220 Q229 219 227 205 L204 112 L184 90 L152 78 L152 62 Z" />
-          <path d="M114 112 Q140 122 166 112 M140 126 V210" fill="none" />
-        </g>
+    <svg viewBox="0 0 280 420" className="mx-auto max-h-[420px] w-full max-w-[280px] bg-white">
+        <image href="/exercise-visuals/body-map-line-art.png" x="0" y="0" width="280" height="420" preserveAspectRatio="xMidYMid meet" aria-hidden="true" />
         {BODY_AREAS.map(area => {
           const { accessibleLabel, disabled } = areaMeta(area);
           const active = selected === area;
-          return <path key={area} d={regionPaths[area]}
-            fill={active ? '#17695d' : disabled ? '#d7dee5' : '#a7d4c8'}
-            stroke={active ? 'none' : disabled ? '#94a3b8' : '#39796c'}
-            strokeWidth={active ? 0 : 3}
-            role="button" tabIndex={disabled ? -1 : 0} aria-disabled={disabled} aria-label={accessibleLabel} aria-pressed={active}
-            className={disabled ? 'cursor-not-allowed' : 'cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-4 focus-visible:outline-calm-700'}
-            onClick={() => selectArea(area, disabled)}
-            onKeyDown={event => { if (!disabled && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onChange(area); } }} />;
+          return <g key={area}>
+            <path d={regionPaths[area]}
+              fill={active ? '#17695d' : disabled ? '#cbd5e1' : '#75b8aa'}
+              fillOpacity={active ? 0.42 : disabled ? 0.12 : 0.2}
+              stroke="none" aria-hidden="true" className="pointer-events-none" />
+            <path d={regionPaths[area]} fill="transparent" stroke="transparent" strokeWidth="14"
+              vectorEffect="non-scaling-stroke" role="button" tabIndex={disabled ? -1 : 0}
+              aria-disabled={disabled} aria-label={accessibleLabel} aria-pressed={active}
+              className={disabled
+                ? 'cursor-not-allowed focus:outline-none'
+                : 'cursor-pointer focus:outline-none focus-visible:stroke-calm-900 focus-visible:stroke-[3]'}
+              onClick={() => selectArea(area, disabled)}
+              onKeyDown={event => { if (!disabled && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onChange(area); } }} />
+          </g>;
         })}
     </svg>
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">

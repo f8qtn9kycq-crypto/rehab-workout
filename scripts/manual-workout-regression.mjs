@@ -73,6 +73,7 @@ assert.match(extractorSource, /fullBodyHeadRatio: '1:7'/, 'full-body movement ar
 assert.match(extractorSource, /neckCrop: 'crown-to-waist'/, 'neck-focused movement art uses the shared upper-torso crop instead of a close-up');
 assert.match(extractorSource, /'296', '160', '320', '184'/, 'every movement uses the shared wide canvas that matches the runtime frame');
 assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
+assert.match(extractorSource, /'glute-bridge'.*width: 1293, height: 650/, 'the glute bridge source is tightly framed so its rendered scale matches the shared movement art');
 assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
 assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
 assert.match(cropToolSource, /func horizontalInkCenter/, 'movement-art generation measures each phase instead of applying a fixed offset');

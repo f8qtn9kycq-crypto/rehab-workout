@@ -35,7 +35,7 @@ const libraryGridGuides = {
 };
 
 const movementOverrides = {
-  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1254, height: 1254 },
+  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1293, height: 650 },
   'neck-rotation-stretch': { path: `${sourceDirectory}/overrides/neck-rotation-stretch.png`, width: 1254, height: 1254 },
 };
 

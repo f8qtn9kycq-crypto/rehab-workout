@@ -1,30 +1,32 @@
 # Exercise Coverage Audit
 
-Generated: 2026-09-25T15:43:13.832Z
+Generated: 2026-10-04T11:18:26.580Z
 
-Source commit: 426b365
+Source commit: 08440e6
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
 ## 1. Executive summary
 
-- Total exercises audited: 42
-- Catalog-only entries included in coverage counts: 7. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
+- Total exercises audited: 43
+- Catalog-only entries included in coverage counts: 8. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
 - Audit body areas: shoulder_hip, shoulder_neck, knee, ankle
 - App body area enums: shoulder, hip, shoulder_neck, knee, ankle
 - Canonical equipment ids: bodyweight, dumbbell, kettlebell, chair, wall, resistance_band, foam_roller
-- Raw equipment-field bodyArea + difficulty + equipment gaps: 61
-- App-realistic filter dead-end combinations: 39
+- Raw equipment-field bodyArea + difficulty + equipment gaps: 60
+- App-realistic filter dead-end combinations: 38
 - Canonical equipment with 0 exercises: foam_roller
 - Non-canonical exercise bodyArea values: None
 - Non-canonical exercise type values: None
 - Non-canonical exercise equipment values: None
+- Manual/backfill selectable canonical coverage: 43/43
+- Quick strength catalog-only isolation: 8/8
 
 Top 5 gaps:
 
 1. shoulder_neck has 0 intermediate and 0 advanced exercises.
 2. foam_roller has 0 total exercise coverage.
-3. Advanced coverage is missing for shoulder_neck, knee; overall, 39 app-realistic bodyArea + difficulty + equipment combinations have 0 matching exercises.
+3. Advanced coverage is missing for shoulder_neck, knee; overall, 38 app-realistic bodyArea + difficulty + equipment combinations have 0 matching exercises.
 4. 「為我推薦」/Recommended for me is a copy and explanation issue, not current evidence of recommendation logic failure.
 5. shoulder_hip is a user/audit mental model while the app stores shoulder and hip separately, which may confuse copy and reporting.
 
@@ -74,6 +76,55 @@ Top 5 gaps:
 | 雙槓撐體 | catalog-dip | shoulder_hip | strength | advanced | bodyweight |
 | 彈力帶下拉 | catalog-lat-pulldown | shoulder_hip | strength | intermediate | resistance_band |
 | 坐姿划船 | catalog-seated-row | shoulder_hip | strength | intermediate | resistance_band |
+| 坐姿膝伸直 | catalog-leg-extension | knee | strength | intermediate | chair |
+
+## Manual/backfill canonical coverage
+
+| Selectable exercise | exerciseId | Canonical exercise exists? | Canonical bodyArea | Canonical type | Equipment | Catalog / recommendation eligibility | Action required |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 啞鈴胸推 | catalog-bench-press | Yes | shoulder | strength | dumbbell | catalogOnly: true | None |
+| 啞鈴肩推 | catalog-shoulder-press | Yes | shoulder | strength | dumbbell, chair | catalogOnly: true | None |
+| 椅子深蹲 | catalog-squat | Yes | hip | strength | chair | catalogOnly: true | None |
+| 引體向上 | catalog-pull-up | Yes | shoulder | strength | bodyweight | catalogOnly: true | None |
+| 雙槓撐體 | catalog-dip | Yes | shoulder | strength | bodyweight | catalogOnly: true | None |
+| 彈力帶下拉 | catalog-lat-pulldown | Yes | shoulder | strength | resistance_band | catalogOnly: true | None |
+| 坐姿划船 | catalog-seated-row | Yes | shoulder | strength | resistance_band | catalogOnly: true | None |
+| 坐姿膝伸直 | catalog-leg-extension | Yes | knee | strength | chair | catalogOnly: true | None |
+| 肩關節前彎運動 | shoulder-flexion | Yes | shoulder | mobility | bodyweight, chair, dumbbell | Recommendation eligible | None |
+| 肩胛骨收縮運動 | shoulder-scapular-squeeze | Yes | shoulder | strength | chair, resistance_band | Recommendation eligible | None |
+| 肩關節外旋運動 | shoulder-external-rotation-band | Yes | shoulder | strength | resistance_band | Recommendation eligible | None |
+| 站姿擺臂 | shoulder-standing-arm-swings | Yes | shoulder | mobility | bodyweight | Recommendation eligible | None |
+| 彈力帶肩內旋 | shoulder-internal-rotation-band | Yes | shoulder | strength | resistance_band | Recommendation eligible | None |
+| 髖關節屈曲運動 | hip-flexion-seated | Yes | hip | mobility | chair | Recommendation eligible | None |
+| 髖關節外展運動 | hip-abduction | Yes | hip | strength | chair, bodyweight, resistance_band | Recommendation eligible | None |
+| 臀橋運動 | glute-bridge | Yes | hip | strength | bodyweight | Recommendation eligible | None |
+| 蚌殼式 | hip-clamshell | Yes | hip | strength | bodyweight | Recommendation eligible | None |
+| 坐到站 | hip-sit-to-stand | Yes | hip | strength | bodyweight, chair, kettlebell | Recommendation eligible | None |
+| 牆壁滑行 | shoulder-wall-slide | Yes | shoulder | mobility | wall | Recommendation eligible | None |
+| 下巴內收 | shoulder-neck-chin-tuck | Yes | shoulder_neck | mobility | chair | Recommendation eligible | None |
+| 頸椎等長收縮 | neck-isometric | Yes | shoulder_neck | strength | chair | Recommendation eligible | None |
+| 上斜方肌伸展 | upper-trap-stretch | Yes | shoulder_neck | stretch | chair | Recommendation eligible | None |
+| 胸大肌伸展 | pec-doorway-stretch | Yes | shoulder_neck | stretch | wall | Recommendation eligible | None |
+| 熱敷與放鬆擺位 | neck-heat-relax | Yes | shoulder_neck | relaxation | bodyweight | Recommendation eligible | None |
+| 頸部旋轉伸展 | neck-rotation-stretch | Yes | shoulder_neck | stretch | chair | Recommendation eligible | None |
+| 貼牆站立姿勢矯正 | neck-wall-posture | Yes | shoulder_neck | relaxation | wall | Recommendation eligible | None |
+| 椅背胸椎伸展 | shoulder-neck-thoracic-extension-chair | Yes | shoulder_neck | mobility | chair | Recommendation eligible | None |
+| 低位彈力帶划船 | shoulder-neck-band-row-low | Yes | shoulder_neck | strength | resistance_band, chair | Recommendation eligible | None |
+| 牆面前鋸肌推牆 | shoulder-neck-serratus-wall-push | Yes | shoulder_neck | strength | wall | Recommendation eligible | None |
+| 膝蓋急性舒緩 RICE | knee-rice-care | Yes | knee | relaxation | bodyweight | Recommendation eligible | None |
+| 直膝抬腿 | knee-straight-leg-raise | Yes | knee | strength | bodyweight | Recommendation eligible | None |
+| 靠牆半蹲 | knee-wall-squat | Yes | knee | strength | wall | Recommendation eligible | None |
+| 站姿腿後彎 | knee-hamstring-curl | Yes | knee | strength | chair | Recommendation eligible | None |
+| 膝痛友善小腿提踵 | knee-calf-raise | Yes | knee | strength | chair | Recommendation eligible | None |
+| 坐姿腳踝畫圓 | ankle-circles | Yes | ankle | mobility | chair | Recommendation eligible | None |
+| 坐姿腳踝字母 | ankle-alphabet | Yes | ankle | mobility | chair | Recommendation eligible | None |
+| 彈力帶腳踝內翻外翻 | ankle-band-inversion-eversion | Yes | ankle | strength | resistance_band | Recommendation eligible | None |
+| 單腳站立 | ankle-single-leg-stand | Yes | ankle | balance | chair | Recommendation eligible | None |
+| 站姿小腿提踵 | ankle-calf-raise | Yes | ankle | strength | chair | Recommendation eligible | None |
+| 靠牆直膝小腿伸展 | ankle-gastrocnemius-stretch | Yes | ankle | stretch | wall | Recommendation eligible | None |
+| 靠牆屈膝小腿伸展 | ankle-soleus-stretch | Yes | ankle | stretch | wall | Recommendation eligible | None |
+| 坐姿屈膝提踵 | ankle-seated-soleus-raise | Yes | ankle | strength | chair | Recommendation eligible | None |
+| 單腳觸遠 | ankle-single-leg-reach | Yes | ankle | proprioception | chair | Recommendation eligible | None |
 
 ## 3. Difficulty coverage table
 
@@ -81,7 +132,7 @@ Top 5 gaps:
 | --- | --- | --- | --- |
 | shoulder_hip | 7 | 9 | 2 |
 | shoulder_neck | 10 | 0 | 0 |
-| knee | 4 | 1 | 0 |
+| knee | 4 | 2 | 0 |
 | ankle | 6 | 2 | 1 |
 
 ## 4. Equipment coverage table
@@ -91,7 +142,7 @@ Top 5 gaps:
 | bodyweight | 11 | shoulder_hip, shoulder_neck, knee | None |
 | dumbbell | 3 | shoulder_hip | advanced |
 | kettlebell | 1 | shoulder_hip | intermediate, advanced |
-| chair | 21 | shoulder_hip, shoulder_neck, knee, ankle | None |
+| chair | 22 | shoulder_hip, shoulder_neck, knee, ankle | None |
 | wall | 7 | shoulder_hip, shoulder_neck, knee, ankle | advanced |
 | resistance_band | 8 | shoulder_hip, shoulder_neck, ankle | advanced |
 | foam_roller | 0 | None | beginner, intermediate, advanced |
@@ -101,7 +152,7 @@ Top 5 gaps:
 | Type | Count | Body Areas Covered |
 | --- | --- | --- |
 | mobility | 8 | shoulder_hip, shoulder_neck, ankle |
-| strength | 24 | shoulder_hip, shoulder_neck, knee, ankle |
+| strength | 25 | shoulder_hip, shoulder_neck, knee, ankle |
 | stretch | 5 | shoulder_neck, ankle |
 | relaxation | 3 | shoulder_neck, knee |
 | balance | 1 | ankle |
@@ -109,7 +160,7 @@ Top 5 gaps:
 
 ## 6. Empty combinations table
 
-This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 61, but it should not be used as live UI dead-end evidence.
+This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 60, but it should not be used as live UI dead-end evidence.
 
 | Body Area | Difficulty | Equipment | Result | Suggested Action |
 | --- | --- | --- | --- | --- |
@@ -129,7 +180,6 @@ This section models live filter compatibility, including bodyweight-required exe
 | shoulder_neck | advanced | foam_roller | 0 exercises | Content gap: add reviewed advanced option only if safety guardrails are explicit. |
 | knee | intermediate | dumbbell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | knee | intermediate | kettlebell | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
-| knee | intermediate | chair | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | knee | intermediate | resistance_band | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | knee | intermediate | foam_roller | 0 exercises | Content gap or filter availability issue: consider count-aware filter guidance before adding content. |
 | knee | advanced | bodyweight | 0 exercises | Content gap: add reviewed advanced option only if safety guardrails are explicit. |
@@ -179,7 +229,7 @@ This section models live filter compatibility, including bodyweight-required exe
 
 | Finding | Content Gap | Filter Bug | Recommendation Bug | Copy/UX Issue | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 39 app-realistic empty bodyArea + difficulty + equipment combinations; 61 raw equipment-field gaps. |
+| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 38 app-realistic empty bodyArea + difficulty + equipment combinations; 60 raw equipment-field gaps. |
 | Canonical foam_roller option has zero total exercise coverage. | Yes | No current evidence | No current evidence | Potentially | foam_roller appears in EQUIPMENT_IDS/EQUIPMENT_OPTIONS and has 0 exercises. |
 | Advanced coverage is sparse and absent outside ankle. | Yes | No current evidence | No current evidence | Potentially | shoulder_neck, knee |
 | 「為我推薦」 may be unclear to users. | No | No current evidence | No current evidence | Yes | Mode label exists, but the visible copy does not explain inputs used: assessment, equipment, pain, and logs. |

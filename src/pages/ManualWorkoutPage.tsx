@@ -2,7 +2,6 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import LibraryMovementArt from '../components/LibraryMovementArt';
-import ReferenceMovementArt, { type QuickMovementId } from '../components/ReferenceMovementArt';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
 import { quickExerciseCatalogIds, quickExerciseIds } from '../data/manualWorkoutOptions';
@@ -14,7 +13,6 @@ import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
-const isQuickExercise = (id: string): id is QuickMovementId => quickExerciseIds.some(quickId => quickId === id);
 const moreExerciseCatalog = catalog.filter(exercise => !quickExerciseCatalogIds.has(exercise.id));
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
@@ -47,7 +45,7 @@ export default function ManualWorkoutPage() {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, value => ({ ...value, name: isQuickExercise(id) ? t(`manualWorkout.quickExercises.${id}`) : selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, value => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
     setEditingExerciseIndex(null);
   }
 
@@ -76,9 +74,9 @@ export default function ManualWorkoutPage() {
         const catalogExercise = catalog.find(item => item.id === id);
         return {
           ...exercise,
-          ...(id === 'custom' ? {} : { exerciseId: id }),
+          exerciseId: id,
           ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
-          name: (isQuickExercise(id) ? t(`manualWorkout.quickExercises.${id}`) : catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
+          name: (catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
           equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '').trim(),
         };
       }),
@@ -103,16 +101,14 @@ export default function ManualWorkoutPage() {
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
           <div className="mt-2 grid grid-cols-1 gap-3">
             {quickExerciseIds.map(id => <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
-              <ReferenceMovementArt id={id} />
-              <span>{t(`manualWorkout.quickExercises.${id}`)}</span>
+              <WorkoutMovementArt id={id} loading="eager" />
+              <span>{getLocalizedExercise(catalog.find(item => item.id === id)!, language).title}</span>
             </button>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
             <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
           </details>
-          <button type="button" aria-pressed={selectedIds[index] === 'custom'} onClick={() => chooseExercise(index, 'custom')} className={`focus-ring mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border p-2 font-bold ${selectedIds[index] === 'custom' ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-calm-800'}`}><Hand size={20} aria-hidden="true" />{t('manualWorkout.otherExercise')}</button>
           </>}
-          {selectedIds[index] === 'custom' && <label className="mt-3 block font-bold">{t('manualWorkout.name')}<input className={control} required maxLength={100} value={exercise.name} onChange={event => changeExercise(index, value => ({ ...value, name: event.target.value }))} /></label>}
         </div>
         {exercise.sets.map((set, setIndex) => <div key={setIndex} className="rounded-md bg-slate-50 p-3">
           <p className="mb-2 font-bold">{t('manualWorkout.setNumber', { number: setIndex + 1 })}</p>

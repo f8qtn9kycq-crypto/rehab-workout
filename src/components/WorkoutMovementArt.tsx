@@ -8,7 +8,7 @@ export default function WorkoutMovementArt({ id, loading = 'lazy' }: { id: strin
   const art = getMovementArt(id);
   if (!art) return null;
 
-  return <span aria-hidden="true" className="block aspect-[155/89] w-full overflow-hidden bg-white">
+  return <span aria-hidden="true" className="block aspect-[40/23] w-full overflow-hidden bg-white">
     <img
       src={art.src}
       alt=""

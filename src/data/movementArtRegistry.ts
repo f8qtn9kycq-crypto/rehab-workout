@@ -16,7 +16,7 @@ const entries: MovementArt[] = manifest.map(entry => {
     group: entry.group as MovementArtGroup,
     src: `/exercise-visuals/movements/${entry.id}.png`,
     width: 320,
-    height: 320,
+    height: 184,
   };
 });
 

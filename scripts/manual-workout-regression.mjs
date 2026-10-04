@@ -51,6 +51,7 @@ assert.ok(!allArtIds.includes('catalog-bench-press') && !allArtIds.includes('cat
 assert.match(sharedArtSource, /getMovementArt\(id\)/, 'shared movement art resolves one canonical registry');
 assert.match(sharedArtSource, /loading=\{loading\}/, 'shared movement art supports native lazy loading');
 assert.match(sharedArtSource, /decoding="async"/, 'shared movement art decodes asynchronously');
+assert.match(sharedArtSource, /aspect-\[40\/23\]/, 'runtime frame uses the same 320:184 aspect ratio as generated assets');
 assert.match(sharedArtSource, /object-contain/, 'individual art keeps its source aspect without pose distortion');
 assert.doesNotMatch(sharedArtSource, /manual-workout-(?:quick|library)-line-art-v2/, 'runtime component does not reference a full sprite');
 assert.match(registrySource, /Duplicate movement-art id or alias/, 'registry rejects conflicting canonical ids and aliases');
@@ -70,18 +71,18 @@ assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)
 assert.match(extractorSource, /libraryGridGuides/, 'library cells use reviewed guide coordinates instead of approximate equal slicing');
 assert.match(extractorSource, /fullBodyHeadRatio: '1:7'/, 'full-body movement art keeps the reviewed adult 1:7 anatomy contract');
 assert.match(extractorSource, /neckCrop: 'crown-to-waist'/, 'neck-focused movement art uses the shared upper-torso crop instead of a close-up');
-assert.match(extractorSource, /'296', '320'/, 'every movement is centered on the shared 320px canvas with a white safety edge');
+assert.match(extractorSource, /'296', '160', '320', '184'/, 'every movement uses the shared wide canvas that matches the runtime frame');
 assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
 assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
 assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
 assert.match(cropToolSource, /func horizontalInkCenter/, 'movement-art generation measures each phase instead of applying a fixed offset');
-assert.match(cropToolSource, /Double\(canvasSize\) \/ 4 - horizontalInkCenter\(leftCrop\)/, 'the left phase center aligns with the left-half centerline');
-assert.match(cropToolSource, /Double\(canvasSize\) \* 3 \/ 4 - horizontalInkCenter\(rightCrop\)/, 'the right phase center aligns with the right-half centerline');
+assert.match(cropToolSource, /Double\(canvasWidth\) \/ 4 - horizontalInkCenter\(leftCrop\)/, 'the left phase center aligns with the left-half centerline');
+assert.match(cropToolSource, /Double\(canvasWidth\) \* 3 \/ 4 - horizontalInkCenter\(rightCrop\)/, 'the right phase center aligns with the right-half centerline');
 for (const entry of artManifest) {
   const image = readFileSync(`public/exercise-visuals/movements/${entry.id}.png`);
   assert.equal(image.toString('hex', 0, 8), '89504e470d0a1a0a', `${entry.id} individual movement art is PNG`);
   assert.equal(image.readUInt32BE(16), 320, `${entry.id} uses the shared 320px canvas width`);
-  assert.equal(image.readUInt32BE(20), 320, `${entry.id} uses the shared 320px canvas height`);
+  assert.equal(image.readUInt32BE(20), 184, `${entry.id} uses the shared 184px canvas height`);
   assert.ok(statSync(`public/exercise-visuals/movements/${entry.id}.png`).size < statSync(`scripts/assets/movement-art-sources/${entry.sheet}`).size, `${entry.id} is smaller than its full source sprite`);
 }
 

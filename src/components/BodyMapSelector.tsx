@@ -43,7 +43,7 @@ export default function BodyMapSelector({ selected, onChange, ariaLabel, availab
           return <g key={area}>
             <path d={regionPaths[area]}
               fill={active ? '#17695d' : disabled ? '#cbd5e1' : '#75b8aa'}
-              fillOpacity={active ? 0.38 : disabled ? 0.12 : 0.07}
+              fillOpacity={active ? 0.42 : disabled ? 0.12 : 0.2}
               stroke="none" aria-hidden="true" className="pointer-events-none" />
             <path d={regionPaths[area]} fill="transparent" stroke="transparent" strokeWidth="14"
               vectorEffect="non-scaling-stroke" role="button" tabIndex={disabled ? -1 : 0}

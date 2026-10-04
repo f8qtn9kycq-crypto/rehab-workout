@@ -56,14 +56,44 @@ let target = NSRect(
   width: targetWidth,
   height: targetHeight
 )
-NSImage(cgImage: crop, size: NSSize(width: cropWidth, height: cropHeight)).draw(
-  in: target,
-  from: .zero,
-  operation: .copy,
-  fraction: 1,
-  respectFlipped: true,
-  hints: [.interpolation: NSImageInterpolation.high]
-)
+let sourceDividerInset = max(1, cropWidth / 100)
+let sourceMiddle = cropWidth / 2
+let leftCropWidth = sourceMiddle - sourceDividerInset
+let rightCropX = sourceMiddle + sourceDividerInset
+let rightCropWidth = cropWidth - rightCropX
+let pairSeparation = 12.0
+let panelWidth = targetWidth / 2
+let halfSeparation = pairSeparation / 2
+
+if let leftCrop = crop.cropping(to: CGRect(x: 0, y: 0, width: leftCropWidth, height: cropHeight)),
+   let rightCrop = crop.cropping(to: CGRect(x: rightCropX, y: 0, width: rightCropWidth, height: cropHeight)) {
+  NSImage(cgImage: leftCrop, size: NSSize(width: leftCropWidth, height: cropHeight)).draw(
+    in: NSRect(x: target.minX - halfSeparation, y: target.minY, width: panelWidth, height: targetHeight),
+    from: .zero,
+    operation: .sourceOver,
+    fraction: 1,
+    respectFlipped: true,
+    hints: [.interpolation: NSImageInterpolation.high]
+  )
+  NSImage(cgImage: rightCrop, size: NSSize(width: rightCropWidth, height: cropHeight)).draw(
+    in: NSRect(x: target.midX + halfSeparation, y: target.minY, width: panelWidth, height: targetHeight),
+    from: .zero,
+    operation: .sourceOver,
+    fraction: 1,
+    respectFlipped: true,
+    hints: [.interpolation: NSImageInterpolation.high]
+  )
+
+  NSColor(calibratedWhite: 0.83, alpha: 1).setStroke()
+  let divider = NSBezierPath()
+  divider.lineWidth = 1
+  divider.move(to: NSPoint(x: Double(canvasSize) / 2, y: target.minY))
+  divider.line(to: NSPoint(x: Double(canvasSize) / 2, y: target.maxY))
+  divider.stroke()
+} else {
+  fputs("unable to split movement phases\n", stderr)
+  exit(1)
+}
 NSGraphicsContext.restoreGraphicsState()
 
 guard let png = bitmap.representation(using: .png, properties: [:]) else {

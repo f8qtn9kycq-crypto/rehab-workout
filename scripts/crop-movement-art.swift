@@ -1,15 +1,15 @@
 import AppKit
 import Foundation
 
-guard CommandLine.arguments.count == 9 else {
-  fputs("usage: crop-movement-art <source> <output> <x> <y> <width> <height> <content-size> <canvas-size>\n", stderr)
+guard CommandLine.arguments.count == 11 else {
+  fputs("usage: crop-movement-art <source> <output> <x> <y> <width> <height> <content-width> <content-height> <canvas-width> <canvas-height>\n", stderr)
   exit(2)
 }
 
 let sourcePath = CommandLine.arguments[1]
 let outputPath = CommandLine.arguments[2]
-let values = CommandLine.arguments[3...8].compactMap(Int.init)
-guard values.count == 6 else {
+let values = CommandLine.arguments[3...10].compactMap(Int.init)
+guard values.count == 8 else {
   fputs("crop coordinates and sizes must be integers\n", stderr)
   exit(2)
 }
@@ -18,8 +18,10 @@ let x = values[0]
 let y = values[1]
 let cropWidth = values[2]
 let cropHeight = values[3]
-let contentSize = values[4]
-let canvasSize = values[5]
+let contentWidth = values[4]
+let contentHeight = values[5]
+let canvasWidth = values[6]
+let canvasHeight = values[7]
 
 guard let source = NSImage(contentsOfFile: sourcePath),
       let sourceCG = source.cgImage(forProposedRect: nil, context: nil, hints: nil),
@@ -28,8 +30,8 @@ guard let source = NSImage(contentsOfFile: sourcePath),
       let crop = sourceCG.cropping(to: CGRect(x: x, y: y, width: cropWidth, height: cropHeight)),
       let bitmap = NSBitmapImageRep(
         bitmapDataPlanes: nil,
-        pixelsWide: canvasSize,
-        pixelsHigh: canvasSize,
+        pixelsWide: canvasWidth,
+        pixelsHigh: canvasHeight,
         bitsPerSample: 8,
         samplesPerPixel: 4,
         hasAlpha: true,
@@ -45,14 +47,14 @@ guard let source = NSImage(contentsOfFile: sourcePath),
 NSGraphicsContext.saveGraphicsState()
 NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
 NSColor.white.setFill()
-NSRect(x: 0, y: 0, width: canvasSize, height: canvasSize).fill()
+NSRect(x: 0, y: 0, width: canvasWidth, height: canvasHeight).fill()
 
-let scale = min(Double(contentSize) / Double(cropWidth), Double(contentSize) / Double(cropHeight))
+let scale = min(Double(contentWidth) / Double(cropWidth), Double(contentHeight) / Double(cropHeight))
 let targetWidth = Double(cropWidth) * scale
 let targetHeight = Double(cropHeight) * scale
 let target = NSRect(
-  x: (Double(canvasSize) - targetWidth) / 2,
-  y: (Double(canvasSize) - targetHeight) / 2,
+  x: (Double(canvasWidth) - targetWidth) / 2,
+  y: (Double(canvasHeight) - targetHeight) / 2,
   width: targetWidth,
   height: targetHeight
 )
@@ -85,8 +87,8 @@ if let leftCrop = crop.cropping(to: CGRect(x: 0, y: 0, width: leftCropWidth, hei
    let rightCrop = crop.cropping(to: CGRect(x: rightCropX, y: 0, width: rightCropWidth, height: cropHeight)) {
   let leftTargetWidth = Double(leftCropWidth) * scale
   let rightTargetWidth = Double(rightCropWidth) * scale
-  let leftTargetX = Double(canvasSize) / 4 - horizontalInkCenter(leftCrop) * scale
-  let rightTargetX = Double(canvasSize) * 3 / 4 - horizontalInkCenter(rightCrop) * scale
+  let leftTargetX = Double(canvasWidth) / 4 - horizontalInkCenter(leftCrop) * scale
+  let rightTargetX = Double(canvasWidth) * 3 / 4 - horizontalInkCenter(rightCrop) * scale
 
   NSImage(cgImage: leftCrop, size: NSSize(width: leftCropWidth, height: cropHeight)).draw(
     in: NSRect(x: leftTargetX, y: target.minY, width: leftTargetWidth, height: targetHeight),
@@ -108,8 +110,8 @@ if let leftCrop = crop.cropping(to: CGRect(x: 0, y: 0, width: leftCropWidth, hei
   NSColor(calibratedWhite: 0.83, alpha: 1).setStroke()
   let divider = NSBezierPath()
   divider.lineWidth = 1
-  divider.move(to: NSPoint(x: Double(canvasSize) / 2, y: target.minY))
-  divider.line(to: NSPoint(x: Double(canvasSize) / 2, y: target.maxY))
+  divider.move(to: NSPoint(x: Double(canvasWidth) / 2, y: target.minY))
+  divider.line(to: NSPoint(x: Double(canvasWidth) / 2, y: target.maxY))
   divider.stroke()
 } else {
   fputs("unable to split movement phases\n", stderr)

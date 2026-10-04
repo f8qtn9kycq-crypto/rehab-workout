@@ -35,7 +35,7 @@ const libraryGridGuides = {
 };
 
 const movementOverrides = {
-  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1254, height: 1254 },
+  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1293, height: 650 },
   'neck-rotation-stretch': { path: `${sourceDirectory}/overrides/neck-rotation-stretch.png`, width: 1254, height: 1254 },
 };
 
@@ -45,7 +45,7 @@ for (const entry of manifest) {
   const output = `${outputDirectory}/${entry.id}.png`;
   if (override) {
     const result = spawnSync(cropTool, [
-      override.path, output, '0', '0', String(override.width), String(override.height), '296', '320',
+      override.path, output, '0', '0', String(override.width), String(override.height), '296', '160', '320', '184',
     ], { encoding: 'utf8' });
     if (result.status !== 0) throw new Error(result.stderr || result.stdout || `Failed to extract ${entry.id}`);
     continue;
@@ -70,7 +70,7 @@ for (const entry of manifest) {
     `${sourceDirectory}/${entry.sheet}`,
     output,
     String(x0), String(y0), String(x1 - x0), String(y1 - y0),
-    '296', '320',
+    '296', '160', '320', '184',
   ], { encoding: 'utf8' });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || `Failed to extract ${entry.id}`);
 }

@@ -10,19 +10,13 @@ export type MovementArt = {
   height: number;
 };
 
-const sourceSizes = {
-  'manual-workout-quick-line-art-v2.png': { width: 1774, height: 887 },
-  'manual-workout-library-line-art-v2.png': { width: 1483, height: 1061 },
-} as const;
-
 const entries: MovementArt[] = manifest.map(entry => {
-  const source = sourceSizes[entry.sheet as keyof typeof sourceSizes];
   return {
     id: entry.id,
     group: entry.group as MovementArtGroup,
     src: `/exercise-visuals/movements/${entry.id}.png`,
-    width: entry.group === 'quick' ? 320 : Math.round(source.width / entry.columns),
-    height: entry.group === 'quick' ? 320 : Math.round(source.height / entry.rows),
+    width: 320,
+    height: 320,
   };
 });
 

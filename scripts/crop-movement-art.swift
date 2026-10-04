@@ -61,14 +61,35 @@ let sourceMiddle = cropWidth / 2
 let leftCropWidth = sourceMiddle - sourceDividerInset
 let rightCropX = sourceMiddle + sourceDividerInset
 let rightCropWidth = cropWidth - rightCropX
-let pairSeparation = 12.0
-let panelWidth = targetWidth / 2
-let halfSeparation = pairSeparation / 2
+
+func horizontalInkCenter(_ image: CGImage) -> Double {
+  let pixels = NSBitmapImageRep(cgImage: image)
+  var minX = pixels.pixelsWide
+  var maxX = -1
+
+  for y in 0..<pixels.pixelsHigh {
+    for x in 0..<pixels.pixelsWide {
+      guard let color = pixels.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) else { continue }
+      let luminance = 0.2126 * color.redComponent + 0.7152 * color.greenComponent + 0.0722 * color.blueComponent
+      if color.alphaComponent > 0.1 && luminance < 0.72 {
+        minX = min(minX, x)
+        maxX = max(maxX, x)
+      }
+    }
+  }
+
+  return maxX >= minX ? Double(minX + maxX) / 2 : Double(pixels.pixelsWide) / 2
+}
 
 if let leftCrop = crop.cropping(to: CGRect(x: 0, y: 0, width: leftCropWidth, height: cropHeight)),
    let rightCrop = crop.cropping(to: CGRect(x: rightCropX, y: 0, width: rightCropWidth, height: cropHeight)) {
+  let leftTargetWidth = Double(leftCropWidth) * scale
+  let rightTargetWidth = Double(rightCropWidth) * scale
+  let leftTargetX = Double(canvasSize) / 4 - horizontalInkCenter(leftCrop) * scale
+  let rightTargetX = Double(canvasSize) * 3 / 4 - horizontalInkCenter(rightCrop) * scale
+
   NSImage(cgImage: leftCrop, size: NSSize(width: leftCropWidth, height: cropHeight)).draw(
-    in: NSRect(x: target.minX - halfSeparation, y: target.minY, width: panelWidth, height: targetHeight),
+    in: NSRect(x: leftTargetX, y: target.minY, width: leftTargetWidth, height: targetHeight),
     from: .zero,
     operation: .sourceOver,
     fraction: 1,
@@ -76,7 +97,7 @@ if let leftCrop = crop.cropping(to: CGRect(x: 0, y: 0, width: leftCropWidth, hei
     hints: [.interpolation: NSImageInterpolation.high]
   )
   NSImage(cgImage: rightCrop, size: NSSize(width: rightCropWidth, height: cropHeight)).draw(
-    in: NSRect(x: target.midX + halfSeparation, y: target.minY, width: panelWidth, height: targetHeight),
+    in: NSRect(x: rightTargetX, y: target.minY, width: rightTargetWidth, height: targetHeight),
     from: .zero,
     operation: .sourceOver,
     fraction: 1,

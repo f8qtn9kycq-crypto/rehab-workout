@@ -74,9 +74,9 @@ assert.match(extractorSource, /'296', '320'/, 'every movement is centered on the
 assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
 assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
 assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
-assert.match(cropToolSource, /let pairSeparation = 12\.0/, 'left and right phases are centered in their own image halves');
-assert.match(cropToolSource, /target\.minX - halfSeparation/, 'the left phase moves toward the center of its own half');
-assert.match(cropToolSource, /target\.midX \+ halfSeparation/, 'the right phase moves toward the center of its own half');
+assert.match(cropToolSource, /func horizontalInkCenter/, 'movement-art generation measures each phase instead of applying a fixed offset');
+assert.match(cropToolSource, /Double\(canvasSize\) \/ 4 - horizontalInkCenter\(leftCrop\)/, 'the left phase center aligns with the left-half centerline');
+assert.match(cropToolSource, /Double\(canvasSize\) \* 3 \/ 4 - horizontalInkCenter\(rightCrop\)/, 'the right phase center aligns with the right-half centerline');
 for (const entry of artManifest) {
   const image = readFileSync(`public/exercise-visuals/movements/${entry.id}.png`);
   assert.equal(image.toString('hex', 0, 8), '89504e470d0a1a0a', `${entry.id} individual movement art is PNG`);

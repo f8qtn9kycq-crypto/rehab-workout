@@ -68,8 +68,11 @@ const librarySprite = readFileSync('scripts/assets/movement-art-sources/manual-w
 assert.equal(librarySprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'library movement sprite is PNG');
 assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1060, 1484], 'library movement sprite keeps square 5x7 cells for consistent proportions');
 assert.match(extractorSource, /libraryGridGuides/, 'library cells use reviewed guide coordinates instead of approximate equal slicing');
+assert.match(extractorSource, /fullBodyHeadRatio: '1:7'/, 'full-body movement art keeps the reviewed adult 1:7 anatomy contract');
+assert.match(extractorSource, /neckCrop: 'crown-to-waist'/, 'neck-focused movement art uses the shared upper-torso crop instead of a close-up');
 assert.match(extractorSource, /'296', '320'/, 'every movement is centered on the shared 320px canvas with a white safety edge');
 assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
+assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
 assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
 for (const entry of artManifest) {
   const image = readFileSync(`public/exercise-visuals/movements/${entry.id}.png`);

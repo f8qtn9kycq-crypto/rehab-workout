@@ -21,13 +21,22 @@ const sourceSizes = {
   'manual-workout-library-line-art-v2.png': { width: 1060, height: 1484 },
 };
 
+// Reviewed illustration contract: complete standing figures use an adult 1:7
+// head-to-body ratio; neck-focused movements use a consistent crown-to-waist
+// crop without enlarging the head relative to that implied full-body template.
+const reviewedAnatomy = {
+  fullBodyHeadRatio: '1:7',
+  neckCrop: 'crown-to-waist',
+};
+
 const libraryGridGuides = {
-  x: [12, 221, 428, 630, 840, 1046],
-  y: [10, 213, 404, 594, 782, 979, 1183, 1406],
+  x: [12, 222, 428, 630, 841, 1046],
+  y: [10, 213, 404, 594, 783, 978, 1183, 1405],
 };
 
 const movementOverrides = {
-  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 297, height: 151 },
+  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1254, height: 1254 },
+  'neck-rotation-stretch': { path: `${sourceDirectory}/overrides/neck-rotation-stretch.png`, width: 1254, height: 1254 },
 };
 
 try {

@@ -468,6 +468,7 @@ export default {
     chooseExercise: '選擇實際完成的動作',
     selectedExercise: '已選：{name}',
     changeExercise: '更換動作',
+    strengthGroups: { push: '推', pull: '拉', leg: '腿' },
     quickExercises: { benchPress: '胸推', shoulderPress: '肩推', squat: '深蹲', pullUp: '引體向上', dip: '雙槓撐體', latPulldown: '下拉', seatedRow: '坐姿划船', legExtension: '腿部伸展' },
     moreExercises: '更多動作庫選項',
     otherExercise: '其他動作（找不到時才輸入）',

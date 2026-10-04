@@ -991,6 +991,10 @@ export const exercises: Exercise[] = [
   {
     id: 'catalog-seated-row', title: '坐姿划船', joint: 'shoulder', bodyArea: 'shoulder', condition: '背部拉力訓練（動作庫）', type: 'strength', level: 'intermediate',
     description: '坐姿使用彈力帶練習受控划船。', detail: '可查詢的拉力動作；保持肩膀放鬆並使用輕阻力。', steps: ['坐穩並固定彈力帶', '雙手向身體方向拉', '肩胛骨向後下方移動', '慢慢放回'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供上背與肩胛控制訓練參考。', cautions: ['固定點不可鬆脫', '不要聳肩或過度拱腰'], stopRules: ['肩頸或背部疼痛增加', '彈力帶失去控制'], regressions: ['降低阻力或縮短距離'], progressions: ['動作穩定後增加阻力'], equipment: ['resistance_band'], requiredEquipment: ['resistance_band'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=resistance+band+seated+row', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+  },
+  {
+    id: 'catalog-leg-extension', title: '坐姿膝伸直', joint: 'knee', bodyArea: 'knee', condition: '大腿前側肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
+    description: '坐在穩固椅子上，緩慢伸直膝蓋並控制放下。', detail: '可查詢的腿部伸展動作；補記時可另行記錄實際使用的訓練機或重量，不會進入保守推薦。', steps: ['坐在穩固椅子上，背部有支撐', '保持大腿穩定，緩慢伸直一側膝蓋', '在舒適角度短暫停留', '控制小腿慢慢放回，再換邊'], sets: 2, reps: 8, holdSeconds: 1, restSeconds: 60, durationText: '每側 2 組，每組 8 次', benefits: '提供大腿前側肌力與膝關節控制訓練參考。', cautions: ['只使用可控制且不增加疼痛的幅度', '使用訓練機時先以輕重量確認座椅與轉軸位置'], stopRules: ['膝蓋疼痛明顯增加或出現尖銳疼痛', '膝蓋不穩、卡住或腫脹增加'], regressions: ['不加重量並縮小伸直幅度', '減少次數或改為較短的停留時間'], progressions: ['動作穩定且無症狀後再逐步增加次數或阻力'], equipment: ['chair'], requiredEquipment: ['chair'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression', 'pain_sensitive'], supportRequired: true, avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=seated+knee+extension+exercise+beginner', sourceRef: 'catalog-only: manual-workout canonicalization', catalogOnly: true
   }
 ];
 

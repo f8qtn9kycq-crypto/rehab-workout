@@ -17,6 +17,8 @@ const sourceFiles = {
   exerciseModel: 'src/utils/exerciseModel.ts',
   recommendationEngine: 'src/utils/recommendationEngine.ts',
   logService: 'src/services/logService.ts',
+  manualWorkoutOptions: 'src/data/manualWorkoutOptions.ts',
+  manualWorkoutPage: 'src/pages/ManualWorkoutPage.tsx',
 };
 
 const auditBodyAreas = ['shoulder_hip', 'shoulder_neck', 'knee', 'ankle'];
@@ -136,6 +138,8 @@ const bodyMapSelectorSource = readSource(sourceFiles.bodyMapSelector);
 const exerciseModelSource = readSource(sourceFiles.exerciseModel);
 const recommendationEngineSource = readSource(sourceFiles.recommendationEngine);
 const logServiceSource = readSource(sourceFiles.logService);
+const manualWorkoutOptionsSource = readSource(sourceFiles.manualWorkoutOptions);
+const manualWorkoutPageSource = readSource(sourceFiles.manualWorkoutPage);
 
 const appBodyAreas = extractConstStringArray(typesSource, 'BODY_AREAS');
 const appTypes = extractConstStringArray(typesSource, 'EXERCISE_TYPES');
@@ -147,6 +151,30 @@ const equipmentOptionIds = [...equipmentOptionsSource.matchAll(/\{\s*id:\s*EQUIP
   return idMatch?.[1];
 }).filter(Boolean);
 const exercises = extractExercises(exercisesSource);
+const quickExerciseMatch = manualWorkoutOptionsSource.match(/quickExerciseIds = \[([\s\S]*?)\] as const/);
+const quickManualExerciseIds = quickExerciseMatch ? [...quickExerciseMatch[1].matchAll(/'([^']+)'/g)].map((match) => match[1]) : [];
+const manualSelectableIds = uniq([...quickManualExerciseIds, ...exercises.map((exercise) => exercise.id)]);
+const exerciseById = new Map(exercises.map((exercise) => [exercise.id, exercise]));
+const missingManualExerciseIds = manualSelectableIds.filter((id) => !exerciseById.has(id));
+const manualCoverageRows = manualSelectableIds.map((id) => {
+  const exercise = exerciseById.get(id);
+  return [
+    exercise?.title ?? id,
+    id,
+    exercise ? 'Yes' : 'No',
+    exercise?.bodyArea ?? '—',
+    exercise?.type ?? '—',
+    exercise ? displayList(allExerciseEquipment(exercise)) : '—',
+    exercise?.catalogOnly === true ? 'catalogOnly: true' : exercise ? 'Recommendation eligible' : '—',
+    exercise ? 'None' : 'Add canonical exercise',
+  ];
+});
+const requiredExerciseFields = ['id', 'title', 'joint', 'bodyArea', 'condition', 'type', 'level', 'description', 'detail', 'steps', 'sets', 'reps', 'holdSeconds', 'restSeconds', 'durationText', 'benefits', 'cautions', 'stopRules', 'regressions', 'progressions', 'equipment', 'youtubeEmbedUrl', 'youtubeSearchUrl', 'sourceRef'];
+const missingRequiredFields = exercises.flatMap((exercise) => requiredExerciseFields
+  .filter((field) => exercise[field] === undefined || exercise[field] === null || exercise[field] === '' && !['youtubeEmbedUrl'].includes(field) || Array.isArray(exercise[field]) && exercise[field].length === 0)
+  .map((field) => `${exercise.id}.${field}`));
+const manualRecommendationLeaks = quickManualExerciseIds.filter((id) => exerciseById.get(id)?.catalogOnly !== true);
+const pickerHasCustomExercise = manualWorkoutPageSource.includes("selectedIds[index] === 'custom'") || manualWorkoutPageSource.includes("id === 'custom'");
 
 const inventoryRows = exercises.map((exercise) => [
   exercise.title,
@@ -524,6 +552,8 @@ Scope: audit only. This report does not add exercise content, change recommendat
 - Non-canonical exercise bodyArea values: ${displayList(nonCanonicalBodyAreas)}
 - Non-canonical exercise type values: ${displayList(nonCanonicalTypes)}
 - Non-canonical exercise equipment values: ${displayList(nonCanonicalEquipment)}
+- Manual/backfill selectable canonical coverage: ${manualSelectableIds.length - missingManualExerciseIds.length}/${manualSelectableIds.length}
+- Quick strength catalog-only isolation: ${quickManualExerciseIds.length - manualRecommendationLeaks.length}/${quickManualExerciseIds.length}
 
 Top 5 gaps:
 
@@ -532,6 +562,10 @@ ${topGaps.map((gap, index) => `${index + 1}. ${gap}`).join('\n')}
 ## 2. Exercise inventory table
 
 ${table(['Exercise', 'ID', 'Body Area', 'Type', 'Difficulty', 'Equipment'], inventoryRows)}
+
+## Manual/backfill canonical coverage
+
+${table(['Selectable exercise', 'exerciseId', 'Canonical exercise exists?', 'Canonical bodyArea', 'Canonical type', 'Equipment', 'Catalog / recommendation eligibility', 'Action required'], manualCoverageRows)}
 
 ## 3. Difficulty coverage table
 
@@ -597,8 +631,22 @@ ${table(['Scenario', 'Handled in UI', 'Evidence'], emptyStateChecks.map((check) 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, report);
 
+const blockingFindings = [
+  ...duplicateIds.map((id) => `duplicate canonical id: ${id}`),
+  ...missingRequiredFields.map((field) => `missing required field: ${field}`),
+  ...missingManualExerciseIds.map((id) => `manual exercise is not canonical: ${id}`),
+  ...manualRecommendationLeaks.map((id) => `manual strength exercise is recommendation eligible: ${id}`),
+  ...(pickerHasCustomExercise ? ['manual picker still permits a non-canonical custom exercise'] : []),
+];
+
+if (blockingFindings.length > 0) {
+  throw new Error(`Exercise coverage audit failed:\n- ${blockingFindings.join('\n- ')}`);
+}
+
 console.log(`Exercise coverage audit generated: ${path.relative(rootDir, outputPath)}`);
 console.log(`Exercises audited: ${exercises.length}`);
 console.log(`Raw equipment-field empty combinations: ${rawEmptyCombinationRows.length}`);
 console.log(`App-realistic empty combinations: ${appEmptyCombinationRows.length}`);
 console.log(`Zero-coverage equipment: ${displayList(zeroExerciseEquipment)}`);
+console.log(`Manual/backfill canonical coverage: ${manualSelectableIds.length}/${manualSelectableIds.length}`);
+console.log('Quick strength catalog-only isolation: passed');

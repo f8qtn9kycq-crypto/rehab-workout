@@ -1,5 +1,5 @@
 import { exercises as catalog } from '../data/exercises';
-import { equipmentChoiceIds, quickExerciseIds } from '../data/manualWorkoutOptions';
+import { equipmentChoiceIds } from '../data/manualWorkoutOptions';
 import { useI18n } from '../services/i18n';
 import type { ManualWorkout } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
@@ -10,9 +10,8 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
   return <article className="card space-y-2 p-4">
     <p className="text-lg font-black text-ink">{t('manualWorkout.recordTitle', { date: workout.date })}</p>
     {workout.exercises.map((exercise, index) => {
-      const quickId = quickExerciseIds.find(id => id === exercise.exerciseId);
       const catalogExercise = catalog.find(item => item.id === exercise.exerciseId);
-      const name = quickId ? t(`manualWorkout.quickExercises.${quickId}`) : catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name;
+      const name = catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name;
       const equipmentId = equipmentChoiceIds.find(id => id === exercise.equipmentId);
       const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : exercise.equipment;
       return <div key={index} className="border-t border-slate-100 pt-2">

@@ -468,6 +468,7 @@ export default {
     chooseExercise: 'Choose the exercise you actually did',
     selectedExercise: 'Selected: {name}',
     changeExercise: 'Change exercise',
+    strengthGroups: { push: 'Push', pull: 'Pull', leg: 'Legs' },
     quickExercises: { benchPress: 'Bench press', shoulderPress: 'Shoulder press', squat: 'Squat', pullUp: 'Pull-up', dip: 'Dip', latPulldown: 'Lat pulldown', seatedRow: 'Seated row', legExtension: 'Leg extension' },
     moreExercises: 'More exercises from the library',
     otherExercise: 'Other exercise (type only if not listed)',

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LibraryMovementArt from '../components/LibraryMovementArt';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
-import { quickExerciseCatalogIds, quickExerciseIds } from '../data/manualWorkoutOptions';
+import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
 import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
@@ -99,11 +99,19 @@ export default function ManualWorkoutPage() {
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
-          <div className="mt-2 grid grid-cols-1 gap-3">
-            {quickExerciseIds.map(id => <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
-              <WorkoutMovementArt id={id} loading="eager" />
-              <span>{getLocalizedExercise(catalog.find(item => item.id === id)!, language).title}</span>
-            </button>)}
+          <div className="mt-3 space-y-5">
+            {quickExerciseGroups.map(group => <section key={group.id} aria-labelledby={`strength-group-${index}-${group.id}`}>
+              <h3 id={`strength-group-${index}-${group.id}`} className="mb-2 text-base font-black text-slate-800">{t(`manualWorkout.strengthGroups.${group.id}`)}</h3>
+              <div className="grid grid-cols-1 gap-3">
+                {group.exerciseIds.map(id => {
+                  const catalogExercise = catalog.find(item => item.id === id);
+                  return catalogExercise ? <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+                    <WorkoutMovementArt id={id} loading="eager" />
+                    <span>{getLocalizedExercise(catalogExercise, language).title}</span>
+                  </button> : null;
+                })}
+              </div>
+            </section>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
             <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>

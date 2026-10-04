@@ -22,17 +22,20 @@ for (const entry of manifest) {
   const x1 = Math.round((entry.column + 1) * size.width / entry.columns);
   const y0 = Math.round(entry.row * size.height / entry.rows);
   const y1 = Math.round((entry.row + 1) * size.height / entry.rows);
-  const offset = value => value === 0 ? '0.001' : String(value);
+  // sips treats an exact zero offset as a centered crop and a fractional near-zero
+  // offset can leave a dark anti-aliased edge. One pixel selects the first cell
+  // without introducing a visible outer border.
+  const offset = value => value === 0 ? '1' : String(value);
+  const output = `${outputDirectory}/${entry.id}.png`;
   const result = spawnSync('sips', [
     '--cropOffset', offset(y0), offset(x0),
     '--cropToHeightWidth', String(y1 - y0), String(x1 - x0),
     `${sourceDirectory}/${entry.sheet}`,
-    '--out', `${outputDirectory}/${entry.id}.png`,
+    '--out', output,
   ], { encoding: 'utf8' });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || `Failed to extract ${entry.id}`);
 
   if (entry.group === 'quick') {
-    const output = `${outputDirectory}/${entry.id}.png`;
     const resize = spawnSync('sips', ['--resampleHeightWidthMax', '320', output, '--out', output], { encoding: 'utf8' });
     if (resize.status !== 0) throw new Error(resize.stderr || resize.stdout || `Failed to resize ${entry.id}`);
   }

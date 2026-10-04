@@ -290,8 +290,9 @@ section('assessment and exercise library reuse the interactive body map', () => 
   assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
   assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
   assertIncludes(source.bodyMapSelector, 'd={regionPaths[area]}', 'rehab body map highlights selectable body regions directly');
-  assertIncludes(source.bodyMapSelector, "stroke={active ? 'none'", 'selected rehab region does not show a border line');
-  assertIncludes(source.bodyMapSelector, 'focus-visible:outline', 'keyboard focus remains visible without showing a pointer-click border');
+  assertIncludes(source.bodyMapSelector, 'fillOpacity={active ? 0.42', 'selected rehab region stays legible without covering the body sketch');
+  assertIncludes(source.bodyMapSelector, 'strokeWidth="14"', 'body-map touch targets are larger than their visible highlights');
+  assertIncludes(source.bodyMapSelector, 'focus-visible:stroke-calm-900', 'keyboard focus remains visible on the interactive body region');
   assertNotIncludes(source.bodyMapSelector, 'className={`focus-ring absolute', 'rehab body map does not overlay text boxes on the body');
   assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');
   assertIncludes(source.muscleMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'resistance muscle map keeps the front/back switch');

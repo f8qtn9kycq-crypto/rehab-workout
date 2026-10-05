@@ -14,6 +14,23 @@ Run `node scripts/extract-movement-art.mjs --list-sources` to inspect effective 
 
 Review every changed asset and every affected alias. Check the canonical registry, `WorkoutMovementArt`, picker, selected entry, Records and library. Use the existing image-creation skill for edits; no additional skill or reviewer agent is required by this contract.
 
+## Reference-derived style acceptance
+
+The user's 2026-10-06 feedback rejects the nine candidates shown after the first eight in the named comparison. Their style gate is **FAIL**, superseding earlier NOT VERIFIED/PENDING wording. See [feedback and specification audit](visual-qa/2026-10-06-workflow/user-feedback.md) and the hash-bound `user-feedback.json`. This is an attributable user decision, not an independent blind result or a GitHub requested-changes review.
+
+Compare the final runtime image with named frozen references at equal display size. Record each dimension separately; a mismatch in any dimension fails visual consistency:
+
+| Dimension | Required reference comparison | Reject |
+| --- | --- | --- |
+| Character | `shoulderPress`, `squat`, `dip`: small simplified head, short hair, plain T-shirt/shorts, economical hands and feet | New hair/head silhouette, enlarged head, bare anatomical torso, individually detailed toes/fingers |
+| Drawing language | All eight: restrained dark sketch outlines and sparse internal marks | Anatomical contour tracing, added back/muscle marks, smoother detailed rendering or changed apparent stroke strength |
+| Scale and whitespace | Standing: `shoulderPress`/`dip`; seated: `seatedRow`/`legExtension`; reclining: `benchPress` | Enlarging the person to fill the available box, crowding edges, or choosing scale by total equipment bounds alone |
+| Props and view | Preserve the required movement's view and equipment while using the references' simple construction and line language | Importing a different illustration system for chairs/bands, or changing the movement to imitate a reference pose |
+
+`benchPress` supplies reclining drawing/scale context, not approval of floor-exercise anatomy. No approved floor control exists in the eight; disclose this limit. A generic 6.5–7-head rule, a 320×184 canvas, and a 136×148 ink fit do not establish reference fidelity. Canvas bounds are limits, not required figure fill. The current Python normalizer tightly fits ink to 136×148; treat its output as a candidate needing final-size comparison, never as style normalization. If framing causes drift, correct the authoring/framing workflow before accepting another output.
+
+On a rejected hash, retain FAIL until a corrected candidate has attributable re-review; changing a prompt, generating a packet, or passing CI does not clear it. On a new hash, invalidate prior acceptance and mark the replacement NOT VERIFIED until reviewed. Do not relabel the unchanged rejected hash PENDING. Review the eight references and all affected candidates together; inspect both phases at native size and measured mobile size.
+
 ## Four independent gates
 
 Record `PASS`, `FAIL`, or `NOT VERIFIED` for each gate. `NOT VERIFIED` is an evidence gap, never a pass. Do not average gates into a score.

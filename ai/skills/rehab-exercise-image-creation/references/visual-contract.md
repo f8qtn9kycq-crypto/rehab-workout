@@ -8,7 +8,7 @@ The primary approved style is the original eight quick images frozen in `docs/vi
 
 - White background with dark hand-drawn outline art. Match the frozen references' visible stroke strength at final runtime/mobile size; “thin” must not mean making lines finer than the baseline.
 - Consistent stroke weight with rounded-looking ends and joins; avoid a heavier cartoon or finer anatomical tracing than the frozen references.
-- Simplified adult anatomy, generally 6.5–7 heads tall for a complete standing figure.
+- Match the actual frozen character silhouettes and head/body relationship in `shoulderPress`, `squat` and `dip`; a generic adult head-count rule is not a substitute for these references.
 - Preserve hairline, ears, and a minimal nose when visible. Do not add eyes, mouths, expressive faces, shading, gradients, muscle rendering, or photorealistic detail.
 - Preserve the reference character design, plain clothing, simplified hands/feet and detail density. Do not substitute a shirtless anatomical tracing or a different cartoon character.
 - Props use the same visual weight as the human figure. Chairs, walls, bands, bars, and machines must not appear to come from a different illustration system.
@@ -27,7 +27,7 @@ The primary approved style is the original eight quick images frozen in `docs/vi
 
 Center each phase by its own complete composition, including required equipment. A long arm or prop is part of the movement and may extend away from the torso, but neither phase should crowd the divider or outer edge.
 
-Ground-based movements may naturally be wider and shorter than standing movements. Match their perceived figure scale through a tight source crop; do not leave large source whitespace that makes the rendered person look miniature.
+Ground-based movements may naturally be wider and shorter than standing movements. Compare their final perceived character scale and whitespace with `benchPress` as reclining style context; it is not a floor-movement accuracy control. Preserve reference-relative whitespace. Do not automatically tighten crops or enlarge the person to fill the content bounds. The current Python 136×148 tight-ink fit is mechanical framing, not an approved figure-size target; reject its output if final-size comparison shows scale drift.
 
 ## Anatomy and action clarity
 
@@ -89,7 +89,7 @@ Composition: preserve the two equal panels, keep each complete pose centered in 
 Constraints: preserve <explicit invariants>. No outer border, text, arrows, shading, extra objects, thicker lines, enlarged head, or unrelated pose changes.
 ~~~
 
-Inspect the generated source before committing it. Prefer a targeted second edit over accepting an output that introduces a new style or anatomy mismatch.
+Apply the reference-derived acceptance table and rejected-hash policy in `docs/exercise-visual-qa.md`. The nine candidates rejected in the 2026-10-06 user feedback remain FAIL until corrected and re-reviewed. Inspect the generated source before committing it. Prefer a targeted second edit over accepting an output that introduces a new style or anatomy mismatch.
 
 ## Human walkthrough
 

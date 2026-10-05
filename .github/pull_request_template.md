@@ -40,6 +40,8 @@ What user problem this addresses:
 - [ ] iOS Safari / SPA routing risk considered; automated evidence is acceptable unless the changed behavior specifically requires physical-device verification
 - [ ] LocalStorage compatibility considered
 
+For exercise-image or image-ID mapping changes, link the per-asset evidence required by `docs/exercise-visual-qa.md` (visual consistency, movement accuracy, safety representation, mobile rendering). Mark unverified gates explicitly; do not claim human/blind acceptance from automation. Not applicable for changes without image or mapping impact.
+
 ## AI review routing
 
 - [ ] Codex review needed

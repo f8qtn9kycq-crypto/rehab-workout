@@ -1,0 +1,3679 @@
+{
+  "engine": "Chromium 153.0.8010.0",
+  "profile": "Playwright iPhone 13, touch/mobile, DPR3; viewport widths 390/375/320, height844; not iOS27 Safari",
+  "assetReference": "local revision restoring six mappings and revising bridge/clamshell; see committed hashes",
+  "results": [
+    {
+      "viewport": 390,
+      "id": "benchPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulderPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "squat",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "pullUp",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "dip",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "latPulldown",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "seatedRow",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "legExtension",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 308,
+      "height": 177.09375,
+      "left": 41,
+      "right": 349,
+      "parentWidth": 308,
+      "parentHeight": 177.09375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-flexion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-external-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "glute-bridge",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "hip-clamshell",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "knee-straight-leg-raise",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 306,
+      "height": 175.9375,
+      "left": 42,
+      "right": 348,
+      "parentWidth": 306,
+      "parentHeight": 175.9375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-flexion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-external-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "glute-bridge",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "hip-clamshell",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "knee-straight-leg-raise",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "benchPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulderPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "squat",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "pullUp",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "dip",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "latPulldown",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "seatedRow",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "legExtension",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 300,
+      "height": 172.5,
+      "left": 45,
+      "right": 345,
+      "parentWidth": 300,
+      "parentHeight": 172.5,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-flexion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-external-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "glute-bridge",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "hip-clamshell",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "knee-straight-leg-raise",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "benchPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulderPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "squat",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "pullUp",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "dip",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "latPulldown",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "seatedRow",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "legExtension",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-flexion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-external-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "glute-bridge",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "hip-clamshell",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "knee-straight-leg-raise",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "benchPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "shoulderPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "squat",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "pullUp",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "dip",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "latPulldown",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "seatedRow",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 390,
+      "id": "legExtension",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 324,
+      "height": 186.296875,
+      "left": 33,
+      "right": 357,
+      "parentWidth": 324,
+      "parentHeight": 186.296875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "benchPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulderPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "squat",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "pullUp",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "dip",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "latPulldown",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "seatedRow",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "legExtension",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 293,
+      "height": 168.46875,
+      "left": 41,
+      "right": 334,
+      "parentWidth": 293,
+      "parentHeight": 168.46875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-flexion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-external-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "glute-bridge",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "hip-clamshell",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "knee-straight-leg-raise",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 291,
+      "height": 167.3125,
+      "left": 42,
+      "right": 333,
+      "parentWidth": 291,
+      "parentHeight": 167.3125,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-flexion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-external-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "glute-bridge",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "hip-clamshell",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "knee-straight-leg-raise",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "benchPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulderPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "squat",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "pullUp",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "dip",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "latPulldown",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "seatedRow",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "legExtension",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 285,
+      "height": 163.875,
+      "left": 45,
+      "right": 330,
+      "parentWidth": 285,
+      "parentHeight": 163.875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-flexion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-external-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "glute-bridge",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "hip-clamshell",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "knee-straight-leg-raise",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "benchPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulderPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "squat",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "pullUp",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "dip",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "latPulldown",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "seatedRow",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "legExtension",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-flexion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-external-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "glute-bridge",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "hip-clamshell",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "knee-straight-leg-raise",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "benchPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "shoulderPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "squat",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "pullUp",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "dip",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "latPulldown",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "seatedRow",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 375,
+      "id": "legExtension",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 309,
+      "height": 177.671875,
+      "left": 33,
+      "right": 342,
+      "parentWidth": 309,
+      "parentHeight": 177.671875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "benchPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulderPress",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "squat",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "pullUp",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "dip",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "latPulldown",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "seatedRow",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "legExtension",
+      "surface": "quick-picker",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 238,
+      "height": 136.84375,
+      "left": 41,
+      "right": 279,
+      "parentWidth": 238,
+      "parentHeight": 136.84375,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-flexion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-external-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "glute-bridge",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "hip-clamshell",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "knee-straight-leg-raise",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "more-picker",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 236,
+      "height": 135.6875,
+      "left": 42,
+      "right": 278,
+      "parentWidth": 236,
+      "parentHeight": 135.6875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-flexion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-external-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "glute-bridge",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "hip-clamshell",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "knee-straight-leg-raise",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "benchPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulderPress",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "squat",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "pullUp",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "dip",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "latPulldown",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "seatedRow",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "legExtension",
+      "surface": "selected",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 230,
+      "height": 132.25,
+      "left": 45,
+      "right": 275,
+      "parentWidth": 230,
+      "parentHeight": 132.25,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-flexion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-external-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "glute-bridge",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "hip-clamshell",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "knee-straight-leg-raise",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "benchPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulderPress",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "squat",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "pullUp",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "dip",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "latPulldown",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "seatedRow",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "legExtension",
+      "surface": "records",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-flexion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-flexion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-scapular-squeeze",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-external-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-internal-rotation-band",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "glute-bridge",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/glute-bridge.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "hip-clamshell",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/hip-clamshell.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "knee-straight-leg-raise",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "ankle-band-inversion-eversion",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "benchPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/benchPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "shoulderPress",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/shoulderPress.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "squat",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/squat.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "pullUp",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/pullUp.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "dip",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/dip.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "latPulldown",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/latPulldown.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "seatedRow",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/seatedRow.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    },
+    {
+      "viewport": 320,
+      "id": "legExtension",
+      "surface": "library",
+      "src": "/exercise-visuals/movements/legExtension.png",
+      "natural": [
+        320,
+        184
+      ],
+      "width": 254,
+      "height": 146.046875,
+      "left": 33,
+      "right": 287,
+      "parentWidth": 254,
+      "parentHeight": 146.046875,
+      "objectFit": "contain",
+      "overflow": false
+    }
+  ]
+}

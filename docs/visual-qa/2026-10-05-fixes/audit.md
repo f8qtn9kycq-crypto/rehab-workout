@@ -1,5 +1,7 @@
 # 2026-10-05 illustration corrections
 
+Historical evidence for head `8498bfd52aff2873f1468a5ebfc3385d6cbccac8`. Superseded after user phone review FAIL: see [restored original images and local mobile checks](../2026-10-05-phone/audit.md). Current aliases, bridge/clamshell hashes and anonymous controls differ; this packet is not current-head acceptance.
+
 Reference: main `6a18c78f582cf2424f40b9ba1e42e0c990d842d8`, the [first audit](../2026-10-05/audit.md), current v2 sheet and named runtime assets. This is implementation evidence, not independent visual or clinical acceptance. The PR head identifies the reviewed tree; `asset-hashes.csv` freezes all 43 before/after runtime SHA-256 values.
 
 ## Six incompatible aliases

@@ -32,7 +32,7 @@ A verified `FAIL` blocks acceptance of the affected image or mapping. Missing re
 
 Each material finding includes file, observed behavior, risk, acceptance criterion and a source/reference. Use the existing P0/P1 severity definitions. A subjective preference without a concrete contract mismatch is not a blocker.
 
-Change the source and regenerate the runtime asset through the existing generator. Re-review the changed asset and affected aliases, confirm unrelated assets are byte-unchanged, and invalidate earlier approval when their hashes change. The extractor currently requires macOS; do not claim regeneration on Linux or hand-edit only generated PNGs.
+Change the source and regenerate the runtime asset through the existing generator. Re-review the changed asset and affected aliases, confirm unrelated assets are byte-unchanged, and invalidate earlier approval when their hashes change. Sheet extraction requires macOS. Manifest `overrideSource` entries can be normalized on Linux/macOS through `--ids` with Python 3 and `scripts/movement-art-requirements.txt`; do not hand-edit only generated PNGs.
 
 ## Anonymous consistency trial
 

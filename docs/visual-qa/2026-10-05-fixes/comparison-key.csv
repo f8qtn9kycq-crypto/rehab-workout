@@ -1,0 +1,17 @@
+anonymous_id,asset_id,cohort
+B01,pullUp,control
+B02,shoulder-standing-arm-swings,control
+B03,shoulder-neck-thoracic-extension-chair,candidate
+B04,hip-sit-to-stand,control
+B05,knee-hamstring-curl,control
+B06,neck-rotation-stretch,control
+B07,glute-bridge,candidate
+B08,shoulder-internal-rotation-band,candidate
+B09,knee-straight-leg-raise,candidate
+B10,shoulder-external-rotation-band,candidate
+B11,shoulder-scapular-squeeze,candidate
+B12,ankle-band-inversion-eversion,candidate
+B13,hip-clamshell,control
+B14,shoulder-flexion,candidate
+B15,ankle-gastrocnemius-stretch,control
+B16,seatedRow,control

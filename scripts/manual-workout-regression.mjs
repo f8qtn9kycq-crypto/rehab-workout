@@ -43,12 +43,13 @@ const additionalCatalogIds = quickIds;
 assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
-assert.deepEqual(artManifest.map(entry => entry.aliases?.[0]).filter(Boolean).slice(0, 8), quickIds, 'quick art aliases and canonical choices stay in the same approved order');
+const mismatchedCatalogArtIds = ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-lat-pulldown', 'catalog-seated-row', 'catalog-leg-extension'];
 const allArtIds = artManifest.flatMap(entry => [entry.id, ...(entry.aliases ?? [])]);
 assert.equal(new Set(allArtIds).size, allArtIds.length, 'canonical ids and aliases are globally unique');
 assert.deepEqual(artManifest.find(entry => entry.id === 'pullUp').aliases, ['catalog-pull-up'], 'exact pull-up catalog equivalent reuses the approved art');
 assert.deepEqual(artManifest.find(entry => entry.id === 'dip').aliases, ['catalog-dip'], 'exact dip catalog equivalent reuses the approved art');
-assert.ok(quickIds.every(id => allArtIds.includes(id)), 'every quick canonical exercise resolves to existing movement art');
+assert.ok(mismatchedCatalogArtIds.every(id => !allArtIds.includes(id)), 'equipment/posture mismatches use text fallback instead of a different exercise picture');
+assert.ok(quickArtIds.every(id => allArtIds.includes(id)), 'legacy strength asset IDs remain readable without canonical mis-aliasing');
 assert.match(sharedArtSource, /getMovementArt\(id\)/, 'shared movement art resolves one canonical registry');
 assert.match(sharedArtSource, /loading=\{loading\}/, 'shared movement art supports native lazy loading');
 assert.match(sharedArtSource, /decoding="async"/, 'shared movement art decodes asynchronously');
@@ -99,6 +100,15 @@ async function loadModule(entry) {
 }
 
 const values = new Map();
+const { getMovementArt } = await loadModule('src/data/movementArtRegistry.ts');
+for (const id of mismatchedCatalogArtIds) {
+  assert.equal(getMovementArt(id), undefined, `${id} must not display an incompatible equipment/pose image`);
+}
+for (const id of quickArtIds) {
+  assert.equal(getMovementArt(id)?.src, `/exercise-visuals/movements/${id}.png`, `${id} legacy art remains stable`);
+}
+assert.equal(getMovementArt('catalog-pull-up')?.src, getMovementArt('pullUp')?.src);
+assert.equal(getMovementArt('catalog-dip')?.src, getMovementArt('dip')?.src);
 globalThis.window = { localStorage: {
   getItem: key => values.get(key) ?? null,
   setItem: (key, value) => values.set(key, value),

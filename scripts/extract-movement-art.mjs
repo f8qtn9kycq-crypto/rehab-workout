@@ -3,14 +3,32 @@ import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-if (process.platform !== 'darwin') {
-  throw new Error('Movement-art extraction requires macOS sips; generated assets are committed for other environments.');
-}
-
-const manifest = JSON.parse(readFileSync('src/data/movementArtManifest.json', 'utf8'));
+const allEntries = JSON.parse(readFileSync('src/data/movementArtManifest.json', 'utf8'));
+const idsIndex = process.argv.indexOf('--ids');
+const requestedIds = idsIndex < 0 ? null : process.argv[idsIndex + 1]?.split(',');
+if (idsIndex >= 0 && !requestedIds?.length) throw new Error('--ids requires comma-separated asset IDs');
+if (requestedIds?.some(id => !allEntries.some(entry => entry.id === id))) throw new Error('Unknown movement-art ID');
+const manifest = requestedIds ? allEntries.filter(entry => requestedIds.includes(entry.id)) : allEntries;
 const sourceDirectory = 'scripts/assets/movement-art-sources';
 const outputDirectory = 'public/exercise-visuals/movements';
 mkdirSync(outputDirectory, { recursive: true });
+
+function normalizeOverride(entry) {
+  const result = spawnSync('python3', ['scripts/normalize-movement-override.py',
+    `${sourceDirectory}/${entry.overrideSource}`, `${outputDirectory}/${entry.id}.png`], { encoding: 'utf8' });
+  if (result.status !== 0) throw new Error(result.stderr || 'Override normalization requires Python 3 and Pillow');
+}
+
+// Targeted generated overrides work on Linux/macOS without re-encoding any
+// unchanged sheet assets. Existing sheet extraction retains its native backend.
+if (manifest.every(entry => entry.overrideSource)) {
+  manifest.forEach(normalizeOverride);
+  console.log(`Normalized ${manifest.length} targeted overrides`);
+  process.exit(0);
+}
+if (process.platform !== 'darwin') {
+  throw new Error('Sheet extraction requires macOS; use --ids for targeted generated overrides.');
+}
 
 const cropTool = join(tmpdir(), `rehab-crop-movement-art-${process.pid}`);
 const compile = spawnSync('swiftc', ['scripts/crop-movement-art.swift', '-o', cropTool], { encoding: 'utf8' });
@@ -41,6 +59,7 @@ const movementOverrides = {
 
 try {
 for (const entry of manifest) {
+  if (entry.overrideSource) { normalizeOverride(entry); continue; }
   const override = movementOverrides[entry.id];
   const output = `${outputDirectory}/${entry.id}.png`;
   if (override) {

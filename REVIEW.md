@@ -55,6 +55,10 @@ Backlog only. Do not block merge.
 - For Tier 2+ PRs, explicitly verify SafetyGate, pain rules, red-flag blocking, session route guards, LocalStorage compatibility, and iOS Safari / SPA routing risk.
 - Treat iOS Safari / physical-device testing as a targeted gate, not a blanket gate. Require it only when the changed behavior depends on device/browser behavior that cannot be covered reliably by automated or scripted QA, or when an explicit acceptance criterion requires it.
 
+## Exercise illustration review
+
+For changed exercise illustrations or image-ID aliases, apply `docs/exercise-visual-qa.md` and record separate visual, movement, safety-representation and mobile results. Evaluate concrete reference/step mismatches, not subjective taste; a shared URL is not proof of correct movement semantics.
+
 ## Draft and ready-for-review policy
 
 Draft means implementation or required automated evidence is incomplete. Once implementation is complete, current-head required checks pass, and there is no known blocking P0/P1, mark the PR Ready for review.

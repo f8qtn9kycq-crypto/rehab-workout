@@ -4,10 +4,13 @@ Use this reference for movement art, exercise-library images, selected-record im
 
 ## Canonical style
 
-- White background with dark, thin, hand-drawn outline art.
-- Consistent stroke weight with rounded-looking ends and joins; avoid mixing bold cartoon outlines with the shared fine-line figures.
+The primary approved style is the original eight quick images frozen in `docs/visual-qa/approved-style-baseline.json` at commit `6a18c78f582cf2424f40b9ba1e42e0c990d842d8`. Preserve their runtime bytes, mappings and source sheet. Approval covers look and feel; it is not approval of catalog equipment or clinical semantics. Neither an entire library sheet nor a byte-unchanged cell is automatically approved.
+
+- White background with dark hand-drawn outline art. Match the frozen references' visible stroke strength at final runtime/mobile size; “thin” must not mean making lines finer than the baseline.
+- Consistent stroke weight with rounded-looking ends and joins; avoid a heavier cartoon or finer anatomical tracing than the frozen references.
 - Simplified adult anatomy, generally 6.5–7 heads tall for a complete standing figure.
 - Preserve hairline, ears, and a minimal nose when visible. Do not add eyes, mouths, expressive faces, shading, gradients, muscle rendering, or photorealistic detail.
+- Preserve the reference character design, plain clothing, simplified hands/feet and detail density. Do not substitute a shirtless anatomical tracing or a different cartoon character.
 - Props use the same visual weight as the human figure. Chairs, walls, bands, bars, and machines must not appear to come from a different illustration system.
 - No text, watermark, arrows, decorative background, or outer image border.
 
@@ -31,6 +34,7 @@ Ground-based movements may naturally be wider and shorter than standing movement
 - Use full-body or consistent upper-torso framing. Avoid isolated head-and-neck close-ups.
 - For neck-focused movements, use a shared crown-to-waist crop and retain the implied normal head-to-body ratio.
 - Both frames must clearly communicate start versus finish. If the action difference is subtle, improve limb, joint, or equipment position rather than adding arrows or text.
+- For holds, relaxation and sustained stretches, identical phases may be correct. Follow written steps; never invent motion merely to distinguish panels.
 - Keep paired anatomy coherent. Head direction, arm visibility, foot stance, clothing, and prop placement should remain the same unless the exercise requires a change.
 - Show required support equipment in both frames. For example, a sit-to-stand pair needs a chair in both phases.
 - Match equipment semantics exactly. A barbell movement must not be illustrated with dumbbells; a standing movement must not silently become seated.
@@ -78,9 +82,9 @@ When a source edit genuinely requires image generation, adapt this:
 ~~~text
 Use case: precise-object-edit
 Asset type: Rehab-Workout two-phase exercise illustration source
-Input images: Image 1 is the edit target; Image 2 is the reviewed full-sheet style reference.
+Input images: Image 1 is the edit target; Image 2 is the frozen quick-sheet primary style reference. Other images provide movement context only.
 Primary request: Change only <requested anatomy, equipment, or pose>.
-Style: match Image 2's thin dark hand-drawn outline, simplified adult proportions, white background, minimal hairline/ears/nose, and no eyes or mouth.
+Style: preserve Image 2's character, clothing, simplified adult proportions and hands/feet, visible dark line weight at final 320×184/mobile size, white background, minimal hairline/ears/nose, and no eyes or mouth.
 Composition: preserve the two equal panels, keep each complete pose centered in its own half, and retain one central light-gray divider.
 Constraints: preserve <explicit invariants>. No outer border, text, arrows, shading, extra objects, thicker lines, enlarged head, or unrelated pose changes.
 ~~~

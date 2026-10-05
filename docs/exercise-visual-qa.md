@@ -8,6 +8,10 @@ Before reviewing, read the root workflow contract, `docs/safety-rules.md`, the r
 
 Record the exact reviewed commit, exercise ID (including aliases), runtime asset path and SHA-256, source sheet/cell or override, and reference asset/commit. Trace PR references to real assets. PR #160 is historical context; current main incorporates #175 anatomy/style and #177 320×184 framing. Never silently revert to an older approved style.
 
+The user-designated primary style is the original eight quick images frozen in `visual-qa/approved-style-baseline.json` (reference main `6a18c78f582cf2424f40b9ba1e42e0c990d842d8`). Preserve their bytes, original catalog mappings and source sheet. Run `npm run audit:movement-art`; a missing mapping, changed reference hash or missing image is a failure. Do not make image presence pass by removing a mapping or declaring a text-only fallback. Record equipment/posture discrepancies separately for content review; style approval is not movement approval. Do not refresh frozen hashes merely to make CI green; replacement requires a new attributable user style decision.
+
+Run `node scripts/extract-movement-art.mjs --list-sources` to inspect effective source selection and `npm run audit:movement-art-sources` to regenerate active Python overrides in temporary files and compare exact runtime bytes. The manifest override wins over legacy overrides. A source string existing in a script is not evidence it was used. These checks are mechanical, not style acceptance.
+
 Review every changed asset and every affected alias. Check the canonical registry, `WorkoutMovementArt`, picker, selected entry, Records and library. Use the existing image-creation skill for edits; no additional skill or reviewer agent is required by this contract.
 
 ## Four independent gates
@@ -36,9 +40,11 @@ Change the source and regenerate the runtime asset through the existing generato
 
 ## Anonymous consistency trial
 
+First prepare a named final-image comparison: all eight frozen runtime references plus every changed runtime image at native 320×184 and measured card widths for 390px (iPhone 13), 375px and 320px viewports. Use the final normalized PNGs, not large generation sources. Record line strength, character/head/body proportions, clothing, detail density, prop rendering, perceived figure scale and whitespace as separate observations. Include exact image hashes and the mobile measurement source. A contact sheet alone is not a browser layout test; a green layout test is not a style Pass. Use `python3 scripts/create-movement-art-review.py --mobile-results <current measurement JSON> --output <evidence directory>` to prepare the packet.
+
 Use this as evidence of style consistency, separate from the named movement/safety review:
 
-1. Freeze exact-head assets and explicitly selected unchanged approved controls of comparable framing (full body, floor, upper torso, equipment).
+1. Freeze exact-head assets and explicitly selected unchanged approved controls of comparable framing (full body, floor, upper torso, equipment). Every control needs attributable style approval. For the current baseline, only the eight listed references have that status; do not promote an unchanged library cell (such as the rejected clamshell) to an approved control. If no approved comparable control exists, disclose that limit and call the exercise an anonymous screening.
 2. Shuffle cards at equal display size, label only anonymous IDs, and keep the key from the reviewer. No filenames, dates, PR numbers or source cohorts in the reviewer packet.
 3. Before revealing the key, record a reviewer identity/role, timestamp, candidate/control guess, confidence and concrete style differences for every card.
 4. Reveal the key; report actual counts and correctness, including the unchanged/candidate mix. A small trial is qualitative evidence, not statistical proof that new images are indistinguishable. Repeated correctly attributed concrete drift requires correction.

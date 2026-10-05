@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { resolveMovementArtSource } from './movement-art-source.mjs';
 
 const allEntries = JSON.parse(readFileSync('src/data/movementArtManifest.json', 'utf8'));
 const idsIndex = process.argv.indexOf('--ids');
@@ -9,19 +10,22 @@ const requestedIds = idsIndex < 0 ? null : process.argv[idsIndex + 1]?.split(','
 if (idsIndex >= 0 && !requestedIds?.length) throw new Error('--ids requires comma-separated asset IDs');
 if (requestedIds?.some(id => !allEntries.some(entry => entry.id === id))) throw new Error('Unknown movement-art ID');
 const manifest = requestedIds ? allEntries.filter(entry => requestedIds.includes(entry.id)) : allEntries;
-const sourceDirectory = 'scripts/assets/movement-art-sources';
 const outputDirectory = 'public/exercise-visuals/movements';
+if (process.argv.includes('--list-sources')) {
+  console.log(JSON.stringify(manifest.map(resolveMovementArtSource), null, 2));
+  process.exit(0);
+}
 mkdirSync(outputDirectory, { recursive: true });
 
 function normalizeOverride(entry) {
   const result = spawnSync('python3', ['scripts/normalize-movement-override.py',
-    `${sourceDirectory}/${entry.overrideSource}`, `${outputDirectory}/${entry.id}.png`], { encoding: 'utf8' });
+    resolveMovementArtSource(entry).path, `${outputDirectory}/${entry.id}.png`], { encoding: 'utf8' });
   if (result.status !== 0) throw new Error(result.stderr || 'Override normalization requires Python 3 and Pillow');
 }
 
 // Targeted generated overrides work on Linux/macOS without re-encoding any
 // unchanged sheet assets. Existing sheet extraction retains its native backend.
-if (manifest.every(entry => entry.overrideSource)) {
+if (manifest.every(entry => resolveMovementArtSource(entry).backend === 'python')) {
   manifest.forEach(normalizeOverride);
   console.log(`Normalized ${manifest.length} targeted overrides`);
   process.exit(0);
@@ -39,32 +43,19 @@ const sourceSizes = {
   'manual-workout-library-line-art-v2.png': { width: 1060, height: 1484 },
 };
 
-// Reviewed illustration contract: complete standing figures use an adult 1:7
-// head-to-body ratio; neck-focused movements use a consistent crown-to-waist
-// crop without enlarging the head relative to that implied full-body template.
-const reviewedAnatomy = {
-  fullBodyHeadRatio: '1:7',
-  neckCrop: 'crown-to-waist',
-};
-
 const libraryGridGuides = {
   x: [12, 222, 428, 630, 841, 1046],
   y: [10, 213, 404, 594, 783, 978, 1183, 1405],
 };
 
-const movementOverrides = {
-  'glute-bridge': { path: `${sourceDirectory}/overrides/glute-bridge.png`, width: 1293, height: 650 },
-  'neck-rotation-stretch': { path: `${sourceDirectory}/overrides/neck-rotation-stretch.png`, width: 1254, height: 1254 },
-};
-
 try {
 for (const entry of manifest) {
-  if (entry.overrideSource) { normalizeOverride(entry); continue; }
-  const override = movementOverrides[entry.id];
+  const source = resolveMovementArtSource(entry);
+  if (source.backend === 'python') { normalizeOverride(entry); continue; }
   const output = `${outputDirectory}/${entry.id}.png`;
-  if (override) {
+  if (source.kind === 'override') {
     const result = spawnSync(cropTool, [
-      override.path, output, '0', '0', String(override.width), String(override.height), '296', '160', '320', '184',
+      source.path, output, '0', '0', String(source.width), String(source.height), '296', '160', '320', '184',
     ], { encoding: 'utf8' });
     if (result.status !== 0) throw new Error(result.stderr || result.stdout || `Failed to extract ${entry.id}`);
     continue;
@@ -86,7 +77,7 @@ for (const entry of manifest) {
     ? libraryGridGuides.y[entry.row + 1] - guideInset
     : Math.round((entry.row + 1) * size.height / entry.rows);
   const result = spawnSync(cropTool, [
-    `${sourceDirectory}/${entry.sheet}`,
+    source.path,
     output,
     String(x0), String(y0), String(x1 - x0), String(y1 - y0),
     '296', '160', '320', '184',

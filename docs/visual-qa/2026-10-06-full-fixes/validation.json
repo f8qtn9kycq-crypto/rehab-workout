@@ -1,0 +1,13 @@
+{
+  "build": "PASS",
+  "npmTest": "PASS",
+  "safetyI18n": "PASS",
+  "coverage": "43/43; catalog-only isolation PASS",
+  "effectiveSourceReproduction": "37/37 PASS",
+  "frozenReferences": "8/8 SHA unchanged",
+  "mobileDPR3FourSurfaces": "NOT VERIFIED",
+  "humanNewHashes": "NOT VERIFIED",
+  "independentCurrentHeadClaude": "PENDING",
+  "mobilePicker": "129/129 loaded, 390/375/320 px, DPR1, no horizontal overflow",
+  "ankleSelectedRecordsLibrary": "selected straight-knee 3 sizes; Records straight-knee 3 sizes; library 9 ankle cards incl 40/41 across 3 sizes; DPR1, loaded, no overflow"
+}

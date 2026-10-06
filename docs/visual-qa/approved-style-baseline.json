@@ -8,8 +8,10 @@
     {
       "id": "benchPress",
       "catalogId": "catalog-bench-press",
-      "path": "public/exercise-visuals/movements/benchPress.png",
-      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a"
+      "path": "docs/visual-qa/frozen-references/benchPress.png",
+      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a",
+      "runtimePath": "public/exercise-visuals/movements/benchPress.png",
+      "replacementReason": "完整圖片修正授權：胸推圖片改為文字既有要求的啞鈴；原風格參考與 hash 保留。新版待真人驗收。"
     },
     {
       "id": "shoulderPress",

@@ -534,6 +534,7 @@ export default {
     advanced: '進階',
   },
   equipmentLabels: {
+    machine: '訓練機',
     bodyweight: '徒手 / 無器材',
     barbell: '槓鈴',
     dumbbell: '啞鈴',

@@ -10,6 +10,7 @@ export const EQUIPMENT_IDS = {
   BODYWEIGHT: 'bodyweight',
   DUMBBELL: 'dumbbell',
   BARBELL: 'barbell',
+  MACHINE: 'machine',
   KETTLEBELL: 'kettlebell',
   CHAIR: 'chair',
   WALL: 'wall',

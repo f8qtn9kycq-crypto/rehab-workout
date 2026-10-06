@@ -67,6 +67,29 @@ export function renderAssessment() {
     assert(!assessment.includes(language === 'en' ? '>Barbell<' : '>槓鈴<'), 'barbell is absent from the actual Assessment UI');
     assert(assessment.includes(language === 'en' ? '>Dumbbell<' : '>啞鈴<'), 'existing assessment equipment remains available');
   }
+  for (const [id, art, oldName, newName, oldEquipment, newEquipment] of [
+    ['catalog-squat', 'squat', '深蹲', '負重深蹲', 'chair', 'barbell'],
+    ['catalog-lat-pulldown', 'latPulldown', '彈力帶下拉', '下拉機', 'resistance_band', 'machine'],
+    ['catalog-seated-row', 'seatedRow', '坐姿彈力帶划船', '機械坐姿划船', 'resistance_band', 'machine'],
+    ['catalog-leg-extension', 'legExtension', '椅上單腿伸膝', '機械膝伸', 'chair', 'machine'],
+  ]) {
+    values.set('rehab.language.v1', 'zh-TW');
+    const record = { id: id, date: '2026-10-05', createdAt: '2026-10-05T01:00:00Z', exercises: [{
+      exerciseId: id, name: oldName, equipment: oldEquipment, equipmentId: oldEquipment, sets: [{ reps: 8 }],
+    }] };
+    const raw = JSON.stringify([record]); values.set(app.MANUAL_WORKOUT_KEY, raw);
+    const html = app.renderRecord(app.readManualWorkouts().workouts[0]);
+    assert(html.includes(oldName) && !html.includes('/movements/' + art + '.png'), id + ': old meaning remains visible without revised art');
+    assert.equal(values.get(app.MANUAL_WORKOUT_KEY), raw, id + ': no storage migration');
+    delete record.exercises[0].equipmentId;
+    assert(!app.renderRecord(record).includes('/movements/' + art + '.png'), id + ': legacy optional equipment protected');
+    Object.assign(record.exercises[0], { name: newName, equipmentId: newEquipment });
+    assert(app.renderRecord(record).includes('/movements/' + art + '.png'), id + ': current meaning keeps art');
+  }
+  for (const language of ['zh-TW', 'en']) {
+    values.set('rehab.language.v1', language);
+    assert(!app.renderAssessment().includes(language === 'en' ? '>Machine<' : '>機械<'), 'machine stays outside guided assessment');
+  }
   const savedAssessment = JSON.stringify({ bodyArea: 'shoulder', pain: 0, mode: 'standard', equipment: ['barbell', 'bodyweight'] });
   values.set(app.assessmentStorageKey, savedAssessment);
   assert.deepEqual(app.getSavedAssessment().equipment, ['barbell', 'bodyweight'], 'previously saved assessment equipment remains readable');

@@ -1,0 +1,929 @@
+[
+  {
+    "dpr": 1,
+    "height": 844,
+    "images": [
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/benchPress.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulderPress.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/dip.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pullUp.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/latPulldown.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/seatedRow.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/squat.png",
+        "width": 308
+      },
+      {
+        "height": 177.09375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/legExtension.png",
+        "width": 308
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-flexion.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-flexion-seated.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-abduction.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/glute-bridge.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-clamshell.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-sit-to-stand.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-wall-slide.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-isometric.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/upper-trap-stretch.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pec-doorway-stretch.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-heat-relax.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-rotation-stretch.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-wall-posture.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-rice-care.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-wall-squat.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-hamstring-curl.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-calf-raise.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 306
+      },
+      {
+        "height": 175.9453125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 306
+      }
+    ],
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "dpr": 1,
+    "height": 844,
+    "images": [
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/benchPress.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulderPress.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/dip.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pullUp.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/latPulldown.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/seatedRow.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/squat.png",
+        "width": 293
+      },
+      {
+        "height": 168.46875,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/legExtension.png",
+        "width": 293
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-flexion.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-flexion-seated.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-abduction.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/glute-bridge.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-clamshell.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-sit-to-stand.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-wall-slide.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-isometric.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/upper-trap-stretch.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pec-doorway-stretch.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-heat-relax.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-rotation-stretch.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-wall-posture.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-rice-care.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-wall-squat.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-hamstring-curl.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-calf-raise.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 291
+      },
+      {
+        "height": 167.3203125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 291
+      }
+    ],
+    "overflow": false,
+    "width": 375
+  },
+  {
+    "dpr": 1,
+    "height": 844,
+    "images": [
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/benchPress.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulderPress.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/dip.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pullUp.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/latPulldown.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/seatedRow.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/squat.png",
+        "width": 238
+      },
+      {
+        "height": 136.84375,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/legExtension.png",
+        "width": 238
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-flexion.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-flexion-seated.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-abduction.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/glute-bridge.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-clamshell.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/hip-sit-to-stand.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-wall-slide.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-isometric.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/upper-trap-stretch.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/pec-doorway-stretch.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-heat-relax.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-rotation-stretch.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/neck-wall-posture.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-rice-care.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-wall-squat.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-hamstring-curl.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/knee-calf-raise.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 236
+      },
+      {
+        "height": 135.6953125,
+        "loaded": true,
+        "naturalHeight": 184,
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 236
+      }
+    ],
+    "overflow": false,
+    "width": 320
+  }
+]

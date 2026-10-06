@@ -534,6 +534,7 @@ export default {
     advanced: 'Advanced',
   },
   equipmentLabels: {
+    machine: 'Machine',
     bodyweight: 'Bodyweight / No equipment',
     barbell: 'Barbell',
     dumbbell: 'Dumbbell',

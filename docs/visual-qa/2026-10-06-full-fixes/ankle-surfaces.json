@@ -1,0 +1,326 @@
+[
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 172.5,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 300
+      }
+    ],
+    "overflow": false,
+    "surface": "selected",
+    "width": 390
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 163.875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 285
+      }
+    ],
+    "overflow": false,
+    "surface": "selected",
+    "width": 375
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 132.25,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 230
+      }
+    ],
+    "overflow": false,
+    "surface": "selected",
+    "width": 320
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 324
+      },
+      {
+        "height": 171.34375,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 298
+      }
+    ],
+    "overflow": false,
+    "surface": "Records",
+    "width": 390
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 309
+      },
+      {
+        "height": 162.71875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 283
+      }
+    ],
+    "overflow": false,
+    "surface": "Records",
+    "width": 375
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 254
+      },
+      {
+        "height": 131.09375,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 228
+      }
+    ],
+    "overflow": false,
+    "surface": "Records",
+    "width": 320
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 324
+      },
+      {
+        "height": 186.296875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 324
+      }
+    ],
+    "overflow": false,
+    "surface": "library",
+    "width": 390
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 309
+      },
+      {
+        "height": 177.671875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 309
+      }
+    ],
+    "overflow": false,
+    "surface": "library",
+    "width": 375
+  },
+  {
+    "dpr": 1,
+    "images": [
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-circles.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-alphabet.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-calf-raise.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+        "width": 254
+      },
+      {
+        "height": 146.046875,
+        "loaded": true,
+        "objectFit": "contain",
+        "url": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+        "width": 254
+      }
+    ],
+    "overflow": false,
+    "surface": "library",
+    "width": 320
+  }
+]

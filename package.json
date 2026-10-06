@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout",
+    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout && npm run test:pr183",
     "audit:movement-art": "node scripts/audit-movement-art.mjs",
     "audit:movement-art-sources": "python3 scripts/verify-movement-overrides.py",
     "test:manual-workout": "node scripts/manual-workout-regression.mjs",
@@ -18,7 +18,8 @@
     "audit:exercise-coverage": "node scripts/audit-exercise-coverage.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test:activities": "node scripts/activity-regression.mjs",
-    "test:set-logging": "node scripts/set-logging-regression.mjs"
+    "test:set-logging": "node scripts/set-logging-regression.mjs",
+    "test:pr183": "node scripts/pr183-regression.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

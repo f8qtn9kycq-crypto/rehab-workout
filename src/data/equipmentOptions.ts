@@ -15,8 +15,14 @@ export const EQUIPMENT_OPTIONS: EquipmentOption[] = [
   { id: EQUIPMENT_IDS.FOAM_ROLLER, icon: 'roller', priority: 5, role: 'recovery' },
   { id: EQUIPMENT_IDS.DUMBBELL, icon: 'dumbbell', priority: 6, role: 'load' },
   { id: EQUIPMENT_IDS.KETTLEBELL, icon: 'kettlebell', priority: 7, role: 'load' },
-  { id: EQUIPMENT_IDS.BARBELL, icon: 'dumbbell', priority: 8, role: 'load' },
+  { id: EQUIPMENT_IDS.BARBELL, icon: 'barbell', priority: 8, role: 'load' },
 ];
+
+// Barbell content is catalog-only; it is available for browsing/backfill,
+// but must not appear as equipment for a guided assessment.
+export const ASSESSMENT_EQUIPMENT_OPTIONS = EQUIPMENT_OPTIONS.filter(
+  item => item.id !== EQUIPMENT_IDS.BARBELL,
+);
 
 export const PRIMARY_EQUIPMENT_IDS = [
   EQUIPMENT_IDS.BODYWEIGHT,

@@ -1,0 +1,1970 @@
+{
+  "environment": "Codex in-app browser; automated; DPR1",
+  "observations": [
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 177.09375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 308
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 306
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 306
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 306
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 306
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 306
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 306
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 306
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 306
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 306
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 306
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 306
+        },
+        {
+          "caption": "",
+          "height": 175.9453125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 306
+        }
+      ],
+      "overflow": false,
+      "surface": "picker",
+      "width": 390
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 168.46875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 293
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 291
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 291
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 291
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 291
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 291
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 291
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 291
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 291
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 291
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 291
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 291
+        },
+        {
+          "caption": "",
+          "height": 167.3203125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 291
+        }
+      ],
+      "overflow": false,
+      "surface": "picker",
+      "width": 375
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 136.84375,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 238
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 236
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 236
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 236
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 236
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 236
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 236
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 236
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 236
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 236
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 236
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 236
+        },
+        {
+          "caption": "",
+          "height": 135.6953125,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 236
+        }
+      ],
+      "overflow": false,
+      "surface": "picker",
+      "width": 320
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 172.5,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 300
+        }
+      ],
+      "overflow": false,
+      "surface": "selected",
+      "width": 390
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 163.875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 285
+        }
+      ],
+      "overflow": false,
+      "surface": "selected",
+      "width": 375
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 132.25,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 230
+        }
+      ],
+      "overflow": false,
+      "surface": "selected",
+      "width": 320
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 171.34375,
+          "loaded": false,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 298
+        }
+      ],
+      "overflow": false,
+      "surface": "Records",
+      "width": 390
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 162.71875,
+          "loaded": false,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 283
+        }
+      ],
+      "overflow": false,
+      "surface": "Records",
+      "width": 375
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 131.09375,
+          "loaded": false,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 228
+        }
+      ],
+      "overflow": false,
+      "surface": "Records",
+      "width": 320
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 324
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 324
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 324
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 324
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 324
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 324
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 324
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 324
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 324
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 324
+        },
+        {
+          "caption": "",
+          "height": 186.296875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 324
+        }
+      ],
+      "overflow": false,
+      "surface": "library",
+      "width": 390
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 309
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 309
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 309
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 309
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 309
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 309
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 309
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 309
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 309
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 309
+        },
+        {
+          "caption": "",
+          "height": 177.671875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 309
+        }
+      ],
+      "overflow": false,
+      "surface": "library",
+      "width": 375
+    },
+    {
+      "dpr": 1,
+      "images": [
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-flexion.png",
+          "width": 254
+        },
+        {
+          "caption": "放鬆肩膀肩胛向後收",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-external-rotation-band.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-flexion-seated.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-abduction.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/glute-bridge.png",
+          "width": 254
+        },
+        {
+          "caption": "膝蓋合攏上側膝蓋打開",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-clamshell.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/hip-sit-to-stand.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-wall-slide.png",
+          "width": 254
+        },
+        {
+          "caption": "頭部放鬆下巴輕收向後",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-isometric.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/upper-trap-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pec-doorway-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-heat-relax.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-rotation-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/neck-wall-posture.png",
+          "width": 254
+        },
+        {
+          "caption": "坐直上背輕伸展",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+          "width": 254
+        },
+        {
+          "caption": "肩胛放鬆肩胛向前推開",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-rice-care.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-straight-leg-raise.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-wall-squat.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-hamstring-curl.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/knee-calf-raise.png",
+          "width": 254
+        },
+        {
+          "caption": "腳尖朝上腳掌轉向下方",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-circles.png",
+          "width": 254
+        },
+        {
+          "caption": "腳尖朝上腳掌斜向移動",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-alphabet.png",
+          "width": 254
+        },
+        {
+          "caption": "腳掌內翻腳掌外翻",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-stand.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-calf-raise.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "擺位維持姿勢維持姿勢時，兩格可以相同。",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-soleus-stretch.png",
+          "width": 254
+        },
+        {
+          "caption": "腳跟著地腳跟抬起",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/ankle-single-leg-reach.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/benchPress.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/shoulderPress.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/squat.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/pullUp.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/dip.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/latPulldown.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/seatedRow.png",
+          "width": 254
+        },
+        {
+          "caption": "",
+          "height": 146.046875,
+          "loaded": true,
+          "src": "/exercise-visuals/movements/legExtension.png",
+          "width": 254
+        }
+      ],
+      "overflow": false,
+      "surface": "library",
+      "width": 320
+    }
+  ]
+}

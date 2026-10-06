@@ -1,0 +1,194 @@
+[
+  {
+    "id": "shoulder-standing-arm-swings",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-standing-arm-swings.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Full-body standing side view. Left both relaxed arms gently swung forwards to controllable height below shoulder; right arms gently swing BACK behind torso with small range. Same head direction, feet and torso, no shrugging.",
+    "changeMotion": false,
+    "prompt": "Use case: precise-object-edit. Image1 edit target, image2 original quick-sheet PRIMARY style. Change ONLY outline tone/weight, remove any gray shadows. Full-body standing side view. Left both relaxed arms gently swung forwards to controllable height below shoulder; right arms gently swing BACK behind torso with small range. Same head direction, feet and torso, no shrugging. Keep same subject, clothing, supports, view and poses. Uniform DARK CHARCOAL (#303030) single clean outlines, same stroke strength as image2 after reduction to 320x184. In the high-resolution output the stroke should be approximately 5-6 pixels wide so it remains a restrained clear 0.8-1px dark line at final size, never faint gray or heavy black cartoon. Pure white background, no shading, no texture, no fine inner gray lines, simplified hands/feet, natural small head, roomy margins. Two equal panels with faint center divider; no text/arrows.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-f1e1905f-dcc1-467d-a4ee-df07c43b22dd.png"
+  },
+  {
+    "id": "shoulder-internal-rotation-band",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v5/shoulder-internal-rotation-band.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Preserve the current paired movement and all supports exactly.",
+    "changeMotion": false,
+    "prompt": "Use case: precise-object-edit. Image1 edit target, image2 original quick-sheet PRIMARY style. Change ONLY outline tone/weight, remove any gray shadows. Preserve the current paired movement and all supports exactly. Keep same subject, clothing, supports, view and poses. Uniform DARK CHARCOAL (#303030) single clean outlines, same stroke strength as image2 after reduction to 320x184. In the high-resolution output the stroke should be approximately 5-6 pixels wide so it remains a restrained clear 0.8-1px dark line at final size, never faint gray or heavy black cartoon. Pure white background, no shading, no texture, no fine inner gray lines, simplified hands/feet, natural small head, roomy margins. Two equal panels with faint center divider; no text/arrows.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-e2c13aef-6cb9-4df8-ace5-bfb784151480.png"
+  },
+  {
+    "id": "hip-flexion-seated",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/hip-flexion-seated.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Full body side view, sit upright on stable chair in BOTH frames. Left both feet flat. Right one bent knee lifted gently towards chest without trunk leaning back, other foot stays planted. Same chair.",
+    "changeMotion": false,
+    "prompt": "Use case: precise-object-edit. Image1 edit target, image2 original quick-sheet PRIMARY style. Change ONLY outline tone/weight, remove any gray shadows. Full body side view, sit upright on stable chair in BOTH frames. Left both feet flat. Right one bent knee lifted gently towards chest without trunk leaning back, other foot stays planted. Same chair. Keep same subject, clothing, supports, view and poses. Uniform DARK CHARCOAL (#303030) single clean outlines, same stroke strength as image2 after reduction to 320x184. In the high-resolution output the stroke should be approximately 5-6 pixels wide so it remains a restrained clear 0.8-1px dark line at final size, never faint gray or heavy black cartoon. Pure white background, no shading, no texture, no fine inner gray lines, simplified hands/feet, natural small head, roomy margins. Two equal panels with faint center divider; no text/arrows.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-24a2ca2e-9bc1-4b47-a379-bde0e5d79044.png"
+  },
+  {
+    "id": "shoulder-wall-slide",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-wall-slide.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Use crown-to-waist framing with natural small head (not head closeup), side-three-quarter view showing back lightly against plain wall. Left elbows bent W, back of hands near wall. Right arms slide upwards gently to Y within comfortable range. Wall visible in both, no lumbar arch.",
+    "changeMotion": false,
+    "prompt": "Use case: precise-object-edit. Image1 edit target, image2 original quick-sheet PRIMARY style. Change ONLY outline tone/weight, remove any gray shadows. Use crown-to-waist framing with natural small head (not head closeup), side-three-quarter view showing back lightly against plain wall. Left elbows bent W, back of hands near wall. Right arms slide upwards gently to Y within comfortable range. Wall visible in both, no lumbar arch. Keep same subject, clothing, supports, view and poses. Uniform DARK CHARCOAL (#303030) single clean outlines, same stroke strength as image2 after reduction to 320x184. In the high-resolution output the stroke should be approximately 5-6 pixels wide so it remains a restrained clear 0.8-1px dark line at final size, never faint gray or heavy black cartoon. Pure white background, no shading, no texture, no fine inner gray lines, simplified hands/feet, natural small head, roomy margins. Two equal panels with faint center divider; no text/arrows.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-a84ad594-08b1-41b7-aeec-af7893ff760c.png"
+  },
+  {
+    "id": "neck-heat-relax",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/neck-heat-relax.png",
+    "frame": {
+      "maxWidth": 115,
+      "maxHeight": 85
+    },
+    "movement": "Full body side view adult lying supine on stable flat surface, small rolled towel supports NECK natural curve, head aligned. Clearly visible folded warm towel over shoulder/neck region. Same comfortable supported static relaxation pose in both frames; no pillow-induced neck flexion, no labels.",
+    "changeMotion": false,
+    "prompt": "Edit line appearance ONLY. Preserve ALL contours poses props margins and 2 panels EXACTLY. Make EVERY subject and prop contour consistently DARK CHARCOAL #303030 with 9-10pixel uniform stroke at1654x950 resolution (currently too fine and faint when downsized). It must downsample to about1px legible dark thin outlines in a 115px-wide tiny subject, not pale gray. Same white clothing/background, no fills/shadows/anatomical marks. Keep pale center divider thin. Do not add detail or change either supported static resting pose.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-75e298d5-ba81-4cbe-8eb6-67ea3b7fac1f.png"
+  },
+  {
+    "id": "knee-rice-care",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/knee-rice-care.png",
+    "frame": {
+      "maxWidth": 115,
+      "maxHeight": 85
+    },
+    "movement": "Full body side view adult rests supine on stable couch/bed, affected leg comfortably supported on stacked cushions with knee/lower leg elevated near HEART level. Towel-wrapped ice pack over knee, gentle wrap visually visible with no tight constriction. Both frames same supported REST pose, not exercise. No text.",
+    "changeMotion": false,
+    "prompt": "Edit line appearance ONLY. Preserve ALL contours poses props margins and 2 panels EXACTLY. Make EVERY subject and prop contour consistently DARK CHARCOAL #303030 with 9-10pixel uniform stroke at1654x950 resolution (currently too fine and faint when downsized). It must downsample to about1px legible dark thin outlines in a 115px-wide tiny subject, not pale gray. Same white clothing/background, no fills/shadows/anatomical marks. Keep pale center divider thin. Do not add detail or change either supported static resting pose.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-4a375bda-b7a8-4273-b35f-2787999709ce.png"
+  },
+  {
+    "id": "knee-calf-raise",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/knee-calf-raise.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Full body side view, holds sturdy chair back BOTH. Left feet flat, knees slightly bent. Right heels clearly lifted gently while forefeet stay grounded, knees remain soft, torso upright. Same chair/body scale.",
+    "changeMotion": false,
+    "prompt": "Use case: precise-object-edit. Image1 edit target, image2 frozen quick-sheet PRIMARY style. Preserve exact paired poses and supports; change only line tone/weight. Full body side view, holds sturdy chair back BOTH. Left feet flat, knees slightly bent. Right heels clearly lifted gently while forefeet stay grounded, knees remain soft, torso upright. Same chair/body scale. Match image2's restrained dark CHARCOAL (#303030) clean sketch outline after reduction to 320x184. At high-resolution use about 5-6 pixel strokes so final outline is clear 0.8-1px dark and never faint gray or heavy black. Same plain adult T-shirt/shorts and small natural head. Pure white, NO shadows or gray inner tracing, no anatomical back marks, no text/arrows. Preserve original spacious layout, entire feet/props, same head direction and limb proportions in both equal panels. Faint center divider.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-c70abba6-12f4-4c4f-8fa8-dda56909f27c.png"
+  },
+  {
+    "id": "shoulder-scapular-squeeze",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-scapular-squeeze.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated back three-quarter view on SAME stable chair. LEFT shoulders relaxed slightly forwards. RIGHT shoulder girdle gently retracts backwards so elbows and shoulders are clearly several pixels farther back at final size and chest opens; torso remains upright, hands stay on thighs, no neck tilt. No added spine, muscle or scapula marks.",
+    "changeMotion": true,
+    "prompt": "Two-panel simple charcoal line exercise illustration, SAME person seated in stable chair in both. SIDE PROFILE view from crown to hips: chair back, thighs, hands resting on thighs visible; legs beyond knees outside framing. Left shoulders rounded forward, upper arms visibly angled slightly forward. Right chest open shoulders pulled backwards, upper arms angled slightly BACK with elbows visibly behind chest, hands still on thighs. Keep hips anchored upright neutral lower back and neck, no shrug. Clear before-after shoulder motion. Character/style ONLY from reference short-haired adult plain T shirt shorts natural proportions thin consistent #303030 outlines generous white space no fills shading or shadows. No text arrows or anatomy marks. Equal panels pale divider. IMPORTANT SIDE VIEW NOT REAR, cropped crown-to-hip NOT full-body.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-3641e3fd-ae15-4d15-9046-d3d58a3a0d85.png"
+  },
+  {
+    "id": "hip-clamshell",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/hip-clamshell.png",
+    "frame": {
+      "maxWidth": 115,
+      "maxHeight": 85
+    },
+    "movement": "LEFT lie on side, BOTH hips and knees clearly bent about 90 degrees, thighs point forwards and shins fold backwards, knees stacked. RIGHT keep feet TOUCHING and lower knee unchanged; lift ONLY upper knee comfortably to open the clam. Same pelvis, no rolling, same supported head. Both phases retain bent knees; never straight legs.",
+    "changeMotion": true,
+    "prompt": "Edit Image 1, match Image 2 original quick-sheet style: adult with short plain hair, plain T shirt and shorts, natural small head, generous white margins, two equal panels and thin pale divider. Uniform clean DARK CHARCOAL #303030 outlines, about 5-6 pixels at 1654x950 so downsampled lines remain thin. White background and clothing, no shadows, gray fills, textures, anatomical marks, text or arrows. Preserve supporting props and person scale. Correct the phases so difference remains readable in a 320x184 thumbnail, without exaggerating range: LEFT lie on side, BOTH hips and knees clearly bent about 90 degrees, thighs point forwards and shins fold backwards, knees stacked. RIGHT keep feet TOUCHING and lower knee unchanged; lift ONLY upper knee comfortably to open the clam. Same pelvis, no rolling, same supported head. Both phases retain bent knees; never straight legs.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-05e15e04-2c16-4a9a-b7cf-4c0ea5811092.png"
+  },
+  {
+    "id": "shoulder-neck-chin-tuck",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-neck-chin-tuck.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated SIDE-profile crown-to-waist view, normal small head. LEFT head slightly forwards with horizontal gaze. RIGHT head translated back into a gentle chin tuck, horizontal gaze unchanged; ears move above shoulders with clearly readable horizontal displacement at 320px. Same torso/arms, no downward nod or forced backward neck tilt. Keep head-to-body proportions natural.",
+    "changeMotion": true,
+    "prompt": "Create a fresh TWO-PANEL rehabilitation movement illustration. Use attached image ONLY as character/line style reference, not pose. Plain thin consistent charcoal #303030 contour lines, about6px at1654x950. White background, same short-haired adult plain short-sleeved shirt and shorts, natural small head proportions. Thin pale center divider, wide generous margins. NO gray shadows, shading, text, arrows, letters or anatomical detail. Left START right FINISH must be visibly DIFFERENT and still readable at320x184. Keep small safe range, supports as specified. SIDE PROFILE crown to waist seated adult with hands on thighs. LEFT relaxed slight forward head: ear visibly ahead of shoulder, chin still horizontal. RIGHT gentle chin retraction: head translated backwards, ear above shoulder, chin slightly tucked with horizontal gaze. Crucial show horizontal movement of head equal about one-quarter of a head width while torso stays unchanged. Never nod down, never tip head backwards.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-10525670-9d40-458c-b48d-4dd394081036.png"
+  },
+  {
+    "id": "shoulder-neck-thoracic-extension-chair",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-neck-thoracic-extension-chair.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "SIDE view same stable chair, pelvis/feet/knees stay fixed, hands crossed on chest, gaze horizontal. LEFT upright seated. RIGHT only UPPER BACK extends gently over stationary chair back, lower trunk stays upright and pelvis seated. Make modest chest opening visible without leaning whole torso backwards or moving chair or tilting neck.",
+    "changeMotion": true,
+    "prompt": "Edit Image 1, match Image 2 original quick-sheet style: adult with short plain hair, plain T shirt and shorts, natural small head, generous white margins, two equal panels and thin pale divider. Uniform clean DARK CHARCOAL #303030 outlines, about 5-6 pixels at 1654x950 so downsampled lines remain thin. White background and clothing, no shadows, gray fills, textures, anatomical marks, text or arrows. Preserve supporting props and person scale. Correct the phases so difference remains readable in a 320x184 thumbnail, without exaggerating range: SIDE view same stable chair, pelvis/feet/knees stay fixed, hands crossed on chest, gaze horizontal. LEFT upright seated. RIGHT only UPPER BACK extends gently over stationary chair back, lower trunk stays upright and pelvis seated. Make modest chest opening visible without leaning whole torso backwards or moving chair or tilting neck.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-ea25bc97-f817-42ae-83d5-016c5a1b0ee9.png"
+  },
+  {
+    "id": "shoulder-neck-serratus-wall-push",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/shoulder-neck-serratus-wall-push.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Side-three-quarter view facing wall, hands at CHEST height stay on SAME wall contact point. Both elbows gently BENT with the SAME small bend in both phases. LEFT neutral scapula position. RIGHT gently protract shoulders with visibly wider upper back and modest torso displacement away from wall; palms and feet stay anchored. No elbow flexion movement, no added muscle marks, no exaggerated hunch.",
+    "changeMotion": true,
+    "prompt": "Edit Image 1, match Image 2 original quick-sheet style: adult with short plain hair, plain T shirt and shorts, natural small head, generous white margins, two equal panels and thin pale divider. Uniform clean DARK CHARCOAL #303030 outlines, about 5-6 pixels at 1654x950 so downsampled lines remain thin. White background and clothing, no shadows, gray fills, textures, anatomical marks, text or arrows. Preserve supporting props and person scale. Correct the phases so difference remains readable in a 320x184 thumbnail, without exaggerating range: Side-three-quarter view facing wall, hands at CHEST height stay on SAME wall contact point. Both elbows gently BENT with the SAME small bend in both phases. LEFT neutral scapula position. RIGHT gently protract shoulders with visibly wider upper back and modest torso displacement away from wall; palms and feet stay anchored. No elbow flexion movement, no added muscle marks, no exaggerated hunch.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-40de559c-ab4e-4304-a374-fe6032acbe2d.png"
+  },
+  {
+    "id": "ankle-circles",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/ankle-circles.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated full body, stable chair, same gently lifted lower leg and unchanged knee. LEFT lifted foot angled up and slightly inward. RIGHT foot gently points down and outward to show two positions along an ankle circle. Clear foot-angle change at final size, no whole-leg rotation, full ankles and forefeet visible.",
+    "changeMotion": true,
+    "prompt": "Redraw Image 1 with IMPORTANT clearly different foot orientations in the two phases described below. Match Image 2 original quick sheet: natural normal-head adult plain T shirt shorts, simple uniform thin DARK CHARCOAL #303030 outlines, about 5-6px at large 1654x950, white background/clothes and generous margins, faint center divider. NO shading gray casts texture anatomical marks letters arrows or text. Foot and ankle are the movement focus, must not be identical in both panels. Preserve all support and knees, person scale. Seated full body, stable chair, same gently lifted lower leg and unchanged knee. LEFT lifted foot angled up and slightly inward. RIGHT foot gently points down and outward to show two positions along an ankle circle. Clear foot-angle change at final size, no whole-leg rotation, full ankles and forefeet visible.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-502ed348-ffbb-4928-9295-88e2f7d3e490.png"
+  },
+  {
+    "id": "ankle-alphabet",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/ankle-alphabet.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated full body, same lifted leg, stable chair and unchanged knee. LEFT lifted foot neutral with toes up. RIGHT only the ankle moves diagonally down and outward as a representative position while tracing letters. Clearly different foot orientation, not proof of full alphabet. No literal letters/arrows.",
+    "changeMotion": true,
+    "prompt": "Redraw Image 1 with IMPORTANT clearly different foot orientations in the two phases described below. Match Image 2 original quick sheet: natural normal-head adult plain T shirt shorts, simple uniform thin DARK CHARCOAL #303030 outlines, about 5-6px at large 1654x950, white background/clothes and generous margins, faint center divider. NO shading gray casts texture anatomical marks letters arrows or text. Foot and ankle are the movement focus, must not be identical in both panels. Preserve all support and knees, person scale. Seated full body, same lifted leg, stable chair and unchanged knee. LEFT lifted foot neutral with toes up. RIGHT only the ankle moves diagonally down and outward as a representative position while tracing letters. Clearly different foot orientation, not proof of full alphabet. No literal letters/arrows.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-38a0e18c-4115-4002-aae7-4eb59667efdf.png"
+  },
+  {
+    "id": "ankle-band-inversion-eversion",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/ankle-band-inversion-eversion.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated on floor with BOTH knees STRAIGHT and extended forwards. Hands hold continuous band around one forefoot. Same legs, pelvis and anchor; LEFT target forefoot tilts gently inward, RIGHT target forefoot tilts gently outward, visibly changing sole orientation. Never change hip/knee direction to fake ankle movement. Keep all feet and toes in frame.",
+    "changeMotion": true,
+    "prompt": "Redraw Image 1 with IMPORTANT clearly different foot orientations in the two phases described below. Match Image 2 original quick sheet: natural normal-head adult plain T shirt shorts, simple uniform thin DARK CHARCOAL #303030 outlines, about 5-6px at large 1654x950, white background/clothes and generous margins, faint center divider. NO shading gray casts texture anatomical marks letters arrows or text. Foot and ankle are the movement focus, must not be identical in both panels. Preserve all support and knees, person scale. Seated on floor with BOTH knees STRAIGHT and extended forwards. Hands hold continuous band around one forefoot. Same legs, pelvis and anchor; LEFT target forefoot tilts gently inward, RIGHT target forefoot tilts gently outward, visibly changing sole orientation. Never change hip/knee direction to fake ankle movement. Keep all feet and toes in frame.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-eb464ca2-220e-469d-8a7b-cdddf28c688b.png"
+  },
+  {
+    "id": "ankle-seated-soleus-raise",
+    "target": "/private/tmp/rehab-visual-qa-183/scripts/assets/movement-art-sources/overrides/style-v6/ankle-seated-soleus-raise.png",
+    "frame": {
+      "maxWidth": 100,
+      "maxHeight": 120
+    },
+    "movement": "Seated side-three-quarter full body on stable chair, knees bent 90 degrees, forefeet at same floor points. LEFT BOTH heels flat on floor. RIGHT BOTH heels rise together a modest comfortable amount, clear white space under both heels and both forefeet/toes still grounded. Same chair/pelvis, show complete ankles.",
+    "changeMotion": true,
+    "prompt": "Redraw Image 1 with IMPORTANT clearly different foot orientations in the two phases described below. Match Image 2 original quick sheet: natural normal-head adult plain T shirt shorts, simple uniform thin DARK CHARCOAL #303030 outlines, about 5-6px at large 1654x950, white background/clothes and generous margins, faint center divider. NO shading gray casts texture anatomical marks letters arrows or text. Foot and ankle are the movement focus, must not be identical in both panels. Preserve all support and knees, person scale. Seated side-three-quarter full body on stable chair, knees bent 90 degrees, forefeet at same floor points. LEFT BOTH heels flat on floor. RIGHT BOTH heels rise together a modest comfortable amount, clear white space under both heels and both forefeet/toes still grounded. Same chair/pelvis, show complete ankles.",
+    "generatedPath": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-e0ab5654-04fd-4a45-942d-4bc5f0e466b4.png"
+  }
+]

@@ -13,6 +13,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { I18nProvider } from '../src/services/i18n';
 import ManualWorkoutCard from '../src/components/ManualWorkoutCard';
 import AssessmentPage from '../src/pages/AssessmentPage';
+import WorkoutMovementArt from '../src/components/WorkoutMovementArt';
+export function renderArt(id) {
+  return renderToStaticMarkup(<I18nProvider><WorkoutMovementArt id={id} /></I18nProvider>);
+}
 export { readManualWorkouts, MANUAL_WORKOUT_KEY } from '../src/services/manualWorkoutStorage';
 export { getSavedAssessment } from '../src/services/assessmentStorage';
 export { assessmentStorageKey } from '../src/data/safety';
@@ -89,6 +93,29 @@ export function renderAssessment() {
   for (const language of ['zh-TW', 'en']) {
     values.set('rehab.language.v1', language);
     assert(!app.renderAssessment().includes(language === 'en' ? '>Machine<' : '>機械<'), 'machine stays outside guided assessment');
+    for (const id of ['neck-isometric', 'neck-heat-relax', 'neck-wall-posture', 'pec-doorway-stretch', 'knee-rice-care', 'ankle-gastrocnemius-stretch', 'ankle-soleus-stretch']) {
+      const html = app.renderArt(id);
+      assert(html.includes(language === 'en' ? 'Set up' : '擺位') && html.includes(language === 'en' ? 'Hold' : '維持姿勢'), id + ': static phases have bilingual explanations');
+      assert(html.includes('/movements/' + id + '.png') && html.includes('width="320"'), id + ': retain original art');
+      assert(!html.includes('aria-hidden="true" class="block w-full"'), 'hold explanation remains accessible');
+    }
+    assert(!app.renderArt('shoulderPress').includes(language === 'en' ? 'Both panels' : '兩格可以相同'), 'dynamic movement does not receive a static label');
+    for (const [id, start, finish] of [
+      ['shoulder-scapular-squeeze', '放鬆肩膀', '肩胛向後收'],
+      ['hip-clamshell', '膝蓋合攏', '上側膝蓋打開'],
+      ['shoulder-neck-chin-tuck', '頭部放鬆', '下巴輕收向後'],
+      ['shoulder-neck-thoracic-extension-chair', '坐直', '上背輕伸展'],
+      ['shoulder-neck-serratus-wall-push', '肩胛放鬆', '肩胛向前推開'],
+      ['ankle-circles', '腳尖朝上', '腳掌轉向下方'],
+      ['ankle-alphabet', '腳尖朝上', '腳掌斜向移動'],
+      ['ankle-band-inversion-eversion', '腳掌內翻', '腳掌外翻'],
+      ['ankle-seated-soleus-raise', '腳跟著地', '腳跟抬起'],
+    ]) {
+      const html = app.renderArt(id);
+      assert(!html.includes('movementArt.'), id + ': both phase translations resolve');
+      assert(language === 'zh-TW' ? html.includes(start) && html.includes(finish) : !html.includes(start) && !html.includes(finish), id + ': phases use the selected language');
+    }
+    assert.equal(app.renderArt('unknown-id'), '', 'unknown art still renders nothing');
   }
   const savedAssessment = JSON.stringify({ bodyArea: 'shoulder', pain: 0, mode: 'standard', equipment: ['barbell', 'bodyweight'] });
   values.set(app.assessmentStorageKey, savedAssessment);

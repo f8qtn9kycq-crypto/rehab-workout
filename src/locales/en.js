@@ -535,6 +535,7 @@ export default {
   },
   equipmentLabels: {
     bodyweight: 'Bodyweight / No equipment',
+    barbell: 'Barbell',
     dumbbell: 'Dumbbell',
     kettlebell: 'Kettlebell',
     chair: 'Chair',

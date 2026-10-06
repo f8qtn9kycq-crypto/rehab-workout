@@ -15,6 +15,7 @@ export const EQUIPMENT_OPTIONS: EquipmentOption[] = [
   { id: EQUIPMENT_IDS.FOAM_ROLLER, icon: 'roller', priority: 5, role: 'recovery' },
   { id: EQUIPMENT_IDS.DUMBBELL, icon: 'dumbbell', priority: 6, role: 'load' },
   { id: EQUIPMENT_IDS.KETTLEBELL, icon: 'kettlebell', priority: 7, role: 'load' },
+  { id: EQUIPMENT_IDS.BARBELL, icon: 'dumbbell', priority: 8, role: 'load' },
 ];
 
 export const PRIMARY_EQUIPMENT_IDS = [
@@ -28,6 +29,7 @@ export const ADVANCED_EQUIPMENT_IDS = [
   EQUIPMENT_IDS.FOAM_ROLLER,
   EQUIPMENT_IDS.DUMBBELL,
   EQUIPMENT_IDS.KETTLEBELL,
+  EQUIPMENT_IDS.BARBELL,
 ] as const satisfies readonly Equipment[];
 
 export const SUPPORT_ONLY_EQUIPMENT_IDS = [

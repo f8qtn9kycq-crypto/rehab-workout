@@ -39,7 +39,8 @@ def measured_width(asset, viewport):
         raise ValueError(f"Need one current picker measurement: {asset['id']} at {viewport}px")
     observation = observations[0]
     # Require evidence bound to the same actual runtime bytes.
-    if observation.get('sha256') != asset['sha256']:
+    expected_sha = digest(Path(asset['runtimePath']).read_bytes()) if asset.get('runtimePath') else asset['sha256']
+    if observation.get('sha256') != expected_sha:
         raise ValueError(f"Stale or unbound mobile evidence: {asset['id']}")
     return round(observation['width'])
 

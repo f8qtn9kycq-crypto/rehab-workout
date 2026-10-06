@@ -535,6 +535,7 @@ export default {
   },
   equipmentLabels: {
     bodyweight: '徒手 / 無器材',
+    barbell: '槓鈴',
     dumbbell: '啞鈴',
     kettlebell: '壺鈴',
     chair: '椅子',

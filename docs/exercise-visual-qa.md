@@ -10,6 +10,8 @@ Record the exact reviewed commit, exercise ID (including aliases), runtime asset
 
 The user-designated primary style is the original eight quick images frozen in `visual-qa/approved-style-baseline.json` (reference main `6a18c78f582cf2424f40b9ba1e42e0c990d842d8`). Preserve their bytes, original catalog mappings and source sheet. Run `npm run audit:movement-art`; a missing mapping, changed reference hash or missing image is a failure. Do not make image presence pass by removing a mapping or declaring a text-only fallback. Record equipment/posture discrepancies separately for content review; style approval is not movement approval. Do not refresh frozen hashes merely to make CI green; replacement requires a new attributable user style decision.
 
+使用者另要求修正肩推起始姿勢為身體前方。原肩推風格參考封存於 `visual-qa/frozen-references/shoulderPress.png`，保留原 SHA-256 與 catalog mapping；runtime 使用獨立 override，新的姿勢與風格仍待驗收。比對封存參考時，手機尺寸取相同 canonical 卡框的當前 runtime 實測寬度，不宣稱舊圖重新取得動作核准。
+
 Run `node scripts/extract-movement-art.mjs --list-sources` to inspect effective source selection and `npm run audit:movement-art-sources` to regenerate active Python overrides in temporary files and compare exact runtime bytes. The manifest override wins over legacy overrides. A source string existing in a script is not evidence it was used. These checks are mechanical, not style acceptance.
 
 Review every changed asset and every affected alias. Check the canonical registry, `WorkoutMovementArt`, picker, selected entry, Records and library. Use the existing image-creation skill for edits; no additional skill or reviewer agent is required by this contract.

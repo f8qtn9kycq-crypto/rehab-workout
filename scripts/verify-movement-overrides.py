@@ -27,3 +27,17 @@ with tempfile.TemporaryDirectory(prefix='movement-art-verify-') as temporary:
         assert candidate.read_bytes() == runtime.read_bytes(), f"Effective source does not reproduce runtime: {source['id']}"
         count += 1
 print(f'{count} effective overrides reproduce byte-for-byte; all PNGs decode. Anatomy/style acceptance is not inferred.')
+
+# A malformed framing sidecar must fail instead of silently enlarging artwork.
+with tempfile.TemporaryDirectory(prefix='movement-frame-negative-') as temporary:
+    source = Path(temporary) / 'fixture.png'
+    source.write_bytes(Path(next(row['path'] for row in sources if row['backend'] == 'python')).read_bytes())
+    for value in (0, -1, 137, True, 'large'):
+        source.with_suffix('.layout.json').write_text(json.dumps({'maxWidth': value}))
+        try:
+            normalizer.normalize(source, Path(temporary) / 'out.png')
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f'Invalid framing accepted: {value}')
+print('Invalid per-source framing limits rejected.')

@@ -9,6 +9,7 @@ export type Joint = BodyArea;
 export const EQUIPMENT_IDS = {
   BODYWEIGHT: 'bodyweight',
   DUMBBELL: 'dumbbell',
+  BARBELL: 'barbell',
   KETTLEBELL: 'kettlebell',
   CHAIR: 'chair',
   WALL: 'wall',

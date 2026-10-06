@@ -14,8 +14,10 @@
     {
       "id": "shoulderPress",
       "catalogId": "catalog-shoulder-press",
-      "path": "public/exercise-visuals/movements/shoulderPress.png",
-      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa"
+      "path": "docs/visual-qa/frozen-references/shoulderPress.png",
+      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa",
+      "runtimePath": "public/exercise-visuals/movements/shoulderPress.png",
+      "replacementReason": "使用者要求修正為身體前方下巴至肩高度的槓鈴起始姿勢；原風格參考與 hash 保留，新圖待真人驗收。"
     },
     {
       "id": "squat",

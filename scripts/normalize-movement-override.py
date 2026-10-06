@@ -2,6 +2,8 @@
 
 Requires Python 3 and Pillow (see movement-art-requirements.txt).
 """
+import json
+import math
 import sys
 import os
 import tempfile
@@ -25,7 +27,14 @@ def normalize(source_path, output_path):
         bounds.append(box)
     # One common scale preserves paired anatomy. Complete props count as ink.
     top, bottom = min(b[1] for b in bounds), max(b[3] for b in bounds)
-    scale = min(136 / max(b[2] - b[0] for b in bounds), 148 / (bottom - top))
+    layout_path = Path(source_path).with_suffix('.layout.json')
+    layout = json.loads(layout_path.read_text()) if layout_path.exists() else {}
+    max_width, max_height = layout.get('maxWidth', 136), layout.get('maxHeight', 148)
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool)
+               and math.isfinite(v) and 0 < v <= limit
+               for v, limit in ((max_width, 136), (max_height, 148))):
+        raise ValueError('Framing limits must fit the shared content area')
+    scale = min(max_width / max(b[2] - b[0] for b in bounds), max_height / (bottom - top))
     canvas = Image.new('RGB', (320, 184), 'white')
     for center, phase, box in zip((80, 240), phases, bounds):
         crop = phase.crop((box[0], top, box[2], bottom))

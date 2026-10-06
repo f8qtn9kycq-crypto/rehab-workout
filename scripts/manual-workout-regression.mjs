@@ -105,6 +105,22 @@ async function loadModule(entry) {
   return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 }
 
+const { exercises: canonicalExercises } = await loadModule('src/data/exercises.ts');
+const { isCompatibleWithEquipment } = await loadModule('src/utils/exerciseModel.ts');
+const { getRecommendedExercises } = await loadModule('src/utils/recommendationEngine.ts');
+const shoulderPressExercise = canonicalExercises.find(exercise => exercise.id === 'catalog-shoulder-press');
+assert.equal(isCompatibleWithEquipment(shoulderPressExercise, ['barbell']), true, 'barbell satisfies the revised press requirement');
+assert.equal(isCompatibleWithEquipment(shoulderPressExercise, ['dumbbell', 'chair']), false, 'dumbbell equipment cannot satisfy a barbell press');
+for (const pain of [0, 3, 4, 6]) {
+  const result = getRecommendedExercises([shoulderPressExercise], {
+    bodyArea: 'shoulder', type: 'all', level: 'all', duration: 'all',
+    equipment: ['barbell'], noEquipmentOnly: false, painSensitive: false,
+  }, { assessment: { pain }, assessmentEquipment: ['barbell'], logs: [] });
+  assert.deepEqual(result, [], 'the revised catalog press cannot enter conservative or fallback recommendations');
+}
+const shoulderReference = frozenStyle.assets.find(asset => asset.id === 'shoulderPress');
+assert.throws(() => auditMovementArt(artManifest, frozenStyle, path => path === shoulderReference.path ? Buffer.from('changed archive') : readFileSync(path)), /differs from the frozen/, 'the authorized runtime correction cannot weaken the archived shoulder reference hash');
+
 const values = new Map();
 const { getMovementArt } = await loadModule('src/data/movementArtRegistry.ts');
 for (const id of retainedCatalogArtIds) {

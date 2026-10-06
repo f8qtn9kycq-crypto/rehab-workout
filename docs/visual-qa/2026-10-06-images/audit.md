@@ -12,7 +12,7 @@
 其他 5 個原快選 alias 的器材／姿勢差異仍存在於 main；本次不擅改文字或刪 alias，保留先前 audit 的獨立內容阻擋。地板姿勢沒有原 8 張中的直接核准 control；benchPress 僅供線條與尺度參考，不代表地板動作已核准。
 
 ## 驗證
-npm test、build、safety/i18n、coverage、基準完整性、10 張来源重建、framing 非法值負向測試通過。槓鈴可滿足肩推器材條件，啞鈴＋椅子不能；疼痛 0/3/4/6 均不會讓 catalog 肩推進入推薦或 fallback。缺 alias、篡改原參考與封存肩推均會使 regression 失敗。
+npm test、build、safety/i18n、coverage、基準完整性、10 張來源重建、framing 非法值負向測試通過。槓鈴可滿足肩推器材條件，啞鈴＋椅子不能；疼痛 0/3/4/6 均不會讓 catalog 肩推進入推薦或 fallback。缺 alias、篡改原參考與封存肩推均會使 regression 失敗。
 
 桌面本機 Chromium：390×844、375×844、320×844；129 筆 picker 圖片 DOM 實測，43 張在每個尺寸載入並保持 40:23，無水平溢出。肩推 selected card 在 320px 顯示相同 URL，寬 230px。截圖與 hash-bound mobile-results.json 隨附。這批不是 DPR3／iPhone Safari 測試，未重現雲端 204 筆四介面證據；Records/library 共享 canonical registry 由程式與既有 regression 驗證，這批沒有逐張 browser walkthrough。
 
@@ -23,3 +23,6 @@ comparison-native 與 comparison-mobile-390/375/320 包含 8 個原 hash 參考�
 2. 打開 Preview /logs/new，確認「槓鈴肩推」，左格槓鈴位於身體前方，下巴至肩高度，選取後同圖。
 3. 展開更多動作，逐張比對 written steps 的左右階段、支撐、ROM 與 band 方向。
 4. 回報「head SHA、圖片 ID、視覺 Pass/Fail、動作 Pass/Fail、安全 Pass/Fail、具體差異、測試裝置」。新版不得繼承舊核准。
+
+## CI 編碼修正
+466b224 的 Linux 來源位元組重建失敗；macOS Pillow 12.3 使用 zlib 1.2.12。逐圖 framing 的 PNG 改用固定 filter-zero／stored DEFLATE 編碼，排除壓縮器版本差異。10 張 runtime 解碼 RGB 與先前本機 commit 逐像素相同；手機量測與截圖保留並更新 hash，非新增 browser 或真人 Pass。新 head 仍須 CI 證實跨平台重建。

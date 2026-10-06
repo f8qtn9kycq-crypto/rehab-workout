@@ -7,8 +7,27 @@ import math
 import sys
 import os
 import tempfile
+import struct
+import zlib
 from pathlib import Path
 from PIL import Image, ImageDraw
+
+
+def deterministic_png(image):
+    """RGB/filter-zero PNG with stored DEFLATE blocks, independent of zlib version."""
+    def chunk(kind, data):
+        return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+    pixels = image.tobytes()
+    stride = image.width * 3
+    raw = b''.join(b'\x00' + pixels[i:i + stride] for i in range(0, len(pixels), stride))
+    blocks = []
+    for offset in range(0, len(raw), 65535):
+        block = raw[offset:offset + 65535]
+        final = offset + len(block) == len(raw)
+        blocks.append(bytes([int(final)]) + struct.pack('<HH', len(block), len(block) ^ 65535) + block)
+    stream = b'\x78\x01' + b''.join(blocks) + struct.pack('>I', zlib.adler32(raw))
+    header = struct.pack('>IIBBBBB', image.width, image.height, 8, 2, 0, 0, 0)
+    return b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', header) + chunk(b'IDAT', stream) + chunk(b'IEND', b'')
 
 
 def normalize(source_path, output_path):
@@ -47,7 +66,10 @@ def normalize(source_path, output_path):
     with tempfile.NamedTemporaryFile(dir=Path(output_path).parent, suffix='.png', delete=False) as temp:
         temporary = temp.name
     try:
-        canvas.save(temporary, optimize=True)
+        if layout_path.exists():
+            Path(temporary).write_bytes(deterministic_png(canvas))
+        else:
+            canvas.save(temporary, optimize=True)
         os.replace(temporary, output_path)
     finally:
         if os.path.exists(temporary):

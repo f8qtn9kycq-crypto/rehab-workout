@@ -1,9 +1,30 @@
 import { exercises as catalog } from '../data/exercises';
 import { equipmentChoiceIds } from '../data/manualWorkoutOptions';
 import { useI18n } from '../services/i18n';
-import type { ManualWorkout } from '../services/manualWorkoutStorage';
+import type { ManualExercise, ManualWorkout } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
+
+// These catalog IDs have explicitly revised equipment or posture. Saved records
+// have no content version; preserve the stored title and suppress reinterpreted art.
+export function isLegacyShoulderPressRecord(exercise: ManualExercise): boolean {
+  return isLegacyRevisedCatalogRecord(exercise);
+}
+
+export function isLegacyRevisedCatalogRecord(exercise: ManualExercise): boolean {
+  const revisedEquipment: Record<string, string> = {
+    'catalog-shoulder-press': 'barbell',
+    'catalog-squat': 'barbell',
+    'catalog-lat-pulldown': 'machine',
+    'catalog-seated-row': 'machine',
+    'catalog-leg-extension': 'machine',
+  };
+  const expected = revisedEquipment[exercise.exerciseId ?? ''];
+  if (!expected) return false;
+  if (exercise.equipmentId && exercise.equipmentId !== expected) return true;
+  const current = catalog.find(item => item.id === exercise.exerciseId);
+  return !current || ![current.title, getLocalizedExercise(current, 'en').title].includes(exercise.name.trim());
+}
 
 export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout }) {
   const { t, language } = useI18n();
@@ -11,11 +32,12 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
     <p className="text-lg font-black text-ink">{t('manualWorkout.recordTitle', { date: workout.date })}</p>
     {workout.exercises.map((exercise, index) => {
       const catalogExercise = catalog.find(item => item.id === exercise.exerciseId);
-      const name = catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name;
+      const legacyRevisedCatalog = isLegacyRevisedCatalogRecord(exercise);
+      const name = !legacyRevisedCatalog && catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name;
       const equipmentId = equipmentChoiceIds.find(id => id === exercise.equipmentId);
       const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : exercise.equipment;
       return <div key={index} className="border-t border-slate-100 pt-2">
-        {hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
+        {!legacyRevisedCatalog && hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
         <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => `${set.warmup ? `${t('manualWorkout.warmup')} · ` : ''}${t('manualWorkout.setSummary', { number: setIndex + 1, weight: set.weightKg === undefined ? t('manualWorkout.noWeight') : t('manualWorkout.weightValue', { value: set.weightKg }), reps: set.reps })}`).join(' · ')}</p>

@@ -1,4 +1,16 @@
 export default {
+  movementArt: {
+    hold: '維持姿勢',
+    scapular: { start: '放鬆肩膀', finish: '肩胛向後收' },
+    clam: { start: '膝蓋合攏', finish: '上側膝蓋打開' },
+    chin: { start: '頭部放鬆', finish: '下巴輕收向後' },
+    thoracic: { start: '坐直', finish: '上背輕伸展' },
+    serratus: { start: '肩胛放鬆', finish: '肩胛向前推開' },
+    circle: { start: '腳尖朝上', finish: '腳掌轉向下方' },
+    alphabet: { start: '腳尖朝上', finish: '腳掌斜向移動' },
+    band: { start: '腳掌內翻', finish: '腳掌外翻' },
+    heel: { start: '腳跟著地', finish: '腳跟抬起' },
+  },
   muscleEntry: {
     map: '阻力訓練肌群圖', choose: '點選肌群：正面胸、肩、下肢；背面背、下肢',
     chest: '胸', shoulders: '肩', back: '背', legs: '下肢',
@@ -534,7 +546,9 @@ export default {
     advanced: '進階',
   },
   equipmentLabels: {
+    machine: '訓練機',
     bodyweight: '徒手 / 無器材',
+    barbell: '槓鈴',
     dumbbell: '啞鈴',
     kettlebell: '壺鈴',
     chair: '椅子',

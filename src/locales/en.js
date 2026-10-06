@@ -1,4 +1,16 @@
 export default {
+  movementArt: {
+    hold: 'Hold',
+    scapular: { start: 'Relax shoulders', finish: 'Draw shoulder blades back' },
+    clam: { start: 'Knees together', finish: 'Open upper knee' },
+    chin: { start: 'Relax head', finish: 'Gently draw chin back' },
+    thoracic: { start: 'Sit upright', finish: 'Gently extend upper back' },
+    serratus: { start: 'Relax shoulder blades', finish: 'Push shoulder blades apart' },
+    circle: { start: 'Toes up', finish: 'Rotate foot down' },
+    alphabet: { start: 'Toes up', finish: 'Move foot diagonally' },
+    band: { start: 'Turn sole inward', finish: 'Turn sole outward' },
+    heel: { start: 'Heels down', finish: 'Raise heels' },
+  },
   muscleEntry: {
     map: 'Resistance training muscle map', choose: 'Select muscles: chest, shoulders and lower body on front; back and lower body on rear',
     chest: 'Chest', shoulders: 'Shoulders', back: 'Back', legs: 'Lower body',
@@ -534,7 +546,9 @@ export default {
     advanced: 'Advanced',
   },
   equipmentLabels: {
+    machine: 'Machine',
     bodyweight: 'Bodyweight / No equipment',
+    barbell: 'Barbell',
     dumbbell: 'Dumbbell',
     kettlebell: 'Kettlebell',
     chair: 'Chair',

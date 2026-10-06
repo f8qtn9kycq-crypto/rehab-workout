@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
+  "approvalScope": "User-designated visual style and look/feel only; not movement or clinical approval",
+  "sourceSheet": "scripts/assets/movement-art-sources/manual-workout-quick-line-art-v2.png",
+  "sourceSheetSha256": "c4e011bdbd25ea07d29406a4c4a310a21abaa1158499d8849e1f39c32fe91454",
+  "assets": [
+    {
+      "id": "benchPress",
+      "catalogId": "catalog-bench-press",
+      "path": "docs/visual-qa/frozen-references/benchPress.png",
+      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a",
+      "runtimePath": "public/exercise-visuals/movements/benchPress.png",
+      "replacementReason": "完整圖片修正授權：胸推圖片改為文字既有要求的啞鈴；原風格參考與 hash 保留。新版待真人驗收。"
+    },
+    {
+      "id": "shoulderPress",
+      "catalogId": "catalog-shoulder-press",
+      "path": "docs/visual-qa/frozen-references/shoulderPress.png",
+      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa",
+      "runtimePath": "public/exercise-visuals/movements/shoulderPress.png",
+      "replacementReason": "使用者要求修正為身體前方下巴至肩高度的槓鈴起始姿勢；原風格參考與 hash 保留，新圖待真人驗收。"
+    },
+    {
+      "id": "squat",
+      "catalogId": "catalog-squat",
+      "path": "public/exercise-visuals/movements/squat.png",
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "catalogId": "catalog-pull-up",
+      "path": "public/exercise-visuals/movements/pullUp.png",
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "catalogId": "catalog-dip",
+      "path": "public/exercise-visuals/movements/dip.png",
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "catalogId": "catalog-lat-pulldown",
+      "path": "public/exercise-visuals/movements/latPulldown.png",
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "catalogId": "catalog-seated-row",
+      "path": "public/exercise-visuals/movements/seatedRow.png",
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "catalogId": "catalog-leg-extension",
+      "path": "public/exercise-visuals/movements/legExtension.png",
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    }
+  ]
+}

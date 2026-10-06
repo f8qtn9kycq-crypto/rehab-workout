@@ -42,6 +42,8 @@ What user problem this addresses:
 
 For exercise-image or image-ID mapping changes, link the per-asset evidence required by `docs/exercise-visual-qa.md` (visual consistency, movement accuracy, safety representation, mobile rendering). Mark unverified gates explicitly; do not claim human/blind acceptance from automation. Not applicable for changes without image or mapping impact.
 
+For those changes, include frozen-baseline integrity and effective-source regeneration results, plus the named final-runtime comparison at native and measured 390/375/320px mobile card sizes. Keep style acceptance separate from load/ratio/overflow; identify approved anonymous controls and record reviewer/head/hash attribution.
+
 ## AI review routing
 
 - [ ] Codex review needed

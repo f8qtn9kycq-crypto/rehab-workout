@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import { build } from 'vite';
+import { execFileSync } from 'node:child_process';
+import { auditMovementArt } from './audit-movement-art.mjs';
 import en from '../src/locales/en.js';
 import zhTW from '../src/locales/zh-TW.js';
 
@@ -43,12 +45,13 @@ const additionalCatalogIds = quickIds;
 assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
-assert.deepEqual(artManifest.map(entry => entry.aliases?.[0]).filter(Boolean).slice(0, 8), quickIds, 'quick art aliases and canonical choices stay in the same approved order');
+const retainedCatalogArtIds = ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-lat-pulldown', 'catalog-seated-row', 'catalog-leg-extension'];
 const allArtIds = artManifest.flatMap(entry => [entry.id, ...(entry.aliases ?? [])]);
 assert.equal(new Set(allArtIds).size, allArtIds.length, 'canonical ids and aliases are globally unique');
 assert.deepEqual(artManifest.find(entry => entry.id === 'pullUp').aliases, ['catalog-pull-up'], 'exact pull-up catalog equivalent reuses the approved art');
 assert.deepEqual(artManifest.find(entry => entry.id === 'dip').aliases, ['catalog-dip'], 'exact dip catalog equivalent reuses the approved art');
-assert.ok(quickIds.every(id => allArtIds.includes(id)), 'every quick canonical exercise resolves to existing movement art');
+assert.ok(quickIds.every(id => allArtIds.includes(id)), 'all eight quick choices retain their requested original illustrations');
+assert.ok(quickArtIds.every(id => allArtIds.includes(id)), 'legacy strength asset IDs remain readable without canonical mis-aliasing');
 assert.match(sharedArtSource, /getMovementArt\(id\)/, 'shared movement art resolves one canonical registry');
 assert.match(sharedArtSource, /loading=\{loading\}/, 'shared movement art supports native lazy loading');
 assert.match(sharedArtSource, /decoding="async"/, 'shared movement art decodes asynchronously');
@@ -69,12 +72,16 @@ const librarySprite = readFileSync('scripts/assets/movement-art-sources/manual-w
 assert.equal(librarySprite.toString('hex', 0, 8), '89504e470d0a1a0a', 'library movement sprite is PNG');
 assert.deepEqual([librarySprite.readUInt32BE(16), librarySprite.readUInt32BE(20)], [1060, 1484], 'library movement sprite keeps square 5x7 cells for consistent proportions');
 assert.match(extractorSource, /libraryGridGuides/, 'library cells use reviewed guide coordinates instead of approximate equal slicing');
-assert.match(extractorSource, /fullBodyHeadRatio: '1:7'/, 'full-body movement art keeps the reviewed adult 1:7 anatomy contract');
-assert.match(extractorSource, /neckCrop: 'crown-to-waist'/, 'neck-focused movement art uses the shared upper-torso crop instead of a close-up');
-assert.match(extractorSource, /'296', '160', '320', '184'/, 'every movement uses the shared wide canvas that matches the runtime frame');
-assert.match(extractorSource, /'glute-bridge'.*overrides\/glute-bridge\.png/, 'the approved complete-arm glute bridge remains an explicit source override');
-assert.match(extractorSource, /'glute-bridge'.*width: 1293, height: 650/, 'the glute bridge source is tightly framed so its rendered scale matches the shared movement art');
-assert.match(extractorSource, /'neck-rotation-stretch'.*overrides\/neck-rotation-stretch\.png/, 'neck rotation keeps the reviewed crown-to-waist scale instead of a close-up');
+const effectiveSources = JSON.parse(execFileSync(process.execPath, ['scripts/extract-movement-art.mjs', '--list-sources'], { encoding: 'utf8' }));
+for (const entry of artManifest.filter(entry => entry.overrideSource)) {
+  const actual = effectiveSources.find(source => source.id === entry.id);
+  assert.equal(actual?.path, `scripts/assets/movement-art-sources/${entry.overrideSource}`, `${entry.id} uses its active manifest source`);
+  assert.equal(actual?.backend, 'python');
+}
+const frozenStyle = JSON.parse(readFileSync('docs/visual-qa/approved-style-baseline.json'));
+auditMovementArt(artManifest, frozenStyle);
+assert.throws(() => auditMovementArt(artManifest.map(entry => entry.id === 'benchPress' ? { ...entry, aliases: [] } : entry), frozenStyle), /missing its original image mapping/, 'removing an image alias must fail QA');
+assert.throws(() => auditMovementArt(artManifest, frozenStyle, path => path === frozenStyle.assets[0].path ? Buffer.from('changed image') : readFileSync(path)), /differs from the frozen/, 'changing an approved reference must fail QA');
 assert.match(cropToolSource, /NSColor\.white\.setFill\(\)/, 'the crop tool removes outer-edge artifacts with a white canvas');
 assert.match(cropToolSource, /func horizontalInkCenter/, 'movement-art generation measures each phase instead of applying a fixed offset');
 assert.match(cropToolSource, /Double\(canvasWidth\) \/ 4 - horizontalInkCenter\(leftCrop\)/, 'the left phase center aligns with the left-half centerline');
@@ -98,7 +105,34 @@ async function loadModule(entry) {
   return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 }
 
+const { exercises: canonicalExercises } = await loadModule('src/data/exercises.ts');
+const { isCompatibleWithEquipment } = await loadModule('src/utils/exerciseModel.ts');
+const { getRecommendedExercises } = await loadModule('src/utils/recommendationEngine.ts');
+const shoulderPressExercise = canonicalExercises.find(exercise => exercise.id === 'catalog-shoulder-press');
+assert.equal(isCompatibleWithEquipment(shoulderPressExercise, ['barbell']), true, 'barbell satisfies the revised press requirement');
+assert.equal(isCompatibleWithEquipment(shoulderPressExercise, ['dumbbell', 'chair']), false, 'dumbbell equipment cannot satisfy a barbell press');
+for (const pain of [0, 3, 4, 6]) {
+  const result = getRecommendedExercises([shoulderPressExercise], {
+    bodyArea: 'shoulder', type: 'all', level: 'all', duration: 'all',
+    equipment: ['barbell'], noEquipmentOnly: false, painSensitive: false,
+  }, { assessment: { pain }, assessmentEquipment: ['barbell'], logs: [] });
+  assert.deepEqual(result, [], 'the revised catalog press cannot enter conservative or fallback recommendations');
+}
+const shoulderReference = frozenStyle.assets.find(asset => asset.id === 'shoulderPress');
+assert.throws(() => auditMovementArt(artManifest, frozenStyle, path => path === shoulderReference.path ? Buffer.from('changed archive') : readFileSync(path)), /differs from the frozen/, 'the authorized runtime correction cannot weaken the archived shoulder reference hash');
+
 const values = new Map();
+const { getMovementArt } = await loadModule('src/data/movementArtRegistry.ts');
+for (const id of retainedCatalogArtIds) {
+  const legacy = artManifest.find(entry => entry.aliases?.includes(id));
+  assert.ok(legacy, `${id} retains its original illustration mapping`);
+  assert.equal(getMovementArt(id)?.src, `/exercise-visuals/movements/${legacy.id}.png`);
+}
+for (const id of quickArtIds) {
+  assert.equal(getMovementArt(id)?.src, `/exercise-visuals/movements/${id}.png`, `${id} legacy art remains stable`);
+}
+assert.equal(getMovementArt('catalog-pull-up')?.src, getMovementArt('pullUp')?.src);
+assert.equal(getMovementArt('catalog-dip')?.src, getMovementArt('dip')?.src);
 globalThis.window = { localStorage: {
   getItem: key => values.get(key) ?? null,
   setItem: (key, value) => values.set(key, value),

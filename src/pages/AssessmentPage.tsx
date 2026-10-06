@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import BodyMapSelector from '../components/BodyMapSelector';
 import PainScale from '../components/PainScale';
-import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
+import { ASSESSMENT_EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import type { BodyArea, Equipment } from '../types/rehab';
@@ -50,7 +50,7 @@ export default function AssessmentPage() {
         <div>
           <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
-            {EQUIPMENT_OPTIONS.map((item) => (
+            {ASSESSMENT_EQUIPMENT_OPTIONS.map((item) => (
               <button key={item.id} onClick={() => toggle(item.id)} className={`focus-ring min-h-11 rounded-md px-3 py-2 font-semibold ${equipment.includes(item.id) ? 'bg-calm-700 text-white' : 'bg-slate-100 text-slate-700'}`}>
                 {t(`equipmentLabels.${item.id}`)}
               </button>

@@ -1,8 +1,6 @@
 export default {
   movementArt: {
-    setup: 'Set up',
     hold: 'Hold',
-    staticHint: 'Both panels may show the same position during a hold.',
     scapular: { start: 'Relax shoulders', finish: 'Draw shoulder blades back' },
     clam: { start: 'Knees together', finish: 'Open upper knee' },
     chin: { start: 'Relax head', finish: 'Gently draw chin back' },

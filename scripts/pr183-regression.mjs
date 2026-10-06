@@ -95,7 +95,7 @@ export function renderAssessment() {
     assert(!app.renderAssessment().includes(language === 'en' ? '>Machine<' : '>機械<'), 'machine stays outside guided assessment');
     for (const id of ['neck-isometric', 'neck-heat-relax', 'neck-wall-posture', 'pec-doorway-stretch', 'knee-rice-care', 'ankle-gastrocnemius-stretch', 'ankle-soleus-stretch']) {
       const html = app.renderArt(id);
-      assert(html.includes(language === 'en' ? 'Set up' : '擺位') && html.includes(language === 'en' ? 'Hold' : '維持姿勢'), id + ': static phases have bilingual explanations');
+      assert(html.includes(language === 'en' ? 'Hold' : '維持姿勢') && !html.includes(language === 'en' ? 'Set up' : '擺位') && !html.includes('grid-cols-2'), id + ': single held pose has one bilingual label');
       assert(html.includes('/movements/' + id + '.png') && html.includes('width="320"'), id + ': retain original art');
       assert(!html.includes('aria-hidden="true" class="block w-full"'), 'hold explanation remains accessible');
     }

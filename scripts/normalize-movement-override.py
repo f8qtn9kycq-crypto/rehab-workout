@@ -37,6 +37,12 @@ def normalize(source_path, output_path):
     inset = max(2, width // 100)
     phases = [source.crop((0, 0, middle - inset, height)),
               source.crop((middle + inset, 0, width, height))]
+    layout_path = Path(source_path).with_suffix('.layout.json')
+    layout = json.loads(layout_path.read_text()) if layout_path.exists() else {}
+    phase_count = layout.get('phaseCount', 2)
+    if type(phase_count) is not int or phase_count not in (1, 2):
+        raise ValueError('phaseCount must be 1 or 2')
+    phases = phases[:phase_count]
     bounds = []
     for phase in phases:
         mask = phase.convert('L').point(lambda p: 255 if p < 184 else 0)
@@ -46,8 +52,6 @@ def normalize(source_path, output_path):
         bounds.append(box)
     # One common scale preserves paired anatomy. Complete props count as ink.
     top, bottom = min(b[1] for b in bounds), max(b[3] for b in bounds)
-    layout_path = Path(source_path).with_suffix('.layout.json')
-    layout = json.loads(layout_path.read_text()) if layout_path.exists() else {}
     max_width, max_height = layout.get('maxWidth', 136), layout.get('maxHeight', 148)
     if not all(isinstance(v, (int, float)) and not isinstance(v, bool)
                and math.isfinite(v) and 0 < v <= limit
@@ -55,12 +59,13 @@ def normalize(source_path, output_path):
         raise ValueError('Framing limits must fit the shared content area')
     scale = min(max_width / max(b[2] - b[0] for b in bounds), max_height / (bottom - top))
     canvas = Image.new('RGB', (320, 184), 'white')
-    for center, phase, box in zip((80, 240), phases, bounds):
+    for center, phase, box in zip((160,) if phase_count == 1 else (80, 240), phases, bounds):
         crop = phase.crop((box[0], top, box[2], bottom))
         size = (max(1, round(crop.width * scale)), max(1, round(crop.height * scale)))
         crop = crop.resize(size, Image.Resampling.LANCZOS)
         canvas.paste(crop, (round(center - crop.width / 2), round(92 - crop.height / 2)))
-    ImageDraw.Draw(canvas).line((160, 12, 160, 171), fill=(212, 212, 212), width=1)
+    if phase_count == 2:
+        ImageDraw.Draw(canvas).line((160, 12, 160, 171), fill=(212, 212, 212), width=1)
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     # Readers must never observe a half-written/empty output.
     with tempfile.NamedTemporaryFile(dir=Path(output_path).parent, suffix='.png', delete=False) as temp:

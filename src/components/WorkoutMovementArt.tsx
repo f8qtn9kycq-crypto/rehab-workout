@@ -44,11 +44,7 @@ export default function WorkoutMovementArt({ id, loading = 'lazy' }: { id: strin
       <span>{t(`movementArt.${motionPhases[id]}.finish`)}</span>
     </span>}
     {heldPositions.has(id) && <span className="block text-center text-xs text-slate-600">
-      <span className="grid grid-cols-2 gap-1">
-        <span>{t('movementArt.setup')}</span>
-        <span>{t('movementArt.hold')}</span>
-      </span>
-      <span className="mt-1 block">{t('movementArt.staticHint')}</span>
+      {t('movementArt.hold')}
     </span>}
   </span>;
 }

@@ -1,8 +1,6 @@
 export default {
   movementArt: {
-    setup: '擺位',
     hold: '維持姿勢',
-    staticHint: '維持姿勢時，兩格可以相同。',
     scapular: { start: '放鬆肩膀', finish: '肩胛向後收' },
     clam: { start: '膝蓋合攏', finish: '上側膝蓋打開' },
     chin: { start: '頭部放鬆', finish: '下巴輕收向後' },

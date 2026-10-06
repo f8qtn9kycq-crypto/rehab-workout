@@ -41,3 +41,30 @@ with tempfile.TemporaryDirectory(prefix='movement-frame-negative-') as temporary
         else:
             raise AssertionError(f'Invalid framing accepted: {value}')
 print('Invalid per-source framing limits rejected.')
+
+# Single held poses retain the left phase at the same scale, centered without a divider.
+with tempfile.TemporaryDirectory(prefix='movement-single-pose-') as temporary:
+    source = Path(temporary) / 'fixture.png'
+    fixture = Image.new('RGB', (640, 368), 'white')
+    from PIL import ImageDraw
+    drawing = ImageDraw.Draw(fixture)
+    drawing.rectangle((60, 40, 120, 280), fill='black')
+    drawing.rectangle((380, 40, 440, 280), fill='red')
+    fixture.save(source)
+    source.with_suffix('.layout.json').write_text(json.dumps({'phaseCount': 1, 'maxWidth': 100, 'maxHeight': 120}))
+    out = Path(temporary) / 'out.png'
+    normalizer.normalize(source, out)
+    image = Image.open(out).convert('RGB')
+    ink = image.convert('L').point(lambda p: 255 if p < 184 else 0).getbbox()
+    assert abs((ink[0] + ink[2]) / 2 - 160) <= 1 and ink[3] - ink[1] == 120
+    assert image.getpixel((160, 12)) == (255, 255, 255), 'Single pose must not have a divider'
+    assert not any(r > g + 30 for r, g, b in image.getdata()), 'Duplicate right phase must be removed'
+    for value in (0, 3, True, '1', 1.0):
+        source.with_suffix('.layout.json').write_text(json.dumps({'phaseCount': value}))
+        try:
+            normalizer.normalize(source, out)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f'Invalid phase count accepted: {value}')
+print('Single-pose framing, duplicate removal and invalid phase counts verified.')

@@ -14,8 +14,8 @@ export default function FavoriteButton({ id, title }: { id: string; title: strin
   }, []);
   const active = state.ids.includes(id);
   return <div className="mt-2">
-    <button type="button" disabled={state.error} aria-pressed={active} aria-label={`${t(active ? 'favorites.remove' : 'favorites.add')}: ${title}`} onClick={() => setFailed(!toggleFavorite(id))} className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-md border border-calm-700 bg-white px-3 py-2 font-bold text-calm-800">
-      <Star size={20} fill={active ? 'currentColor' : 'none'} aria-hidden="true" />{t(active ? 'favorites.saved' : 'favorites.add')}
+    <button type="button" disabled={state.error} aria-pressed={active} aria-label={`${t(active ? 'favorites.remove' : 'favorites.add')}: ${title}`} onClick={() => setFailed(!toggleFavorite(id))} className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-md px-2 text-sm font-semibold text-calm-800">
+      <Star size={16} fill={active ? 'currentColor' : 'none'} aria-hidden="true" />{t(active ? 'favorites.saved' : 'favorites.add')}
     </button>
     {(failed || state.error) && <p role="alert" className="mt-1 text-sm text-red-800">{t('favorites.error')}</p>}
   </div>;

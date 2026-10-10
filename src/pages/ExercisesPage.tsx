@@ -71,7 +71,6 @@ function removeDeprecatedFilterParams(searchParams: URLSearchParams): URLSearchP
 
 export default function ExercisesPage() {
   const [favorites, setFavorites] = useState(readFavorites);
-  const [favoritesOnly, setFavoritesOnly] = useState(() => new URLSearchParams(window.location.search).get('favorites') === '1');
   useEffect(() => {
     const refresh = () => setFavorites(readFavorites());
     window.addEventListener('rehab:favorites', refresh);
@@ -79,6 +78,7 @@ export default function ExercisesPage() {
     return () => { window.removeEventListener('rehab:favorites', refresh); window.removeEventListener('storage', refresh); };
   }, []);
   const [searchParams, setSearchParams] = useSearchParams();
+  const favoritesOnly = searchParams.get('favorites') === '1';
   const { t } = useI18n();
   const assessment = useMemo(() => getSavedAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
@@ -145,7 +145,8 @@ export default function ExercisesPage() {
 
   const availability = useMemo<FilterAvailability>(() => {
     function countFor(nextFilters: ExerciseFilters): number {
-      return getFilteredExercises(nextFilters).length;
+      const matches = getFilteredExercises(nextFilters);
+      return (favoritesOnly ? matches.filter(exercise => favorites.ids.includes(exercise.id)) : matches).length;
     }
 
     const bodyArea = Object.fromEntries(BODY_AREAS.map((bodyAreaOption) => [
@@ -154,7 +155,7 @@ export default function ExercisesPage() {
     ])) as FilterAvailability['bodyArea'];
 
     return { bodyArea };
-  }, [assessment, assessmentEquipment, filters, logs]);
+  }, [assessment, assessmentEquipment, filters, logs, favoritesOnly, favorites.ids]);
 
   function clearExerciseFilters(): void {
     handleFilterChange({
@@ -221,7 +222,7 @@ export default function ExercisesPage() {
         </div>
       ) : null}
       <div className="space-y-2">
-        <button type="button" aria-pressed={favoritesOnly} onClick={() => { const next = !favoritesOnly; setFavoritesOnly(next); const params = new URLSearchParams(searchParams); if (next) params.set('favorites', '1'); else params.delete('favorites'); setSearchParams(params, { replace: true }); }} className="focus-ring min-h-11 rounded-md border border-calm-700 px-4 py-2 font-bold text-calm-800">{t(favoritesOnly ? 'favorites.showAll' : 'favorites.show')}</button>
+        <button type="button" aria-pressed={favoritesOnly} onClick={() => { const next = !favoritesOnly; const params = new URLSearchParams(searchParams); if (next) params.set('favorites', '1'); else params.delete('favorites'); setSearchParams(params, { replace: true }); }} className="focus-ring min-h-11 rounded-md border border-calm-700 px-4 py-2 font-bold text-calm-800">{t(favoritesOnly ? 'favorites.showAll' : 'favorites.show')}</button>
         <p className="text-sm leading-6">{t('favorites.hint')}</p>
         {favorites.error && <p role="alert" className="text-red-800">{t('favorites.error')}</p>}
         {favoritesOnly && visibleExercises.length === 0 && <p role="status">{t('favorites.empty')}</p>}

@@ -149,6 +149,8 @@ export default {
     close: '關閉',
   },
   home: {
+    quickLogHint: '補記已經完成的訓練。現在要開始訓練，請先完成上方的安全檢查。',
+    activityDetails: '活動紀錄與本週計畫',
     safetyFirst: '安全優先',
     title: '樂齡復健與肌力訓練',
     subtitle: '肩部、髖部、肩頸、膝、踝五個區域，先評估，再選低衝擊動作。',

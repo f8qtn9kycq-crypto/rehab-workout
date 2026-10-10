@@ -14,7 +14,7 @@ export function buildTodayPlan(days: number[], records: RecordsPresentation, tod
     }
   }
   return {
-    planned: days.flatMap((day, index) => day === today.getDay() ? [PLAN_NAMES[index]] : []),
+    planned: days.flatMap((day, index) => day === (today.getDay() + 6) % 7 ? [PLAN_NAMES[index]] : []),
     focuses: [...focuses],
     sources: (['training', 'manual', 'activity'] as const).map(source => ({ source, count: items.filter(item => item.source === source).length })),
   };

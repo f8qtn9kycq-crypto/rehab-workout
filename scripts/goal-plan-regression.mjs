@@ -14,7 +14,11 @@ for(const raw of ['broken','null','[]','{"rehab":2}']) {data.set(goals.GOAL_KEY,
 assert.equal(data.get('rehab.manualWorkouts.v1'),'legacy data');assert.equal(data.get('rehab.weeklyActivityPlan.v1'),'[0,2,5,0,1,3,4]');
 assert.match(readFileSync('src/services/localStorageService.ts','utf8'),/rehab.trainingGoals.v1/);
 const {buildTodayPlan}=await load('src/utils/todayPlan.ts');
-const days=[0,6,5,0,1,3,4];const day={date:'2026-10-10',items:[{source:'manual',workout:{exercises:[{exerciseId:'catalog-lat-pulldown'},{exerciseId:'custom-personal',kind:'strength'}]}},{source:'activity',activity:{kind:'cycling'}},{source:'training',log:{}}]};const records={days:[day]};const before=JSON.stringify({days,records});
+const days=[0,5,6,0,1,3,4];const day={date:'2026-10-10',items:[{source:'manual',workout:{exercises:[{exerciseId:'catalog-lat-pulldown'},{exerciseId:'custom-personal',kind:'strength'}]}},{source:'activity',activity:{kind:'cycling'}},{source:'training',log:{}}]};const records={days:[day]};const before=JSON.stringify({days,records});
 const today=buildTodayPlan(days,records,new Date('2026-10-10T12:00:00'));assert.deepEqual(today.planned,['push']);assert.deepEqual(today.focuses,['pull','mixed']);assert.deepEqual(today.sources.map(s=>s.count),[1,1,1]);assert.equal(JSON.stringify({days,records}),before,'plan Push permits actual Pull without schedule mutation');
 assert.deepEqual(buildTodayPlan([],records,new Date('2026-10-11T12:00:00')).sources.map(s=>s.count),[0,0,0]);
 console.log('Goal/Today regression passed: unset/zero/reload, bounds/corrupt/quota preservation, existing keys, Push plan/Pull actual without mutation, date/source distinction and cleanup.');
+
+assert.deepEqual(buildTodayPlan([0,2,4,0,1,3,6],{days:[]},new Date('2026-10-12T12:00:00')).planned,['lower','cycling'],'Monday=0');
+assert.deepEqual(buildTodayPlan([0,2,4,0,1,3,6],{days:[]},new Date('2026-10-11T12:00:00')).planned,['cycling'],'Sunday=6');
+console.log('Monday-first schedule boundaries passed: Monday and Sunday.');

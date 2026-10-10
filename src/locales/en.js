@@ -1,4 +1,23 @@
 export default {
+  savedRoutine: {
+    "title": "My saved routines",
+    "hint": "Save official exercise IDs in your chosen order. A saved routine is quick access, not a safety recommendation. Open an exercise to read its steps and safety notes; existing safety checks still apply. Private record-only movements are not included.",
+    "readError": "Saved routines could not be read. Existing data was preserved.",
+    "missing": "Unavailable exercise ({id}); edit this routine to remove or replace it.",
+    "edit": "Edit this routine",
+    "editor": "Routine editor",
+    "new": "New routine",
+    "name": "Routine name",
+    "choose": "Choose an official exercise",
+    "select": "Choose an exercise",
+    "add": "Add exercise",
+    "up": "Move up",
+    "down": "Move down",
+    "remove": "Remove from draft",
+    "save": "Save routine",
+    "saved": "Routine saved on this device.",
+    "error": "Could not save. Use a unique name and available official exercises; existing data was preserved."
+  },
   goalPlan: {
     "title": "Today’s plan and weekly goals",
     "planned": "Scheduled today",

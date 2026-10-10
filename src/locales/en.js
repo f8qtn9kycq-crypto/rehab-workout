@@ -470,6 +470,13 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    doseMode: 'Record by (changing clears entered dose)',
+    durationSeconds: 'Duration (seconds)',
+    holdSeconds: 'Hold time (seconds)',
+    repsValue: '{value} reps',
+    durationValue: 'Duration: {value} seconds',
+    holdValue: 'Hold: {value} seconds',
+
     entry: 'Log a finished workout',
     entryHint: 'Choose a movement, enter the reps for each set, and save today’s or a past workout.',
     back: 'Back to training records',

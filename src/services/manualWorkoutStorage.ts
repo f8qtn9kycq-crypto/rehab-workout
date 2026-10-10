@@ -3,7 +3,7 @@ import { safeSetItem } from './localStorageService';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 export const MANUAL_WORKOUT_KEY = 'rehab.manualWorkouts.v1';
-export interface ManualSet { weightKg?: number; reps: number; warmup?: boolean }
+export interface ManualSet { weightKg?: number; reps?: number; durationSeconds?: number; holdSeconds?: number; warmup?: boolean }
 export interface ManualExercise { name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string; bodyArea?: BodyArea; kind?: 'strength' | 'mobility'; painBefore?: number; painAfter?: number; effort?: number }
 export interface ManualWorkout { id: string; date: string; createdAt: string; exercises: ManualExercise[]; cyclingMinutes?: number }
 
@@ -29,7 +29,9 @@ export function validManualWorkout(value: unknown): value is ManualWorkout {
       && (exercise.painBefore === undefined) === (exercise.painAfter === undefined)
       && [exercise.painBefore, exercise.painAfter, exercise.effort].every(value => value === undefined || (Number.isInteger(value) && value >= 0 && value <= 10))
       && Array.isArray(exercise.sets) && exercise.sets.length >= 1 && exercise.sets.length <= 20
-      && exercise.sets.every(set => Number.isInteger(set.reps) && set.reps >= 1 && set.reps <= 1000
+      && exercise.sets.every(set => (set.reps !== undefined || set.durationSeconds !== undefined || set.holdSeconds !== undefined)
+        && (set.reps === undefined || (Number.isInteger(set.reps) && set.reps >= 1 && set.reps <= 1000))
+        && [set.durationSeconds, set.holdSeconds].every(seconds => seconds === undefined || (Number.isInteger(seconds) && seconds >= 1 && seconds <= 86400))
         && (set.warmup === undefined || typeof set.warmup === 'boolean')
         && (set.weightKg === undefined || (Number.isFinite(set.weightKg) && set.weightKg >= 0 && set.weightKg <= 1000))));
 }

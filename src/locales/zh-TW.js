@@ -470,6 +470,13 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    doseMode: '記錄方式（變更會清除已填劑量）',
+    durationSeconds: '持續時間（秒）',
+    holdSeconds: '停留時間（秒）',
+    repsValue: '{value} 次',
+    durationValue: '持續 {value} 秒',
+    holdValue: '停留 {value} 秒',
+
     entry: '補記已完成的訓練',
     entryHint: '選動作、填每組次數，就能儲存今天或過去的訓練。',
     back: '返回訓練紀錄',

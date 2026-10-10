@@ -38,6 +38,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
       const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : exercise.equipment;
       return <div key={index} className="border-t border-slate-100 pt-2">
         {!legacyRevisedCatalog && hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
+        {(exercise.recordOnly || exercise.exerciseId?.startsWith('custom-')) && <p className="text-sm text-slate-600">{t('manualWorkout.recordOnly')}</p>}
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
         <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {

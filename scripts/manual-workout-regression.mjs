@@ -231,4 +231,39 @@ assert.equal(values.get(storage.MANUAL_WORKOUT_KEY),rawDose);
 window.localStorage.setItem=originalSetItem;
 for(const locale of [en,zhTW]) for(const key of ['doseMode','durationSeconds','holdSeconds','repsValue','durationValue','holdValue']) assert.equal(typeof locale.manualWorkout[key],'string',key);
 console.log('Actual dose regression passed: duration/hold/combined, bounds, no fake reps/pain, duplicate and write-failure preservation.');
+
+const custom = await loadModule('src/services/customExerciseStorage.ts');
+const { getExerciseById } = await loadModule('src/utils/exerciseModel.ts');
+const personal={id:'custom-test',name:'Personal movement',kind:'mobility',equipmentId:'chair',recordOnly:true};
+assert.equal(custom.saveCustomExercise(personal),'ok');
+assert.deepEqual(custom.readCustomExercises().exercises,[personal]);
+assert.equal(custom.saveCustomExercise({...personal,id:'custom-second',name:'  PERSONAL MOVEMENT  '}),'duplicate');
+assert.equal(custom.saveCustomExercise({...personal,name:'Other'}),'duplicate','stable IDs cannot be reused');
+for(const invalid of [{...personal,id:'official-id'},{...personal,recordOnly:false},{...personal,name:' '},{...personal,kind:'cycling'},{...personal,equipmentId:'unknown'}]) assert.equal(custom.saveCustomExercise(invalid),'invalid');
+assert.equal(custom.validCustomExercise({...personal,name:'x'.repeat(101)}),false);
+const personalRecord={...dose,id:'custom-history',exercises:[{...dose.exercises[0],name:personal.name,exerciseId:personal.id,kind:personal.kind,recordOnly:true}]};
+assert.equal(storage.saveManualWorkout(personalRecord),'ok');
+assert.equal(storage.saveManualWorkout({...personalRecord,id:'without-marker',exercises:[{...personalRecord.exercises[0],recordOnly:undefined}]}),'invalid','new custom saves require record-only marker');
+values.delete(custom.CUSTOM_EXERCISE_KEY);
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].name,personal.name,'history survives missing definition');
+assert.equal(getExerciseById(personal.id),undefined,'guided resolver cannot resolve private exercises');
+assert.ok(!canonicalExercises.some(exercise=>exercise.id===personal.id),'private definition never enters canonical catalog');
+assert.ok(!readFileSync('src/utils/recommendationEngine.ts','utf8').includes('customExerciseStorage'),'recommendation does not consume private definitions');
+assert.ok(!readFileSync('src/components/WeeklyRoutineBuilder.tsx','utf8').includes('customExerciseStorage'),'routine does not consume private definitions');
+for(const pain of [0,3,4,6]) {
+ const recommended=getRecommendedExercises(canonicalExercises,{bodyArea:'all',type:'all',level:'all',duration:'all',equipment:['bodyweight','chair','wall','dumbbell'],noEquipmentOnly:false,painSensitive:false},{assessment:{pain},assessmentEquipment:['bodyweight','chair','wall','dumbbell'],logs:[]});
+ assert.ok(recommended.every(exercise=>!exercise.catalogOnly&&!exercise.id.startsWith('custom-')),'no private/catalog-only recommendation leakage');
+}
+const customRaw=JSON.stringify([personal]);values.set(custom.CUSTOM_EXERCISE_KEY,customRaw);
+window.localStorage.setItem=()=>{throw Error('quota')};
+assert.equal(custom.saveCustomExercise({...personal,id:'custom-new',name:'New'}),'write-failed');
+assert.equal(values.get(custom.CUSTOM_EXERCISE_KEY),customRaw);window.localStorage.setItem=originalSetItem;
+for(const raw of ['{bad',JSON.stringify([personal,personal]),JSON.stringify([{...personal,recordOnly:false}])]) {
+ values.set(custom.CUSTOM_EXERCISE_KEY,raw);assert.equal(custom.readCustomExercises().error,true);assert.equal(custom.saveCustomExercise({...personal,id:'custom-new'}),'corrupt');assert.equal(values.get(custom.CUSTOM_EXERCISE_KEY),raw);
+}
+values.set(custom.CUSTOM_EXERCISE_KEY,customRaw);
+assert.ok(clearRehabLocalData().clearedKeys.includes(custom.CUSTOM_EXERCISE_KEY));
+assert.equal(values.has(custom.CUSTOM_EXERCISE_KEY),false);
+for(const locale of [en,zhTW]) for(const key of ['customTitle','addCustom','customName','saveCustom','customDuplicate','customStorageError','recordOnly']) assert.equal(typeof locale.manualWorkout[key],'string',key);
+console.log('Record-only custom regression passed: IDs, normalized duplicates, limits, corrupt/quota preservation, history snapshots, guided/routine/recommendation isolation and cleanup.');
 console.log('Manual workout regression passed: quick-picker art and locales, gym equipment readback, sets, dedupe, dates, corrupt/write-failed storage, Records count, and cleanup.');

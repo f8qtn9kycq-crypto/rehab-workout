@@ -470,6 +470,14 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    customTitle: 'Personal record-only exercises',
+    addCustom: 'Add a personal exercise',
+    customName: 'Exercise name',
+    saveCustom: 'Save exercise and select',
+    customDuplicate: 'An exercise with this name already exists. Select it or use a different name.',
+    customStorageError: 'Personal exercises could not be read. Existing data was preserved. You can still choose from the catalog.',
+    recordOnly: 'For personal records only; not reviewed for safe recommendations. This does not start guided training.',
+
     doseMode: 'Record by (changing clears entered dose)',
     durationSeconds: 'Duration (seconds)',
     holdSeconds: 'Hold time (seconds)',

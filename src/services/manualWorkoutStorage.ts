@@ -4,7 +4,7 @@ import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 export const MANUAL_WORKOUT_KEY = 'rehab.manualWorkouts.v1';
 export interface ManualSet { weightKg?: number; reps?: number; durationSeconds?: number; holdSeconds?: number; warmup?: boolean }
-export interface ManualExercise { name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string; bodyArea?: BodyArea; kind?: 'strength' | 'mobility'; painBefore?: number; painAfter?: number; effort?: number }
+export interface ManualExercise { recordOnly?: true; name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string; bodyArea?: BodyArea; kind?: 'strength' | 'mobility'; painBefore?: number; painAfter?: number; effort?: number }
 export interface ManualWorkout { id: string; date: string; createdAt: string; exercises: ManualExercise[]; cyclingMinutes?: number }
 
 function validDate(value: unknown): value is string {
@@ -25,6 +25,7 @@ export function validManualWorkout(value: unknown): value is ManualWorkout {
       && (exercise.exerciseId === undefined || (typeof exercise.exerciseId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.exerciseId)))
       && (exercise.equipmentId === undefined || (typeof exercise.equipmentId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.equipmentId)))
       && (exercise.bodyArea === undefined || BODY_AREAS.includes(exercise.bodyArea))
+      && (exercise.recordOnly === undefined || exercise.recordOnly === true)
       && (exercise.kind === undefined || exercise.kind === 'strength' || exercise.kind === 'mobility')
       && (exercise.painBefore === undefined) === (exercise.painAfter === undefined)
       && [exercise.painBefore, exercise.painAfter, exercise.effort].every(value => value === undefined || (Number.isInteger(value) && value >= 0 && value <= 10))
@@ -53,7 +54,7 @@ export type ManualWorkoutSaveResult = 'ok' | 'corrupt' | 'invalid' | 'write-fail
 export function saveManualWorkout(workout: ManualWorkout): ManualWorkoutSaveResult {
   const current = readManualWorkouts();
   if (current.error) return 'corrupt';
-  if (!validManualWorkout(workout) || workout.date > localDate() || current.workouts.some(item => item.id === workout.id)) return 'invalid';
+  if (!validManualWorkout(workout) || workout.exercises.some(exercise => exercise.exerciseId?.startsWith('custom-') && exercise.recordOnly !== true) || workout.date > localDate() || current.workouts.some(item => item.id === workout.id)) return 'invalid';
   return safeSetItem(MANUAL_WORKOUT_KEY, JSON.stringify([workout, ...current.workouts])) ? 'ok' : 'write-failed';
 }
 

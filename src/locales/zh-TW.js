@@ -470,6 +470,14 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    customTitle: '個人補記動作',
+    addCustom: '新增個人動作',
+    customName: '動作名稱',
+    saveCustom: '儲存動作並選取',
+    customDuplicate: '已有相同名稱的動作，請選取既有動作或使用不同名稱。',
+    customStorageError: '個人動作資料無法讀取，未覆寫原資料。仍可選取既有動作庫。',
+    recordOnly: '僅供個人補記，未經安全推薦審核；不會開始引導訓練。',
+
     doseMode: '記錄方式（變更會清除已填劑量）',
     durationSeconds: '持續時間（秒）',
     holdSeconds: '停留時間（秒）',

@@ -8,6 +8,8 @@ export default {
       equipmentTooNarrowEmpty: 'No exercises match the selected equipment. Try clearing equipment filters or choosing bodyweight support.',
     },
     records: {
+      categories: { rehab: 'Rehab / mobility', strength: 'Strength', cardio: 'Cardio', unknown: 'Unclassified' },
+      sources: { training: 'Guided training', manual: 'Workout backfill', activity: 'Activity record' },
       recent: {
         title: 'Recent activity',
         subtitle: 'Guided sessions, activities, and finished-workout entries appear together without double-counting linked exercises.',
@@ -16,9 +18,13 @@ export default {
         activityMeta: '{date} · {minutes} minutes',
       },
       week: {
+        activeDays: 'Days with records this week: {count}',
+        categoryDays: 'Days with records: {count}',
+        countingHint: 'Each category counts once per day. Mixed training can appear in several categories, so category days cannot be added. Records are not full sessions; early stops remain recorded.',
+
         title: 'This week',
-        subtitle: 'One count across guided sessions, standalone activities, and finished-workout entries.',
-        count: '{count} activities',
+        subtitle: 'Records from guided training, activities, and workout backfills.',
+        count: '{count} records',
         helper: 'Linked exercise logs count once; invalid and future dates are excluded.',
       },
       recovery: {
@@ -257,6 +263,8 @@ export default {
       equipmentTooNarrowEmpty: '目前選擇的器材沒有符合動作。可以清除器材篩選，或改選徒手支撐動作。',
     },
     records: {
+      categories: { rehab: '復健／活動度', strength: '肌力', cardio: '有氧', unknown: '未分類' },
+      sources: { training: '引導訓練', manual: '補記訓練', activity: '活動紀錄' },
       recent: {
         title: '最近活動',
         subtitle: '引導訓練、活動與已完成訓練補記整合顯示；已連結的動作不重複計算。',
@@ -265,9 +273,13 @@ export default {
         activityMeta: '{date}・{minutes} 分鐘',
       },
       week: {
+        activeDays: '本週共 {count} 天有紀錄',
+        categoryDays: '{count} 天有紀錄',
+        countingHint: '同一天同類訓練只算一天；混合訓練可列入多類，分類天數不能相加。紀錄筆數不是完整訓練次數，提前停止也會保留紀錄。',
+
         title: '本週進度',
-        subtitle: '整合引導訓練、獨立活動與補記訓練，只顯示一個一致的計數。',
-        count: '{count} 次活動',
+        subtitle: '整合引導訓練、獨立活動與補記訓練的紀錄。',
+        count: '{count} 筆紀錄',
         helper: '已連結的動作只計一次；無效或未來日期不納入。',
       },
       recovery: {

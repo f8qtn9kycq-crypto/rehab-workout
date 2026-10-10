@@ -1,6 +1,8 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import RecordOnlyExercisePicker from '../components/RecordOnlyExercisePicker';
+import { readCustomExercises, type CustomExercise } from '../services/customExerciseStorage';
 import LibraryMovementArt from '../components/LibraryMovementArt';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
@@ -26,6 +28,7 @@ const equipmentChoices = [
 export default function ManualWorkoutPage() {
   const { t, language } = useI18n();
   const navigate = useNavigate();
+  const [customState, setCustomState] = useState(readCustomExercises);
   const [date, setDate] = useState(localDate);
   const [exercises, setExercises] = useState<ManualExercise[]>([emptyExercise()]);
   const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(['reps']);
@@ -46,7 +49,15 @@ export default function ManualWorkoutPage() {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, value => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, ({ recordOnly, kind, ...value }) => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    setEditingExerciseIndex(null);
+  }
+
+  function chooseCustomExercise(index: number, exercise: CustomExercise): void {
+    setSelectedIds(current => current.map((value, position) => position === index ? exercise.id : value));
+    setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
+    changeExercise(index, value => ({ ...value, name: exercise.name, kind: exercise.kind, recordOnly: true,
+      equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
     setEditingExerciseIndex(null);
   }
 
@@ -67,7 +78,7 @@ export default function ManualWorkoutPage() {
   function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (saving.current) return;
-    if (selectedIds.some(id => !id)) { setError('input'); return; }
+    if (selectedIds.some(id => !catalog.some(item => item.id === id) && !readCustomExercises().exercises.some(item => item.id === id))) { setError('input'); return; }
     saving.current = true;
     const workout = {
       id: manualWorkoutId(), date, createdAt: new Date().toISOString(),
@@ -118,7 +129,11 @@ export default function ManualWorkoutPage() {
           <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
             <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
           </details>
+          <RecordOnlyExercisePicker exercises={customState.exercises} storageError={customState.error}
+            onSelect={exercise => chooseCustomExercise(index, exercise)}
+            onCreated={exercise => { setCustomState(readCustomExercises()); chooseCustomExercise(index, exercise); }} />
           </>}
+          {exercise.recordOnly && <p className="mt-2 text-sm leading-6 text-slate-600">{t('manualWorkout.recordOnly')}</p>}
         </div>
         <label className="block text-sm font-bold">{t('manualWorkout.doseMode')}
           <select className={control} value={doseModes[index]} onChange={event => {

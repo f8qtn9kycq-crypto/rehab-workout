@@ -249,3 +249,7 @@ Audit output should help identify:
 ## 補記復健實際劑量
 
 `rehab.manualWorkouts.v1` 的每組新增可選 `durationSeconds`／`holdSeconds`（整數 1–86400 秒），`reps` 改為可選；每組至少填一種實際劑量，次數仍限整數 1–1000，最多 20 組。原有 reps-only 紀錄不需轉換，含 duration／hold 的新紀錄不假填 reps。UI 一次選一種記錄方式，切換會清除目前劑量並明確告知；reader 可讀含多種劑量的紀錄。kg、暖身、成對可選 pain 與舊 ID 關係保留。此為已完成訓練補記，不改引導處方或安全推薦。
+
+## 個人補記動作
+
+`rehab.customExercises.v1` 獨立保存最多 200 個私人定義：`custom-` 前綴穩定 ID、名稱（1–100 字元）、`kind`（strength／mobility）、可選 canonical equipmentId、`recordOnly: true`。名稱正規化後重複會提示，資料損壞或寫入失敗不得覆寫。只由補記 picker 讀取，不加入官方 exercises、推薦、routine 或 guided session。名稱與 kind、recordOnly 會保存於 manual workout snapshot；定義缺失不影響歷史閱讀，缺失定義不能作為新選取。現有清除本機資料功能納入此 key。

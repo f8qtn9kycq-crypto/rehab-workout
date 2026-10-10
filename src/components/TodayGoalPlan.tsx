@@ -18,7 +18,7 @@ export default function TodayGoalPlan() {
   const records = buildRecordsPresentation(getLogs(), activities.activities, [], new Date(), manual.workouts);
   const today = buildTodayPlan(plan.error ? [] : plan.days, records);
   return <section className="card mx-auto max-w-xl space-y-3 p-5" aria-labelledby="today-plan-title">
-    <h2 id="today-plan-title" className="text-xl font-bold">{t('goalPlan.title')}</h2>
+    <h2 id="today-plan-title" className="text-xl font-bold">{t('homePlans.progress')}</h2>
     <p>{t('goalPlan.planned')}: {plan.error ? t('goalPlan.unavailable') : today.planned.map(name => t(`activities.planNames.${name}`)).join(' · ') || t('activities.rest')}</p>
     <p>{t('goalPlan.actualFocus')}: {today.focuses.map(name => t(`goalPlan.focusNames.${name}`)).join(' · ') || t('goalPlan.noFocus')}</p>
     <p className="text-sm leading-6">{t('goalPlan.flexible')}</p>
@@ -28,7 +28,7 @@ export default function TodayGoalPlan() {
       <strong>{t(`records.categories.${category}`)}</strong>: {t('goalPlan.progress', { actual: records.weeklyCategoryDays[category], target: state.goals[category] ?? t('goalPlan.unset') })}
     </li>)}</ul>
     {(state.error || plan.error || activities.error || manual.error) && <p role="alert" className="text-red-800">{t('goalPlan.readError')}</p>}
-    <div><h3 className="py-3 font-bold">{t('goalPlan.edit')}</h3>
+    <details><summary className="focus-ring min-h-11 cursor-pointer py-3 font-bold">{t('goalPlan.edit')}</summary>
       <p className="text-sm leading-6">{t('goalPlan.intent')}</p>
       <form className="mt-3 space-y-3" onSubmit={event => {
         event.preventDefault();
@@ -42,6 +42,6 @@ export default function TodayGoalPlan() {
         <button type="submit" disabled={state.error} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 font-bold text-white">{t('goalPlan.save')}</button>
         {message && <p role={message === 'error' ? 'alert' : 'status'}>{t(`goalPlan.${message}`)}</p>}
       </form>
-    </div>
+    </details>
   </section>;
 }

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { useI18n } from '../services/i18n';
 import { readSavedRoutines, routineId, saveRoutine, type SavedRoutine } from '../services/savedRoutineStorage';
@@ -34,6 +35,7 @@ export default function FavoritePlanPicker({ exerciseId, onSaved }: { exerciseId
       {target === 'new' && <label className="block font-bold">{t('favorites.planName')}<input className={`${control} mt-1 w-full`} maxLength={100} value={name} onChange={event => { setName(event.target.value); setMessage(null); }} /></label>}
       {duplicate && <p role="status">{t('favorites.alreadyAdded')}</p>}
       <button type="button" className={control} disabled={state.error || duplicate || (target === 'new' ? !name.trim() : !selected || selected.exerciseIds.length >= 20)} onClick={save}>{t(target === 'new' ? 'favorites.createAndAdd' : 'favorites.confirmAdd')}</button>
+      {message === 'saved' && <Link to="/" className="focus-ring inline-flex min-h-11 items-center font-bold underline">{t('homePlans.back')}</Link>}
       {state.error && <p role="alert">{t('savedRoutine.readError')}</p>}
       {message && <p role={message === 'error' ? 'alert' : 'status'}>{t(message === 'error' ? 'savedRoutine.error' : 'favorites.planSaved')}</p>}
     </div>}

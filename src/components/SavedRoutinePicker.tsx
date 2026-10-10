@@ -3,7 +3,7 @@ import { readFavorites } from '../services/favoriteStorage';
 import FavoriteButton from './FavoriteButton';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { exercises } from '../data/exercises';
 import { useI18n } from '../services/i18n';
 import { readSavedRoutines, routineId, saveRoutine, type SavedRoutine } from '../services/savedRoutineStorage';
@@ -12,6 +12,7 @@ const catalog = new Map(exercises.map(exercise => [exercise.id, exercise]));
 const emptyRoutine = (): SavedRoutine => ({ id: routineId(), name: '', exerciseIds: [] });
 export default function SavedRoutinePicker() {
   const { t, language } = useI18n();
+  const [params] = useSearchParams();
   const editor = useRef<HTMLDetailsElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
   const [favorites, setFavorites] = useState(readFavorites);
@@ -25,6 +26,16 @@ export default function SavedRoutinePicker() {
   const [draft, setDraft] = useState(emptyRoutine);
   const [selected, setSelected] = useState('');
   const [message, setMessage] = useState<'saved' | 'error' | null>(null);
+  useEffect(() => {
+    const editId = params.get('edit');
+    const routine = readSavedRoutines().routines.find(item => item.id === editId);
+    if (routine) setDraft({ ...routine, exerciseIds: [...routine.exerciseIds] });
+    if (params.get('new') === '1') setDraft(emptyRoutine());
+    if (routine || params.get('new') === '1') {
+      if (editor.current) editor.current.open = true;
+      requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); });
+    }
+  }, [params]);
   const label = (id: string) => { const exercise = catalog.get(id); return exercise ? getLocalizedExercise(exercise, language).title : t('savedRoutine.missing', { id }); };
   const button = 'focus-ring min-h-11 rounded-md border border-calm-700 px-3 py-2 font-bold text-calm-800';
   function move(index: number, direction: number) {

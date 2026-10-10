@@ -1,4 +1,6 @@
 export default {
+  homePlans: { title: '我的計畫', empty: '尚未建立計畫。先收藏喜歡的動作，再安排順序。', count: '{count} 個動作', all: '查看全部', create: '建立計畫', fromFavorites: '從收藏建立計畫', favorites: '★ 收藏 · {count} 個動作', find: '到動作庫挑選並收藏', progress: '本週進度', back: '回 Today 查看計畫', },
+
   favorites: {
     destination: '選擇計畫', newPlan: '建立新計畫', planName: '新計畫名稱', alreadyAdded: '這個動作已在計畫中。', createAndAdd: '建立並加入', confirmAdd: '加入既有計畫', planSaved: '已加入計畫，收藏仍保留。',
     section: '收藏動作', routineEmpty: '先在動作圖片下方收藏，這裡就會顯示。', addToRoutine: '加入計畫',

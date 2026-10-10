@@ -1,4 +1,6 @@
 export default {
+  homePlans: { title: 'My plans', empty: 'No plans yet. Bookmark exercises, then arrange them in a plan.', count: '{count} exercises', all: 'View all', create: 'Create a plan', fromFavorites: 'Create a plan from favorites', favorites: '★ Favorites · {count} exercises', find: 'Browse and bookmark exercises', progress: 'This week’s progress', back: 'View plans on Today', },
+
   favorites: {
     destination: 'Choose a plan', newPlan: 'Create a new plan', planName: 'New plan name', alreadyAdded: 'This exercise is already in the plan.', createAndAdd: 'Create and add', confirmAdd: 'Add to existing plan', planSaved: 'Added to plan. Your bookmark is kept.',
     section: 'Favorite exercises', routineEmpty: 'Favorite an exercise below its image to see it here.', addToRoutine: 'Add to plan',

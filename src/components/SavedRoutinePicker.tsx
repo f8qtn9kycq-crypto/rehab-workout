@@ -9,6 +9,7 @@ const emptyRoutine = (): SavedRoutine => ({ id: routineId(), name: '', exerciseI
 export default function SavedRoutinePicker() {
   const { t, language } = useI18n();
   const editor = useRef<HTMLDetailsElement>(null);
+  const nameInput = useRef<HTMLInputElement>(null);
   const [state, setState] = useState(readSavedRoutines);
   const [draft, setDraft] = useState(emptyRoutine);
   const [selected, setSelected] = useState('');
@@ -32,12 +33,12 @@ export default function SavedRoutinePicker() {
       <ol className="list-inside list-decimal space-y-2">{routine.exerciseIds.map(id => <li key={id} className="break-words">
         {catalog.has(id) ? <Link className="focus-ring inline-flex min-h-11 items-center underline" to={`/exercise/${id}?mode=all`}>{label(id)}</Link> : <span role="status">{label(id)}</span>}
       </li>)}</ol>
-      <button type="button" className={button} onClick={() => { setDraft({ ...routine, exerciseIds: [...routine.exerciseIds] }); setSelected(''); setMessage(null); if (editor.current) editor.current.open = true; }}>{t('savedRoutine.edit')}</button>
+      <button type="button" className={button} onClick={() => { setDraft({ ...routine, exerciseIds: [...routine.exerciseIds] }); setSelected(''); setMessage(null); if (editor.current) editor.current.open = true; requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); }); }}>{t('savedRoutine.edit')}</button>
     </article>)}
     <details ref={editor}><summary className="focus-ring min-h-11 cursor-pointer py-3 font-bold">{t('savedRoutine.editor')}</summary>
       <button type="button" className={button} onClick={() => { setDraft(emptyRoutine()); setSelected(''); setMessage(null); }}>{t('savedRoutine.new')}</button>
       <form className="mt-3 space-y-3" onSubmit={event => { event.preventDefault(); const ok = saveRoutine(draft); setMessage(ok ? 'saved' : 'error'); if (ok) setState(readSavedRoutines()); }}>
-        <label className="block font-bold">{t('savedRoutine.name')}<input required maxLength={100} disabled={state.error} value={draft.name} onChange={event => { setMessage(null); setDraft(current => ({ ...current, name: event.target.value })); }} className="focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white p-3" /></label>
+        <label className="block font-bold">{t('savedRoutine.name')}<input ref={nameInput} required maxLength={100} disabled={state.error} value={draft.name} onChange={event => { setMessage(null); setDraft(current => ({ ...current, name: event.target.value })); }} className="focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white p-3" /></label>
         <label className="block font-bold">{t('savedRoutine.choose')}<select value={selected} disabled={state.error} onChange={event => setSelected(event.target.value)} className="focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white p-3">
           <option value="">{t('savedRoutine.select')}</option>{exercises.filter(exercise => !draft.exerciseIds.includes(exercise.id)).map(exercise => <option key={exercise.id} value={exercise.id}>{label(exercise.id)}</option>)}
         </select></label>

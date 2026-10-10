@@ -1,6 +1,7 @@
 export default {
   favorites: {
-    section: 'Favorite exercises', routineEmpty: 'Favorite an exercise below its image to see it here.', addToRoutine: 'Add to routine',
+    destination: 'Choose a plan', newPlan: 'Create a new plan', planName: 'New plan name', alreadyAdded: 'This exercise is already in the plan.', createAndAdd: 'Create and add', confirmAdd: 'Add to existing plan', planSaved: 'Added to plan. Your bookmark is kept.',
+    section: 'Favorite exercises', routineEmpty: 'Favorite an exercise below its image to see it here.', addToRoutine: 'Add to plan',
     add: 'Favorite exercise', remove: 'Remove favorite', saved: 'Favorited', show: '★ View favorites', showAll: 'Show all exercises',
     hint: 'Tap Favorite exercise below an image to find it quickly next time. Favorites do not mean a movement is suitable today; current body-area and recommendation filters still apply.',
     empty: 'No favorites match these filters. Switch to All exercises or another body area, or favorite an exercise below its image.',

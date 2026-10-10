@@ -1,3 +1,4 @@
+import FavoritePlanPicker from './FavoritePlanPicker';
 import { readFavorites } from '../services/favoriteStorage';
 import FavoriteButton from './FavoriteButton';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
@@ -43,7 +44,7 @@ export default function SavedRoutinePicker() {
         {hasWorkoutMovementArt(id) && <div className="max-w-xs"><WorkoutMovementArt id={id} /></div>}
         <Link className="focus-ring inline-flex min-h-11 items-center font-bold underline" to={`/exercise/${id}?mode=all`}>{label(id)}</Link>
         <div className="flex flex-wrap items-center gap-2"><FavoriteButton id={id} title={label(id)} />
-          <button type="button" className={button} disabled={state.error || draft.exerciseIds.includes(id) || draft.exerciseIds.length >= 20} onClick={() => { setDraft(current => ({ ...current, exerciseIds: [...current.exerciseIds, id] })); setMessage(null); if (editor.current) editor.current.open = true; requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); }); }}>{t('favorites.addToRoutine')}</button>
+          <FavoritePlanPicker exerciseId={id} onSaved={routine => { setState(readSavedRoutines()); if (draft.id === routine.id && !draft.exerciseIds.includes(id)) setDraft(current => ({ ...current, exerciseIds: [...current.exerciseIds, id] })); }} />
         </div>
       </article>)}
     </div>

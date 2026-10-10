@@ -1,6 +1,7 @@
 export default {
   favorites: {
-    section: '收藏動作', routineEmpty: '先在動作圖片下方收藏，這裡就會顯示。', addToRoutine: '加入組合',
+    destination: '選擇計畫', newPlan: '建立新計畫', planName: '新計畫名稱', alreadyAdded: '這個動作已在計畫中。', createAndAdd: '建立並加入', confirmAdd: '加入既有計畫', planSaved: '已加入計畫，收藏仍保留。',
+    section: '收藏動作', routineEmpty: '先在動作圖片下方收藏，這裡就會顯示。', addToRoutine: '加入計畫',
     add: '收藏動作', remove: '取消收藏', saved: '已收藏', show: '★ 查看收藏', showAll: '顯示全部動作',
     hint: '在動作圖片下方按「收藏動作」，下次可快速找到。收藏不代表今天適合訓練；仍依目前的身體部位與推薦條件顯示。',
     empty: '目前條件下沒有收藏動作。可切換「所有動作」或身體部位，或先在圖片下方收藏動作。',

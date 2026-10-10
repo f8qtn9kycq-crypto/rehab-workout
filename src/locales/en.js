@@ -478,7 +478,7 @@ export default {
     holdValue: 'Hold: {value} seconds',
 
     entry: 'Log a finished workout',
-    entryHint: 'Choose a movement, enter the reps for each set, and save today’s or a past workout.',
+    entryHint: 'Choose a movement, enter the selected dose for each set, and save today’s or a past workout.',
     back: 'Back to training records',
     title: 'Log a workout',
     hint: 'Record the exercises and sets you actually completed. This retrospective record does not start a guided session or assume a pain score.',
@@ -522,7 +522,7 @@ export default {
     cyclingSeparate: 'Return to Records to log cycling as a separate activity. Save each ride separately.',
     cyclingSummary: 'Cycling {minutes} minutes',
     save: 'Save this workout',
-    saveError: 'Could not save. Choose each exercise and check the date and reps for every set; existing records were not overwritten.',
+    saveError: 'Could not save. Choose each exercise and check the date and selected dose for every set; existing records were not overwritten.',
     storageError: 'Local workout data could not be read. This workout was not saved and existing data was not overwritten. Back up your data or ask for help before clearing local data.',
     writeError: 'This device cannot write to local storage right now. This workout was not saved. Check browser storage space or permissions and retry; existing records were not overwritten.',
     saved: 'Workout saved. Find it in recent activity or detailed history below.',

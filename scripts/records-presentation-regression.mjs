@@ -12,7 +12,7 @@ async function loadModule(entry) {
   return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 }
 
-const { buildRecordsPresentation } = await loadModule('src/utils/recordsPresentation.ts');
+const { buildRecordsPresentation, recordCategories } = await loadModule('src/utils/recordsPresentation.ts');
 const today = new Date('2026-09-20T23:00:00');
 const log = {
   id: 'log-1', date: '2026-09-19T10:00:00Z', completedAt: '2026-09-19T10:00:00Z',
@@ -36,7 +36,7 @@ assert.deepEqual(linkedResult.recentActivities.map(item => item.id), [`activity:
 assert.equal(linkedResult.weeklyActivityCount, 1, 'one linked resistance session counts once for the week');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).recentActivities.length, 0, 'assessment-only state has no fake activity');
 assert.equal(buildRecordsPresentation([], [], [outcome], today).validOutcomes.length, 1, 'assessment-only recovery data remains available');
-assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], days: [], weeklyActivityCount: 0, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');
+assert.deepEqual(buildRecordsPresentation([], [], [], today), { recentActivities: [], days: [], weeklyActivityCount: 0, weeklyActiveDays: 0, weeklyCategoryDays: {rehab:0,strength:0,cardio:0,unknown:0}, hasActivityHistory: false, validOutcomes: [] }, 'truly empty state remains empty');
 assert.equal(buildRecordsPresentation([{ ...log, id: 'bad', date: 'bad' }, { ...log, id: 'future', date: '2999-01-01T00:00:00Z' }], [{ ...resistance, id: 'bad-date', date: '2026-02-30' }, { ...cycling, id: 'future-activity', date: '2999-01-01' }], [{ ...outcome, date: 'bad' }, { ...outcome, id: 'future-outcome', date: '2999-01-01T00:00:00Z' }], today).recentActivities.length, 0, 'invalid and future activity dates are excluded');
 
 for (const hour of ['00:01', '09:00', '23:59']) {
@@ -49,3 +49,20 @@ for (const hour of ['00:01', '09:00', '23:59']) {
   assert.equal(result.weeklyActivityCount, 1, 'Monday morning activity counts in the new week');
 }
 console.log('Records presentation regression passed: activity-only, guided-only, both, assessment-only, empty, date boundaries, and linked dedupe.');
+
+const manual = {id:'manual-1', date:'2026-09-19', createdAt:'2026-09-19T10:00:00Z', exercises:[{name:'Bench',equipment:'',exerciseId:'catalog-bench-press',sets:[{reps:8}]}]};
+const mixed = {...manual, id:'mixed', cyclingMinutes:10, exercises:[...manual.exercises,{name:'Mobility',equipment:'',kind:'mobility',sets:[{reps:1}]},{name:'Old name',equipment:'',sets:[{reps:4}]}]};
+assert.deepEqual(recordCategories({source:'manual',workout:manual}),['strength']);
+assert.deepEqual(recordCategories({source:'manual',workout:mixed}),['rehab','strength','cardio','unknown']);
+assert.deepEqual(recordCategories({source:'manual',workout:{...manual,exercises:[{...manual.exercises[0],exerciseId:'missing-id'}]}}),['unknown']);
+assert.deepEqual(recordCategories({source:'manual',workout:{...manual,exercises:[{...manual.exercises[0],exerciseId:'ankle-circles'}]}}),['rehab']);
+assert.deepEqual(recordCategories({source:'activity',activity:linkedSession},[log,secondLog]),['rehab','strength']);
+const snapshot=JSON.stringify([log,linkedSession,cycling,mixed]);
+const all=buildRecordsPresentation([log,secondLog],[linkedSession,cycling,{...cycling,id:'ride-2'}],[],today,[mixed]);
+assert.equal(all.weeklyActivityCount,4,'two rides stay separate, linked logs dedupe, mixed stays one record');
+assert.equal(all.weeklyActiveDays,2,'same-day mixed sources do not invent sessions');
+assert.deepEqual(all.weeklyCategoryDays,{rehab:1,strength:1,cardio:2,unknown:1});
+assert.equal(JSON.stringify([log,linkedSession,cycling,mixed]),snapshot,'read model cannot mutate storage inputs');
+const monday=buildRecordsPresentation([],[],[],new Date('2026-09-21T00:01:00'),[{...mixed,date:'2026-09-20'},{...mixed,id:'today',date:'2026-09-21'},{...mixed,id:'future',date:'2026-09-22'}]);
+assert.equal(monday.weeklyActivityCount,1);assert.equal(monday.weeklyActiveDays,1);assert.deepEqual(monday.weeklyCategoryDays,{rehab:1,strength:1,cardio:1,unknown:1});
+console.log('Category regression passed: canonical IDs, unknown legacy, mixed categories, record/day distinction, rides, local-week boundaries, future exclusion and immutable inputs.');

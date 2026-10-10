@@ -149,6 +149,8 @@ export default {
     close: 'Close',
   },
   home: {
+    quickLogHint: 'Record a workout you have already finished. To start training now, use the safety check above.',
+    activityDetails: 'Activity records and weekly plan',
     safetyFirst: 'Safety first',
     title: 'Rehab and Strength Training',
     subtitle: 'Choose shoulder, hip, shoulder-neck, knee, or ankle routines after a simple safety check.',

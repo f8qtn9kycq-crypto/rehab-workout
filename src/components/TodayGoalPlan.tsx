@@ -28,7 +28,7 @@ export default function TodayGoalPlan() {
       <strong>{t(`records.categories.${category}`)}</strong>: {t('goalPlan.progress', { actual: records.weeklyCategoryDays[category], target: state.goals[category] ?? t('goalPlan.unset') })}
     </li>)}</ul>
     {(state.error || plan.error || activities.error || manual.error) && <p role="alert" className="text-red-800">{t('goalPlan.readError')}</p>}
-    <details><summary className="focus-ring min-h-11 cursor-pointer py-3 font-bold">{t('goalPlan.edit')}</summary>
+    <div><h3 className="py-3 font-bold">{t('goalPlan.edit')}</h3>
       <p className="text-sm leading-6">{t('goalPlan.intent')}</p>
       <form className="mt-3 space-y-3" onSubmit={event => {
         event.preventDefault();
@@ -42,6 +42,6 @@ export default function TodayGoalPlan() {
         <button type="submit" disabled={state.error} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 font-bold text-white">{t('goalPlan.save')}</button>
         {message && <p role={message === 'error' ? 'alert' : 'status'}>{t(`goalPlan.${message}`)}</p>}
       </form>
-    </details>
+    </div>
   </section>;
 }

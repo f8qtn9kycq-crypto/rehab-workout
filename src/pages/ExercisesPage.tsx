@@ -4,6 +4,7 @@ import ExerciseCard from '../components/ExerciseCard';
 import ExerciseFilter, { type FilterAvailability } from '../components/ExerciseFilter';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
+import { readFavorites } from '../services/favoriteStorage';
 import { getSavedAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
@@ -69,6 +70,14 @@ function removeDeprecatedFilterParams(searchParams: URLSearchParams): URLSearchP
 }
 
 export default function ExercisesPage() {
+  const [favorites, setFavorites] = useState(readFavorites);
+  const [favoritesOnly, setFavoritesOnly] = useState(() => new URLSearchParams(window.location.search).get('favorites') === '1');
+  useEffect(() => {
+    const refresh = () => setFavorites(readFavorites());
+    window.addEventListener('rehab:favorites', refresh);
+    window.addEventListener('storage', refresh);
+    return () => { window.removeEventListener('rehab:favorites', refresh); window.removeEventListener('storage', refresh); };
+  }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useI18n();
   const assessment = useMemo(() => getSavedAssessment(), []);
@@ -102,6 +111,7 @@ export default function ExercisesPage() {
     setFilters(visibleFilters);
     const nextSearchParams = new URLSearchParams();
 
+    if (favoritesOnly) nextSearchParams.set('favorites', '1');
     if (visibleFilters.mode !== 'recommended') nextSearchParams.set('mode', visibleFilters.mode);
     if (visibleFilters.bodyArea !== 'all') nextSearchParams.set('bodyArea', visibleFilters.bodyArea);
 
@@ -130,6 +140,8 @@ export default function ExercisesPage() {
   const filtered = useMemo(() => {
     return getFilteredExercises(filters);
   }, [assessment, filters, logs]);
+
+  const visibleExercises = favoritesOnly ? filtered.filter(exercise => favorites.ids.includes(exercise.id)) : filtered;
 
   const availability = useMemo<FilterAvailability>(() => {
     function countFor(nextFilters: ExerciseFilters): number {
@@ -208,9 +220,15 @@ export default function ExercisesPage() {
           {t('exercises.painStopEmpty')}
         </div>
       ) : null}
+      <div className="space-y-2">
+        <button type="button" aria-pressed={favoritesOnly} onClick={() => { const next = !favoritesOnly; setFavoritesOnly(next); const params = new URLSearchParams(searchParams); if (next) params.set('favorites', '1'); else params.delete('favorites'); setSearchParams(params, { replace: true }); }} className="focus-ring min-h-11 rounded-md border border-calm-700 px-4 py-2 font-bold text-calm-800">{t(favoritesOnly ? 'favorites.showAll' : 'favorites.show')}</button>
+        <p className="text-sm leading-6">{t('favorites.hint')}</p>
+        {favorites.error && <p role="alert" className="text-red-800">{t('favorites.error')}</p>}
+        {favoritesOnly && visibleExercises.length === 0 && <p role="status">{t('favorites.empty')}</p>}
+      </div>
       <ExerciseFilter filters={filters} availability={availability} onChange={handleFilterChange} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((exercise) => (
+        {visibleExercises.map((exercise) => (
           <ExerciseCard key={exercise.id} exercise={exercise} />
         ))}
       </div>

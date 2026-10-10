@@ -123,7 +123,7 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, activi
         {a.date < localDate() && <label className="block">{t('activities.nextDay')}<select className={control} value={a.nextDayResponse ?? ''} onChange={e => { const updated = { ...a }; if (e.target.value) updated.nextDayResponse = e.target.value as Response; else delete updated.nextDayResponse; refresh(saveActivity(updated)); }}><option value="">{t('activities.unknown')}</option>{RESPONSES.map(r => <option key={r} value={r}>{t(`activities.responses.${r}`)}</option>)}</select></label>}
       </article>)}</div>
     </details>
-    <ActivityPlan />
+    <ActivityPlan onChange={onActivitiesChange} />
     <details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.share')}</summary><textarea aria-label={t('activities.share')} readOnly value={copyText} className={control + ' min-h-32'} /><p className="text-sm">{t('activities.localOnly')}</p></details>
     </>}
     {message && <p role={message === 'error' ? 'alert' : 'status'}>{t(`activities.${message}`)}</p>}

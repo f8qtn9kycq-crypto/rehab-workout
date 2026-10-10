@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useI18n } from '../services/i18n';
 import { readActivityPlan, saveActivityPlan } from '../services/activityStorage';
 
-export default function ActivityPlan() {
+export default function ActivityPlan({ onChange = () => {} }: { onChange?: () => void }) {
   const { t } = useI18n();
   const [plan, setPlan] = useState(readActivityPlan);
   const [failed, setFailed] = useState(false);
@@ -15,7 +15,7 @@ export default function ActivityPlan() {
       {plan.days.map((day, index) => <label key={index} className="my-3 block">{t(`activities.planNames.${names[index]}`)} {index < 3 ? '' : index - 2}
         <select disabled={plan.error} className="focus-ring min-h-11 w-full rounded-md border border-slate-300 bg-white p-3" value={day} onChange={event => {
           const days = plan.days.map((value, i) => i === index ? Number(event.target.value) : value);
-          const ok = saveActivityPlan(days); setFailed(!ok); if (ok) setPlan({ days, error: false });
+          const ok = saveActivityPlan(days); setFailed(!ok); if (ok) { setPlan({ days, error: false }); onChange(); }
         }}>{Array.from({ length: 7 }, (_, i) => <option key={i} value={i}>{t(`activities.days.${i}`)}</option>)}</select>
       </label>)}
     </details>

@@ -1,4 +1,27 @@
 export default {
+  goalPlan: {
+    "title": "Today’s plan and weekly goals",
+    "planned": "Scheduled today",
+    "actualFocus": "Strength recorded today",
+    "noFocus": "No classified strength record",
+    "flexible": "Your schedule is a suggestion. Record what you actually did without editing it; nothing is rescheduled automatically.",
+    "unit": "Progress counts days with records, not completed sessions. Multiple records on one day count once per category; categories can overlap. Today’s source counts are records.",
+    "progress": "{actual} days / target {target}",
+    "unset": "not set",
+    "edit": "Set weekly goals",
+    "intent": "Your personal intention, not a prescription. Enter 0–7 days per week; leave blank for no goal.",
+    "save": "Save goals",
+    "saved": "Goals saved on this device.",
+    "error": "Could not save goals. Existing data was preserved.",
+    "readError": "Some local data could not be read. Displayed progress may be incomplete; existing data was preserved.",
+    "unavailable": "Unavailable",
+    "focusNames": {
+      "lower": "Legs",
+      "push": "Push",
+      "pull": "Pull",
+      "mixed": "Mixed / unclassified"
+    }
+  },
   movementArt: {
     hold: 'Hold',
     scapular: { start: 'Relax shoulders', finish: 'Draw shoulder blades back' },

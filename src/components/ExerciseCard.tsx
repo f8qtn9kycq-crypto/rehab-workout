@@ -1,3 +1,4 @@
+import FavoriteButton from './FavoriteButton';
 import { Clock, Dumbbell, Layers3, MapPin } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
@@ -22,6 +23,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>
       </div>
       {hasWorkoutMovementArt(exercise.id) && <div className="mt-3"><WorkoutMovementArt id={exercise.id} /></div>}
+      <FavoriteButton id={exercise.id} title={displayExercise.title} />
       <h3 className="mt-3 text-xl font-bold text-ink">{displayExercise.title}</h3>
       <p className="mt-2 flex-1 text-base text-slate-600">{displayExercise.description}</p>
       <div className="mt-3 flex flex-wrap gap-2">

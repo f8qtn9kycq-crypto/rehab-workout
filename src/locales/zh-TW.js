@@ -1,4 +1,15 @@
 export default {
+  homePlans: { title: '我的計畫', empty: '尚未建立計畫。先收藏喜歡的動作，再安排順序。', count: '{count} 個動作', all: '查看全部', create: '建立計畫', fromFavorites: '從收藏建立計畫', favorites: '★ 收藏 · {count} 個動作', find: '到動作庫挑選並收藏', progress: '本週進度', back: '回 Today 查看計畫', },
+
+  favorites: {
+    destination: '選擇計畫', newPlan: '建立新計畫', planName: '新計畫名稱', alreadyAdded: '這個動作已在計畫中。', createAndAdd: '建立並加入', confirmAdd: '加入既有計畫', planSaved: '已加入計畫，收藏仍保留。',
+    section: '收藏動作', routineEmpty: '先在動作圖片下方收藏，這裡就會顯示。', addToRoutine: '加入計畫',
+    add: '收藏動作', remove: '取消收藏', saved: '已收藏', show: '★ 查看收藏', showAll: '顯示全部動作',
+    hint: '在動作圖片下方按「收藏動作」，下次可快速找到。收藏不代表今天適合訓練；仍依目前的身體部位與推薦條件顯示。',
+    empty: '目前條件下沒有收藏動作。可切換「所有動作」或身體部位，或先在圖片下方收藏動作。',
+    error: '無法讀取或儲存收藏，原有資料保留。請稍後再試。',
+  },
+
   savedRoutine: {
     "title": "我的常用組合",
     "hint": "依自己選擇的順序保存官方動作。常用組合只是快速存取，不代表安全推薦；請先開啟動作閱讀步驟與安全說明，開始時仍須原有安全檢查。個人補記動作不納入組合。",

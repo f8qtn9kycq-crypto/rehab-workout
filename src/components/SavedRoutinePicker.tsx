@@ -1,5 +1,9 @@
-import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import FavoritePlanPicker from './FavoritePlanPicker';
+import { readFavorites } from '../services/favoriteStorage';
+import FavoriteButton from './FavoriteButton';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { exercises } from '../data/exercises';
 import { useI18n } from '../services/i18n';
 import { readSavedRoutines, routineId, saveRoutine, type SavedRoutine } from '../services/savedRoutineStorage';
@@ -8,12 +12,30 @@ const catalog = new Map(exercises.map(exercise => [exercise.id, exercise]));
 const emptyRoutine = (): SavedRoutine => ({ id: routineId(), name: '', exerciseIds: [] });
 export default function SavedRoutinePicker() {
   const { t, language } = useI18n();
+  const [params] = useSearchParams();
   const editor = useRef<HTMLDetailsElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
+  const [favorites, setFavorites] = useState(readFavorites);
+  useEffect(() => {
+    const refresh = () => setFavorites(readFavorites());
+    window.addEventListener('rehab:favorites', refresh);
+    window.addEventListener('storage', refresh);
+    return () => { window.removeEventListener('rehab:favorites', refresh); window.removeEventListener('storage', refresh); };
+  }, []);
   const [state, setState] = useState(readSavedRoutines);
   const [draft, setDraft] = useState(emptyRoutine);
   const [selected, setSelected] = useState('');
   const [message, setMessage] = useState<'saved' | 'error' | null>(null);
+  useEffect(() => {
+    const editId = params.get('edit');
+    const routine = readSavedRoutines().routines.find(item => item.id === editId);
+    if (routine) setDraft({ ...routine, exerciseIds: [...routine.exerciseIds] });
+    if (params.get('new') === '1') setDraft(emptyRoutine());
+    if (routine || params.get('new') === '1') {
+      if (editor.current) editor.current.open = true;
+      requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); });
+    }
+  }, [params]);
   const label = (id: string) => { const exercise = catalog.get(id); return exercise ? getLocalizedExercise(exercise, language).title : t('savedRoutine.missing', { id }); };
   const button = 'focus-ring min-h-11 rounded-md border border-calm-700 px-3 py-2 font-bold text-calm-800';
   function move(index: number, direction: number) {
@@ -27,6 +49,16 @@ export default function SavedRoutinePicker() {
   return <section className="card space-y-4 p-4" aria-labelledby="saved-routine-title">
     <h2 id="saved-routine-title" className="text-xl font-bold">{t('savedRoutine.title')}</h2>
     <p className="text-sm leading-6">{t('savedRoutine.hint')}</p>
+    <div className="space-y-3">
+      <h3 className="font-bold">{t('favorites.section')}</h3>
+      {favorites.error ? <p role="alert">{t('favorites.error')}</p> : favorites.ids.filter(id => catalog.has(id)).length === 0 ? <p className="text-sm">{t('favorites.routineEmpty')}</p> : favorites.ids.filter(id => catalog.has(id)).map(id => <article key={id} className="rounded-md bg-slate-50 p-3">
+        {hasWorkoutMovementArt(id) && <div className="max-w-xs"><WorkoutMovementArt id={id} /></div>}
+        <Link className="focus-ring inline-flex min-h-11 items-center font-bold underline" to={`/exercise/${id}?mode=all`}>{label(id)}</Link>
+        <div className="flex flex-wrap items-center gap-2"><FavoriteButton id={id} title={label(id)} />
+          <FavoritePlanPicker exerciseId={id} onSaved={routine => { setState(readSavedRoutines()); if (draft.id === routine.id && !draft.exerciseIds.includes(id)) setDraft(current => ({ ...current, exerciseIds: [...current.exerciseIds, id] })); }} />
+        </div>
+      </article>)}
+    </div>
     {state.error && <p role="alert" className="text-red-800">{t('savedRoutine.readError')}</p>}
     {state.routines.map(routine => <article key={routine.id} className="space-y-2 rounded-md bg-slate-50 p-3">
       <h3 className="break-words font-bold">{routine.name}</h3>

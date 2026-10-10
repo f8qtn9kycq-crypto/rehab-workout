@@ -1,4 +1,15 @@
 export default {
+  homePlans: { title: 'My plans', empty: 'No plans yet. Bookmark exercises, then arrange them in a plan.', count: '{count} exercises', all: 'View all', create: 'Create a plan', fromFavorites: 'Create a plan from favorites', favorites: '★ Favorites · {count} exercises', find: 'Browse and bookmark exercises', progress: 'This week’s progress', back: 'View plans on Today', },
+
+  favorites: {
+    destination: 'Choose a plan', newPlan: 'Create a new plan', planName: 'New plan name', alreadyAdded: 'This exercise is already in the plan.', createAndAdd: 'Create and add', confirmAdd: 'Add to existing plan', planSaved: 'Added to plan. Your bookmark is kept.',
+    section: 'Favorite exercises', routineEmpty: 'Favorite an exercise below its image to see it here.', addToRoutine: 'Add to plan',
+    add: 'Favorite exercise', remove: 'Remove favorite', saved: 'Favorited', show: '★ View favorites', showAll: 'Show all exercises',
+    hint: 'Tap Favorite exercise below an image to find it quickly next time. Favorites do not mean a movement is suitable today; current body-area and recommendation filters still apply.',
+    empty: 'No favorites match these filters. Switch to All exercises or another body area, or favorite an exercise below its image.',
+    error: 'Could not read or save favorites. Existing data is preserved. Please try again later.',
+  },
+
   savedRoutine: {
     "title": "My saved routines",
     "hint": "Save official exercise IDs in your chosen order. A saved routine is quick access, not a safety recommendation. Open an exercise to read its steps and safety notes; existing safety checks still apply. Private record-only movements are not included.",

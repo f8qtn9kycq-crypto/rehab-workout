@@ -18,6 +18,7 @@ export default function FavoritePlanPicker({ exerciseId, onSaved }: { exerciseId
     const current = readSavedRoutines();
     const existing = current.routines.find(routine => routine.id === target);
     if (current.error || (target !== 'new' && !existing)) { setMessage('error'); setState(current); return; }
+    if (existing?.exerciseIds.includes(exerciseId)) { setState(current); setMessage(null); return; }
     const routine = target === 'new' ? { id: routineId(), name, exerciseIds: [exerciseId] } : existing!;
     if (!routine.exerciseIds.includes(exerciseId)) routine.exerciseIds = [...routine.exerciseIds, exerciseId];
     const ok = saveRoutine(routine);

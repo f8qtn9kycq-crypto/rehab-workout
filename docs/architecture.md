@@ -92,3 +92,7 @@ Product-code PRs should run `npm run build`. Run `npm run audit:exercise-coverag
 
 ### 每週目標與 Today 安排
 `rehab.trainingGoals.v1` 獨立保存三類個人每週天數意圖（0–7 或 null 未設定），未設定時不產生處方。進度沿用 Records 有紀錄天數，非完整 session 次數。Today 只讀既有 weekday 排程與今日來源／已知重訓分類，允許 Push 計畫與 Pull 實際不同，不改排程或安全推薦。損壞資料／寫入失敗不覆寫，清除本機資料包含此新鍵。
+
+
+### 個人常用組合
+`rehab.savedRoutines.v1` 只保存名稱、routine ID 與有序 canonical exercise IDs；50 組、每組 20 個動作上限。讀取容許歷史缺失 IDs 並提示編輯替換，寫入只接受目前 canonical IDs，拒絕 custom record-only 動作。不自動推薦或一鍵啟動整套訓練；組合連到既有詳情頁，步驟／安全說明／原有 session gate 不變。保留三種 starter routines。損壞／quota 不覆寫，清除本機資料包含新鍵。

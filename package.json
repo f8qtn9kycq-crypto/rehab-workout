@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout && npm run test:pr183 && node scripts/movement-mobile-evidence-regression.mjs && npm run test:goal-plan",
+    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout && npm run test:pr183 && node scripts/movement-mobile-evidence-regression.mjs && npm run test:goal-plan && npm run test:saved-routines",
     "audit:movement-art": "node scripts/audit-movement-art.mjs",
     "audit:movement-art-sources": "python3 scripts/verify-movement-overrides.py",
     "test:manual-workout": "node scripts/manual-workout-regression.mjs",
@@ -20,7 +20,8 @@
     "test:activities": "node scripts/activity-regression.mjs",
     "test:set-logging": "node scripts/set-logging-regression.mjs",
     "test:pr183": "node scripts/pr183-regression.mjs",
-    "test:goal-plan": "node scripts/goal-plan-regression.mjs"
+    "test:goal-plan": "node scripts/goal-plan-regression.mjs",
+    "test:saved-routines": "node scripts/saved-routine-regression.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

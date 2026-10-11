@@ -1,4 +1,27 @@
 export default {
+  goalPlan: {
+    "title": "今日安排與每週目標",
+    "planned": "今日原排",
+    "actualFocus": "今日重訓實際",
+    "noFocus": "尚無可分類重訓紀錄",
+    "flexible": "安排是建議，可直接記錄實際完成的訓練，不必先改排程；不會自動重排。",
+    "unit": "進度以有紀錄的天數計算，不代表完成整次訓練。同日多筆在每類算一天，分類天數可能重疊；今日來源數字則是紀錄筆數。",
+    "progress": "{actual} 天／目標 {target}",
+    "unset": "未設定",
+    "edit": "設定每週目標",
+    "intent": "這是個人意圖，不是訓練處方。每週可填 0–7 天，留白表示未設定目標。",
+    "save": "儲存目標",
+    "saved": "目標已儲存在此裝置。",
+    "error": "無法儲存目標，原資料未被覆寫。",
+    "readError": "部分本機資料無法讀取，顯示進度可能不完整；原資料未被覆寫。",
+    "unavailable": "無法讀取",
+    "focusNames": {
+      "lower": "腿",
+      "push": "推",
+      "pull": "拉",
+      "mixed": "混合／未分類"
+    }
+  },
   movementArt: {
     hold: '維持姿勢',
     scapular: { start: '放鬆肩膀', finish: '肩胛向後收' },

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import TodayGoalPlan from '../components/TodayGoalPlan';
 import ActivityTracking from '../components/ActivityTracking';
 import { ArrowRight, ClipboardList, ShieldCheck } from 'lucide-react';
 import { Navigate, Link } from 'react-router-dom';
@@ -12,6 +14,7 @@ import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '.
 
 export default function HomePage({ demo = false }: { demo?: boolean }) {
   const { t } = useI18n();
+  const [, setSummaryVersion] = useState(0);
   const seenOnboarding = safeGetItem(onboardingStorageKey);
   if (!seenOnboarding && !demo) return <Navigate to="/onboarding" replace />;
 
@@ -49,9 +52,10 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
           <p className="text-sm leading-6 text-slate-600">{t('home.quickLogHint')}</p>
         </div>
       </section>
+      {!demo && <TodayGoalPlan />}
       {!demo && <details className="mx-auto max-w-xl">
         <summary className="focus-ring min-h-11 cursor-pointer rounded-md px-3 py-3 font-bold text-calm-800">{t('home.activityDetails')}</summary>
-        <div className="mt-3"><ActivityTracking /></div>
+        <div className="mt-3"><ActivityTracking onActivitiesChange={() => setSummaryVersion(value => value + 1)} /></div>
       </details>}
     </div>
   );

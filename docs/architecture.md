@@ -88,3 +88,7 @@ Product-code PRs should run `npm run build`. Run `npm run audit:exercise-coverag
 保留三個既有儲存來源並顯示來源。引導紀錄列為復健；肌力活動列為肌力，也可包含連結的復健紀錄。補記先採使用者明確的 strength／mobility 分類，再依既有 canonical ID 判定（catalogOnly 健身動作為肌力，其餘復健動作庫為復健）。缺失 ID 與舊 name-only 紀錄維持未分類，不從翻譯名稱推測。舊 cyclingMinutes 只加入同一筆補記的有氧標籤，不產生新騎車紀錄。
 
 每週紀錄筆數不是訓練 session 次數。有紀錄天數及各類別每天最多算一天，包含提前停止紀錄；混合分類可重疊，不能相加。這些呈現計數不影響疼痛／功能趨勢或安全推薦資格。
+
+
+### 每週目標與 Today 安排
+`rehab.trainingGoals.v1` 獨立保存三類個人每週天數意圖（0–7 或 null 未設定），未設定時不產生處方。進度沿用 Records 有紀錄天數，非完整 session 次數。Today 只讀既有 weekday 排程與今日來源／已知重訓分類，允許 Push 計畫與 Pull 實際不同，不改排程或安全推薦。損壞資料／寫入失敗不覆寫，清除本機資料包含此新鍵。

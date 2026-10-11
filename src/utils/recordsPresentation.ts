@@ -1,3 +1,4 @@
+import { exercises } from '../data/exercises';
 import type { Activity } from '../services/activityStorage';
 import type { ManualWorkout } from '../services/manualWorkoutStorage';
 import type { FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
@@ -7,10 +8,34 @@ export type RecordsActivityItem =
   | { id: string; source: 'activity'; date: string; activity: Activity }
   | { id: string; source: 'manual'; date: string; workout: ManualWorkout };
 
+export const TRAINING_CATEGORIES = ['rehab', 'strength', 'cardio', 'unknown'] as const;
+export type TrainingCategory = typeof TRAINING_CATEGORIES[number];
+const catalogById = new Map(exercises.map(exercise => [exercise.id, exercise]));
+
+export function recordCategories(item: RecordsActivityItem, logs: TrainingLogEntry[] = []): TrainingCategory[] {
+  if (item.source === 'training') return ['rehab'];
+  if (item.source === 'activity') {
+    if (item.activity.kind === 'cycling') return ['cardio'];
+    return item.activity.exerciseLogIds.some(id => logs.some(log => log.id === id))
+      ? ['rehab', 'strength'] : ['strength'];
+  }
+  const categories = item.workout.exercises.map((exercise): TrainingCategory => {
+    if (exercise.kind === 'strength') return 'strength';
+    if (exercise.kind === 'mobility') return 'rehab';
+    const canonical = exercise.exerciseId ? catalogById.get(exercise.exerciseId) : undefined;
+    if (!canonical) return 'unknown';
+    return canonical.catalogOnly ? 'strength' : 'rehab';
+  });
+  if (item.workout.cyclingMinutes !== undefined) categories.push('cardio');
+  return TRAINING_CATEGORIES.filter(category => categories.includes(category));
+}
+
 export interface RecordsPresentation {
   recentActivities: RecordsActivityItem[];
   days: { date: string; items: RecordsActivityItem[] }[];
   weeklyActivityCount: number;
+  weeklyActiveDays: number;
+  weeklyCategoryDays: Record<TrainingCategory, number>;
   hasActivityHistory: boolean;
   validOutcomes: FunctionalOutcomeEntry[];
 }
@@ -77,11 +102,17 @@ export function buildRecordsPresentation(
     byDay.set(day, [...(byDay.get(day) ?? []), item]);
   }
   const weekStart = startOfWeek(today);
+  const weeklyDays = [...byDay].filter(([date]) => new Date(`${date}T12:00:00`) >= weekStart);
+  const weeklyCategoryDays = Object.fromEntries(TRAINING_CATEGORIES.map(category => [
+    category, weeklyDays.filter(([, items]) => items.some(item => recordCategories(item, validLogs).includes(category))).length,
+  ])) as Record<TrainingCategory, number>;
 
   return {
     recentActivities,
     days: [...byDay].map(([date, items]) => ({ date, items })),
     weeklyActivityCount: recentActivities.filter(item => new Date(item.date) >= weekStart).length,
+    weeklyActiveDays: weeklyDays.length,
+    weeklyCategoryDays,
     hasActivityHistory: recentActivities.length > 0,
     validOutcomes: outcomes
       .filter(outcome => validDate(outcome.date, today))

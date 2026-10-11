@@ -17,7 +17,7 @@ import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
-import { buildRecordsPresentation } from '../utils/recordsPresentation';
+import { buildRecordsPresentation, recordCategories, TRAINING_CATEGORIES } from '../utils/recordsPresentation';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
   return (
@@ -92,7 +92,12 @@ export default function LogsPage() {
           <div className="space-y-3">
             {presentation.days.slice(0, 5).map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
               <h3 className="text-lg font-black text-ink">{day.date}</h3>
-              {day.items.map(item => item.source === 'training' ? (
+              {day.items.map(item => <div key={item.id} className="space-y-2">
+                <p className="flex flex-wrap gap-2 text-sm font-semibold text-calm-800">
+                  <span>{t(`records.sources.${item.source}`)}</span>
+                  {recordCategories(item, logs).map(category => <span key={category} className="rounded-md bg-calm-100 px-2 py-1">{t(`records.categories.${category}`)}</span>)}
+                </p>
+                {item.source === 'training' ? (
               <article key={item.id} className="card space-y-3 p-4">
                 <ExerciseIdentityVisual log={item.log} compact />
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
@@ -110,7 +115,7 @@ export default function LogsPage() {
                   return log ? <div key={id} className="mt-3 border-t border-slate-200 pt-3"><ExerciseIdentityVisual log={log} compact /><TrainingSetSummary sets={log.sets} /></div> : null;
                 })}
               </article>
-              ))}
+              )}</div>)}
             </section>)}
           </div>
         ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
@@ -121,6 +126,14 @@ export default function LogsPage() {
         <article className="card border-calm-200 bg-calm-50/80 p-5">
           <p className="text-3xl font-black text-ink">{t('records.week.count', { count: presentation.weeklyActivityCount })}</p>
           <p className="mt-2 text-sm leading-6 text-calm-800">{t('records.week.helper')}</p>
+          <p className="mt-3 font-bold text-ink">{t('records.week.activeDays', { count: presentation.weeklyActiveDays })}</p>
+          <dl className="mt-3 grid grid-cols-2 gap-3">
+            {TRAINING_CATEGORIES.map(category => <div key={category} className="rounded-md bg-white p-3">
+              <dt className="font-bold">{t(`records.categories.${category}`)}</dt>
+              <dd className="mt-1 text-sm">{t('records.week.categoryDays', { count: presentation.weeklyCategoryDays[category] })}</dd>
+            </div>)}
+          </dl>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{t('records.week.countingHint')}</p>
         </article>
       </section>
 

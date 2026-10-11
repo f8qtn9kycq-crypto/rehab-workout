@@ -1,5 +1,5 @@
 import ActivityTracking from '../components/ActivityTracking';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ClipboardList, ShieldCheck } from 'lucide-react';
 import { Navigate, Link } from 'react-router-dom';
 import { onboardingStorageKey } from '../data/safety';
 import { getSavedAssessment } from '../services/assessmentStorage';
@@ -41,8 +41,18 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
           {t(nextAction.ctaKey)}
           <ArrowRight size={20} aria-hidden="true" />
         </Link>
+        <div className="space-y-2 border-t border-slate-200 pt-4">
+          <Link to="/logs/new" className="focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-calm-700 px-4 py-3 font-bold text-calm-800">
+            <ClipboardList size={20} aria-hidden="true" />
+            {t('manualWorkout.entry')}
+          </Link>
+          <p className="text-sm leading-6 text-slate-600">{t('home.quickLogHint')}</p>
+        </div>
       </section>
-      {!demo && <ActivityTracking />}
+      {!demo && <details className="mx-auto max-w-xl">
+        <summary className="focus-ring min-h-11 cursor-pointer rounded-md px-3 py-3 font-bold text-calm-800">{t('home.activityDetails')}</summary>
+        <div className="mt-3"><ActivityTracking /></div>
+      </details>}
     </div>
   );
 }

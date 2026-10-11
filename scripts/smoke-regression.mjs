@@ -338,7 +338,10 @@ section('routine builder and education pages remain reachable', () => {
   assertIncludes(source.mobileNav, "to: '/routine'", 'routine reachable from mobile More');
   assertIncludes(source.desktopNav, "to: '/routine'", 'routine reachable on desktop');
   if (source.homePage.includes('WeeklyRoutineBuilder') || source.homePage.includes('home.summaryLabel')) fail('home must not render routine or summary clutter');
-  if ((source.homePage.match(/<Link\s/g) ?? []).length !== 1) fail('home must have exactly one primary link');
+  if ((source.homePage.match(/to=\{nextAction.href\}/g) ?? []).length !== 1) fail('home must keep exactly one primary next-action link');
+  assertIncludes(source.homePage, 'to="/logs/new"', 'retrospective Quick Log is reachable directly from Today');
+  assertIncludes(source.homePage, "t('home.quickLogHint')", 'Quick Log explains record-only boundary');
+  assertMatch(source.homePage, /<details[^>]*>[\s\S]*<ActivityTracking \/>[\s\S]*<\/details>/, 'activity form stays behind native disclosure');
   assertIncludes(source.weeklyRoutineBuilder, 'weeklyRoutines', 'routine definitions');
   assertIncludes(source.weeklyRoutineBuilder, "to={`/session/${exercise.id}`}", 'routine starts existing session route');
   assertIncludes(source.weeklyRoutineBuilder, "t('weeklyRoutine.sessionGuardHint')", 'routine includes safety guard hint');

@@ -40,7 +40,16 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
         {!legacyRevisedCatalog && hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
-        <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => `${set.warmup ? `${t('manualWorkout.warmup')} · ` : ''}${t('manualWorkout.setSummary', { number: setIndex + 1, weight: set.weightKg === undefined ? t('manualWorkout.noWeight') : t('manualWorkout.weightValue', { value: set.weightKg }), reps: set.reps })}`).join(' · ')}</p>
+        <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {
+          const prefix = set.warmup ? `${t('manualWorkout.warmup')} · ` : '';
+          if (set.durationSeconds !== undefined || set.holdSeconds !== undefined) {
+            const dose = [set.reps !== undefined ? t('manualWorkout.repsValue', { value: set.reps }) : null,
+              set.durationSeconds !== undefined ? t('manualWorkout.durationValue', { value: set.durationSeconds }) : null,
+              set.holdSeconds !== undefined ? t('manualWorkout.holdValue', { value: set.holdSeconds }) : null].filter(Boolean).join(' · ');
+            return `${prefix}${t('manualWorkout.setNumber', { number: setIndex + 1 })} · ${dose}${set.weightKg !== undefined ? ` · ${t('manualWorkout.weightValue', { value: set.weightKg })}` : ''}`;
+          }
+          return `${prefix}${t('manualWorkout.setSummary', { number: setIndex + 1, weight: set.weightKg === undefined ? t('manualWorkout.noWeight') : t('manualWorkout.weightValue', { value: set.weightKg }), reps: set.reps ?? t('manualWorkout.unknown') })}`;
+        }).join(' · ')}</p>
         {exercise.painBefore !== undefined && exercise.painAfter !== undefined && <p className="text-sm text-slate-600">{t('manualWorkout.painSummary', { before: exercise.painBefore, after: exercise.painAfter })}</p>}
         {exercise.effort !== undefined && <p className="text-sm text-slate-600">{t('manualWorkout.effortSummary', { effort: exercise.effort })}</p>}
       </div>;

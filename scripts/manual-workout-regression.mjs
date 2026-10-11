@@ -211,4 +211,24 @@ assert.equal(storage.saveManualWorkout({ ...workout, id: 'manual-2' }), 'corrupt
 assert.equal(values.get(storage.MANUAL_WORKOUT_KEY), '{broken');
 assert.ok(clearRehabLocalData().clearedKeys.includes(storage.MANUAL_WORKOUT_KEY));
 assert.equal(values.has(storage.MANUAL_WORKOUT_KEY), false);
+
+const dose = {...workout,id:'duration-only',cyclingMinutes:undefined,exercises:[{name:'Ankle mobility',exerciseId:'ankle-circles',equipment:'',sets:[{durationSeconds:60}]}]};
+assert.equal(storage.saveManualWorkout(dose),'ok','duration-only dose saves without fake reps');
+assert.deepEqual(storage.readManualWorkouts().workouts[0].exercises[0].sets,[{durationSeconds:60}]);
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].painBefore,undefined,'unknown pain stays unknown');
+assert.equal(storage.saveManualWorkout({...dose,id:'hold-only',exercises:[{...dose.exercises[0],sets:[{holdSeconds:30}]}]}),'ok');
+assert.equal(storage.saveManualWorkout({...dose,id:'combined',exercises:[{...dose.exercises[0],sets:[{reps:3,holdSeconds:30,durationSeconds:90}]}]}),'ok','optional combined dose remains readable');
+for(const invalid of [{},{durationSeconds:0},{holdSeconds:-1},{durationSeconds:1.5},{holdSeconds:86401},{durationSeconds:null},{reps:0,holdSeconds:30},{durationSeconds:'30'}]) {
+ const before=values.get(storage.MANUAL_WORKOUT_KEY);
+ assert.equal(storage.saveManualWorkout({...dose,id:'invalid-dose',exercises:[{...dose.exercises[0],sets:[invalid]}]}),'invalid',JSON.stringify(invalid));
+ assert.equal(values.get(storage.MANUAL_WORKOUT_KEY),before,'invalid dose cannot overwrite records');
+}
+assert.equal(storage.saveManualWorkout(dose),'invalid','duration duplicate ID blocked');
+const rawDose=values.get(storage.MANUAL_WORKOUT_KEY);
+window.localStorage.setItem=()=>{throw Error('quota')};
+assert.equal(storage.saveManualWorkout({...dose,id:'dose-write-failure'}),'write-failed');
+assert.equal(values.get(storage.MANUAL_WORKOUT_KEY),rawDose);
+window.localStorage.setItem=originalSetItem;
+for(const locale of [en,zhTW]) for(const key of ['doseMode','durationSeconds','holdSeconds','repsValue','durationValue','holdValue']) assert.equal(typeof locale.manualWorkout[key],'string',key);
+console.log('Actual dose regression passed: duration/hold/combined, bounds, no fake reps/pain, duplicate and write-failure preservation.');
 console.log('Manual workout regression passed: quick-picker art and locales, gym equipment readback, sets, dedupe, dates, corrupt/write-failed storage, Records count, and cleanup.');

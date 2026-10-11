@@ -12,7 +12,7 @@ import { getLocalizedExercise } from '../utils/localizedExercise';
 import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
-const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{ reps: 0 }] });
+const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{}] });
 const moreExerciseCatalog = catalog.filter(exercise => !quickExerciseCatalogIds.has(exercise.id));
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
@@ -28,6 +28,7 @@ export default function ManualWorkoutPage() {
   const navigate = useNavigate();
   const [date, setDate] = useState(localDate);
   const [exercises, setExercises] = useState<ManualExercise[]>([emptyExercise()]);
+  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(['reps']);
   const [selectedIds, setSelectedIds] = useState<string[]>(['']);
   const [equipmentIds, setEquipmentIds] = useState<string[]>(['']);
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
@@ -57,6 +58,7 @@ export default function ManualWorkoutPage() {
 
   function removeExercise(index: number) {
     setExercises(current => current.filter((_, position) => position !== index));
+    setDoseModes(current => current.filter((_, position) => position !== index));
     setSelectedIds(current => current.filter((_, position) => position !== index));
     setEquipmentIds(current => current.filter((_, position) => position !== index));
     setEditingExerciseIndex(current => current === index ? null : current !== null && current > index ? current - 1 : current);
@@ -118,17 +120,28 @@ export default function ManualWorkoutPage() {
           </details>
           </>}
         </div>
+        <label className="block text-sm font-bold">{t('manualWorkout.doseMode')}
+          <select className={control} value={doseModes[index]} onChange={event => {
+            const mode = event.target.value as 'reps' | 'durationSeconds' | 'holdSeconds';
+            setDoseModes(current => current.map((value, position) => position === index ? mode : value));
+            changeExercise(index, value => ({ ...value, sets: value.sets.map(({ reps, durationSeconds, holdSeconds, ...row }) => ({ ...row })) }));
+          }}>
+            <option value="reps">{t('manualWorkout.reps')}</option>
+            <option value="durationSeconds">{t('manualWorkout.durationSeconds')}</option>
+            <option value="holdSeconds">{t('manualWorkout.holdSeconds')}</option>
+          </select>
+        </label>
         {exercise.sets.map((set, setIndex) => <div key={setIndex} className="rounded-md bg-slate-50 p-3">
           <p className="mb-2 font-bold">{t('manualWorkout.setNumber', { number: setIndex + 1 })}</p>
           <div className="grid grid-cols-2 gap-3">
             <label className="text-sm font-bold">{t('manualWorkout.weight')}<input className={control} type="number" inputMode="decimal" min="0" max="1000" step="any" value={set.weightKg ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, weightKg: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
-            <label className="text-sm font-bold">{t('manualWorkout.reps')}<input className={control} type="number" inputMode="numeric" required min="1" max="1000" step="1" value={set.reps || ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, reps: Number(event.target.value) } : row) }))} /></label>
+            <label className="text-sm font-bold">{t(`manualWorkout.${doseModes[index]}`)}<input className={control} type="number" inputMode="numeric" required min="1" max={doseModes[index] === 'reps' ? 1000 : 86400} step="1" value={set[doseModes[index]] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, [doseModes[index]]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
           </div>
           <label className="mt-2 flex min-h-11 items-center gap-3 text-sm font-bold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, warmup: event.target.checked } : row) }))} />{t('manualWorkout.warmup')}</label>
           {exercise.sets.length > 1 && <button className="focus-ring mt-2 min-h-11 text-sm font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: value.sets.filter((_, position) => position !== setIndex) }))}>{t('manualWorkout.removeSet')}</button>}
         </div>)}
         <div className="flex flex-wrap gap-4">
-          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, { reps: 0 }] }))}>{t('manualWorkout.addSet')}</button>}
+          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, {}] }))}>{t('manualWorkout.addSet')}</button>}
           {exercises.length > 1 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => removeExercise(index)}>{t('manualWorkout.removeExercise')}</button>}
         </div>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{equipmentIds[index] ? t('manualWorkout.selectedEquipment', { name: t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) }) : t('manualWorkout.equipment')}</summary><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">{equipmentChoices.map(({ id, Icon }) => <button key={id} type="button" aria-pressed={equipmentIds[index] === id} onClick={() => chooseEquipment(index, id)} className={`focus-ring flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-xs font-bold ${equipmentIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={22} aria-hidden="true" /><span>{t(`manualWorkout.equipmentChoices.${id}`)}</span></button>)}</div></details>
@@ -143,7 +156,7 @@ export default function ManualWorkoutPage() {
           </div>
         </details>
       </fieldset>)}
-      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setExercises(current => [...current, emptyExercise()]); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
+      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
       <p className="rounded-md bg-calm-50 p-3 text-sm text-calm-800">{t('manualWorkout.cyclingSeparate')}</p>
       {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
       <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>

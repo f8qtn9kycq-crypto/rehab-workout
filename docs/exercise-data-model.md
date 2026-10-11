@@ -245,3 +245,7 @@ Audit output should help identify:
 - 週摘要可選取複製，無後端、跨裝置或 ChatGPT 自動同步。功能指標繼續使用 Records 既有獨立儲存與呈現。
 
 隔天回饋狀態區分：今天的活動為「尚待觀察」，不算應補未補；過去日期未填才算缺漏。已達週目標但今天仍有待觀察活動時維持，不直接進入小幅進展分支。
+
+## 補記復健實際劑量
+
+`rehab.manualWorkouts.v1` 的每組新增可選 `durationSeconds`／`holdSeconds`（整數 1–86400 秒），`reps` 改為可選；每組至少填一種實際劑量，次數仍限整數 1–1000，最多 20 組。原有 reps-only 紀錄不需轉換，含 duration／hold 的新紀錄不假填 reps。UI 一次選一種記錄方式，切換會清除目前劑量並明確告知；reader 可讀含多種劑量的紀錄。kg、暖身、成對可選 pain 與舊 ID 關係保留。此為已完成訓練補記，不改引導處方或安全推薦。

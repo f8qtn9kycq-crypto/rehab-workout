@@ -22,7 +22,7 @@ assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices
 assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
 assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
 assert.match(libraryArtSource, /<WorkoutMovementArt id=\{id\}/, 'library choices use the shared movement-art component');
-assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
+assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <div[^>]*><button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
 assert.match(pickerSource, /<details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3/, 'library art avoids duplicate horizontal padding so it matches quick-art width');
 assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/quickExerciseIds = \[([\s\S]*?)\] as const/);

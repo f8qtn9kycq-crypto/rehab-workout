@@ -1,3 +1,4 @@
+import FavoriteButton from '../components/FavoriteButton';
 import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -109,6 +110,7 @@ export default function ManualWorkoutPage() {
         <div>
           {selectedIds[index] && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
+            {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
@@ -118,16 +120,16 @@ export default function ManualWorkoutPage() {
               <div className="grid grid-cols-1 gap-3">
                 {group.exerciseIds.map(id => {
                   const catalogExercise = catalog.find(item => item.id === id);
-                  return catalogExercise ? <button key={id} type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+                  return catalogExercise ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
                     <WorkoutMovementArt id={id} loading="eager" />
                     <span>{getLocalizedExercise(catalogExercise, language).title}</span>
-                  </button> : null;
+                  </button><FavoriteButton id={id} title={getLocalizedExercise(catalogExercise, language).title} /></div> : null;
                 })}
               </div>
             </section>)}
           </div>
           <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
-            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <button key={item.id} type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button>)}</div>
+            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <div key={item.id}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
           </details>
           <RecordOnlyExercisePicker exercises={customState.exercises} storageError={customState.error}
             onSelect={exercise => chooseCustomExercise(index, exercise)}

@@ -1,3 +1,4 @@
+import HomeSavedPlans from '../components/HomeSavedPlans';
 import { useState } from 'react';
 import TodayGoalPlan from '../components/TodayGoalPlan';
 import ActivityTracking from '../components/ActivityTracking';
@@ -52,6 +53,7 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
           <p className="text-sm leading-6 text-slate-600">{t('home.quickLogHint')}</p>
         </div>
       </section>
+      {!demo && <HomeSavedPlans /> }
       {!demo && <TodayGoalPlan />}
       {!demo && <details className="mx-auto max-w-xl">
         <summary className="focus-ring min-h-11 cursor-pointer rounded-md px-3 py-3 font-bold text-calm-800">{t('home.activityDetails')}</summary>

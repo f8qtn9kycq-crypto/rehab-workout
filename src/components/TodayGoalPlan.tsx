@@ -18,7 +18,7 @@ export default function TodayGoalPlan() {
   const records = buildRecordsPresentation(getLogs(), activities.activities, [], new Date(), manual.workouts);
   const today = buildTodayPlan(plan.error ? [] : plan.days, records);
   return <section className="card mx-auto max-w-xl space-y-3 p-5" aria-labelledby="today-plan-title">
-    <h2 id="today-plan-title" className="text-xl font-bold">{t('goalPlan.title')}</h2>
+    <h2 id="today-plan-title" className="text-xl font-bold">{t('homePlans.progress')}</h2>
     <p>{t('goalPlan.planned')}: {plan.error ? t('goalPlan.unavailable') : today.planned.map(name => t(`activities.planNames.${name}`)).join(' · ') || t('activities.rest')}</p>
     <p>{t('goalPlan.actualFocus')}: {today.focuses.map(name => t(`goalPlan.focusNames.${name}`)).join(' · ') || t('goalPlan.noFocus')}</p>
     <p className="text-sm leading-6">{t('goalPlan.flexible')}</p>

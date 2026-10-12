@@ -36,12 +36,17 @@ export function renderMissing() { return renderToStaticMarkup(<I18nProvider><Exe
         const identity=app.renderIdentity(exercise,compact);
         assert.equal(identity.match(/<img[^>]*src="([^"]+)"/)?.[1],source,`same image for ${exercise.id}, ${language}, compact=${compact}`);
         assert(!identity.includes('/hip-sit-to-stand.svg'),'legacy pose must not replace library art');
+        if(exercise.id==='hip-sit-to-stand') {
+          assert(identity.includes('/exercise-visuals/hip-sit-to-stand-muscles.svg'),'canonical pose retains supplemental muscle map');
+          for(const label of (language==='en' ? ['Primary regions','Secondary regions','Glutes and front thighs','Trunk support and back thighs','diagonal stripes'] : ['主要訓練區域','輔助訓練區域','臀部與大腿前側','軀幹穩定與大腿後側','P 加斜線'])) assert(identity.includes(label),'supplemental muscle labels remain');
+        }
         comparisons++;
       }
       const record=app.renderLog(exercise);
       assert.equal(record.match(/<img[^>]*src="([^"]+)"/)?.[1],source,`saved log image for ${exercise.id}, ${language}`);
       const title=card.match(/<h3[^>]*>(.*?)<\/h3>/)?.[1];
       assert(title && record.includes(title),`saved log localized identity for ${exercise.id}, ${language}`);
+      if(exercise.id==='hip-sit-to-stand') assert(record.includes('/exercise-visuals/hip-sit-to-stand-muscles.svg'),'saved log preserves supplemental muscle map');
       assert(!record.includes('Stored title'),'known ID resolves current localized identity');
       comparisons++;
     }

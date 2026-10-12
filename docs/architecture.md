@@ -98,4 +98,7 @@ Product-code PRs should run `npm run build`. Run `npm run audit:exercise-coverag
 `rehab.savedRoutines.v1` 只保存名稱、routine ID 與有序 canonical exercise IDs；50 組、每組 20 個動作上限。讀取容許歷史缺失 IDs 並提示編輯替換，寫入只接受目前 canonical IDs，拒絕 custom record-only 動作。不自動推薦或一鍵啟動整套訓練；組合連到既有詳情頁，步驟／安全說明／原有 session gate 不變。保留三種 starter routines。損壞／quota 不覆寫，清除本機資料包含新鍵。
 
 ### 動作收藏
-`rehab.favoriteExercises.v1` 獨立保存 canonical IDs；保留歷史缺失 ID，損壞／quota 時不覆寫。圖片卡片下方提供收藏按鈕，Today 直接連到所有動作中的收藏；動作庫收藏是既有篩選結果的子集合，不改推薦資格或安全規則。取消收藏不刪除紀錄、目標或常用組合，清除本機資料包含此新鍵。每週目標表單直接顯示於 Today，不需要展開選單。
+`rehab.favoriteExercises.v1` 獨立保存 canonical IDs；保留歷史缺失 ID，損壞／quota 時不覆寫。圖片卡片下方提供收藏按鈕，Today 的收藏入口連到 `/routine#saved-routine-title` 的收藏清單，空狀態連到動作庫；動作庫收藏是既有篩選結果的子集合，不改推薦資格或安全規則。取消收藏不刪除紀錄、目標或常用組合，清除本機資料包含此新鍵。每週目標表單位於 Today 本週進度區塊，透過 details 展開編輯。
+
+
+最新版頁面／圖片與使用阻力盤點見 [2026-10-13 UX 現況報告](ux-current-state-2026-10-13.md)；它是指定 main SHA 的盤點快照，不代表後續改善已實作。

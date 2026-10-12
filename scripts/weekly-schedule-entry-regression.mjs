@@ -39,6 +39,7 @@ export function render(path) { return renderToStaticMarkup(<MemoryRouter initial
    assert(html.includes('data-weekly-schedule-editor'),'inner editor exists');
    assert.equal((html.match(/<select/g)||[]).length>=7,true,'existing date selects are available');
   }
+  assert(app.render('/routine?new=1').includes('href="/routine?new=1#weekly-schedule"'),'new routine query is retained by the same-page date link');
   assert(routine.includes('Preserved routine'),'existing saved routine remains visible');
   assert.equal(JSON.stringify([...values]),before,'render/navigation entry does not write existing storage');
  }

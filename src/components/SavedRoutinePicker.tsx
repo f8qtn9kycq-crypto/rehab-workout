@@ -3,7 +3,7 @@ import { readFavorites } from '../services/favoriteStorage';
 import FavoriteButton from './FavoriteButton';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { exercises } from '../data/exercises';
 import { useI18n } from '../services/i18n';
 import { readSavedRoutines, routineId, saveRoutine, type SavedRoutine } from '../services/savedRoutineStorage';
@@ -13,6 +13,7 @@ const emptyRoutine = (): SavedRoutine => ({ id: routineId(), name: '', exerciseI
 export default function SavedRoutinePicker() {
   const { t, language } = useI18n();
   const [params] = useSearchParams();
+  const { hash } = useLocation();
   const editor = useRef<HTMLDetailsElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
   const [favorites, setFavorites] = useState(readFavorites);
@@ -33,7 +34,8 @@ export default function SavedRoutinePicker() {
     if (params.get('new') === '1') setDraft(emptyRoutine());
     if (routine || params.get('new') === '1') {
       if (editor.current) editor.current.open = true;
-      requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); });
+      // The date-editor deep link owns focus; hash changes must not reset this draft.
+      if (hash !== '#weekly-schedule') requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); });
     }
   }, [params]);
   const label = (id: string) => { const exercise = catalog.get(id); return exercise ? getLocalizedExercise(exercise, language).title : t('savedRoutine.missing', { id }); };

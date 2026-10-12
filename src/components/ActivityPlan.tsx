@@ -18,7 +18,12 @@ export function revealWeeklyScheduleEditor() {
 export default function ActivityPlan({ onChange = () => {} }: { onChange?: () => void }) {
   const { t } = useI18n();
   const { hash } = useLocation();
-  useEffect(() => { if (hash === '#weekly-schedule') revealWeeklyScheduleEditor(); }, [hash]);
+  useEffect(() => {
+    if (hash !== '#weekly-schedule') return;
+    // Wait for the initial fragment jump before moving focus into the opened editor.
+    const frame = requestAnimationFrame(revealWeeklyScheduleEditor);
+    return () => cancelAnimationFrame(frame);
+  }, [hash]);
   const [plan, setPlan] = useState(readActivityPlan);
   const [failed, setFailed] = useState(false);
   const names = ['lower', 'push', 'pull', 'cycling', 'cycling', 'cycling', 'cycling'];

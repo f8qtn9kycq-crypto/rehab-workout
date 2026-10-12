@@ -5,6 +5,7 @@ import { getExerciseById } from '../utils/exerciseModel';
 import { getLocalizedExercise, getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import { useI18n } from '../services/i18n';
 import BodyAreaIcon from './BodyAreaIcon';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 
 const SUPPORTED_VISUALS: Partial<Record<string, { pose: string; muscles: string; primary: string; secondary: string }>> = {
   'hip-sit-to-stand': { pose: '/exercise-visuals/hip-sit-to-stand.svg', muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg', primary: 'exerciseVisual.sitToStandPrimary', secondary: 'exerciseVisual.sitToStandSecondary' },
@@ -30,7 +31,7 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
       {bodyArea ? <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-calm-800"><BodyAreaIcon area={bodyArea} size={18} /><span>{t('exerciseVisual.targetArea', { area: t(`bodyAreas.${bodyArea}.label`) })}</span></p> : null}
       <p className="mt-1 flex items-start gap-2 break-words text-sm text-slate-600"><Dumbbell size={16} className="mt-0.5 shrink-0" aria-hidden="true" /><span>{t('exerciseVisual.equipment', { equipment: equipment.length > 0 ? equipment.map(item => t(`equipmentLabels.${item}`)).join(t('progress.areaSeparator')) : t('equipmentLabels.bodyweight') })}</span></p>
     </div>
-    {visuals ? <>
+    {hasWorkoutMovementArt(sourceExercise?.id) ? <div className="mt-3"><WorkoutMovementArt id={sourceExercise.id} /></div> : visuals ? <>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {[
           { kind: 'pose', src: visuals.pose, label: t('exerciseVisual.poseLabel'), alt: t('exerciseVisual.poseAlt', { exercise: name }) },

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+import { revealWeeklyScheduleEditor } from './ActivityPlan';
 import { useState } from 'react';
 import { useI18n } from '../services/i18n';
 import { readActivities, readActivityPlan } from '../services/activityStorage';
@@ -20,6 +22,7 @@ export default function TodayGoalPlan() {
   return <section className="card mx-auto max-w-xl space-y-3 p-5" aria-labelledby="today-plan-title">
     <h2 id="today-plan-title" className="text-xl font-bold">{t('homePlans.progress')}</h2>
     <p>{t('goalPlan.planned')}: {plan.error ? t('goalPlan.unavailable') : today.planned.map(name => t(`activities.planNames.${name}`)).join(' · ') || t('activities.rest')}</p>
+    <Link to="/#weekly-schedule" onClick={revealWeeklyScheduleEditor} className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('weeklySchedule.edit')}</Link>
     <p>{t('goalPlan.actualFocus')}: {today.focuses.map(name => t(`goalPlan.focusNames.${name}`)).join(' · ') || t('goalPlan.noFocus')}</p>
     <p className="text-sm leading-6">{t('goalPlan.flexible')}</p>
     <p className="text-sm">{today.sources.map(({ source, count }) => `${t(`records.sources.${source}`)}: ${count}`).join(' · ')}</p>

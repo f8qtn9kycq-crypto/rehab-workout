@@ -5,6 +5,7 @@ import { getExerciseById } from '../utils/exerciseModel';
 import { getLocalizedExercise, getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import { useI18n } from '../services/i18n';
 import BodyAreaIcon from './BodyAreaIcon';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 
 const SUPPORTED_VISUALS: Partial<Record<string, { pose: string; muscles: string; primary: string; secondary: string }>> = {
   'hip-sit-to-stand': { pose: '/exercise-visuals/hip-sit-to-stand.svg', muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg', primary: 'exerciseVisual.sitToStandPrimary', secondary: 'exerciseVisual.sitToStandSecondary' },
@@ -20,6 +21,7 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
   const name = localizedExercise?.title ?? (log ? getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback')) : t('logs.savedExerciseFallback'));
   const bodyArea = sourceExercise?.bodyArea ?? log?.bodyArea;
   const equipment = localizedExercise?.equipment ?? [];
+  const hasCanonicalArt = hasWorkoutMovementArt(sourceExercise?.id);
   const visuals = sourceExercise ? SUPPORTED_VISUALS[sourceExercise.id] : undefined;
   const failed = (kind: string) => failedVisuals.includes(kind);
   const markFailed = (kind: string) => setFailedVisuals(current => current.includes(kind) ? current : [...current, kind]);
@@ -30,12 +32,13 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
       {bodyArea ? <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-calm-800"><BodyAreaIcon area={bodyArea} size={18} /><span>{t('exerciseVisual.targetArea', { area: t(`bodyAreas.${bodyArea}.label`) })}</span></p> : null}
       <p className="mt-1 flex items-start gap-2 break-words text-sm text-slate-600"><Dumbbell size={16} className="mt-0.5 shrink-0" aria-hidden="true" /><span>{t('exerciseVisual.equipment', { equipment: equipment.length > 0 ? equipment.map(item => t(`equipmentLabels.${item}`)).join(t('progress.areaSeparator')) : t('equipmentLabels.bodyweight') })}</span></p>
     </div>
+    {hasCanonicalArt && sourceExercise ? <div className="mt-3"><WorkoutMovementArt id={sourceExercise.id} /></div> : null}
     {visuals ? <>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {[
           { kind: 'pose', src: visuals.pose, label: t('exerciseVisual.poseLabel'), alt: t('exerciseVisual.poseAlt', { exercise: name }) },
           { kind: 'muscles', src: visuals.muscles, label: t('exerciseVisual.muscleMapLabel'), alt: t('exerciseVisual.muscleMapAlt', { exercise: name }) },
-        ].map(item => <figure key={item.kind} className="min-w-0 rounded-lg bg-white p-2">
+        ].filter(item => item.kind !== 'pose' || !hasCanonicalArt).map(item => <figure key={item.kind} className="min-w-0 rounded-lg bg-white p-2">
           <figcaption className="mb-1 text-xs font-black text-slate-700">{item.label}</figcaption>
           <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-slate-50">
             {!failed(item.kind) ? <img src={item.src} alt={item.alt} onError={() => markFailed(item.kind)} className="h-full w-full object-contain" /> : <div className="flex flex-col items-center gap-1 text-calm-700" role="img" aria-label={t('exerciseVisual.fallbackAlt', { exercise: name, visual: item.label })}>
@@ -50,6 +53,6 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
         <p className="rounded-md bg-white p-2"><span className="font-black">{t('exerciseVisual.secondaryLabel')}:</span> {t(visuals.secondary)}</p>
       </div>
       <p className="mt-2 text-xs leading-5 text-slate-600">{t('exerciseVisual.patternLegend')}</p>
-    </> : <div className="mt-3 flex aspect-[4/3] max-w-28 items-center justify-center rounded-lg bg-white text-calm-700" role="img" aria-label={t('exerciseVisual.fallbackAlt', { exercise: name, visual: t('exerciseVisual.poseLabel') })}><PersonStanding size={28} aria-hidden="true" /><Armchair size={22} aria-hidden="true" /></div>}
+    </> : hasCanonicalArt ? null : <div className="mt-3 flex aspect-[4/3] max-w-28 items-center justify-center rounded-lg bg-white text-calm-700" role="img" aria-label={t('exerciseVisual.fallbackAlt', { exercise: name, visual: t('exerciseVisual.poseLabel') })}><PersonStanding size={28} aria-hidden="true" /><Armchair size={22} aria-hidden="true" /></div>}
   </div>;
 }

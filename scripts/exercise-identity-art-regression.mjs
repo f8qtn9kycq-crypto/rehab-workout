@@ -15,6 +15,7 @@ import ExerciseIdentityVisual from '../src/components/ExerciseIdentityVisual';
 export { exercises } from '../src/data/exercises';
 export function renderCard(exercise) { return renderToStaticMarkup(<MemoryRouter><I18nProvider><ExerciseCard exercise={exercise} /></I18nProvider></MemoryRouter>); }
 export function renderIdentity(exercise, compact=false) { return renderToStaticMarkup(<I18nProvider><ExerciseIdentityVisual exercise={exercise} compact={compact} /></I18nProvider>); }
+export function renderLog(exercise) { return renderToStaticMarkup(<I18nProvider><ExerciseIdentityVisual log={{exerciseId:exercise.id,title:'Stored title',bodyArea:exercise.bodyArea}} compact /></I18nProvider>); }
 export function renderMissing() { return renderToStaticMarkup(<I18nProvider><ExerciseIdentityVisual log={{exerciseId:'removed-exercise',exerciseTitle:'Legacy exercise',bodyArea:'hip'}} /></I18nProvider>); }
 `);
   const result = await build({configFile:false,logLevel:'silent',build:{ssr:entry,write:false}});
@@ -37,6 +38,12 @@ export function renderMissing() { return renderToStaticMarkup(<I18nProvider><Exe
         assert(!identity.includes('/hip-sit-to-stand.svg'),'legacy pose must not replace library art');
         comparisons++;
       }
+      const record=app.renderLog(exercise);
+      assert.equal(record.match(/<img[^>]*src="([^"]+)"/)?.[1],source,`saved log image for ${exercise.id}, ${language}`);
+      const title=card.match(/<h3[^>]*>(.*?)<\/h3>/)?.[1];
+      assert(title && record.includes(title),`saved log localized identity for ${exercise.id}, ${language}`);
+      assert(!record.includes('Stored title'),'known ID resolves current localized identity');
+      comparisons++;
     }
     const missing=app.renderMissing();
     assert(!missing.includes('<img'),'missing catalog record does not borrow another exercise image');

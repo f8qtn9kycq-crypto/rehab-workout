@@ -1,6 +1,8 @@
 import { Clock, Dumbbell, Layers3, MapPin, PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import SavedRoutineReturnLink from '../components/SavedRoutineReturnLink';
+import { getSavedRoutineContext } from '../utils/savedRoutineNavigation';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
@@ -22,6 +24,7 @@ export default function ExerciseDetailPage() {
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
+  const routine = getSavedRoutineContext(location.search, exercise.id);
   const displayExercise = getLocalizedExercise(exercise, language);
   const stopRules = displayExercise.stopRules.length > 0 ? displayExercise.stopRules : [t('detail.defaultStopRule')];
   const regressions = displayExercise.regressions.length > 0 ? displayExercise.regressions : [t('detail.defaultStopRule')];
@@ -52,6 +55,7 @@ export default function ExerciseDetailPage() {
           ))}
         </nav>
       </div>
+      <SavedRoutineReturnLink exerciseId={exercise.id} />
       <section id="overview" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-5 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionOverview')}</h2>
         <div className="flex flex-wrap gap-2 text-sm font-semibold">
@@ -138,7 +142,7 @@ export default function ExerciseDetailPage() {
             ))}
           </div>
         </div>
-        <Link to={`/session/${exercise.id}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
+        <Link to={`/session/${exercise.id}${routine ? `?routine=${encodeURIComponent(routine.id)}` : ''}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
           {t('detail.startSession')}
         </Link>
       </section>}

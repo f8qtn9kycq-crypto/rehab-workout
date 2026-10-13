@@ -38,6 +38,17 @@ export default function SavedRoutinePicker() {
       if (hash !== '#weekly-schedule') requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); });
     }
   }, [params]);
+  useEffect(() => {
+    // Navigation owns card focus; routine saves must leave focus in the editor.
+    const routine = readSavedRoutines().routines.find(item => `#${item.id}` === hash);
+    if (!routine) return;
+    const frame = requestAnimationFrame(() => {
+      const card = document.getElementById(routine.id);
+      card?.focus({ preventScroll: true });
+      card?.scrollIntoView({ block: 'start' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [hash]);
   const label = (id: string) => { const exercise = catalog.get(id); return exercise ? getLocalizedExercise(exercise, language).title : t('savedRoutine.missing', { id }); };
   const button = 'focus-ring min-h-11 rounded-md border border-calm-700 px-3 py-2 font-bold text-calm-800';
   function move(index: number, direction: number) {
@@ -62,10 +73,10 @@ export default function SavedRoutinePicker() {
       </article>)}
     </div>
     {state.error && <p role="alert" className="text-red-800">{t('savedRoutine.readError')}</p>}
-    {state.routines.map(routine => <article key={routine.id} className="space-y-2 rounded-md bg-slate-50 p-3">
+    {state.routines.map(routine => <article key={routine.id} id={routine.id} tabIndex={-1} className="focus-ring scroll-mt-24 space-y-2 rounded-md bg-slate-50 p-3">
       <h3 className="break-words font-bold">{routine.name}</h3>
       <ol className="list-inside list-decimal space-y-2">{routine.exerciseIds.map(id => <li key={id} className="break-words">
-        {catalog.has(id) ? <Link className="focus-ring inline-flex min-h-11 items-center underline" to={`/exercise/${id}?mode=all`}>{label(id)}</Link> : <span role="status">{label(id)}</span>}
+        {catalog.has(id) ? <Link className="focus-ring inline-flex min-h-11 items-center underline" to={`/exercise/${id}?mode=all&routine=${encodeURIComponent(routine.id)}`}>{label(id)}</Link> : <span role="status">{label(id)}</span>}
       </li>)}</ol>
       <button type="button" className={button} onClick={() => { setDraft({ ...routine, exerciseIds: [...routine.exerciseIds] }); setSelected(''); setMessage(null); if (editor.current) editor.current.open = true; requestAnimationFrame(() => { nameInput.current?.focus(); nameInput.current?.scrollIntoView({ block: 'center' }); }); }}>{t('savedRoutine.edit')}</button>
     </article>)}

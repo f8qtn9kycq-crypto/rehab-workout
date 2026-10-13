@@ -12,6 +12,7 @@ export default {
   },
 
   savedRoutine: {
+    returnTo: 'Back to routine: {name}',
     "title": "My saved routines",
     "hint": "Save official exercise IDs in your chosen order. A saved routine is quick access, not a safety recommendation. Open an exercise to read its steps and safety notes; existing safety checks still apply. Private record-only movements are not included.",
     "readError": "Saved routines could not be read. Existing data was preserved.",

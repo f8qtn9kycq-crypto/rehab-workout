@@ -52,7 +52,7 @@ export default function ExerciseDetailPage() {
           ))}
         </nav>
       </div>
-      <section id="overview" className="card scroll-mt-40 space-y-5 p-4">
+      <section id="overview" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-5 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionOverview')}</h2>
         <div className="flex flex-wrap gap-2 text-sm font-semibold">
           <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
@@ -83,7 +83,7 @@ export default function ExerciseDetailPage() {
           <p className="mt-3"><strong>{t('detail.benefits')}:</strong> {displayExercise.benefits}</p>
         </div>
       </section>
-      <section id="steps" className="card scroll-mt-40 p-4">
+      <section id="steps" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionSteps')}</h2>
         <ol className="mt-3 space-y-2">
           {displayExercise.steps.map((step, index) => (
@@ -91,7 +91,7 @@ export default function ExerciseDetailPage() {
           ))}
         </ol>
       </section>
-      <section id="safety" className="card scroll-mt-40 space-y-4 p-4">
+      <section id="safety" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionSafety')}</h2>
         <div>
           <h3 className="font-bold text-slate-900">{t('detail.safetyCautions')}</h3>
@@ -106,7 +106,7 @@ export default function ExerciseDetailPage() {
           </ul>
         </div>
       </section>
-      <section id="adjustments" className="card scroll-mt-40 space-y-4 p-4">
+      <section id="adjustments" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionAdjustments')}</h2>
         <div>
           <h3 className="font-bold text-slate-900">{t('detail.regressions')}</h3>
@@ -123,7 +123,7 @@ export default function ExerciseDetailPage() {
           </div>
         ) : null}
       </section>
-      {!exercise.catalogOnly && <section id="start" className="card scroll-mt-40 space-y-4 p-4">
+      {!exercise.catalogOnly && <section id="start" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionStart')}</h2>
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <div className="rounded-md bg-slate-50 p-2"><strong className="block text-xl">{exercise.sets}</strong>{t('exercises.setsUnit')}</div>

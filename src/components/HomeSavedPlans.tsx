@@ -25,7 +25,7 @@ export default function HomeSavedPlans() {
         <summary className="focus-ring min-h-11 cursor-pointer break-words py-2 font-bold">{plan.name} · {t('homePlans.count', { count: plan.exerciseIds.length })}</summary>
         <ol className="list-inside list-decimal space-y-2">{plan.exerciseIds.map(id => {
           const exercise = catalog.get(id);
-          return <li key={id} className="break-words">{exercise ? <Link className={link} to={`/exercise/${id}?mode=all`}>{getLocalizedExercise(exercise, language).title}</Link> : <span>{t('savedRoutine.missing', { id })}</span>}</li>;
+          return <li key={id} className="break-words">{exercise ? <Link className={link} to={`/exercise/${id}?mode=all&routine=${encodeURIComponent(plan.id)}`}>{getLocalizedExercise(exercise, language).title}</Link> : <span>{t('savedRoutine.missing', { id })}</span>}</li>;
         })}</ol>
         <Link className={link} to={`/routine?edit=${encodeURIComponent(plan.id)}`}>{t('savedRoutine.edit')}</Link>
       </details>)}

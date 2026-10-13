@@ -106,3 +106,6 @@ Product-code PRs should run `npm run build`. Run `npm run audit:exercise-coverag
 
 
 最新版頁面／圖片與使用阻力盤點見 [2026-10-13 UX 現況報告](ux-current-state-2026-10-13.md)；它是指定 main SHA 的盤點快照，不代表後續改善已實作。F1 日期入口後續由 #207 交付；現況以本文件日期入口段落與最新程式為準。
+
+### 常用組合返回來源
+從首頁／組合清單進入詳情時，以 URL `routine` ID 保留來源，開始單一動作時沿用該 query；SafetyRouteGuard 已保留 search，無 guard 修改。詳情與成功儲存畫面提供回原組合，只在目前 reader 可讀且該組合仍含目前動作時顯示；無新 key、跨動作完成狀態或自動續做。返回 `/routine#<routine-id>` 聚焦對應卡片並沿用原順序，下一動作由使用者自行選取並再次經既有獨立安全／疼痛流程。停止或症狀加劇不自動指派下一動作，儲存失敗不顯示成功返回入口。

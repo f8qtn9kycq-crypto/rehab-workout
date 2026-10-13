@@ -13,6 +13,7 @@ import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
 import TrainingSetEditor from './TrainingSetEditor';
 import ExerciseIdentityVisual from './ExerciseIdentityVisual';
+import SavedRoutineReturnLink from './SavedRoutineReturnLink';
 import TrainingSetSummary from './TrainingSetSummary';
 
 interface SessionTrackerProps {
@@ -350,6 +351,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               {t('session.painAfterWarning')}
             </div>
           ) : null}
+          <SavedRoutineReturnLink exerciseId={exercise.id} />
           <div>
             <button
               type="button"

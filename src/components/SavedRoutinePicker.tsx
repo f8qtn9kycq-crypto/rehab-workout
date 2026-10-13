@@ -39,7 +39,8 @@ export default function SavedRoutinePicker() {
     }
   }, [params]);
   useEffect(() => {
-    const routine = state.routines.find(item => `#${item.id}` === hash);
+    // Navigation owns card focus; routine saves must leave focus in the editor.
+    const routine = readSavedRoutines().routines.find(item => `#${item.id}` === hash);
     if (!routine) return;
     const frame = requestAnimationFrame(() => {
       const card = document.getElementById(routine.id);
@@ -47,7 +48,7 @@ export default function SavedRoutinePicker() {
       card?.scrollIntoView({ block: 'start' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [hash, state.routines]);
+  }, [hash]);
   const label = (id: string) => { const exercise = catalog.get(id); return exercise ? getLocalizedExercise(exercise, language).title : t('savedRoutine.missing', { id }); };
   const button = 'focus-ring min-h-11 rounded-md border border-calm-700 px-3 py-2 font-bold text-calm-800';
   function move(index: number, direction: number) {

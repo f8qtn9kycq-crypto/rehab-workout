@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { useI18n } from '../services/i18n';
 import { getExerciseById, getExerciseEquipment } from '../utils/exerciseModel';
 import { getLocalizedExercise } from '../utils/localizedExercise';
@@ -67,6 +68,11 @@ export default function ExerciseDetailPage() {
           <p className="mt-2 text-lg text-slate-600">{displayExercise.description}</p>
           {exercise.catalogOnly && <p className="mt-3 rounded-md bg-calm-100 p-3 font-semibold text-calm-800">{t('detail.catalogOnlyNotice')}</p>}
         </div>
+        {hasWorkoutMovementArt(exercise.id) && (
+          <div className="mx-auto w-full max-w-sm">
+            <WorkoutMovementArt id={exercise.id} loading="eager" />
+          </div>
+        )}
         <YouTubeEmbed title={displayExercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
         <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
           <PlayCircle size={20} />

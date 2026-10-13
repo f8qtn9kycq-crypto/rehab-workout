@@ -1,4 +1,5 @@
 export default {
+  weeklySchedule: { edit: 'Edit weekly dates', explanation: 'Weekly dates set when you intend to train. Saved routines below keep exercises in your chosen order; saving a routine does not assign it to a date or start a workout.' },
   homePlans: { title: 'My plans', empty: 'No plans yet. Bookmark exercises, then arrange them in a plan.', count: '{count} exercises', all: 'View all', create: 'Create a plan', fromFavorites: 'Create a plan from favorites', favorites: '★ Favorites · {count} exercises', find: 'Browse and bookmark exercises', progress: 'This week’s progress', back: 'View plans on Today', },
 
   favorites: {

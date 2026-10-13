@@ -101,4 +101,8 @@ Product-code PRs should run `npm run build`. Run `npm run audit:exercise-coverag
 `rehab.favoriteExercises.v1` 獨立保存 canonical IDs；保留歷史缺失 ID，損壞／quota 時不覆寫。圖片卡片下方提供收藏按鈕，Today 的收藏入口連到 `/routine#saved-routine-title` 的收藏清單，空狀態連到動作庫；動作庫收藏是既有篩選結果的子集合，不改推薦資格或安全規則。取消收藏不刪除紀錄、目標或常用組合，清除本機資料包含此新鍵。每週目標表單位於 Today 本週進度區塊，透過 details 展開編輯。
 
 
-最新版頁面／圖片與使用阻力盤點見 [2026-10-13 UX 現況報告](ux-current-state-2026-10-13.md)；它是指定 main SHA 的盤點快照，不代表後續改善已實作。
+### 每週日期安排入口
+首頁本週進度的「編輯每週日期安排」以 `/#weekly-schedule` 同頁定位既有 ActivityPlan，展開活動細節、排程與日期編輯並聚焦第一個欄位。`/routine` 亦重用 ActivityPlan，提供同頁 `#weekly-schedule` 入口與日期／動作組合用途說明；hash 不重設組合或目標草稿。沿用 `rehab.weeklyActivityPlan.v1` 與既有 saveActivityPlan，星期選項立即保存、不改預設或 safety／recommendation。相同 hash 再次點擊也能展開。
+
+
+最新版頁面／圖片與使用阻力盤點見 [2026-10-13 UX 現況報告](ux-current-state-2026-10-13.md)；它是指定 main SHA 的盤點快照，不代表後續改善已實作。F1 日期入口後續由 #207 交付；現況以本文件日期入口段落與最新程式為準。

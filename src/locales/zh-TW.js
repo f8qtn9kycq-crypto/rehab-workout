@@ -1,4 +1,5 @@
 export default {
+  weeklySchedule: { edit: '編輯每週日期安排', explanation: '日期安排決定預計哪天訓練；下方的常用組合保存動作順序。儲存組合不會指定日期，也不會直接開始訓練。' },
   homePlans: { title: '我的計畫', empty: '尚未建立計畫。先收藏喜歡的動作，再安排順序。', count: '{count} 個動作', all: '查看全部', create: '建立計畫', fromFavorites: '從收藏建立計畫', favorites: '★ 收藏 · {count} 個動作', find: '到動作庫挑選並收藏', progress: '本週進度', back: '回 Today 查看計畫', },
 
   favorites: {

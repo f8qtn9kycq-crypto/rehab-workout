@@ -114,8 +114,8 @@ The skill keeps product decisions in the GitHub issue and repo docs, while Codex
 
 - Tier 0: docs / copy / small CSS. Codex review is usually enough.
 - Tier 1: mobile UX / i18n / navigation. Codex review is usually enough unless findings conflict.
-- Tier 2: safety / session / storage / routing. Claude review is recommended.
-- Tier 3: architecture / data migration / security. Split scope if possible and require stronger review.
+- Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更. Claude review is recommended.
+- Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更. 範圍過大時拆分；Codex、Claude 審查必要，ChatGPT PM synthesis 合併前必要。
 
 ## Guardrails
 

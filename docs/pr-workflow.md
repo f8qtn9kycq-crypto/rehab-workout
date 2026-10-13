@@ -42,7 +42,7 @@ Before implementation:
 
 ## Risk Tiers
 
-Use the PR template as source of truth.
+風險分級與審查路由以 `AGENTS.md`、`REVIEW.md` 與 `.github/ai-automation.yml` 為契約，PR template 用於記錄適用項目及證據。純文件描述現有行為為 Tier 0；產品變更依最高受影響風險分級。
 
 ### Tier 0 — Docs / workflow only
 
@@ -76,11 +76,11 @@ Expected evidence:
 - mobile QA notes when UX changes
 - confirmation no safety behavior changed
 
-### Tier 2 — State / routing / session / LocalStorage
+### Tier 2 — 安全相關流程／state／routing／session／storage
 
 Examples:
 
-- session flow
+- session flow（不含安全邏輯變更）
 - route guards
 - LocalStorage behavior
 - recommendation filtering
@@ -92,24 +92,22 @@ Expected evidence:
 - relevant test or manual QA
 - safety regression check
 - iOS Safari / SPA routing consideration
-- Claude review recommended when risk is meaningful
+- Codex 審查必要；Claude 建議，衝突或 merge gate 時建議 ChatGPT PM synthesis
 
-### Tier 3 — Safety / recommendation safety / exercise content
+### Tier 3 — 架構／資料遷移／安全性／安全邏輯／推薦安全／動作內容
 
 Examples:
 
-- SafetyGate
-- PainScale
-- red-flag behavior
-- Recovery Mode
-- recommendation safety logic
-- exercise content additions
+- 架構變更、資料遷移或安全性變更
+- SafetyGate、PainScale、red flags 或 Recovery Mode 的安全邏輯
+- 推薦安全規則
+- 動作內容變更
 
 Expected evidence:
 
 - build result
 - relevant audit/test result
-- safety review
+- Codex 與 Claude 審查必要，ChatGPT PM synthesis 合併前必要；結果綁定精確 head
 - no diagnosis/cure claims
 - stricter merge gate
 
@@ -126,15 +124,11 @@ evidence that either reviewer completed its work.
 
 ## Sole-contributor approval policy
 
-For this repository, the default human-approval path is conditional on the live
-GitHub collaborator list. If exactly one contributor exists and the PR author is
-that contributor, GitHub self-approval may be impossible. The delivery record
-may use a human walkthrough comment tied to the exact head SHA as human approval
-evidence, but must still include the Claude review, ChatGPT PM synthesis,
-current-head checks, review-thread state, mergeability, and all product safety
-gates. The record must say that it is evidence, not a formal GitHub approval.
+每次交付前核對即時 collaborator 清單及 PR author。只有 collaborator 恰為一人、且 PR author 為該人時，才適用 sole-contributor 政策；無法查證時不得推定符合條件。
 
-If collaborator count changes, require an independent formal human review again.
+Tier 0–2 不以作者無法 self-approve 作為預設阻塞；仍需適用的 AI 審查、精確 head checks、無 active requested changes／blocking threads、clean mergeability 及驗收通過。Tier 3 保留必要 Claude 審查與 ChatGPT PM synthesis。真人 walkthrough 依 `AGENTS.md`／`REVIEW.md` 的安全邏輯、破壞性或不可逆資料遷移、安全敏感行為、無法可靠自動驗證或明確驗收需求判定，並綁定精確 head。
+
+AI 或 walkthrough 結果不得宣稱為正式 GitHub `APPROVE`；條件不符或新增 collaborator 時，遵循實際 branch protection、ruleset 與 requested-review 要求，不另設一律真人核准的門檻。
 
 ## PR Template Evidence
 
@@ -179,6 +173,8 @@ Do not include P2 wishlist items unless explicitly requested.
 ## Merge Gate
 
 Before merge, confirm:
+
+- 依 `REVIEW.md` 的精確 head gate 核對 SHA、required Check Runs／GitHub App、reviews／threads、Draft、mergeability 及授權；每次 head 改變後重新驗證
 
 - no P0 remains
 - P1 findings are fixed or explicitly deferred

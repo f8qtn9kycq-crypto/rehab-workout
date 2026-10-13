@@ -66,14 +66,14 @@ The issue should include risk tier, goal, user problem, scope, likely files, saf
 Shortcut risk tiers:
 - Tier 0: docs / copy / small CSS
 - Tier 1: mobile UX / i18n / navigation
-- Tier 2: safety / session / storage / routing
-- Tier 3: architecture / data migration / security
+- Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更
+- Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更
 
 Default safety constraints for product tasks:
 - Do not change pain thresholds.
 - Do not bypass SafetyGate.
 - Do not weaken red-flag blocking.
-- Do not change SessionRouteGuard.
+- Do not change SafetyRouteGuard.
 - Do not change recommendation safety logic.
 - Do not introduce diagnosis or cure claims.
 - Written steps and safety notes must remain accessible.

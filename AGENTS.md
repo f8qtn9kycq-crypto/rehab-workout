@@ -12,8 +12,9 @@ For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo
 6. Classify risk tier before implementation:
    - Tier 0: docs / copy / small CSS
    - Tier 1: mobile UX / i18n / navigation
-   - Tier 2: safety / session / storage / routing
-   - Tier 3: architecture / data migration / security
+   - Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更。
+   - Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更。
+   - 純文件描述現有行為仍為 Tier 0；若實際改變上述產品行為，依最高受影響風險分級。
 7. Keep changes minimal and localized. Split broad work into the smallest safe PR.
 
 ## Product and safety contract
@@ -90,6 +91,8 @@ Those are evidence gaps, not default Draft gates. They block merge only when the
 ## Sole-contributor approval policy
 
 While this repository has one collaborator and the PR author is that collaborator, formal GitHub self-approval is not a default merge-readiness requirement.
+
+每次交付前核對即時 collaborator 清單與 PR author；查詢失敗時不得推定符合 sole-contributor 條件。條件不符時遵循實際 branch protection、ruleset 與 requested-review 要求。
 
 For Tier 0-2 work, the default gate is:
 

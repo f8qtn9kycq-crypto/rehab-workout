@@ -113,8 +113,8 @@ P0：本次靜態盤點沒有證明新安全／資料遺失／核心故障；不
 
 ## 7. Codex-ready 下一步
 
-本報告不批次啟動三項實作。建議先 F1，分支 `codex/weekly-plan-entry-clarity`。實作前重新讀 workflow及最新main、核對本 finding仍存在，搜尋既有 issue／PR，然後建立單一可驗收追蹤。
+F1 已由 #207 交付，不再提供重做 F1 的可執行提示。下一個最小 PR 是 F2 第一階段：只在動作詳情概覽重用動作庫圖片，分支 `codex/detail-library-artwork`。實作前重新讀 workflow 與最新 main，核對詳情仍沒有該圖片、搜尋既有 issue／PR；不將 active 圖片或整套 session 自動加入同一 PR。
 
-> Implement the F1 weekly schedule entry clarification described in docs/ux-current-state-2026-10-13.md. Read AGENTS.md, REVIEW.md, .github/pull_request_template.md and applicable docs first. Verify the current route mismatch. Add the smallest clear route/anchor to the existing weekday editor without changing schedule defaults, safety rules, recommendations or storage. Preserve drafts and localization, validate mobile and keyboard behavior, classify risk based on actual routing/state impact, open one PR, trigger applicable exact-head reviews, and do not merge without authorization.
+> Implement the first stage of F2 described in docs/ux-current-state-2026-10-13.md: reuse the existing canonical WorkoutMovementArt in ExerciseDetailPage overview. Read AGENTS.md, REVIEW.md and the PR template, verify current main, and keep the scope to detail-page image continuity. Preserve video, written steps, cautions, adjustments, catalog-only start restrictions, SafetyGate and storage. Do not change assets or ID aliases. Compare actual rendered image sources against ExerciseCard in both languages and check mobile layout. Use an isolated branch, open one minimal PR and trigger applicable exact-head reviews. Merge only with explicit authorization and a clean exact-head gate.
 
-後续每次更新報告須更換基準SHA／觀察日期與證據範圍；不將歷史真人 Pass 自動套用新head。不修改 ChatGPT project的 `sources/`。
+後續每次更新報告須更換基準 SHA／觀察日期與證據範圍；不將歷史真人 Pass 自動套用新 head。不修改 ChatGPT project 的 `sources/`。

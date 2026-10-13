@@ -78,7 +78,7 @@ export default function ExerciseDetailPage() {
           </div>
         )}
         <YouTubeEmbed title={displayExercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
-        <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
+        <button onClick={(event) => { event.currentTarget.focus(); setModalOpen(true); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
           <PlayCircle size={20} />
           {t('detail.enlargeVideo')}
         </button>

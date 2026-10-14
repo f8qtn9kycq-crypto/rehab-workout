@@ -133,7 +133,7 @@ Include:
 Always verify when the PR touches relevant code:
 
 - SafetyGate cannot be skipped before session.
-- SessionRouteGuard blocks unsafe direct session entry.
+- SafetyRouteGuard blocks unsafe direct session entry.
 - PainScale appears before and after exercise.
 - Pain = 0 is a valid explicit selection.
 - Pain >3 triggers Recovery Mode or regression.

@@ -1,0 +1,697 @@
+{
+  "head": "df9d6aa565e2f762cbce00777bc5d88d608e1527",
+  "verdict": "Partial Pass",
+  "toneFindings": 9,
+  "motionFindings": 9,
+  "affectedAssets": 16,
+  "assets": [
+    {
+      "number": 1,
+      "id": "benchPress",
+      "file": "public/exercise-visuals/movements/benchPress.png",
+      "sha256": "7c0cba388bbf4bc0e653607d0864690c834adad534ad5da2967af6bef0f7ecd0",
+      "toneDiagnostic": {
+        "inkP10": 86,
+        "inkMedian": 136
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 2,
+      "id": "shoulderPress",
+      "file": "public/exercise-visuals/movements/shoulderPress.png",
+      "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba",
+      "toneDiagnostic": {
+        "inkP10": 39,
+        "inkMedian": 107
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 3,
+      "id": "squat",
+      "file": "public/exercise-visuals/movements/squat.png",
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce",
+      "toneDiagnostic": {
+        "inkP10": 65,
+        "inkMedian": 122
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 4,
+      "id": "pullUp",
+      "file": "public/exercise-visuals/movements/pullUp.png",
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6",
+      "toneDiagnostic": {
+        "inkP10": 82,
+        "inkMedian": 133
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 5,
+      "id": "dip",
+      "file": "public/exercise-visuals/movements/dip.png",
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931",
+      "toneDiagnostic": {
+        "inkP10": 80,
+        "inkMedian": 133
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 6,
+      "id": "latPulldown",
+      "file": "public/exercise-visuals/movements/latPulldown.png",
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0",
+      "toneDiagnostic": {
+        "inkP10": 57,
+        "inkMedian": 117
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 7,
+      "id": "seatedRow",
+      "file": "public/exercise-visuals/movements/seatedRow.png",
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565",
+      "toneDiagnostic": {
+        "inkP10": 64,
+        "inkMedian": 128
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 8,
+      "id": "legExtension",
+      "file": "public/exercise-visuals/movements/legExtension.png",
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b",
+      "toneDiagnostic": {
+        "inkP10": 64,
+        "inkMedian": 131
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 9,
+      "id": "shoulder-flexion",
+      "file": "public/exercise-visuals/movements/shoulder-flexion.png",
+      "sha256": "97b033fbe2f86b3701aaa02db143190526f775064af344c8d37f54fb4af75dee",
+      "toneDiagnostic": {
+        "inkP10": 56,
+        "inkMedian": 107
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 10,
+      "id": "shoulder-scapular-squeeze",
+      "file": "public/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "sha256": "f966b7c4bec3c5c1b87516cbb3a07db8b983e23e8cfb1528a69ce5d8232de5bc",
+      "toneDiagnostic": {
+        "inkP10": 42,
+        "inkMedian": 101
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 11,
+      "id": "shoulder-external-rotation-band",
+      "file": "public/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "sha256": "be49006946a8544631f0f76f64fb885180d818242d05929e2376ee9d0992fbe6",
+      "toneDiagnostic": {
+        "inkP10": 36,
+        "inkMedian": 97
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 12,
+      "id": "shoulder-standing-arm-swings",
+      "file": "public/exercise-visuals/movements/shoulder-standing-arm-swings.png",
+      "sha256": "bef8dfe942bc769f93b618b10744d4b125b5203d08484ec2ae86fe62f97e36e8",
+      "toneDiagnostic": {
+        "inkP10": 29,
+        "inkMedian": 88
+      },
+      "severity": "P1",
+      "observed": "線條偏深",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 13,
+      "id": "shoulder-internal-rotation-band",
+      "file": "public/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "sha256": "d80104b7d8cddb096a31e707ae7a6f440951616d80f26714af32c717c9d53953",
+      "toneDiagnostic": {
+        "inkP10": 22,
+        "inkMedian": 87
+      },
+      "severity": "P1",
+      "observed": "線條偏深",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 14,
+      "id": "hip-flexion-seated",
+      "file": "public/exercise-visuals/movements/hip-flexion-seated.png",
+      "sha256": "4e320f4b9a227ffb87c5f84ddf2b1b339388283f729ce37632fd13f2069761b8",
+      "toneDiagnostic": {
+        "inkP10": 30,
+        "inkMedian": 87
+      },
+      "severity": "P1",
+      "observed": "線條偏深",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 15,
+      "id": "hip-abduction",
+      "file": "public/exercise-visuals/movements/hip-abduction.png",
+      "sha256": "4372b50f64cba101018ddb08367ffbed1ee6870ce0b3b0f8ee54c3ae72da3435",
+      "toneDiagnostic": {
+        "inkP10": 39,
+        "inkMedian": 96
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 16,
+      "id": "glute-bridge",
+      "file": "public/exercise-visuals/movements/glute-bridge.png",
+      "sha256": "fe7d868f16fb8caf2681aa0bd69e1203f9ef21fdb179799864d22e8027ae23e1",
+      "toneDiagnostic": {
+        "inkP10": 62,
+        "inkMedian": 111
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 17,
+      "id": "hip-clamshell",
+      "file": "public/exercise-visuals/movements/hip-clamshell.png",
+      "sha256": "84067e6056e17ec962320f2d30c8ff086fc2be935ffd91017011e1ca1f432276",
+      "toneDiagnostic": {
+        "inkP10": 63,
+        "inkMedian": 115
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 18,
+      "id": "hip-sit-to-stand",
+      "file": "public/exercise-visuals/movements/hip-sit-to-stand.png",
+      "sha256": "bb317844b30d6886ba777d9576f7742001c20cd70d48a1248241cde01fb822b5",
+      "toneDiagnostic": {
+        "inkP10": 69,
+        "inkMedian": 119
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 19,
+      "id": "shoulder-wall-slide",
+      "file": "public/exercise-visuals/movements/shoulder-wall-slide.png",
+      "sha256": "626d9caad7a2872b16992ceedecf6de3eca7928c40b8306d312f765b214afad5",
+      "toneDiagnostic": {
+        "inkP10": 96,
+        "inkMedian": 139
+      },
+      "severity": "P1",
+      "observed": "線條偏淡",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 20,
+      "id": "shoulder-neck-chin-tuck",
+      "file": "public/exercise-visuals/movements/shoulder-neck-chin-tuck.png",
+      "sha256": "07c92ed9b7d4ddffc91a8612529231e58cfd75ec86d91acee49d5461bb541c00",
+      "toneDiagnostic": {
+        "inkP10": 64,
+        "inkMedian": 115
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 21,
+      "id": "neck-isometric",
+      "file": "public/exercise-visuals/movements/neck-isometric.png",
+      "sha256": "4e18403b4d47b9cf9c3ae5e8e1726d9992d139d9915062ee9114073513abb55a",
+      "toneDiagnostic": {
+        "inkP10": 64,
+        "inkMedian": 116
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 22,
+      "id": "upper-trap-stretch",
+      "file": "public/exercise-visuals/movements/upper-trap-stretch.png",
+      "sha256": "a103eba1a976f6d24464def0ec0ec54ee852c93accd9a448d3034fb204c1bfff",
+      "toneDiagnostic": {
+        "inkP10": 56,
+        "inkMedian": 111
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 23,
+      "id": "pec-doorway-stretch",
+      "file": "public/exercise-visuals/movements/pec-doorway-stretch.png",
+      "sha256": "1723a2e569c9eab075f7416e1d0c04d13698404009c920722000078f9c8edc50",
+      "toneDiagnostic": {
+        "inkP10": 53,
+        "inkMedian": 98
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 24,
+      "id": "neck-heat-relax",
+      "file": "public/exercise-visuals/movements/neck-heat-relax.png",
+      "sha256": "f2fa1644bf2b87015b7991c88c41438be01f76798cfce529fcb5db23d7f8ff2d",
+      "toneDiagnostic": {
+        "inkP10": 106,
+        "inkMedian": 143
+      },
+      "severity": "P1",
+      "observed": "線條偏淡",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 25,
+      "id": "neck-rotation-stretch",
+      "file": "public/exercise-visuals/movements/neck-rotation-stretch.png",
+      "sha256": "ffa2e1427296b5fbdd2b8fb1b644a98bd928a15205ff9f931f00d7c531ad4fc3",
+      "toneDiagnostic": {
+        "inkP10": 36,
+        "inkMedian": 103
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 26,
+      "id": "neck-wall-posture",
+      "file": "public/exercise-visuals/movements/neck-wall-posture.png",
+      "sha256": "21542941df6a9e8af15e1b4c94946796958afdceedbdbe5c01fe629aa90dd53f",
+      "toneDiagnostic": {
+        "inkP10": 66,
+        "inkMedian": 108
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 27,
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "file": "public/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "sha256": "f6636dcb62c05c9b7ade6728ae1f8dea28bf536c81ea4503519286d62f0def32",
+      "toneDiagnostic": {
+        "inkP10": 36,
+        "inkMedian": 89
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 28,
+      "id": "shoulder-neck-band-row-low",
+      "file": "public/exercise-visuals/movements/shoulder-neck-band-row-low.png",
+      "sha256": "470dc1022f84736d928ebe89df4bc9daad4b1f0293e475fb41125826d4bfa13e",
+      "toneDiagnostic": {
+        "inkP10": 77,
+        "inkMedian": 124
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 29,
+      "id": "shoulder-neck-serratus-wall-push",
+      "file": "public/exercise-visuals/movements/shoulder-neck-serratus-wall-push.png",
+      "sha256": "95ebee84cdfadacd0a3985a98032bdfdc745e022f9b53a804287609cec856797",
+      "toneDiagnostic": {
+        "inkP10": 39,
+        "inkMedian": 96
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 30,
+      "id": "knee-rice-care",
+      "file": "public/exercise-visuals/movements/knee-rice-care.png",
+      "sha256": "5aaf76e9ea92f5695398f8af2b7cbd1bcef5cf57c6a9ce8708b7021d1c28f690",
+      "toneDiagnostic": {
+        "inkP10": 107,
+        "inkMedian": 153
+      },
+      "severity": "P1",
+      "observed": "線條偏淡",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 31,
+      "id": "knee-straight-leg-raise",
+      "file": "public/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "sha256": "86e95d3dd561da9cf9dee07f3d1853ef79d6bc89dc61139dacd9af09de636b8f",
+      "toneDiagnostic": {
+        "inkP10": 68,
+        "inkMedian": 115
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 32,
+      "id": "knee-wall-squat",
+      "file": "public/exercise-visuals/movements/knee-wall-squat.png",
+      "sha256": "52515c4aa218a79b21cae2ccb429e605ebda843dedee405445520a89f789aadf",
+      "toneDiagnostic": {
+        "inkP10": 39,
+        "inkMedian": 90
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 33,
+      "id": "knee-hamstring-curl",
+      "file": "public/exercise-visuals/movements/knee-hamstring-curl.png",
+      "sha256": "1d054dd6d9601a210b2719c89e51358b737a954661d621c428c5521d51c8ab9f",
+      "toneDiagnostic": {
+        "inkP10": 39,
+        "inkMedian": 95
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 34,
+      "id": "knee-calf-raise",
+      "file": "public/exercise-visuals/movements/knee-calf-raise.png",
+      "sha256": "4767945ef7ee0edff73d054269036f58c672b1b146807ff8b0a3346ce8c42c2c",
+      "toneDiagnostic": {
+        "inkP10": 24,
+        "inkMedian": 88
+      },
+      "severity": "P1",
+      "observed": "線條偏深",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 35,
+      "id": "ankle-circles",
+      "file": "public/exercise-visuals/movements/ankle-circles.png",
+      "sha256": "789cae11e4c1715972b04e116b37ce653db66279eefaccfdb69976ea56f373d0",
+      "toneDiagnostic": {
+        "inkP10": 31,
+        "inkMedian": 95
+      },
+      "severity": "P1",
+      "observed": "線條偏深；縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 36,
+      "id": "ankle-alphabet",
+      "file": "public/exercise-visuals/movements/ankle-alphabet.png",
+      "sha256": "3ebaa417b861353aeeb5313b83ea82d91968d5c67760a0161bcf3e2776b846fa",
+      "toneDiagnostic": {
+        "inkP10": 35,
+        "inkMedian": 102
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 37,
+      "id": "ankle-band-inversion-eversion",
+      "file": "public/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "sha256": "0118f80f8c740a1f4e29bd90841545b050eff7ddacb44fa5a869215ae77f1a25",
+      "toneDiagnostic": {
+        "inkP10": 54,
+        "inkMedian": 109
+      },
+      "severity": "P1",
+      "observed": "縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 38,
+      "id": "ankle-single-leg-stand",
+      "file": "public/exercise-visuals/movements/ankle-single-leg-stand.png",
+      "sha256": "9e9c338a5a7b83d62fe0ce882d2408f1034829d9416798e52057fbc375367a74",
+      "toneDiagnostic": {
+        "inkP10": 49,
+        "inkMedian": 99
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 39,
+      "id": "ankle-calf-raise",
+      "file": "public/exercise-visuals/movements/ankle-calf-raise.png",
+      "sha256": "d8907fb90965d4f2dc896caf14b0b0e7572f3b34752df144217aa85b1fedb011",
+      "toneDiagnostic": {
+        "inkP10": 73,
+        "inkMedian": 111
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 40,
+      "id": "ankle-gastrocnemius-stretch",
+      "file": "public/exercise-visuals/movements/ankle-gastrocnemius-stretch.png",
+      "sha256": "d4efaf63112d0643e27f926926f871f69bac06bbe87859be8ddd096fe7444a48",
+      "toneDiagnostic": {
+        "inkP10": 50,
+        "inkMedian": 99
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 41,
+      "id": "ankle-soleus-stretch",
+      "file": "public/exercise-visuals/movements/ankle-soleus-stretch.png",
+      "sha256": "051b4977ea8317454ede4e1f5e997a8e39f2bcf3d78f12e891be8f2546812d6a",
+      "toneDiagnostic": {
+        "inkP10": 75,
+        "inkMedian": 122
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    },
+    {
+      "number": 42,
+      "id": "ankle-seated-soleus-raise",
+      "file": "public/exercise-visuals/movements/ankle-seated-soleus-raise.png",
+      "sha256": "4fe34557261d3a92a3205ee66c62b6045db0f3b909bc8d12b1ffb1f0966027b6",
+      "toneDiagnostic": {
+        "inkP10": 15,
+        "inkMedian": 88
+      },
+      "severity": "P1",
+      "observed": "線條偏深；縮圖左右差異不清楚",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": "線條不一致或無法判讀動作方向可能誤解步驟。",
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "修正"
+    },
+    {
+      "number": 43,
+      "id": "ankle-single-leg-reach",
+      "file": "public/exercise-visuals/movements/ankle-single-leg-reach.png",
+      "sha256": "e2f688ee2441fc17fd5c6f04f9230a15f94adef1451681424a8d1a6044eaf39a",
+      "toneDiagnostic": {
+        "inkP10": 64,
+        "inkMedian": 120
+      },
+      "severity": null,
+      "observed": "本輪未新增具體缺失。",
+      "expected": "與冷凍8張同顯示大小比較：細線深淺接近；動態階段可辨認，靜態不捏造動作；重點關節與支撐完整。",
+      "risk": null,
+      "acceptanceCriterion": "逐張比對新hash與文字步驟，回報線條、動作方向與支撐Pass/Fail。",
+      "disposition": "保留"
+    }
+  ]
+}

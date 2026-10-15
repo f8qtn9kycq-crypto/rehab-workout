@@ -47,6 +47,8 @@ const files = {
   localeZh: 'src/locales/zh-TW.js',
   localDataLocale: 'src/locales/localData.js',
   rehabTypes: 'src/types/rehab.ts',
+  exercisesData: 'src/data/exercises.ts',
+  recommendationEngine: 'src/utils/recommendationEngine.ts',
 };
 
 function readSource(filePath) {
@@ -233,9 +235,10 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');
   assertIncludes(source.localizedExercise, 'getLocalizedTrainingLogTitle(', 'localized saved-log title helper exists');
   assertIncludes(source.localizedExercise, 'getExerciseById(log.exerciseId)', 'saved logs localize from stable exercise id');
-  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes)', 'Records unifies guided logs and activities through the presentation adapter');
+  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts)', 'Records unifies guided logs, activities, and manual workouts through the presentation adapter');
   assertIncludes(source.recordsPresentation, "source: 'training'", 'presentation adapter includes guided sessions');
   assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
+  assertIncludes(source.recordsPresentation, "source: 'manual'", 'presentation adapter includes retrospective workouts');
   assertIncludes(source.recordsPresentation, '.filter(log => !linkedLogIds.has(log.id))', 'logs linked to a resistance aggregate are not duplicated');
   assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
   assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');
@@ -270,6 +273,16 @@ section('body entry separates training goals from sore-area guidance', () => {
   assertIncludes(source.muscleMapSelector, 'M101 205 Q140 220 179 205', 'lower-body highlight includes the hip region');
 });
 
+section('Records keeps one clear start action and catalog-only exercises stay out of recommendations', () => {
+  assertIncludes(source.logsPage, "t('logs.startTraining')", 'Records exposes one localized start-training CTA');
+  assertIncludes(source.logsPage, 'to="/exercises?mode=all"', 'Records sends exercise discovery to the library');
+  assertNotIncludes(source.logsPage, '<BodyTrainingEntry', 'Records does not duplicate the full exercise discovery surface');
+  assertIncludes(source.rehabTypes, 'catalogOnly?: boolean', 'exercise schema marks catalog-only content explicitly');
+  assertIncludes(source.exercisesData, "sourceRef: 'catalog-only: reviewed-content-needed'", 'catalog-only exercise content is traceable');
+  assertIncludes(source.exercisesData, 'catalogOnly: true', 'catalog-only exercises are marked in data');
+  assertIncludes(source.recommendationEngine, 'if (exercise.catalogOnly) return false', 'recommendations exclude catalog-only exercises');
+});
+
 section('assessment and exercise library reuse the interactive body map', () => {
   assertIncludes(source.assessmentPage, '<BodyMapSelector selected={bodyArea}', 'assessment selects the saved body area with the shared body map');
   assertIncludes(source.exerciseFilter, '<BodyMapSelector', 'exercise library filters with the shared body map');
@@ -277,8 +290,10 @@ section('assessment and exercise library reuse the interactive body map', () => 
   assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
   assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
   assertIncludes(source.bodyMapSelector, 'd={regionPaths[area]}', 'rehab body map highlights selectable body regions directly');
-  assertIncludes(source.bodyMapSelector, "stroke={active ? 'none'", 'selected rehab region does not show a border line');
-  assertIncludes(source.bodyMapSelector, 'focus-visible:outline', 'keyboard focus remains visible without showing a pointer-click border');
+  assertIncludes(source.bodyMapSelector, 'fillOpacity={active ? 0.42 : disabled ? 0.12 : 0.2}', 'selectable rehab regions stay visibly light while the selected region is slightly darker');
+  assertIncludes(source.bodyMapSelector, 'stroke="none"', 'body highlights reuse the human sketch as their only persistent outer contour');
+  assertIncludes(source.bodyMapSelector, 'strokeWidth="14"', 'body-map touch targets are larger than their visible highlights');
+  assertIncludes(source.bodyMapSelector, 'focus-visible:stroke-calm-900', 'keyboard focus remains visible on the interactive body region');
   assertNotIncludes(source.bodyMapSelector, 'className={`focus-ring absolute', 'rehab body map does not overlay text boxes on the body');
   assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');
   assertIncludes(source.muscleMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'resistance muscle map keeps the front/back switch');
@@ -323,7 +338,10 @@ section('routine builder and education pages remain reachable', () => {
   assertIncludes(source.mobileNav, "to: '/routine'", 'routine reachable from mobile More');
   assertIncludes(source.desktopNav, "to: '/routine'", 'routine reachable on desktop');
   if (source.homePage.includes('WeeklyRoutineBuilder') || source.homePage.includes('home.summaryLabel')) fail('home must not render routine or summary clutter');
-  if ((source.homePage.match(/<Link\s/g) ?? []).length !== 1) fail('home must have exactly one primary link');
+  if ((source.homePage.match(/to=\{nextAction.href\}/g) ?? []).length !== 1) fail('home must keep exactly one primary next-action link');
+  assertIncludes(source.homePage, 'to="/logs/new"', 'retrospective Quick Log is reachable directly from Today');
+  assertIncludes(source.homePage, "t('home.quickLogHint')", 'Quick Log explains record-only boundary');
+  assertMatch(source.homePage, /<details[^>]*>[\s\S]*<ActivityTracking[^\n]*\/>[\s\S]*<\/details>/, 'activity form stays behind native disclosure');
   assertIncludes(source.weeklyRoutineBuilder, 'weeklyRoutines', 'routine definitions');
   assertIncludes(source.weeklyRoutineBuilder, "to={`/session/${exercise.id}`}", 'routine starts existing session route');
   assertIncludes(source.weeklyRoutineBuilder, "t('weeklyRoutine.sessionGuardHint')", 'routine includes safety guard hint');

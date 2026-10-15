@@ -1,0 +1,182 @@
+import FavoriteButton from '../components/FavoriteButton';
+import { useRef, useState, type FormEvent } from 'react';
+import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import RecordOnlyExercisePicker from '../components/RecordOnlyExercisePicker';
+import { readCustomExercises, type CustomExercise } from '../services/customExerciseStorage';
+import LibraryMovementArt from '../components/LibraryMovementArt';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
+import { exercises as catalog } from '../data/exercises';
+import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
+import { localDate } from '../services/activityStorage';
+import { useI18n } from '../services/i18n';
+import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
+import { getLocalizedExercise } from '../utils/localizedExercise';
+import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
+import { BODY_AREAS, type BodyArea } from '../types/rehab';
+
+const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{}] });
+const moreExerciseCatalog = catalog.filter(exercise => !quickExerciseCatalogIds.has(exercise.id));
+const equipmentChoices = [
+  { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
+  { id: 'barbell', Icon: GripHorizontal }, { id: 'machine', Icon: Cable },
+  { id: 'cable', Icon: Cable }, { id: 'smith_machine', Icon: GripHorizontal },
+  { id: 'resistance_band', Icon: StretchHorizontal }, { id: 'chair', Icon: Armchair },
+  { id: 'wall', Icon: Hand }, { id: 'kettlebell', Icon: Weight },
+  { id: 'foam_roller', Icon: Waves },
+];
+
+export default function ManualWorkoutPage() {
+  const { t, language } = useI18n();
+  const navigate = useNavigate();
+  const [customState, setCustomState] = useState(readCustomExercises);
+  const [date, setDate] = useState(localDate);
+  const [exercises, setExercises] = useState<ManualExercise[]>([emptyExercise()]);
+  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(['reps']);
+  const [selectedIds, setSelectedIds] = useState<string[]>(['']);
+  const [equipmentIds, setEquipmentIds] = useState<string[]>(['']);
+  const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
+  const [error, setError] = useState<'input' | 'storage' | 'write' | null>(null);
+  const saving = useRef(false);
+  const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
+  const painNotices = exercises.map(exercise => manualWorkoutPainNotice(exercise.painBefore, exercise.painAfter));
+
+  function changeExercise(index: number, update: (exercise: ManualExercise) => ManualExercise) {
+    setExercises(current => current.map((exercise, position) => position === index ? update(exercise) : exercise));
+    setError(null);
+  }
+
+  function chooseExercise(index: number, id: string) {
+    setSelectedIds(current => current.map((value, position) => position === index ? id : value));
+    setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
+    const selected = catalog.find(item => item.id === id);
+    changeExercise(index, ({ recordOnly, kind, ...value }) => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    setEditingExerciseIndex(null);
+  }
+
+  function chooseCustomExercise(index: number, exercise: CustomExercise): void {
+    setSelectedIds(current => current.map((value, position) => position === index ? exercise.id : value));
+    setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
+    changeExercise(index, value => ({ ...value, name: exercise.name, kind: exercise.kind, recordOnly: true,
+      equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
+    setEditingExerciseIndex(null);
+  }
+
+  function chooseEquipment(index: number, id: string) {
+    const nextId = equipmentIds[index] === id ? '' : id;
+    setEquipmentIds(current => current.map((value, position) => position === index ? nextId : value));
+    changeExercise(index, value => ({ ...value, equipment: nextId ? t(`manualWorkout.equipmentChoices.${nextId}`) : '' }));
+  }
+
+  function removeExercise(index: number) {
+    setExercises(current => current.filter((_, position) => position !== index));
+    setDoseModes(current => current.filter((_, position) => position !== index));
+    setSelectedIds(current => current.filter((_, position) => position !== index));
+    setEquipmentIds(current => current.filter((_, position) => position !== index));
+    setEditingExerciseIndex(current => current === index ? null : current !== null && current > index ? current - 1 : current);
+  }
+
+  function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (saving.current) return;
+    if (selectedIds.some(id => !catalog.some(item => item.id === id) && !readCustomExercises().exercises.some(item => item.id === id))) { setError('input'); return; }
+    saving.current = true;
+    const workout = {
+      id: manualWorkoutId(), date, createdAt: new Date().toISOString(),
+      exercises: exercises.map((exercise, index) => {
+        const id = selectedIds[index];
+        const catalogExercise = catalog.find(item => item.id === id);
+        return {
+          ...exercise,
+          exerciseId: id,
+          ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
+          name: (catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
+          equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '').trim(),
+        };
+      }),
+    };
+    const result = saveManualWorkout(workout);
+    if (result !== 'ok') { saving.current = false; setError(result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input'); return; }
+    navigate('/logs', { state: { manualSavedId: workout.id } });
+  }
+
+  return <div className="page mx-auto max-w-2xl space-y-5">
+    <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center text-calm-800 underline">{t('manualWorkout.back')}</Link>
+    <div><h1 className="text-3xl font-black text-ink">{t('manualWorkout.title')}</h1><p className="mt-2 leading-7 text-slate-600">{t('manualWorkout.hint')}</p></div>
+    <form onSubmit={save} className="space-y-5">
+      <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
+      {exercises.map((exercise, index) => <fieldset key={index} className="card space-y-4 p-4">
+        <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
+        <div>
+          {selectedIds[index] && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
+            {hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
+            {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
+            <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
+          </div> : <>
+          <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
+          <div className="mt-3 space-y-5">
+            {quickExerciseGroups.map(group => <section key={group.id} aria-labelledby={`strength-group-${index}-${group.id}`}>
+              <h3 id={`strength-group-${index}-${group.id}`} className="mb-2 text-base font-black text-slate-800">{t(`manualWorkout.strengthGroups.${group.id}`)}</h3>
+              <div className="grid grid-cols-1 gap-3">
+                {group.exerciseIds.map(id => {
+                  const catalogExercise = catalog.find(item => item.id === id);
+                  return catalogExercise ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+                    <WorkoutMovementArt id={id} loading="eager" />
+                    <span>{getLocalizedExercise(catalogExercise, language).title}</span>
+                  </button><FavoriteButton id={id} title={getLocalizedExercise(catalogExercise, language).title} /></div> : null;
+                })}
+              </div>
+            </section>)}
+          </div>
+          <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
+            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <div key={item.id}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
+          </details>
+          <RecordOnlyExercisePicker exercises={customState.exercises} storageError={customState.error}
+            onSelect={exercise => chooseCustomExercise(index, exercise)}
+            onCreated={exercise => { setCustomState(readCustomExercises()); chooseCustomExercise(index, exercise); }} />
+          </>}
+          {exercise.recordOnly && <p className="mt-2 text-sm leading-6 text-slate-600">{t('manualWorkout.recordOnly')}</p>}
+        </div>
+        <label className="block text-sm font-bold">{t('manualWorkout.doseMode')}
+          <select className={control} value={doseModes[index]} onChange={event => {
+            const mode = event.target.value as 'reps' | 'durationSeconds' | 'holdSeconds';
+            setDoseModes(current => current.map((value, position) => position === index ? mode : value));
+            changeExercise(index, value => ({ ...value, sets: value.sets.map(({ reps, durationSeconds, holdSeconds, ...row }) => ({ ...row })) }));
+          }}>
+            <option value="reps">{t('manualWorkout.reps')}</option>
+            <option value="durationSeconds">{t('manualWorkout.durationSeconds')}</option>
+            <option value="holdSeconds">{t('manualWorkout.holdSeconds')}</option>
+          </select>
+        </label>
+        {exercise.sets.map((set, setIndex) => <div key={setIndex} className="rounded-md bg-slate-50 p-3">
+          <p className="mb-2 font-bold">{t('manualWorkout.setNumber', { number: setIndex + 1 })}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="text-sm font-bold">{t('manualWorkout.weight')}<input className={control} type="number" inputMode="decimal" min="0" max="1000" step="any" value={set.weightKg ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, weightKg: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
+            <label className="text-sm font-bold">{t(`manualWorkout.${doseModes[index]}`)}<input className={control} type="number" inputMode="numeric" required min="1" max={doseModes[index] === 'reps' ? 1000 : 86400} step="1" value={set[doseModes[index]] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, [doseModes[index]]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
+          </div>
+          <label className="mt-2 flex min-h-11 items-center gap-3 text-sm font-bold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, warmup: event.target.checked } : row) }))} />{t('manualWorkout.warmup')}</label>
+          {exercise.sets.length > 1 && <button className="focus-ring mt-2 min-h-11 text-sm font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: value.sets.filter((_, position) => position !== setIndex) }))}>{t('manualWorkout.removeSet')}</button>}
+        </div>)}
+        <div className="flex flex-wrap gap-4">
+          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, {}] }))}>{t('manualWorkout.addSet')}</button>}
+          {exercises.length > 1 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => removeExercise(index)}>{t('manualWorkout.removeExercise')}</button>}
+        </div>
+        <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{equipmentIds[index] ? t('manualWorkout.selectedEquipment', { name: t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) }) : t('manualWorkout.equipment')}</summary><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">{equipmentChoices.map(({ id, Icon }) => <button key={id} type="button" aria-pressed={equipmentIds[index] === id} onClick={() => chooseEquipment(index, id)} className={`focus-ring flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-xs font-bold ${equipmentIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={22} aria-hidden="true" /><span>{t(`manualWorkout.equipmentChoices.${id}`)}</span></button>)}</div></details>
+        <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{t('manualWorkout.feedback')}</summary>
+          <div className="mt-3 space-y-3">
+            <label className="block text-sm font-bold">{t('manualWorkout.kind')}<select className={control} value={exercise.kind ?? ''} onChange={event => changeExercise(index, value => ({ ...value, kind: event.target.value === '' ? undefined : event.target.value as 'strength' | 'mobility' }))}><option value="">{t('manualWorkout.unknown')}</option><option value="strength">{t('manualWorkout.strength')}</option><option value="mobility">{t('manualWorkout.mobility')}</option></select></label>
+            <label className="block text-sm font-bold">{t('manualWorkout.bodyArea')}<select className={control} value={exercise.bodyArea ?? ''} onChange={event => changeExercise(index, value => ({ ...value, bodyArea: event.target.value === '' ? undefined : event.target.value as BodyArea }))}><option value="">{t('manualWorkout.unknown')}</option>{BODY_AREAS.map(area => <option key={area} value={area}>{t(`bodyAreas.${area}.label`)}</option>)}</select></label>
+            <div className="grid grid-cols-2 gap-3">{(['painBefore', 'painAfter'] as const).map(field => <label key={field} className="text-sm font-bold">{t(`manualWorkout.${field}`)}<select className={control} value={exercise[field] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, [field]: event.target.value === '' ? undefined : Number(event.target.value) }))}><option value="">{t('manualWorkout.unknown')}</option>{Array.from({ length: 11 }, (_, score) => <option key={score} value={score}>{score}/10</option>)}</select></label>)}</div>
+            <label className="block text-sm font-bold">{t('manualWorkout.effort')}<select className={control} value={exercise.effort ?? ''} onChange={event => changeExercise(index, value => ({ ...value, effort: event.target.value === '' ? undefined : Number(event.target.value) }))}><option value="">{t('manualWorkout.unknown')}</option>{Array.from({ length: 11 }, (_, score) => <option key={score} value={score}>{score}/10</option>)}</select></label>
+            {(exercise.painBefore === undefined) !== (exercise.painAfter === undefined) && <p role="alert" className="text-sm text-red-800">{t('manualWorkout.painPair')}</p>}
+            {painNotices[index] && <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-800">{t(painNotices[index] === 'stop' ? 'manualWorkout.stopWarning' : 'manualWorkout.warning')}</p>}
+          </div>
+        </details>
+      </fieldset>)}
+      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
+      <p className="rounded-md bg-calm-50 p-3 text-sm text-calm-800">{t('manualWorkout.cyclingSeparate')}</p>
+      {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
+      <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>
+    </form>
+  </div>;
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "shoulder-flexion",
+    "runtime": "public/exercise-visuals/movements/shoulder-flexion.png",
+    "sha256": "97b033fbe2f86b3701aaa02db143190526f775064af344c8d37f54fb4af75dee",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulder-flexion.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "shoulder-scapular-squeeze",
+    "runtime": "public/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+    "sha256": "fb9ee1daab83df46c98386923f173be44ae44ef97202e60c230e02da50644364",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulder-scapular-squeeze.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "shoulder-external-rotation-band",
+    "runtime": "public/exercise-visuals/movements/shoulder-external-rotation-band.png",
+    "sha256": "be49006946a8544631f0f76f64fb885180d818242d05929e2376ee9d0992fbe6",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulder-external-rotation-band.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "shoulder-internal-rotation-band",
+    "runtime": "public/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+    "sha256": "d80104b7d8cddb096a31e707ae7a6f440951616d80f26714af32c717c9d53953",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulder-internal-rotation-band.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "glute-bridge",
+    "runtime": "public/exercise-visuals/movements/glute-bridge.png",
+    "sha256": "fe7d868f16fb8caf2681aa0bd69e1203f9ef21fdb179799864d22e8027ae23e1",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/glute-bridge.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "hip-clamshell",
+    "runtime": "public/exercise-visuals/movements/hip-clamshell.png",
+    "sha256": "42dbb4755f215f85f1f15baac4fc8ee0076663c77784dad7485a343770bb8b3f",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/hip-clamshell.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "shoulder-neck-thoracic-extension-chair",
+    "runtime": "public/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+    "sha256": "63a64f2677013ea818c8273a4989ec377c80f1bee39d15041501fbd4baf201be",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulder-neck-thoracic-extension-chair.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "knee-straight-leg-raise",
+    "runtime": "public/exercise-visuals/movements/knee-straight-leg-raise.png",
+    "sha256": "86e95d3dd561da9cf9dee07f3d1853ef79d6bc89dc61139dacd9af09de636b8f",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/knee-straight-leg-raise.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "ankle-band-inversion-eversion",
+    "runtime": "public/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+    "sha256": "17780592c95963f360454215e17f5e61dfa22bc8476c0a438ae0b860aca3bbe0",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/ankle-band-inversion-eversion.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  },
+  {
+    "id": "shoulderPress",
+    "runtime": "public/exercise-visuals/movements/shoulderPress.png",
+    "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba",
+    "source": "scripts/assets/movement-art-sources/overrides/style-v5/shoulderPress.png",
+    "visualConsistency": "NOT VERIFIED",
+    "movementAccuracy": "NOT VERIFIED",
+    "safetyRepresentation": "NOT VERIFIED",
+    "mobileRendering": "PASS - local Chromium picker at 390/375/320; shoulder selected 320 only",
+    "disposition": "PENDING",
+    "assistantObservation": "候選採短髮、素色上衣、短褲與鞋，縮小人物並保留留白；人工觀察不能代替真人或專家驗收。"
+  }
+]

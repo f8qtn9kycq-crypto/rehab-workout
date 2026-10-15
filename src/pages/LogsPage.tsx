@@ -1,21 +1,23 @@
 import ActivityTracking from '../components/ActivityTracking';
-import BodyTrainingEntry from '../components/BodyTrainingEntry';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
 import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
+import ManualWorkoutCard from '../components/ManualWorkoutCard';
 import TrainingSetSummary from '../components/TrainingSetSummary';
+import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
 import { readActivities } from '../services/activityStorage';
+import { readManualWorkouts } from '../services/manualWorkoutStorage';
 import { getSavedAssessment } from '../services/assessmentStorage';
 import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
-import { buildRecordsPresentation } from '../utils/recordsPresentation';
+import { buildRecordsPresentation, recordCategories, TRAINING_CATEGORIES } from '../utils/recordsPresentation';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
   return (
@@ -28,13 +30,17 @@ function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title:
 
 export default function LogsPage() {
   const { language, t } = useI18n();
+  const location = useLocation();
   const [logs, setLogs] = useState(() => getLogs());
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const [activities, setActivities] = useState(() => readActivities().activities);
+  const [manualWorkouts, setManualWorkouts] = useState(() => readManualWorkouts().workouts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
-  const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes), [logs, activities, outcomes]);
+  const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts), [logs, activities, outcomes, manualWorkouts]);
+  const savedManualId = (location.state as { manualSavedId?: string } | null)?.manualSavedId;
+  const savedManualWorkout = manualWorkouts.find(workout => workout.id === savedManualId);
   const latestOutcome = presentation.validOutcomes[0] ?? null;
 
   function formatDate(date: string): string {
@@ -52,6 +58,7 @@ export default function LogsPage() {
 
     const result = clearRehabLocalData();
     setActivities([]);
+    setManualWorkouts(readManualWorkouts().workouts);
     setLogs([]);
     setOutcomes([]);
     setClearStatus(result.failedKeys.length > 0 ? 'partial' : 'success');
@@ -64,25 +71,52 @@ export default function LogsPage() {
         <p className="mt-2 max-w-2xl leading-7 text-slate-600">{t('logs.subtitle')}</p>
       </div>
 
-      <BodyTrainingEntry onActivitiesChange={() => setActivities(readActivities().activities)} />
+      {savedManualWorkout && <div role="status" className="space-y-2 rounded-md bg-calm-50 p-4"><p className="font-bold text-calm-800">{t('manualWorkout.saved')}</p><p className="text-sm">{savedManualWorkout.date} · {savedManualWorkout.exercises.map(exercise => exercise.name).join(t('progress.areaSeparator'))}</p></div>}
+
+      <section className="card space-y-3 border-calm-200 bg-calm-50/80 p-5" aria-labelledby="records-start-title">
+        <div>
+          <h2 id="records-start-title" className="text-xl font-black text-ink">{t('manualWorkout.entry')}</h2>
+          <p className="mt-1 text-sm leading-6 text-calm-800">{t('manualWorkout.entryHint')}</p>
+        </div>
+        <Link to="/logs/new" className="focus-ring inline-flex min-h-12 w-full items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white sm:w-auto">
+          {t('manualWorkout.entry')}
+        </Link>
+        <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('logs.startTraining')}</Link>
+      </section>
+
+      <a href="#records-cycling" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('activities.cycling')}</a>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
         {presentation.hasActivityHistory ? (
           <div className="space-y-3">
-            {presentation.recentActivities.slice(0, 5).map(item => item.source === 'training' ? (
+            {presentation.days.slice(0, 5).map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
+              <h3 className="text-lg font-black text-ink">{day.date}</h3>
+              {day.items.map(item => <div key={item.id} className="space-y-2">
+                <p className="flex flex-wrap gap-2 text-sm font-semibold text-calm-800">
+                  <span>{t(`records.sources.${item.source}`)}</span>
+                  {recordCategories(item, logs).map(category => <span key={category} className="rounded-md bg-calm-100 px-2 py-1">{t(`records.categories.${category}`)}</span>)}
+                </p>
+                {item.source === 'training' ? (
               <article key={item.id} className="card space-y-3 p-4">
                 <ExerciseIdentityVisual log={item.log} compact />
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
                 <TrainingSetSummary sets={item.log.sets} />
               </article>
+            ) : item.source === 'manual' ? (
+              <ManualWorkoutCard key={item.id} workout={item.workout} />
             ) : (
               <article key={item.id} className="card p-4">
                 <ActivityIdentityVisual activity={item.activity} />
                 <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
                 {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
+                {item.activity.kind === 'resistance' && item.activity.exerciseLogIds.map(id => {
+                  const log = logs.find(row => row.id === id);
+                  return log ? <div key={id} className="mt-3 border-t border-slate-200 pt-3"><ExerciseIdentityVisual log={log} compact /><TrainingSetSummary sets={log.sets} /></div> : null;
+                })}
               </article>
-            ))}
+              )}</div>)}
+            </section>)}
           </div>
         ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
       </section>
@@ -92,6 +126,14 @@ export default function LogsPage() {
         <article className="card border-calm-200 bg-calm-50/80 p-5">
           <p className="text-3xl font-black text-ink">{t('records.week.count', { count: presentation.weeklyActivityCount })}</p>
           <p className="mt-2 text-sm leading-6 text-calm-800">{t('records.week.helper')}</p>
+          <p className="mt-3 font-bold text-ink">{t('records.week.activeDays', { count: presentation.weeklyActiveDays })}</p>
+          <dl className="mt-3 grid grid-cols-2 gap-3">
+            {TRAINING_CATEGORIES.map(category => <div key={category} className="rounded-md bg-white p-3">
+              <dt className="font-bold">{t(`records.categories.${category}`)}</dt>
+              <dd className="mt-1 text-sm">{t('records.week.categoryDays', { count: presentation.weeklyCategoryDays[category] })}</dd>
+            </div>)}
+          </dl>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{t('records.week.countingHint')}</p>
         </article>
       </section>
 
@@ -112,12 +154,15 @@ export default function LogsPage() {
         <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
       </section>
 
+      <section id="records-cycling" className="space-y-4" aria-label={t('activities.cycling')}><ActivityTracking initialKind="cycling" activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} /></section>
+
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />
         <details className="card p-3">
           <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
           <div className="mt-4 space-y-5">
-            <ActivityTracking onActivitiesChange={() => setActivities(readActivities().activities)} />
+            <ActivityTracking allowCycling={false} activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} />
+            {manualWorkouts.length > 0 && <div className="space-y-3">{manualWorkouts.map(workout => <ManualWorkoutCard key={workout.id} workout={workout} />)}</div>}
             {logs.length > 0 ? <TrainingLog logs={logs} onLogsChange={setLogs} /> : null}
           </div>
         </details>

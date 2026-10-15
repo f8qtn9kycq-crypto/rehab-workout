@@ -13,6 +13,7 @@ import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
 import TrainingSetEditor from './TrainingSetEditor';
 import ExerciseIdentityVisual from './ExerciseIdentityVisual';
+import SavedRoutineReturnLink from './SavedRoutineReturnLink';
 import TrainingSetSummary from './TrainingSetSummary';
 
 interface SessionTrackerProps {
@@ -47,6 +48,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const backButtonRef = useRef<HTMLButtonElement>(null);
   const exitButtonRef = useRef<HTMLButtonElement>(null);
   const continueSessionButtonRef = useRef<HTMLButtonElement>(null);
+  const exitDialogRef = useRef<HTMLDialogElement>(null);
   const savedTitleRef = useRef<HTMLHeadingElement>(null);
   const lastExitTriggerRef = useRef<HTMLButtonElement | null>(null);
   const saveInProgressRef = useRef(false);
@@ -62,12 +64,17 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const supportsSetDetails = exercise.type === 'strength' && exercise.equipment.some(item => item === 'dumbbell' || item === 'kettlebell');
 
   useEffect(() => {
-    if (exitDialogOpen) {
-      continueSessionButtonRef.current?.focus();
-      return;
-    }
+    const dialog = exitDialogRef.current;
+    if (!exitDialogOpen || !dialog) return;
 
-    lastExitTriggerRef.current?.focus();
+    dialog.showModal();
+    continueSessionButtonRef.current?.focus();
+
+    return () => {
+      dialog.close();
+      const trigger = lastExitTriggerRef.current;
+      if (trigger?.isConnected) trigger.focus();
+    };
   }, [exitDialogOpen]);
 
   useEffect(() => {
@@ -220,8 +227,22 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   );
 
   const exitDialog = exitDialogOpen ? (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:justify-center sm:py-5" role="dialog" aria-modal="true" aria-labelledby="session-exit-title" aria-describedby="session-exit-description">
-      <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
+    <dialog
+      ref={exitDialogRef}
+      className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none items-end border-0 bg-transparent px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 backdrop:bg-slate-950/45 open:flex sm:items-center sm:justify-center sm:py-5"
+      aria-labelledby="session-exit-title"
+      aria-describedby="session-exit-description"
+      onCancel={(event) => { event.preventDefault(); setExitDialogOpen(false); }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Tab') return;
+        const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)'));
+        const current = controls.findIndex(control => control === document.activeElement);
+        if (current < 0 || controls.length === 0) return;
+        event.preventDefault();
+        controls[(current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
+      }}
+    >
+      <div className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white p-4 shadow-xl">
         <div className="flex items-center gap-2 text-red-800">
           <AlertTriangle size={22} />
           <h2 id="session-exit-title" className="text-xl font-bold">{t('session.exitTitle')}</h2>
@@ -278,7 +299,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   ) : null;
 
   if (phase === 'before') {
@@ -350,6 +371,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               {t('session.painAfterWarning')}
             </div>
           ) : null}
+          <SavedRoutineReturnLink exerciseId={exercise.id} />
           <div>
             <button
               type="button"

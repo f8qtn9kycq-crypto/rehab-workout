@@ -15,14 +15,24 @@ export default function ExerciseDetailModal({
   onClose: () => void;
 }) {
   const { language, t } = useI18n();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    if (!isOpen || !exercise || !dialog) return;
+
+    const opener = document.activeElement;
+    dialog.showModal();
 
     contentRef.current?.scrollTo({ left: 0, top: 0 });
     closeButtonRef.current?.focus();
+
+    return () => {
+      dialog.close();
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus();
+    };
   }, [exercise?.id, isOpen]);
 
   if (!isOpen || !exercise) return null;
@@ -30,7 +40,22 @@ export default function ExerciseDetailModal({
   const displayExercise = getLocalizedExercise(exercise, language);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/70 p-0 md:items-center md:p-6" role="dialog" aria-modal="true" aria-labelledby="exercise-video-title" aria-describedby="exercise-video-description">
+    <dialog
+      ref={dialogRef}
+      className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none items-end border-0 bg-transparent p-0 backdrop:bg-slate-950/70 open:flex md:items-center md:p-6"
+      aria-labelledby="exercise-video-title"
+      aria-describedby="exercise-video-description"
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Tab') return;
+        const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button, a[href], iframe'));
+        const current = controls.findIndex(control => control === document.activeElement);
+        if (current < 0 || controls.length === 0) return;
+        event.preventDefault();
+        const next = (current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
+        controls[next].focus();
+      }}
+    >
       <div ref={contentRef} className="safe-bottom max-h-[92vh] w-full overflow-auto rounded-t-xl bg-white p-4 shadow-soft md:mx-auto md:max-w-3xl md:rounded-xl">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 id="exercise-video-title" className="text-xl font-bold text-ink">{displayExercise.title}</h2>
@@ -58,6 +83,6 @@ export default function ExerciseDetailModal({
           </ul>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

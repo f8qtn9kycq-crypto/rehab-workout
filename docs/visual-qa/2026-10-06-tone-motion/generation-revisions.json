@@ -1,0 +1,44 @@
+[
+  {
+    "id": "shoulder-scapular-squeeze",
+    "prompt": "Create a fresh TWO-PANEL rehabilitation movement illustration. Use attached image ONLY as character/line style reference, not pose. Plain thin consistent charcoal #303030 contour lines, about6px at1654x950. White background, same short-haired adult plain short-sleeved shirt and shorts, natural small head proportions. Thin pale center divider, wide generous margins. NO gray shadows, shading, text, arrows, letters or anatomical detail. Left START right FINISH must be visibly DIFFERENT and still readable at320x184. Keep small safe range, supports as specified. Rear THREE-QUARTER view, crown to hips, standing adult short hair T shirt. Left shoulders gently rounded forwards, upper arms at sides in front of trunk. Right shoulders gently retracted with chest open and upper arms several centimeters farther back, elbows visibly behind torso outline, hands relaxed by hips. Head and torso upright both. Show DIFFERENT shoulder and elbow positions, modest range no shrug, no muscle marks.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-4c6d592c-ee24-4b38-9bbd-8d5dc2239561.png",
+    "disposition": "REJECTED — 肩胛坐姿／椅背固定／牆面接觸需保留，不採用未符版本"
+  },
+  {
+    "id": "shoulder-neck-chin-tuck",
+    "prompt": "Create a fresh TWO-PANEL rehabilitation movement illustration. Use attached image ONLY as character/line style reference, not pose. Plain thin consistent charcoal #303030 contour lines, about6px at1654x950. White background, same short-haired adult plain short-sleeved shirt and shorts, natural small head proportions. Thin pale center divider, wide generous margins. NO gray shadows, shading, text, arrows, letters or anatomical detail. Left START right FINISH must be visibly DIFFERENT and still readable at320x184. Keep small safe range, supports as specified. SIDE PROFILE crown to waist seated adult with hands on thighs. LEFT relaxed slight forward head: ear visibly ahead of shoulder, chin still horizontal. RIGHT gentle chin retraction: head translated backwards, ear above shoulder, chin slightly tucked with horizontal gaze. Crucial show horizontal movement of head equal about one-quarter of a head width while torso stays unchanged. Never nod down, never tip head backwards.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-10525670-9d40-458c-b48d-4dd394081036.png",
+    "disposition": "SELECTED"
+  },
+  {
+    "id": "shoulder-neck-thoracic-extension-chair",
+    "prompt": "Create a fresh TWO-PANEL rehabilitation movement illustration. Use attached image ONLY as character/line style reference, not pose. Plain thin consistent charcoal #303030 contour lines, about6px at1654x950. White background, same short-haired adult plain short-sleeved shirt and shorts, natural small head proportions. Thin pale center divider, wide generous margins. NO gray shadows, shading, text, arrows, letters or anatomical detail. Left START right FINISH must be visibly DIFFERENT and still readable at320x184. Keep small safe range, supports as specified. SIDE PROFILE seated adult full body on stationary stable chair, feet flat hips knees90 hands crossed over chest. LEFT upright back straight. RIGHT upper thoracic back gently extends over top of stationary chair back, chest opens with upper trunk about15 degrees backwards above fixed lower trunk, head remains aligned gaze horizontal. Chair position and pelvis legs exactly same. Do not recline whole body.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-204883ea-ffb4-489c-aa64-4abc57c9a257.png",
+    "disposition": "REJECTED — 肩胛坐姿／椅背固定／牆面接觸需保留，不採用未符版本"
+  },
+  {
+    "id": "shoulder-neck-serratus-wall-push",
+    "prompt": "Create a fresh TWO-PANEL rehabilitation movement illustration. Use attached image ONLY as character/line style reference, not pose. Plain thin consistent charcoal #303030 contour lines, about6px at1654x950. White background, same short-haired adult plain short-sleeved shirt and shorts, natural small head proportions. Thin pale center divider, wide generous margins. NO gray shadows, shading, text, arrows, letters or anatomical detail. Left START right FINISH must be visibly DIFFERENT and still readable at320x184. Keep small safe range, supports as specified. SIDE THREE-QUARTER full body adult facing vertical wall. Both hands touching wall at chest height, elbows gently bent and bend identical both phases. LEFT shoulders relaxed neutral, shoulder blades resting together. RIGHT scapula protracted, shoulders clearly round forwards and upper back subtly widens, upper torso displaced backwards from wall a few centimeters while hands and feet stay fixed. Straight upright lower trunk, no elbow pushup, no exaggerated hunched neck.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-64c40407-a99f-4554-ad18-4f795b5528be.png",
+    "disposition": "REJECTED — 肩胛坐姿／椅背固定／牆面接觸需保留，不採用未符版本"
+  },
+  {
+    "id": "shoulder-scapular-squeeze",
+    "prompt": "Edit this two-panel seated scapular squeeze illustration. Preserve SAME seated stable chair and BOTH hands resting on thighs, head upright, pelvis and legs fixed. Change framing to CROWN TO HIP so the upper body and chair back are the main focus with natural head/body proportions. LEFT shoulders gently rounded forwards, arms and elbows a little forwards. RIGHT chest gently opens as shoulder blades draw BACK and DOWN; shoulders and elbows clearly further backwards, hands STILL on thighs, no shrug or spine arch. Right shirt back outline and shoulder positions must visibly differ, no anatomical scapula marks. Thin uniform dark charcoal #303030 lines, white background and clothes, short-haired adult shirt/shorts same as reference, no shading/text/arrows. Generous margins and pale center divider. Difference readable at320x184 but no exaggerated range.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-b5be91ff-549c-4507-a8d0-b7a46ea18bea.png",
+    "disposition": "REJECTED — 左右差異仍不足"
+  },
+  {
+    "id": "shoulder-scapular-squeeze",
+    "prompt": "Two-panel simple charcoal line exercise illustration, SAME person seated in stable chair in both. SIDE PROFILE view from crown to hips: chair back, thighs, hands resting on thighs visible; legs beyond knees outside framing. Left shoulders rounded forward, upper arms visibly angled slightly forward. Right chest open shoulders pulled backwards, upper arms angled slightly BACK with elbows visibly behind chest, hands still on thighs. Keep hips anchored upright neutral lower back and neck, no shrug. Clear before-after shoulder motion. Character/style ONLY from reference short-haired adult plain T shirt shorts natural proportions thin consistent #303030 outlines generous white space no fills shading or shadows. No text arrows or anatomy marks. Equal panels pale divider. IMPORTANT SIDE VIEW NOT REAR, cropped crown-to-hip NOT full-body.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-3641e3fd-ae15-4d15-9046-d3d58a3a0d85.png",
+    "disposition": "SELECTED"
+  },
+  {
+    "id": "shoulder-neck-serratus-wall-push",
+    "prompt": "Two-panel SIDE PROFILE illustration of gentle serratus wall scapular push, showing adult CROWN TO HIP only. Thin uniform charcoal #303030 line art short plain hair plain T shirt white background no shading no text no arrows no anatomical marks. Plain vertical wall on right of EACH panel, BOTH palms flat against it at chest height. Elbows micro-bent SAME angle both phases. Left chest closer to wall, shoulders at neutral position. Right pushes shoulder girdle forwards so upper torso moves slightly away from wall, upper back outline gently rounds; arms stay same elbow angle, palms remain flat at SAME wall height. Lower trunk upright both, neck neutral gaze forward. Clear but modest shoulder position difference, not an elbow pushup. generous white margins and pale center divider. Style and character from reference ONLY, not poses.",
+    "path": "/Users/mac_mini_m4/.codex/generated_images/01a10e90-30f5-7c91-aa2c-4d548591bde3/exec-6cb3cc87-68a2-45cd-89c0-1f1e628d7d05.png",
+    "disposition": "REJECTED — 彎肘過多"
+  }
+]

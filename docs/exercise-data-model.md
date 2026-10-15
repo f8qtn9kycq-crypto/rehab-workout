@@ -32,6 +32,7 @@ Every exercise should follow this shape:
   youtubeEmbedUrl,
   youtubeSearchUrl,
   sourceRef
+  catalogOnly? // searchable in All exercises; excluded from recommendations
 }
 ```
 
@@ -150,6 +151,10 @@ sets: [
 
 Preserve LocalStorage compatibility unless a migration is explicitly requested.
 
+## Retrospective workout record
+
+`rehab.manualWorkouts.v1` is additive and separate from guided `rehab.trainingLogs.v2` and activity `rehab.activities.v1`. One saved workout has a local `YYYY-MM-DD` date, a stable ID, creation time, and 1–12 exercises. Each exercise has its actual name, optional equipment, and 1–20 completed sets with required positive integer reps and optional nonnegative weight in kg. A set may be marked as warm-up. Optional exercise feedback includes type, body area, effort, and a paired before/after pain score; an omitted value remains unknown, including when the user does not provide any pain score. These records do not enter rehab recommendations or recovery trends. New cycling entries use separate `rehab.activities.v1` records so two rides stay distinct. Existing manual workouts with `cyclingMinutes` remain readable and still count as one workout, without creating a cycling activity. Invalid or corrupt stored data must not be overwritten by a new save; clear-local-data includes this key.
+
 ## Functional Outcome Schema
 
 Functional outcome check-ins use a separate LocalStorage key and must not change the training log key or shape.
@@ -202,6 +207,8 @@ Detailed safety rules live in `docs/safety-rules.md`. Data edits should preserve
 
 Do not add random advanced exercises just to fill coverage matrices. Conservative gaps are acceptable when safer for users.
 
+`catalogOnly: true` is reserved for content that users may search and read in All exercises but cannot start as a guided session. It remains excluded from conservative recommendations and Today defaults until a separate safety/content decision is made.
+
 ## Audit Expectations
 
 When exercise data, filters, recommendations, or coverage docs change, run:
@@ -238,3 +245,11 @@ Audit output should help identify:
 - 週摘要可選取複製，無後端、跨裝置或 ChatGPT 自動同步。功能指標繼續使用 Records 既有獨立儲存與呈現。
 
 隔天回饋狀態區分：今天的活動為「尚待觀察」，不算應補未補；過去日期未填才算缺漏。已達週目標但今天仍有待觀察活動時維持，不直接進入小幅進展分支。
+
+## 補記復健實際劑量
+
+`rehab.manualWorkouts.v1` 的每組新增可選 `durationSeconds`／`holdSeconds`（整數 1–86400 秒），`reps` 改為可選；每組至少填一種實際劑量，次數仍限整數 1–1000，最多 20 組。原有 reps-only 紀錄不需轉換，含 duration／hold 的新紀錄不假填 reps。UI 一次選一種記錄方式，切換會清除目前劑量並明確告知；reader 可讀含多種劑量的紀錄。kg、暖身、成對可選 pain 與舊 ID 關係保留。此為已完成訓練補記，不改引導處方或安全推薦。
+
+## 個人補記動作
+
+`rehab.customExercises.v1` 獨立保存最多 200 個私人定義：`custom-` 前綴穩定 ID、名稱（1–100 字元）、`kind`（strength／mobility）、可選 canonical equipmentId、`recordOnly: true`。名稱正規化後重複會提示，資料損壞或寫入失敗不得覆寫。只由補記 picker 讀取，不加入官方 exercises、推薦、routine 或 guided session。名稱與 kind、recordOnly 會保存於 manual workout snapshot；定義缺失不影響歷史閱讀，缺失定義不能作為新選取。現有清除本機資料功能納入此 key。

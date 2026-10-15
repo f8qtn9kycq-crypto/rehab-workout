@@ -1,0 +1,104 @@
+{
+  "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
+  "approvalScope": "User-designated visual style and look/feel only; not movement or clinical approval",
+  "mobileMeasurements": "docs/visual-qa/2026-10-05-phone/mobile-results.json",
+  "mobileMeasurementsSha256": "992f57407984f3c83e1a2c8ae34b88592963bb37ce5cf2397a8bd4db975c7312",
+  "references": [
+    {
+      "id": "benchPress",
+      "catalogId": "catalog-bench-press",
+      "path": "public/exercise-visuals/movements/benchPress.png",
+      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a"
+    },
+    {
+      "id": "shoulderPress",
+      "catalogId": "catalog-shoulder-press",
+      "path": "public/exercise-visuals/movements/shoulderPress.png",
+      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa"
+    },
+    {
+      "id": "squat",
+      "catalogId": "catalog-squat",
+      "path": "public/exercise-visuals/movements/squat.png",
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "catalogId": "catalog-pull-up",
+      "path": "public/exercise-visuals/movements/pullUp.png",
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "catalogId": "catalog-dip",
+      "path": "public/exercise-visuals/movements/dip.png",
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "catalogId": "catalog-lat-pulldown",
+      "path": "public/exercise-visuals/movements/latPulldown.png",
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "catalogId": "catalog-seated-row",
+      "path": "public/exercise-visuals/movements/seatedRow.png",
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "catalogId": "catalog-leg-extension",
+      "path": "public/exercise-visuals/movements/legExtension.png",
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "shoulder-flexion",
+      "path": "public/exercise-visuals/movements/shoulder-flexion.png",
+      "sha256": "755821bd6173ae82e30dafa91f0a5323c400d1191afea055fdb94df189061ac6"
+    },
+    {
+      "id": "shoulder-scapular-squeeze",
+      "path": "public/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "sha256": "ffb17ff8b2302e51b9be64571f94a9852ec0b99efdef89ee222d1e76911a2f2b"
+    },
+    {
+      "id": "shoulder-external-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "sha256": "96ba01930d681f24e93369b575e02a949968b405126054ade39865140e811a9d"
+    },
+    {
+      "id": "shoulder-internal-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "sha256": "0212b9dc50b3cd841e338e2ae412edc22aba46d9f9d3a7f77ffb7b93e6d2b350"
+    },
+    {
+      "id": "glute-bridge",
+      "path": "public/exercise-visuals/movements/glute-bridge.png",
+      "sha256": "20f2b40500f27d4f3c2f6195046c6dce2cc8b9ed0d39c937aa980567ec2477ff"
+    },
+    {
+      "id": "hip-clamshell",
+      "path": "public/exercise-visuals/movements/hip-clamshell.png",
+      "sha256": "94d0ba46dc48fd437ea7038804186d5820d6353d02f85339f2e48a2b7ee753bf"
+    },
+    {
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "path": "public/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "sha256": "f12f92b80b38438f4edde9b0d33d750137c3edcc78d802c14a772085c12f8ed2"
+    },
+    {
+      "id": "knee-straight-leg-raise",
+      "path": "public/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "sha256": "9f6340ff1fb8aa5676a7a6636ed9317a240c7311389347a1e3ea657b299d2240"
+    },
+    {
+      "id": "ankle-band-inversion-eversion",
+      "path": "public/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "sha256": "2897128676bb6033d4f7c93150e03c5ef44619807262592a536a3719b00185b1"
+    }
+  ],
+  "status": "Named comparison only; style NOT VERIFIED; not independent blind screening"
+}

@@ -31,12 +31,17 @@ on:
 
 permissions:
   contents: read
-  issues: write
+  issues: read
   pull-requests: read
 
 jobs:
   request:
     name: Request exact-head AI reviews
+    # PR conversation comments require pull-requests: write for the job token.
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     if: >-
       (github.event_name == 'pull_request_target') ||
       (github.event_name == 'issue_comment' &&
@@ -124,7 +129,13 @@ jobs:
 
   publish:
     name: Publish synthesis result
-    if: github.event_name == 'workflow_dispatch'
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Validate exact head and publish result

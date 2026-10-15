@@ -31,8 +31,9 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: read
+  # Timeline comments on pull requests accept this narrower permission. Using
+  # issues:write here produced HTTP 403 for the repository GITHUB_TOKEN.
+  pull-requests: write
 
 jobs:
   request:

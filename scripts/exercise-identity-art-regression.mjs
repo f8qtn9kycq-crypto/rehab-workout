@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { build } from 'vite';
 const temporary = mkdtempSync(join(process.cwd(), '.identity-art-regression-'));
 try {
+  assert(!existsSync('public/exercise-visuals/hip-sit-to-stand.svg'), 'obsolete second pose asset stays removed');
+  assert(!readFileSync('src/components/ExerciseIdentityVisual.tsx', 'utf8').includes('/hip-sit-to-stand.svg'), 'no legacy pose fallback remains');
   const entry = join(temporary, 'entry.tsx');
   writeFileSync(entry, `
 import { renderToStaticMarkup } from 'react-dom/server';

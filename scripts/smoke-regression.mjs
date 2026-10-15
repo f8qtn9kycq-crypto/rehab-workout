@@ -242,7 +242,8 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.recordsPresentation, '.filter(log => !linkedLogIds.has(log.id))', 'logs linked to a resistance aggregate are not duplicated');
   assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
   assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');
-  assertIncludes(source.exerciseIdentityVisual, "{ kind: 'pose'", 'supported resistance visual distinguishes the side-view pose');
+  assertIncludes(source.exerciseIdentityVisual, '<WorkoutMovementArt id={sourceExercise.id}', 'supported resistance visual uses canonical movement art');
+  assertNotIncludes(source.exerciseIdentityVisual, '/hip-sit-to-stand.svg', 'obsolete second pose system stays removed');
   assertIncludes(source.exerciseIdentityVisual, 'onError={() => markFailed(item.kind)}', 'each exercise image has an independent failure fallback');
   assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.primaryLabel')", 'exercise visual keeps a textual primary-region label');
   assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.secondaryLabel')", 'exercise visual keeps a textual secondary-region label');

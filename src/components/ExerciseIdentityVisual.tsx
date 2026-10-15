@@ -7,8 +7,8 @@ import { useI18n } from '../services/i18n';
 import BodyAreaIcon from './BodyAreaIcon';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from './WorkoutMovementArt';
 
-const SUPPORTED_VISUALS: Partial<Record<string, { pose: string; muscles: string; primary: string; secondary: string }>> = {
-  'hip-sit-to-stand': { pose: '/exercise-visuals/hip-sit-to-stand.svg', muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg', primary: 'exerciseVisual.sitToStandPrimary', secondary: 'exerciseVisual.sitToStandSecondary' },
+const SUPPORTED_VISUALS: Partial<Record<string, { muscles: string; primary: string; secondary: string }>> = {
+  'hip-sit-to-stand': { muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg', primary: 'exerciseVisual.sitToStandPrimary', secondary: 'exerciseVisual.sitToStandSecondary' },
 };
 
 interface Props { exercise?: Exercise; log?: TrainingLogEntry; compact?: boolean }
@@ -36,13 +36,12 @@ export default function ExerciseIdentityVisual({ exercise, log, compact = false 
     {visuals ? <>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {[
-          { kind: 'pose', src: visuals.pose, label: t('exerciseVisual.poseLabel'), alt: t('exerciseVisual.poseAlt', { exercise: name }) },
           { kind: 'muscles', src: visuals.muscles, label: t('exerciseVisual.muscleMapLabel'), alt: t('exerciseVisual.muscleMapAlt', { exercise: name }) },
-        ].filter(item => item.kind !== 'pose' || !hasCanonicalArt).map(item => <figure key={item.kind} className="min-w-0 rounded-lg bg-white p-2">
+        ].map(item => <figure key={item.kind} className="min-w-0 rounded-lg bg-white p-2">
           <figcaption className="mb-1 text-xs font-black text-slate-700">{item.label}</figcaption>
           <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md bg-slate-50">
             {!failed(item.kind) ? <img src={item.src} alt={item.alt} onError={() => markFailed(item.kind)} className="h-full w-full object-contain" /> : <div className="flex flex-col items-center gap-1 text-calm-700" role="img" aria-label={t('exerciseVisual.fallbackAlt', { exercise: name, visual: item.label })}>
-              <ImageOff size={22} aria-hidden="true" />{item.kind === 'pose' ? <><PersonStanding size={26} aria-hidden="true" /><Armchair size={20} aria-hidden="true" /></> : <BodyAreaIcon area={bodyArea ?? 'hip'} size={28} />}
+              <ImageOff size={22} aria-hidden="true" /><BodyAreaIcon area={bodyArea ?? 'hip'} size={28} />
             </div>}
           </div>
           {item.kind === 'muscles' ? <div className="mt-1 grid grid-cols-2 text-center text-xs font-bold text-slate-600"><span>{t('exerciseVisual.frontView')}</span><span>{t('exerciseVisual.backView')}</span></div> : null}

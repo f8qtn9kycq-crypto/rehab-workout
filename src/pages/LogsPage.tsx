@@ -158,7 +158,7 @@ export default function LogsPage() {
         <FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />
       </section>
 
-      <section id="records-cycling" className="space-y-4" aria-label={t('activities.cycling')}><ActivityTracking manualWorkouts={manualWorkouts} initialKind="cycling" activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} /></section>
+      <section id="records-cycling" className="space-y-4" aria-label={t('activities.cycling')}><ActivityTracking initialKind="cycling" activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} /></section>
 
       <section className="space-y-4" aria-labelledby="records-history-title">
         <SectionHeader id="records-history-title" title={t('records.history.title')} subtitle={t('records.history.subtitle')} icon={History} />

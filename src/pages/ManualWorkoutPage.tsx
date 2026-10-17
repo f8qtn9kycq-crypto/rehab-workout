@@ -55,6 +55,8 @@ export default function ManualWorkoutPage() {
   const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
   const revision = useRef(resumed?.revision ?? 0);
   const firstRender = useRef(true);
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   const saveQueue = useRef(Promise.resolve());
   const saveRequest = useRef(0);
   const identity = useRef({ id: resumed?.id ?? manualWorkoutId(), createdAt: resumed?.createdAt ?? new Date().toISOString() });
@@ -128,9 +130,9 @@ export default function ManualWorkoutPage() {
       draft.revision = revision.current;
       const result = await persistManualDraft(draft);
       revision.current = draft.revision;
-      if (draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
+      if (mounted.current && window.location.pathname === '/logs/new' && draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
       success = result === 'ok';
-      if (request === saveRequest.current) {
+      if (mounted.current && request === saveRequest.current) {
         setError(result === 'ok' ? null : result === 'conflict' ? 'conflict' : result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input');
         setSaveStatus(success);
       }

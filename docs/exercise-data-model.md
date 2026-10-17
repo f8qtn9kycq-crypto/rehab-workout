@@ -153,7 +153,7 @@ Preserve LocalStorage compatibility unless a migration is explicitly requested.
 
 ## Retrospective workout record
 
-`rehab.manualWorkouts.v1` is additive and separate from guided `rehab.trainingLogs.v2` and activity `rehab.activities.v1`. One saved workout has a local `YYYY-MM-DD` date, a stable ID, creation time, and 1–12 exercises. Each exercise has its actual name, optional equipment, and 1–20 completed sets with required positive integer reps and optional nonnegative weight in kg. A set may be marked as warm-up. Optional exercise feedback includes type, body area, effort, and a paired before/after pain score; an omitted value remains unknown, including when the user does not provide any pain score. These records do not enter rehab recommendations or recovery trends. New cycling entries use separate `rehab.activities.v1` records so two rides stay distinct. Existing manual workouts with `cyclingMinutes` remain readable and still count as one workout, without creating a cycling activity. Invalid or corrupt stored data must not be overwritten by a new save; clear-local-data includes this key.
+`rehab.manualWorkouts.v1` is additive and separate from guided `rehab.trainingLogs.v2` and activity `rehab.activities.v1`. One saved workout has a local `YYYY-MM-DD` date, a stable ID, creation time, and 1–12 exercises. Each exercise has its actual name, optional equipment, and 1–20 completed sets with required positive integer reps and optional nonnegative weight in kg. A set may be marked as warm-up. Optional exercise feedback includes type, body area, effort, and a paired before/after pain score; an omitted value remains unknown, including when the user does not provide any pain score. These records do not enter rehab recommendations or recovery trends. 獨立騎車仍使用 `rehab.activities.v1`；手動訓練可確認同次騎車總分鐘，保存為 `cyclingMinutes`，不可再重複另記相同騎車。活動摘要分列同次訓練分鐘與合計；既有安全建議只使用原活動回饋資料。 Existing manual workouts with `cyclingMinutes` remain readable and still count as one workout, without creating a cycling activity. Invalid or corrupt stored data must not be overwritten by a new save; clear-local-data includes this key.
 
 ## Functional Outcome Schema
 
@@ -253,3 +253,7 @@ Audit output should help identify:
 ## 個人補記動作
 
 `rehab.customExercises.v1` 獨立保存最多 200 個私人定義：`custom-` 前綴穩定 ID、名稱（1–100 字元）、`kind`（strength／mobility）、可選 canonical equipmentId、`recordOnly: true`。名稱正規化後重複會提示，資料損壞或寫入失敗不得覆寫。只由補記 picker 讀取，不加入官方 exercises、推薦、routine 或 guided session。名稱與 kind、recordOnly 會保存於 manual workout snapshot；定義缺失不影響歷史閱讀，缺失定義不能作為新選取。現有清除本機資料功能納入此 key。
+
+## 進行中手動訓練
+
+`rehab.manualWorkoutDrafts.v1` 保存獨立的 workout／exercise／set ID、未完成輸入、每組完成狀態與 revision。沿用數字預設未完成；歷史僅投影已完成組。先寫草稿，再更新同 workout ID 的歷史；第二步失敗可重試，不新增副本。不同頁籤 revision 不符時拒絕寫入，避免覆蓋較新草稿。草稿不進入推薦或活動統計；清除本機資料包含此鍵。

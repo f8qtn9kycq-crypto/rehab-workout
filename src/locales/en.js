@@ -527,6 +527,20 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    conflict: "Another tab has newer data. This page is not saved. Load the latest draft before editing.",
+    reloadDraft: "Load latest draft (replace this page’s inputs)",
+
+    resume: "Continue recording",
+    draftSaved: "Inputs and completed sets saved. Unfinished sets do not count.",
+    viewSaved: "View saved records",
+    completeSet: "Complete and save set",
+    setDone: "Completed (tap to undo)",
+    saveDraft: "Save current inputs",
+    confirmCycling: "Confirm today’s cycling time",
+    cyclingDone: "Cycling confirmed (tap to undo)",
+    cyclingDraftHint: "Cycling enters history with your first completed set. Do not record the same ride separately.",
+    cyclingTotal: "Workout cycling adds {manual} minutes; all cycling totals {total} minutes.",
+
     reuse: "Use this workout",
     reuseSource: "Copied from {date}. Adjust for today; pain and effort were not copied.",
     sourceMissing: "Source record unavailable. Return to Records and choose again.",

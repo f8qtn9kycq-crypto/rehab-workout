@@ -1,3 +1,4 @@
+import type { ManualWorkout } from '../services/manualWorkoutStorage';
 import ActivityPlan from './ActivityPlan';
 import { useId, useState } from 'react';
 import ActivityIdentityVisual from './ActivityIdentityVisual';
@@ -9,7 +10,7 @@ import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 const newSegment = (phase: SessionPhase = 'main'): SessionSegment => ({ phase, exerciseLogIds: [], exerciseResults: [] });
 
-export default function ActivityTracking({ onActivitiesChange = () => {}, activities, initialKind = null, allowCycling = true }: { onActivitiesChange?: () => void; activities?: Activity[]; initialKind?: Activity['kind'] | null; allowCycling?: boolean }) {
+export default function ActivityTracking({ onActivitiesChange = () => {}, activities, initialKind = null, allowCycling = true, manualWorkouts = [] }: { manualWorkouts?: ManualWorkout[]; onActivitiesChange?: () => void; activities?: Activity[]; initialKind?: Activity['kind'] | null; allowCycling?: boolean }) {
   const { t, language } = useI18n();
   const titleId = useId();
   const [savedActivity, setSavedActivity] = useState<Activity | null>(null);
@@ -25,6 +26,7 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, activi
   const [message, setMessage] = useState('');
   const currentActivities = activities ?? state.activities;
   const summary = weeklyActivities(currentActivities);
+  const manualCycling = manualWorkouts.filter(w => w.date >= summary.start && w.date <= localDate()).reduce((sum, w) => sum + (w.cyclingMinutes ?? 0), 0);
   const links = segments.flatMap(segment => segment.exerciseLogIds);
   const usedIds = currentActivities.flatMap(a => a.kind === 'resistance' ? a.exerciseLogIds : []);
   const logs = getLogs();
@@ -75,6 +77,7 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, activi
     <h2 id={titleId} className="text-xl font-bold">{t(initialKind ? `activities.${initialKind}` : 'activities.title')}</h2>
     {!initialKind && <>
     <p>{t('activities.summary', { resistance: summary.resistance, cycling: summary.cycling, minutes: summary.cyclingMinutes })}</p>
+    {manualCycling > 0 && <p>{t('manualWorkout.cyclingTotal', { manual: manualCycling, total: manualCycling + summary.cyclingMinutes })}</p>}
     <p className="text-sm text-slate-600">{t('activities.legacy')}</p>
     <p className="text-sm">{feedbackText}</p>
     <p className="rounded-md bg-amber-50 p-3">{t(`activities.recommendations.${summary.recommendation}`)}</p>

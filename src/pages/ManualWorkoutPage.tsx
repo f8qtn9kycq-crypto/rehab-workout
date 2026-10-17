@@ -55,6 +55,8 @@ export default function ManualWorkoutPage() {
   const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
   const revision = useRef(resumed?.revision ?? 0);
   const firstRender = useRef(true);
+  const saveQueue = useRef(Promise.resolve());
+  const saveRequest = useRef(0);
   const identity = useRef({ id: resumed?.id ?? manualWorkoutId(), createdAt: resumed?.createdAt ?? new Date().toISOString() });
   const [saveStatus, setSaveStatus] = useState(false);
   const [cyclingMinutes, setCyclingMinutes] = useState<number | undefined>(resumed?.cyclingMinutes ?? source?.cyclingMinutes);
@@ -104,7 +106,7 @@ export default function ManualWorkoutPage() {
     setEditingExerciseIndex(current => current === index ? null : current !== null && current > index ? current - 1 : current);
   }
 
-  function persist(nextExercises = exercises, cycleConfirmed = cyclingConfirmed): boolean {
+  async function persist(nextExercises = exercises, cycleConfirmed = cyclingConfirmed): Promise<boolean> {
     setSaveStatus(false);
     if (draftState.error || missingResume || (sourceState.requested && !source)) { setError('storage'); return false; }
     const draft: ManualWorkoutDraft = {
@@ -120,11 +122,22 @@ export default function ManualWorkoutPage() {
         };
       }),
     };
-    const result = persistManualDraft(draft);
-    revision.current = draft.revision;
-    if (draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
-    if (result !== 'ok') { setError(result === 'conflict' ? 'conflict' : result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input'); return false; }
-    setError(null); setSaveStatus(true); return true;
+    const request = ++saveRequest.current;
+    let success = false;
+    const task = saveQueue.current.then(async () => {
+      draft.revision = revision.current;
+      const result = await persistManualDraft(draft);
+      revision.current = draft.revision;
+      if (draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
+      success = result === 'ok';
+      if (request === saveRequest.current) {
+        setError(result === 'ok' ? null : result === 'conflict' ? 'conflict' : result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input');
+        setSaveStatus(success);
+      }
+    });
+    saveQueue.current = task.catch(() => { setError('write'); });
+    await saveQueue.current;
+    return success;
   }
   useEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }

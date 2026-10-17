@@ -55,7 +55,7 @@ export function projectManualDraft(draft: ManualWorkoutDraft): ManualWorkout | n
   };
 }
 /** Draft first, history second. Retry is idempotent when the second write fails. */
-export function persistManualDraft(draft: ManualWorkoutDraft): ManualWorkoutSaveResult | 'conflict' {
+function persistUnlocked(draft: ManualWorkoutDraft): ManualWorkoutSaveResult | 'conflict' {
   const state = readManualDrafts();
   const history = readManualWorkouts();
   if (state.error || history.error) return 'corrupt';
@@ -72,4 +72,27 @@ export function persistManualDraft(draft: ManualWorkoutDraft): ManualWorkoutSave
   // Removing the last completed set removes only this draft's projection.
   if (!safeSetItem(MANUAL_WORKOUT_KEY, JSON.stringify(projected ? [projected, ...others] : others))) return 'write-failed';
   return 'ok';
+}
+
+/** Serialize the complete two-key update across tabs. IndexedDB is the Safari fallback. */
+export async function persistManualDraft(draft: ManualWorkoutDraft): Promise<ManualWorkoutSaveResult | 'conflict'> {
+  if (typeof navigator !== 'undefined' && navigator.locks) {
+    return navigator.locks.request('rehab.manualWorkout.write', () => persistUnlocked(draft));
+  }
+  return new Promise(resolve => {
+    try {
+      const open = indexedDB.open('rehab.manualWorkoutMutex.v1', 1);
+      open.onupgradeneeded = () => open.result.createObjectStore('mutex');
+      open.onerror = () => resolve('write-failed');
+      open.onblocked = () => resolve('write-failed');
+      open.onsuccess = () => {
+        const db = open.result;
+        const transaction = db.transaction('mutex', 'readwrite');
+        let result: ManualWorkoutSaveResult | 'conflict' = 'write-failed';
+        transaction.objectStore('mutex').get('write').onsuccess = () => { result = persistUnlocked(draft); };
+        transaction.oncomplete = () => { db.close(); resolve(result); };
+        transaction.onerror = transaction.onabort = () => { db.close(); resolve('write-failed'); };
+      };
+    } catch { resolve('write-failed'); }
+  });
 }

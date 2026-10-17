@@ -36,7 +36,7 @@ export default function LogsPage() {
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const [activities, setActivities] = useState(() => readActivities().activities);
   const [manualWorkouts, setManualWorkouts] = useState(() => readManualWorkouts().workouts);
-  const [draftState] = useState(readManualDrafts);
+  const [draftState, setDraftState] = useState(readManualDrafts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
@@ -59,6 +59,7 @@ export default function LogsPage() {
     if (!window.confirm(t('logs.clearLocalDataConfirm'))) return;
 
     const result = clearRehabLocalData();
+    setDraftState(readManualDrafts());
     setActivities([]);
     setManualWorkouts(readManualWorkouts().workouts);
     setLogs([]);

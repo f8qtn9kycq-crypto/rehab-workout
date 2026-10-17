@@ -61,7 +61,7 @@ export default function ManualWorkoutPage() {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, ({ recordOnly, kind, ...value }) => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, value => ({ sets: value.sets, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
@@ -70,7 +70,7 @@ export default function ManualWorkoutPage() {
   function chooseCustomExercise(index: number, exercise: CustomExercise): void {
     setSelectedIds(current => current.map((value, position) => position === index ? exercise.id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
-    changeExercise(index, value => ({ ...value, name: exercise.name, kind: exercise.kind, recordOnly: true,
+    changeExercise(index, value => ({ sets: value.sets, name: exercise.name, kind: exercise.kind, recordOnly: true,
       equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));

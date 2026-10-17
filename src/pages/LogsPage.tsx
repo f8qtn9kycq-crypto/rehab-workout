@@ -1,3 +1,4 @@
+import { readManualDrafts } from '../services/manualWorkoutDraftStorage';
 import ActivityTracking from '../components/ActivityTracking';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
@@ -35,6 +36,7 @@ export default function LogsPage() {
   const [outcomes, setOutcomes] = useState(() => getOutcomeEntries());
   const [activities, setActivities] = useState(() => readActivities().activities);
   const [manualWorkouts, setManualWorkouts] = useState(() => readManualWorkouts().workouts);
+  const [draftState, setDraftState] = useState(readManualDrafts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
@@ -57,6 +59,7 @@ export default function LogsPage() {
     if (!window.confirm(t('logs.clearLocalDataConfirm'))) return;
 
     const result = clearRehabLocalData();
+    setDraftState(readManualDrafts());
     setActivities([]);
     setManualWorkouts(readManualWorkouts().workouts);
     setLogs([]);
@@ -84,6 +87,8 @@ export default function LogsPage() {
         <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('logs.startTraining')}</Link>
       </section>
 
+      {draftState.error && <p role="alert">{t('manualWorkout.storageError')}</p>}
+      {draftState.drafts.map(d => <Link key={d.id} to={`/logs/new?draft=${encodeURIComponent(d.id)}`} className="focus-ring block min-h-11 font-bold text-calm-800 underline">{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
       <a href="#records-cycling" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('activities.cycling')}</a>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">

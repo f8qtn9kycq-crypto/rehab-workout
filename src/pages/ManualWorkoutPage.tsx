@@ -101,8 +101,9 @@ export default function ManualWorkoutPage() {
       exercises: exercises.map((exercise, index) => {
         const id = selectedIds[index];
         const catalogExercise = catalog.find(item => item.id === id);
+        const { exerciseId: previousId, equipmentId: previousEquipment, ...details } = exercise;
         return {
-          ...exercise,
+          ...details,
           ...(id ? { exerciseId: id } : {}),
           ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
           name: (catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),

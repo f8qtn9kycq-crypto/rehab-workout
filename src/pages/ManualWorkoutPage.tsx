@@ -49,7 +49,6 @@ export default function ManualWorkoutPage() {
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
   const [error, setError] = useState<'input' | 'storage' | 'write' | null>(null);
   const saving = useRef(false);
-  const [cyclingMinutes, setCyclingMinutes] = useState<number | undefined>(source?.cyclingMinutes);
   const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
   const painNotices = exercises.map(exercise => manualWorkoutPainNotice(exercise.painBefore, exercise.painAfter));
 
@@ -102,7 +101,6 @@ export default function ManualWorkoutPage() {
     saving.current = true;
     const workout = {
       id: manualWorkoutId(), date, createdAt: new Date().toISOString(),
-      ...(cyclingMinutes !== undefined ? { cyclingMinutes } : {}),
       exercises: exercises.map((exercise, index) => {
         const id = selectedIds[index];
         const catalogExercise = catalog.find(item => item.id === id);
@@ -199,7 +197,7 @@ export default function ManualWorkoutPage() {
         </details>
       </fieldset>)}
       {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setLegacyRecords(current => [...current, false]); setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
-      <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" min="1" max="1440" step="1" value={cyclingMinutes ?? ''} onChange={event => setCyclingMinutes(event.target.value === '' ? undefined : Number(event.target.value))} /></label>
+      <p className="rounded-md bg-calm-50 p-3 text-sm text-calm-800">{t('manualWorkout.cyclingSeparate')}</p>
       {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
       <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>
     </form>

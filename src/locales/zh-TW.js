@@ -532,7 +532,6 @@ export default {
     sourceMissing: "找不到來源紀錄，請返回紀錄頁重新選擇。",
     notes: "今天的動作備註",
     previousNotes: "上次備註（參考）",
-    cyclingMinutes: "騎車總分鐘（選填，請確認今天實際時間）",
 
     customTitle: '個人補記動作',
     addCustom: '新增個人動作',

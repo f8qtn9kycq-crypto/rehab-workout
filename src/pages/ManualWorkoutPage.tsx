@@ -1,3 +1,4 @@
+import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
 import FavoriteButton from '../components/FavoriteButton';
 import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
@@ -38,6 +39,7 @@ export default function ManualWorkoutPage() {
   const source = sourceState.workout;
   const [previousNotes, setPreviousNotes] = useState(() => source?.exercises.map(exercise => exercise.notes) ?? [undefined]);
   const [initialExercises] = useState(() => source ? copyManualExercises(source) : [emptyExercise()]);
+  const [legacyRecords, setLegacyRecords] = useState(() => initialExercises.map(isLegacyRevisedCatalogRecord));
   const [customState, setCustomState] = useState(readCustomExercises);
   const [date, setDate] = useState(localDate);
   const [exercises, setExercises] = useState<ManualExercise[]>(initialExercises);
@@ -61,6 +63,7 @@ export default function ManualWorkoutPage() {
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
     changeExercise(index, ({ recordOnly, kind, ...value }) => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
   }
@@ -70,6 +73,7 @@ export default function ManualWorkoutPage() {
     setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
     changeExercise(index, value => ({ ...value, name: exercise.name, kind: exercise.kind, recordOnly: true,
       equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
+    setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
   }
@@ -81,6 +85,7 @@ export default function ManualWorkoutPage() {
   }
 
   function removeExercise(index: number) {
+    setLegacyRecords(current => current.filter((_, position) => position !== index));
     setPreviousNotes(current => current.filter((_, position) => position !== index));
     setExercises(current => current.filter((_, position) => position !== index));
     setDoseModes(current => current.filter((_, position) => position !== index));
@@ -106,7 +111,7 @@ export default function ManualWorkoutPage() {
           ...details,
           ...(id ? { exerciseId: id } : {}),
           ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
-          name: (catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
+          name: (!legacyRecords[index] && catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
           equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : exercise.equipment).trim(),
         };
       }),
@@ -127,7 +132,7 @@ export default function ManualWorkoutPage() {
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
           {(selectedIds[index] || (source && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
-            {hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
+            {!legacyRecords[index] && hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
@@ -193,7 +198,7 @@ export default function ManualWorkoutPage() {
           </div>
         </details>
       </fieldset>)}
-      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
+      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setLegacyRecords(current => [...current, false]); setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
       <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" min="1" max="1440" step="1" value={cyclingMinutes ?? ''} onChange={event => setCyclingMinutes(event.target.value === '' ? undefined : Number(event.target.value))} /></label>
       {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
       <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>

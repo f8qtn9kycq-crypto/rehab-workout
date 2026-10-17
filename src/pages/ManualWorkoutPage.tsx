@@ -3,7 +3,7 @@ import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
 import FavoriteButton from '../components/FavoriteButton';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RecordOnlyExercisePicker from '../components/RecordOnlyExercisePicker';
 import { readCustomExercises, type CustomExercise } from '../services/customExerciseStorage';
 import LibraryMovementArt from '../components/LibraryMovementArt';
@@ -30,10 +30,12 @@ const equipmentChoices = [
 
 export default function ManualWorkoutPage() {
   const { t, language } = useI18n();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const [draftState] = useState(readManualDrafts);
   const resumeId = params.get('draft');
   const [resumed] = useState(() => draftState.drafts.find(row => row.id === resumeId));
+  const [missingResume] = useState(() => !!resumeId && !resumed);
   const [sourceState] = useState(() => {
     const id = params.get('from');
     const state = readManualWorkouts();
@@ -104,7 +106,7 @@ export default function ManualWorkoutPage() {
 
   function persist(nextExercises = exercises, cycleConfirmed = cyclingConfirmed): boolean {
     setSaveStatus(false);
-    if (draftState.error || (resumeId && !resumed) || (sourceState.requested && !source)) { setError('storage'); return false; }
+    if (draftState.error || missingResume || (sourceState.requested && !source)) { setError('storage'); return false; }
     const draft: ManualWorkoutDraft = {
       ...identity.current, revision: revision.current, date, cyclingMinutes, cyclingConfirmed: cycleConfirmed,
       exercises: nextExercises.map((exercise, index) => {
@@ -120,6 +122,7 @@ export default function ManualWorkoutPage() {
     };
     const result = persistManualDraft(draft);
     revision.current = draft.revision;
+    if (draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
     if (result !== 'ok') { setError(result === 'conflict' ? 'conflict' : result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input'); return false; }
     setError(null); setSaveStatus(true); return true;
   }
@@ -144,7 +147,7 @@ export default function ManualWorkoutPage() {
     {source && <p role="status" className="rounded-md bg-calm-50 p-3">{t('manualWorkout.reuseSource', { date: source.date })}</p>}
     {sourceState.requested && !source && <p role="alert">{t('manualWorkout.sourceMissing')}</p>}
     {!resumed && !source && draftState.drafts.filter(d => d.date === localDate()).map(d => <Link key={d.id} className="focus-ring block min-h-11 font-bold text-calm-800 underline" to={`/logs/new?draft=${encodeURIComponent(d.id)}`} reloadDocument>{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
-    {(draftState.error || (resumeId && !resumed)) && <p role="alert">{t('manualWorkout.storageError')}</p>}
+    {(draftState.error || missingResume) && <p role="alert">{t('manualWorkout.storageError')}</p>}
     {saveStatus && <p role="status">{t('manualWorkout.draftSaved')}</p>}
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.viewSaved')}</Link>
     <form onBlur={() => persist()} onSubmit={save} className="space-y-5">
@@ -152,7 +155,7 @@ export default function ManualWorkoutPage() {
       {exercises.map((exercise, index) => <fieldset key={exercise.id} className="card space-y-4 p-4">
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
-          {(selectedIds[index] || (source && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
+          {(selectedIds[index] || ((source || resumed) && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {!legacyRecords[index] && hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>

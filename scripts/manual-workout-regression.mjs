@@ -153,6 +153,19 @@ const workout = { id: 'manual-1', date, createdAt: today.toISOString(), cyclingM
   { name: 'Shoulder press', equipment: 'dumbbells', sets: [{ weightKg: 20, reps: 10 }] },
 ] };
 
+const original = { ...workout, exercises: [{ ...workout.exercises[0], notes: '右側感受較弱', painBefore: 2, painAfter: 3, effort: 8 }] };
+const originalJson = JSON.stringify(original);
+const copied = storage.copyManualExercises(original);
+assert.equal(copied[0].painBefore, undefined);
+assert.equal(copied[0].painAfter, undefined);
+assert.equal(copied[0].effort, undefined);
+assert.equal(copied[0].notes, undefined);
+assert.equal(copied[0].equipmentId, 'barbell');
+copied[0].sets[0].weightKg = 1;
+assert.equal(JSON.stringify(original), originalJson, 'editing a copy never changes the source');
+assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: '字'.repeat(2000) }] }), true);
+assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: '字'.repeat(2001) }] }), false);
+assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: 1 }] }), false);
 assert.equal(storage.saveManualWorkout(workout), 'ok');
 assert.equal(storage.readManualWorkouts().workouts.length, 1, 'one workout holds multiple exercises');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].sets[2].weightKg, 72);

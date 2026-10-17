@@ -1,7 +1,7 @@
 import FavoriteButton from '../components/FavoriteButton';
 import { useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RecordOnlyExercisePicker from '../components/RecordOnlyExercisePicker';
 import { readCustomExercises, type CustomExercise } from '../services/customExerciseStorage';
 import LibraryMovementArt from '../components/LibraryMovementArt';
@@ -10,7 +10,7 @@ import { exercises as catalog } from '../data/exercises';
 import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
-import { manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
+import { copyManualExercises, readManualWorkouts, manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
@@ -29,15 +29,25 @@ const equipmentChoices = [
 export default function ManualWorkoutPage() {
   const { t, language } = useI18n();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const [sourceState] = useState(() => {
+    const id = params.get('from');
+    const state = readManualWorkouts();
+    return { requested: !!id, workout: state.error ? undefined : state.workouts.find(row => row.id === id) };
+  });
+  const source = sourceState.workout;
+  const [previousNotes, setPreviousNotes] = useState(() => source?.exercises.map(exercise => exercise.notes) ?? [undefined]);
+  const [initialExercises] = useState(() => source ? copyManualExercises(source) : [emptyExercise()]);
   const [customState, setCustomState] = useState(readCustomExercises);
   const [date, setDate] = useState(localDate);
-  const [exercises, setExercises] = useState<ManualExercise[]>([emptyExercise()]);
-  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(['reps']);
-  const [selectedIds, setSelectedIds] = useState<string[]>(['']);
-  const [equipmentIds, setEquipmentIds] = useState<string[]>(['']);
+  const [exercises, setExercises] = useState<ManualExercise[]>(initialExercises);
+  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(() => initialExercises.map(exercise => exercise.sets[0]?.durationSeconds !== undefined ? 'durationSeconds' : exercise.sets[0]?.holdSeconds !== undefined ? 'holdSeconds' : 'reps'));
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.exerciseId ?? ''));
+  const [equipmentIds, setEquipmentIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.equipmentId ?? ''));
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
   const [error, setError] = useState<'input' | 'storage' | 'write' | null>(null);
   const saving = useRef(false);
+  const [cyclingMinutes, setCyclingMinutes] = useState<number | undefined>(source?.cyclingMinutes);
   const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
   const painNotices = exercises.map(exercise => manualWorkoutPainNotice(exercise.painBefore, exercise.painAfter));
 
@@ -51,6 +61,7 @@ export default function ManualWorkoutPage() {
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
     changeExercise(index, ({ recordOnly, kind, ...value }) => ({ ...value, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
   }
 
@@ -59,6 +70,7 @@ export default function ManualWorkoutPage() {
     setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
     changeExercise(index, value => ({ ...value, name: exercise.name, kind: exercise.kind, recordOnly: true,
       equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
+    setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
   }
 
@@ -69,6 +81,7 @@ export default function ManualWorkoutPage() {
   }
 
   function removeExercise(index: number) {
+    setPreviousNotes(current => current.filter((_, position) => position !== index));
     setExercises(current => current.filter((_, position) => position !== index));
     setDoseModes(current => current.filter((_, position) => position !== index));
     setSelectedIds(current => current.filter((_, position) => position !== index));
@@ -79,19 +92,21 @@ export default function ManualWorkoutPage() {
   function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (saving.current) return;
-    if (selectedIds.some(id => !catalog.some(item => item.id === id) && !readCustomExercises().exercises.some(item => item.id === id))) { setError('input'); return; }
+    if (sourceState.requested && !source) { setError('input'); return; }
+    if (selectedIds.some((id, index) => !catalog.some(item => item.id === id) && !readCustomExercises().exercises.some(item => item.id === id) && !source?.exercises.some(item => item.exerciseId === (id || undefined) && item.name === exercises[index].name))) { setError('input'); return; }
     saving.current = true;
     const workout = {
       id: manualWorkoutId(), date, createdAt: new Date().toISOString(),
+      ...(cyclingMinutes !== undefined ? { cyclingMinutes } : {}),
       exercises: exercises.map((exercise, index) => {
         const id = selectedIds[index];
         const catalogExercise = catalog.find(item => item.id === id);
         return {
           ...exercise,
-          exerciseId: id,
+          ...(id ? { exerciseId: id } : {}),
           ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
           name: (catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
-          equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '').trim(),
+          equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : exercise.equipment).trim(),
         };
       }),
     };
@@ -103,12 +118,14 @@ export default function ManualWorkoutPage() {
   return <div className="page mx-auto max-w-2xl space-y-5">
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center text-calm-800 underline">{t('manualWorkout.back')}</Link>
     <div><h1 className="text-3xl font-black text-ink">{t('manualWorkout.title')}</h1><p className="mt-2 leading-7 text-slate-600">{t('manualWorkout.hint')}</p></div>
+    {source && <p role="status" className="rounded-md bg-calm-50 p-3">{t('manualWorkout.reuseSource', { date: source.date })}</p>}
+    {sourceState.requested && !source && <p role="alert">{t('manualWorkout.sourceMissing')}</p>}
     <form onSubmit={save} className="space-y-5">
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
       {exercises.map((exercise, index) => <fieldset key={index} className="card space-y-4 p-4">
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
-          {selectedIds[index] && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
+          {(selectedIds[index] || (source && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
@@ -162,6 +179,8 @@ export default function ManualWorkoutPage() {
           {exercises.length > 1 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => removeExercise(index)}>{t('manualWorkout.removeExercise')}</button>}
         </div>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{equipmentIds[index] ? t('manualWorkout.selectedEquipment', { name: t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) }) : t('manualWorkout.equipment')}</summary><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">{equipmentChoices.map(({ id, Icon }) => <button key={id} type="button" aria-pressed={equipmentIds[index] === id} onClick={() => chooseEquipment(index, id)} className={`focus-ring flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-xs font-bold ${equipmentIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={22} aria-hidden="true" /><span>{t(`manualWorkout.equipmentChoices.${id}`)}</span></button>)}</div></details>
+        {previousNotes[index] && <p className="whitespace-pre-wrap break-words text-sm text-slate-600">{t('manualWorkout.previousNotes')}: {previousNotes[index]}</p>}
+        <label className="block text-sm font-bold">{t('manualWorkout.notes')}<textarea maxLength={2000} className={control} value={exercise.notes ?? ''} onChange={event => changeExercise(index, value => ({ ...value, notes: event.target.value }))} /></label>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{t('manualWorkout.feedback')}</summary>
           <div className="mt-3 space-y-3">
             <label className="block text-sm font-bold">{t('manualWorkout.kind')}<select className={control} value={exercise.kind ?? ''} onChange={event => changeExercise(index, value => ({ ...value, kind: event.target.value === '' ? undefined : event.target.value as 'strength' | 'mobility' }))}><option value="">{t('manualWorkout.unknown')}</option><option value="strength">{t('manualWorkout.strength')}</option><option value="mobility">{t('manualWorkout.mobility')}</option></select></label>
@@ -173,8 +192,8 @@ export default function ManualWorkoutPage() {
           </div>
         </details>
       </fieldset>)}
-      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
-      <p className="rounded-md bg-calm-50 p-3 text-sm text-calm-800">{t('manualWorkout.cyclingSeparate')}</p>
+      {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
+      <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" min="1" max="1440" step="1" value={cyclingMinutes ?? ''} onChange={event => setCyclingMinutes(event.target.value === '' ? undefined : Number(event.target.value))} /></label>
       {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
       <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>
     </form>

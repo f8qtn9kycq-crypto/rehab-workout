@@ -4,7 +4,7 @@ import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 export const MANUAL_WORKOUT_KEY = 'rehab.manualWorkouts.v1';
 export interface ManualSet { weightKg?: number; reps?: number; durationSeconds?: number; holdSeconds?: number; warmup?: boolean }
-export interface ManualExercise { recordOnly?: true; name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string; bodyArea?: BodyArea; kind?: 'strength' | 'mobility'; painBefore?: number; painAfter?: number; effort?: number }
+export interface ManualExercise { notes?: string; recordOnly?: true; name: string; equipment: string; sets: ManualSet[]; exerciseId?: string; equipmentId?: string; bodyArea?: BodyArea; kind?: 'strength' | 'mobility'; painBefore?: number; painAfter?: number; effort?: number }
 export interface ManualWorkout { id: string; date: string; createdAt: string; exercises: ManualExercise[]; cyclingMinutes?: number }
 
 function validDate(value: unknown): value is string {
@@ -21,6 +21,7 @@ export function validManualWorkout(value: unknown): value is ManualWorkout {
     && (workout.cyclingMinutes === undefined || (Number.isInteger(workout.cyclingMinutes) && workout.cyclingMinutes >= 1 && workout.cyclingMinutes <= 1440))
     && Array.isArray(workout.exercises) && workout.exercises.length >= 1 && workout.exercises.length <= 12
     && workout.exercises.every(exercise => typeof exercise.name === 'string' && exercise.name.trim().length > 0 && exercise.name.length <= 100
+      && (exercise.notes === undefined || (typeof exercise.notes === 'string' && exercise.notes.length <= 2000))
       && typeof exercise.equipment === 'string' && exercise.equipment.length <= 100
       && (exercise.exerciseId === undefined || (typeof exercise.exerciseId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.exerciseId)))
       && (exercise.equipmentId === undefined || (typeof exercise.equipmentId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(exercise.equipmentId)))
@@ -61,4 +62,11 @@ export function saveManualWorkout(workout: ManualWorkout): ManualWorkoutSaveResu
 export function manualWorkoutId(): string {
   return typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
     ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+/** Copy recorded doses only. Current symptoms and today's notes must be entered anew. */
+export function copyManualExercises(workout: ManualWorkout): ManualExercise[] {
+  return workout.exercises.map(({ painBefore, painAfter, effort, notes, ...exercise }) => ({
+    ...exercise, sets: exercise.sets.map(set => ({ ...set })),
+  }));
 }

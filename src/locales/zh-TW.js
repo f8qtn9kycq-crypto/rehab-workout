@@ -527,6 +527,13 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    reuse: "以此建立訓練",
+    reuseSource: "沿用 {date} 的內容；請依今天狀態修改，疼痛與努力程度未帶入。",
+    sourceMissing: "找不到來源紀錄，請返回紀錄頁重新選擇。",
+    notes: "今天的動作備註",
+    previousNotes: "上次備註（參考）",
+    cyclingMinutes: "騎車總分鐘（選填，請確認今天實際時間）",
+
     customTitle: '個人補記動作',
     addCustom: '新增個人動作',
     customName: '動作名稱',

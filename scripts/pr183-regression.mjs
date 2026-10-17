@@ -21,7 +21,7 @@ export { readManualWorkouts, MANUAL_WORKOUT_KEY } from '../src/services/manualWo
 export { getSavedAssessment } from '../src/services/assessmentStorage';
 export { assessmentStorageKey } from '../src/data/safety';
 export function renderRecord(workout) {
-  return renderToStaticMarkup(<I18nProvider><ManualWorkoutCard workout={workout} /></I18nProvider>);
+  return renderToStaticMarkup(<MemoryRouter><I18nProvider><ManualWorkoutCard workout={workout} /></I18nProvider></MemoryRouter>);
 }
 export function renderAssessment() {
   return renderToStaticMarkup(<MemoryRouter><I18nProvider><AssessmentPage /></I18nProvider></MemoryRouter>);

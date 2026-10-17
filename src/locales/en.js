@@ -527,6 +527,12 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    reuse: "Use this workout",
+    reuseSource: "Copied from {date}. Adjust for today; pain and effort were not copied.",
+    sourceMissing: "Source record unavailable. Return to Records and choose again.",
+    notes: "Today’s exercise notes",
+    previousNotes: "Previous notes (reference)",
+
     customTitle: 'Personal record-only exercises',
     addCustom: 'Add a personal exercise',
     customName: 'Exercise name',

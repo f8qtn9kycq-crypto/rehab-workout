@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { exercises as catalog } from '../data/exercises';
 import { equipmentChoiceIds } from '../data/manualWorkoutOptions';
 import { useI18n } from '../services/i18n';
@@ -30,6 +31,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
   const { t, language } = useI18n();
   return <article className="card space-y-2 p-4">
     <p className="text-lg font-black text-ink">{t('manualWorkout.recordTitle', { date: workout.date })}</p>
+    <Link to={`/logs/new?from=${encodeURIComponent(workout.id)}`} className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.reuse')}</Link>
     {workout.exercises.map((exercise, index) => {
       const catalogExercise = catalog.find(item => item.id === exercise.exerciseId);
       const legacyRevisedCatalog = isLegacyRevisedCatalogRecord(exercise);
@@ -52,6 +54,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
           return `${prefix}${t('manualWorkout.setSummary', { number: setIndex + 1, weight: set.weightKg === undefined ? t('manualWorkout.noWeight') : t('manualWorkout.weightValue', { value: set.weightKg }), reps: set.reps ?? t('manualWorkout.unknown') })}`;
         }).join(' · ')}</p>
         {exercise.painBefore !== undefined && exercise.painAfter !== undefined && <p className="text-sm text-slate-600">{t('manualWorkout.painSummary', { before: exercise.painBefore, after: exercise.painAfter })}</p>}
+        {exercise.notes && <p className="whitespace-pre-wrap break-words text-sm text-slate-700">{t('manualWorkout.notes')}: {exercise.notes}</p>}
         {exercise.effort !== undefined && <p className="text-sm text-slate-600">{t('manualWorkout.effortSummary', { effort: exercise.effort })}</p>}
       </div>;
     })}

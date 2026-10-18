@@ -1,6 +1,6 @@
 import { localDate } from './activityStorage';
 import { safeSetItem } from './localStorageService';
-import { manualWorkoutId, readManualWorkouts, validManualWorkout, type ManualExercise, type ManualSet, type ManualWorkout, type ManualWorkoutSaveResult, MANUAL_WORKOUT_KEY } from './manualWorkoutStorage';
+import { manualWorkoutId, snapshotSetEquipment, readManualWorkouts, validManualWorkout, type ManualExercise, type ManualSet, type ManualWorkout, type ManualWorkoutSaveResult, MANUAL_WORKOUT_KEY } from './manualWorkoutStorage';
 
 export const MANUAL_DRAFT_KEY = 'rehab.manualWorkoutDrafts.v1';
 export type DoseMode = 'reps' | 'durationSeconds' | 'holdSeconds';
@@ -15,7 +15,7 @@ export interface ManualWorkoutDraft {
 export function draftExercise(exercise: ManualExercise = { name: '', equipment: '', sets: [{}] }, legacy = false, previousNotes?: string): DraftExercise {
   return { ...exercise, id: manualWorkoutId(), legacy, previousNotes,
     doseMode: exercise.sets[0]?.durationSeconds !== undefined ? 'durationSeconds' : exercise.sets[0]?.holdSeconds !== undefined ? 'holdSeconds' : 'reps',
-    sets: exercise.sets.map(set => ({ ...set, id: manualWorkoutId(), completed: false })),
+    sets: exercise.sets.map(set => ({ ...snapshotSetEquipment(set, exercise), id: manualWorkoutId(), completed: false })),
   };
 }
 const doseFields = ['reps', 'durationSeconds', 'holdSeconds'] as const;

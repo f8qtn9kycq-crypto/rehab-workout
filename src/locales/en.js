@@ -527,6 +527,13 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    search: "Search exercises (Chinese or English)",
+    noSearchResults: "No matching exercise. Add a personal exercise below.",
+    setEquipment: "Equipment for this set",
+    grip: "Grip / attachment for this set (optional)",
+    newSetEquipmentHint: "The exercise equipment default applies to new sets; existing sets keep their own equipment.",
+    artEquipmentHint: "The image illustrates the original movement. See each set for actual equipment and grip.",
+
     conflict: "Another tab has newer data. This page is not saved. Load the latest draft before editing.",
     reloadDraft: "Load latest draft (replace this page’s inputs)",
 

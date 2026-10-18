@@ -23,7 +23,7 @@ assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choic
 assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
 assert.match(libraryArtSource, /<WorkoutMovementArt id=\{id\}/, 'library choices use the shared movement-art component');
 assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <div[^>]*><button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
-assert.match(pickerSource, /<details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3/, 'library art avoids duplicate horizontal padding so it matches quick-art width');
+assert.match(pickerSource, /<details className="mt-3 rounded-lg border border-slate-200 py-3" open=\{query\.trim\(\) \? true : undefined\}><summary className="focus-ring cursor-pointer px-3/, 'library art avoids duplicate horizontal padding so it matches quick-art width');
 assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/quickExerciseIds = \[([\s\S]*?)\] as const/);
 assert.ok(quickChoiceList, 'quick choice list exists');
@@ -166,6 +166,24 @@ assert.equal(JSON.stringify(original), originalJson, 'editing a copy never chang
 assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: '字'.repeat(2000) }] }), true);
 assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: '字'.repeat(2001) }] }), false);
 assert.equal(storage.validManualWorkout({ ...workout, exercises: [{ ...workout.exercises[0], notes: 1 }] }), false);
+const { matchesManualExercise } = await loadModule('src/utils/manualWorkoutSearch.ts');
+const { getLocalizedExercise } = await loadModule('src/utils/localizedExercise.ts');
+const lat = canonicalExercises.find(e => e.id === 'catalog-lat-pulldown');
+const names = [lat.title, getLocalizedExercise(lat, 'en').title];
+assert.equal(matchesManualExercise('下拉', names), true);
+assert.equal(matchesManualExercise('LAT  PULL', names), true);
+assert.equal(matchesManualExercise('ＶｉＰＲ', ['ViPR 前滑']), true);
+assert.equal(matchesManualExercise('不存在的動作', names), false);
+const parent = { equipmentId: 'cable', equipment: '滑輪' };
+const snapshot = storage.snapshotSetEquipment({ reps: 10 }, parent);
+assert.equal(snapshot.equipmentId, 'cable');
+parent.equipmentId = 'machine';
+assert.equal(storage.snapshotSetEquipment(snapshot, parent).equipmentId, 'cable', 'later defaults do not rewrite old sets');
+assert.equal(storage.snapshotSetEquipment({ reps: 10, equipment: '' }, parent).equipmentId, undefined, 'explicit unknown never inherits a later default');
+assert.equal(storage.snapshotSetEquipment({ reps: 6 }, parent).equipmentId, 'machine');
+for (const set of [{reps:10,grip:'x'.repeat(101)},{reps:10,equipmentId:'bad id'},{reps:10,equipment:1}]) {
+  assert.equal(storage.validManualWorkout({ ...workout, exercises:[{...workout.exercises[0],sets:[set]}] }), false);
+}
 assert.equal(storage.saveManualWorkout(workout), 'ok');
 assert.equal(storage.readManualWorkouts().workouts.length, 1, 'one workout holds multiple exercises');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].sets[2].weightKg, 72);

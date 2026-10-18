@@ -14,6 +14,8 @@ assert.equal(await api.persistManualDraft(draft),'ok');
 assert.deepEqual(JSON.parse(data.get(HISTORY)),[],'old numbers do not enter history');
 const stale=structuredClone(draft);
 draft.exercises[0].sets[0].completed=true;
+draft.exercises[0].sets[0].grip='長直桿';
+draft.exercises[0].sets[1].grip='V 握把';
 assert.equal(await api.persistManualDraft(draft),'ok');
 let rows=JSON.parse(data.get(HISTORY));
 assert.equal(rows.length,1);assert.equal(rows[0].exercises[0].sets.length,1);
@@ -42,6 +44,7 @@ assert.equal(data.get(HISTORY),original,'second write failure preserves prior hi
 assert.equal(api.readManualDrafts().drafts[0].exercises[0].sets[1].completed,true,'draft survives failed projection');
 failKey='';assert.equal(await api.persistManualDraft(draft),'ok');
 assert.equal(JSON.parse(data.get(HISTORY))[0].exercises[0].sets.length,2,'retry reconciles');
+assert.deepEqual(JSON.parse(data.get(HISTORY))[0].exercises[0].sets.map(s=>s.grip),['長直桿','V 握把']);
 draft.exercises[0].sets.forEach(s=>s.completed=false);
 assert.equal(await api.persistManualDraft(draft),'ok');assert.deepEqual(JSON.parse(data.get(HISTORY)),[]);
 const incomplete={...draft,id:'partial',revision:0,exercises:[api.draftExercise()]};

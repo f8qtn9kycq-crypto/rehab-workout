@@ -257,3 +257,7 @@ Audit output should help identify:
 ## 進行中手動訓練
 
 `rehab.manualWorkoutDrafts.v1` 保存獨立的 workout／exercise／set ID、未完成輸入、每組完成狀態與 revision。沿用數字預設未完成；歷史僅投影已完成組。先寫草稿，再更新同 workout ID 的歷史；第二步失敗可重試，不新增副本。不同頁籤 revision 不符時拒絕寫入，避免覆蓋較新草稿。草稿不進入推薦或活動統計；清除本機資料包含此鍵。
+
+### 每組器材與握把
+
+手動 `ManualSet` 可選擇 `equipmentId`、`equipment`（快照文字）與 `grip`（最多 100 字）。舊紀錄缺少每組器材時，顯示沿用動作層級器材；編輯／帶入時建立每組快照，後續預設器材變更不回寫既有組。明確空白器材保留為未知，不繼承後續預設。握把／器材文字不代表圖片已驗證為該器材變體；canonical ID、圖片及安全推薦不變。動作搜尋只比對中英文名稱與個人動作名稱，不改動作識別。

@@ -401,6 +401,14 @@ export default {
     },
   },
   detail: {
+    recordWithSelection: "帶入訓練紀錄",
+    originalEquipment: "原動作示範器材",
+    recordingSelectionUnavailable: "動作或器材設定無效，未建立紀錄。請返回動作庫重新選擇。",
+
+    recordingSetup: "記錄器材／握把",
+    recordingSetupHint: "選擇實際使用的器材與握把，帶入紀錄第一組；各組仍可分別調整。這些設定只用於記錄，原動作圖說與引導訓練不會隨之改變。",
+    recordWithSettings: "選器材／握把並記錄",
+
     backToLibrary: '← 返回動作庫',
     enlargeVideo: '放大觀看影片',
     sectionNavLabel: '動作詳細內容區段',

@@ -401,6 +401,14 @@ export default {
     },
   },
   detail: {
+    recordWithSelection: "Bring into training record",
+    originalEquipment: "Original demonstration equipment",
+    recordingSelectionUnavailable: "Invalid exercise or equipment selection. No record was created. Return to the library and choose again.",
+
+    recordingSetup: "Recording equipment / grip",
+    recordingSetupHint: "Choose the equipment and grip used, then bring them into the first recorded set. Each set can be adjusted separately. These settings are for recording; the original instructions and guided session remain unchanged.",
+    recordWithSettings: "Choose equipment / grip and record",
+
     backToLibrary: '← Back to library',
     enlargeVideo: 'Enlarge video',
     sectionNavLabel: 'Exercise detail sections',

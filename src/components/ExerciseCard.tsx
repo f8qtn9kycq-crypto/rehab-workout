@@ -50,6 +50,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       >
         {t('exercises.viewDetail')}
       </Link>
+      <Link to={`/exercise/${exercise.id}${detailSearch}#record`} className="focus-ring mt-2 inline-flex min-h-11 items-center justify-center rounded-md border border-calm-600 px-4 text-center font-semibold text-calm-800">{t('detail.recordWithSettings')}</Link>
     </article>
   );
 }

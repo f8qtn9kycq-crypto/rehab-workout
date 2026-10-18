@@ -1,3 +1,4 @@
+import ExerciseRecordingSetup from '../components/ExerciseRecordingSetup';
 import { Clock, Dumbbell, Layers3, MapPin, PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
@@ -19,8 +20,12 @@ export default function ExerciseDetailPage() {
   const backTarget = `/exercises${location.search}`;
 
   useEffect(() => {
-    window.scrollTo({ left: 0, top: 0 });
-  }, [exerciseId]);
+    if (location.hash === '#record') {
+      const frame = window.requestAnimationFrame(() => document.getElementById('record')?.scrollIntoView({ block: 'start' }));
+      return () => window.cancelAnimationFrame(frame);
+    }
+    if (!location.hash) window.scrollTo({ left: 0, top: 0 });
+  }, [exerciseId, location.hash]);
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
@@ -35,6 +40,7 @@ export default function ExerciseDetailPage() {
     ['steps', t('detail.sectionSteps')],
     ['safety', t('detail.sectionSafety')],
     ['adjustments', t('detail.sectionAdjustments')],
+    ['record', t('detail.recordingSetup')],
     ...(!exercise.catalogOnly ? [['start', t('detail.sectionStart')] as const] : []),
   ] as const;
 
@@ -146,6 +152,7 @@ export default function ExerciseDetailPage() {
           {t('detail.startSession')}
         </Link>
       </section>}
+      <ExerciseRecordingSetup key={exercise.id} exercise={exercise} />
       <ExerciseDetailModal exercise={exercise} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );

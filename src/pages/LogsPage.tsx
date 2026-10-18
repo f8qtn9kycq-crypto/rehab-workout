@@ -84,6 +84,7 @@ export default function LogsPage() {
         <Link to="/logs/new" className="focus-ring inline-flex min-h-12 w-full items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white sm:w-auto">
           {t('manualWorkout.entry')}
         </Link>
+        <Link to="/logs/soreness" className="focus-ring flex min-h-11 items-center font-bold text-calm-800 underline">{t('soreness.entry')}</Link>
         <Link to="/exercises?mode=all" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('logs.startTraining')}</Link>
       </section>
 

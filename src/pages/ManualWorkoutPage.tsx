@@ -1,6 +1,7 @@
+import { draftExercise, readManualDrafts, persistManualDraft, type DraftExercise, type ManualWorkoutDraft } from '../services/manualWorkoutDraftStorage';
 import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
 import FavoriteButton from '../components/FavoriteButton';
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Armchair, Cable, Dumbbell, GripHorizontal, Hand, PersonStanding, StretchHorizontal, Waves, Weight } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import RecordOnlyExercisePicker from '../components/RecordOnlyExercisePicker';
@@ -11,12 +12,12 @@ import { exercises as catalog } from '../data/exercises';
 import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
-import { copyManualExercises, readManualWorkouts, manualWorkoutId, saveManualWorkout, type ManualExercise } from '../services/manualWorkoutStorage';
+import { copyManualExercises, readManualWorkouts, manualWorkoutId } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
-const emptyExercise = (): ManualExercise => ({ name: '', equipment: '', sets: [{}] });
+const emptyExercise = (): DraftExercise => draftExercise();
 const moreExerciseCatalog = catalog.filter(exercise => !quickExerciseCatalogIds.has(exercise.id));
 const equipmentChoices = [
   { id: 'bodyweight', Icon: PersonStanding }, { id: 'dumbbell', Icon: Dumbbell },
@@ -31,37 +32,51 @@ export default function ManualWorkoutPage() {
   const { t, language } = useI18n();
   const navigate = useNavigate();
   const [params] = useSearchParams();
+  const [draftState] = useState(readManualDrafts);
+  const resumeId = params.get('draft');
+  const [resumed] = useState(() => draftState.drafts.find(row => row.id === resumeId));
+  const [missingResume] = useState(() => !!resumeId && !resumed);
   const [sourceState] = useState(() => {
     const id = params.get('from');
     const state = readManualWorkouts();
     return { requested: !!id, workout: state.error ? undefined : state.workouts.find(row => row.id === id) };
   });
   const source = sourceState.workout;
-  const [previousNotes, setPreviousNotes] = useState(() => source?.exercises.map(exercise => exercise.notes) ?? [undefined]);
-  const [initialExercises] = useState(() => source ? copyManualExercises(source) : [emptyExercise()]);
-  const [legacyRecords, setLegacyRecords] = useState(() => initialExercises.map(isLegacyRevisedCatalogRecord));
+  const [previousNotes, setPreviousNotes] = useState(() => resumed?.exercises.map(e => e.previousNotes) ?? source?.exercises.map(e => e.notes) ?? [undefined]);
+  const [initialExercises] = useState(() => resumed?.exercises ?? (source ? copyManualExercises(source).map((e, i) => draftExercise(e, isLegacyRevisedCatalogRecord(e), source.exercises[i].notes)) : [emptyExercise()]));
+  const [legacyRecords, setLegacyRecords] = useState(() => initialExercises.map(e => e.legacy));
   const [customState, setCustomState] = useState(readCustomExercises);
-  const [date, setDate] = useState(localDate);
-  const [exercises, setExercises] = useState<ManualExercise[]>(initialExercises);
-  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(() => initialExercises.map(exercise => exercise.sets[0]?.durationSeconds !== undefined ? 'durationSeconds' : exercise.sets[0]?.holdSeconds !== undefined ? 'holdSeconds' : 'reps'));
+  const [date, setDate] = useState(() => resumed?.date ?? localDate());
+  const [exercises, setExercises] = useState<DraftExercise[]>(initialExercises);
+  const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(() => initialExercises.map(exercise => exercise.doseMode));
   const [selectedIds, setSelectedIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.exerciseId ?? ''));
   const [equipmentIds, setEquipmentIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.equipmentId ?? ''));
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
-  const [error, setError] = useState<'input' | 'storage' | 'write' | null>(null);
-  const saving = useRef(false);
+  const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
+  const revision = useRef(resumed?.revision ?? 0);
+  const firstRender = useRef(true);
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const saveQueue = useRef(Promise.resolve());
+  const saveRequest = useRef(0);
+  const identity = useRef({ id: resumed?.id ?? manualWorkoutId(), createdAt: resumed?.createdAt ?? new Date().toISOString() });
+  const [saveStatus, setSaveStatus] = useState(false);
+  const [cyclingMinutes, setCyclingMinutes] = useState<number | undefined>(resumed?.cyclingMinutes ?? source?.cyclingMinutes);
+  const [cyclingConfirmed, setCyclingConfirmed] = useState(resumed?.cyclingConfirmed ?? false);
   const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
   const painNotices = exercises.map(exercise => manualWorkoutPainNotice(exercise.painBefore, exercise.painAfter));
 
-  function changeExercise(index: number, update: (exercise: ManualExercise) => ManualExercise) {
+  function changeExercise(index: number, update: (exercise: DraftExercise) => DraftExercise) {
     setExercises(current => current.map((exercise, position) => position === index ? update(exercise) : exercise));
     setError(null);
+    setSaveStatus(false);
   }
 
   function chooseExercise(index: number, id: string) {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, value => ({ sets: value.sets, name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, completed: false })), name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
@@ -70,7 +85,7 @@ export default function ManualWorkoutPage() {
   function chooseCustomExercise(index: number, exercise: CustomExercise): void {
     setSelectedIds(current => current.map((value, position) => position === index ? exercise.id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
-    changeExercise(index, value => ({ sets: value.sets, name: exercise.name, kind: exercise.kind, recordOnly: true,
+    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, completed: false })), name: exercise.name, kind: exercise.kind, recordOnly: true,
       equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
@@ -93,30 +108,52 @@ export default function ManualWorkoutPage() {
     setEditingExerciseIndex(current => current === index ? null : current !== null && current > index ? current - 1 : current);
   }
 
-  function save(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (saving.current) return;
-    if (sourceState.requested && !source) { setError('input'); return; }
-    if (selectedIds.some((id, index) => !catalog.some(item => item.id === id) && !readCustomExercises().exercises.some(item => item.id === id) && !source?.exercises.some(item => item.exerciseId === (id || undefined) && item.name === exercises[index].name))) { setError('input'); return; }
-    saving.current = true;
-    const workout = {
-      id: manualWorkoutId(), date, createdAt: new Date().toISOString(),
-      exercises: exercises.map((exercise, index) => {
-        const id = selectedIds[index];
-        const catalogExercise = catalog.find(item => item.id === id);
+  async function persist(nextExercises = exercises, cycleConfirmed = cyclingConfirmed): Promise<boolean> {
+    setSaveStatus(false);
+    if (draftState.error || missingResume || (sourceState.requested && !source)) { setError('storage'); return false; }
+    const draft: ManualWorkoutDraft = {
+      ...identity.current, revision: revision.current, date, cyclingMinutes, cyclingConfirmed: cycleConfirmed,
+      exercises: nextExercises.map((exercise, index) => {
         const { exerciseId: previousId, equipmentId: previousEquipment, ...details } = exercise;
-        return {
-          ...details,
-          ...(id ? { exerciseId: id } : {}),
-          ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
-          name: (!legacyRecords[index] && catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name).trim(),
+        const id = selectedIds[index];
+        const selected = catalog.find(item => item.id === id);
+        return { ...details, doseMode: doseModes[index], previousNotes: previousNotes[index], legacy: legacyRecords[index],
+          ...(id ? { exerciseId: id } : {}), ...(equipmentIds[index] ? { equipmentId: equipmentIds[index] } : {}),
+          name: (!legacyRecords[index] && selected ? getLocalizedExercise(selected, language).title : exercise.name).trim(),
           equipment: (equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : exercise.equipment).trim(),
         };
       }),
     };
-    const result = saveManualWorkout(workout);
-    if (result !== 'ok') { saving.current = false; setError(result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input'); return; }
-    navigate('/logs', { state: { manualSavedId: workout.id } });
+    const request = ++saveRequest.current;
+    let success = false;
+    const task = saveQueue.current.then(async () => {
+      draft.revision = revision.current;
+      const result = await persistManualDraft(draft);
+      revision.current = draft.revision;
+      if (mounted.current && window.location.pathname === '/logs/new' && draft.revision > 0 && params.get('draft') !== draft.id) navigate(`/logs/new?draft=${encodeURIComponent(draft.id)}`, { replace: true });
+      success = result === 'ok';
+      if (mounted.current && request === saveRequest.current) {
+        setError(result === 'ok' ? null : result === 'conflict' ? 'conflict' : result === 'corrupt' ? 'storage' : result === 'write-failed' ? 'write' : 'input');
+        setSaveStatus(success);
+      }
+    });
+    saveQueue.current = task.catch(() => { setError('write'); });
+    await saveQueue.current;
+    return success;
+  }
+  useEffect(() => {
+    if (firstRender.current) { firstRender.current = false; return; }
+    const timer = window.setTimeout(() => persist(), 300);
+    return () => window.clearTimeout(timer);
+  }, [date, exercises, doseModes, selectedIds, equipmentIds, legacyRecords, previousNotes, cyclingMinutes, cyclingConfirmed]);
+  function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    persist();
+  }
+  function completeSet(index: number, setIndex: number) {
+    const next = exercises.map((exercise, i) => i === index ? { ...exercise, sets: exercise.sets.map((set, j) => j === setIndex ? { ...set, completed: !set.completed } : set) } : exercise);
+    setExercises(next);
+    persist(next);
   }
 
   return <div className="page mx-auto max-w-2xl space-y-5">
@@ -124,12 +161,16 @@ export default function ManualWorkoutPage() {
     <div><h1 className="text-3xl font-black text-ink">{t('manualWorkout.title')}</h1><p className="mt-2 leading-7 text-slate-600">{t('manualWorkout.hint')}</p></div>
     {source && <p role="status" className="rounded-md bg-calm-50 p-3">{t('manualWorkout.reuseSource', { date: source.date })}</p>}
     {sourceState.requested && !source && <p role="alert">{t('manualWorkout.sourceMissing')}</p>}
-    <form onSubmit={save} className="space-y-5">
+    {!resumed && !source && draftState.drafts.filter(d => d.date === localDate()).map(d => <Link key={d.id} className="focus-ring block min-h-11 font-bold text-calm-800 underline" to={`/logs/new?draft=${encodeURIComponent(d.id)}`} reloadDocument>{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
+    {(draftState.error || missingResume) && <p role="alert">{t('manualWorkout.storageError')}</p>}
+    {saveStatus && <p role="status">{t('manualWorkout.draftSaved')}</p>}
+    <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.viewSaved')}</Link>
+    <form onBlur={() => persist()} onSubmit={save} className="space-y-5">
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
-      {exercises.map((exercise, index) => <fieldset key={index} className="card space-y-4 p-4">
+      {exercises.map((exercise, index) => <fieldset key={exercise.id} className="card space-y-4 p-4">
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
-          {(selectedIds[index] || (source && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
+          {(selectedIds[index] || ((source || resumed) && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {!legacyRecords[index] && hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
@@ -162,24 +203,25 @@ export default function ManualWorkoutPage() {
           <select className={control} value={doseModes[index]} onChange={event => {
             const mode = event.target.value as 'reps' | 'durationSeconds' | 'holdSeconds';
             setDoseModes(current => current.map((value, position) => position === index ? mode : value));
-            changeExercise(index, value => ({ ...value, sets: value.sets.map(({ reps, durationSeconds, holdSeconds, ...row }) => ({ ...row })) }));
+            changeExercise(index, value => ({ ...value, sets: value.sets.map(({ reps, durationSeconds, holdSeconds, ...row }) => ({ ...row, completed: false })) }));
           }}>
             <option value="reps">{t('manualWorkout.reps')}</option>
             <option value="durationSeconds">{t('manualWorkout.durationSeconds')}</option>
             <option value="holdSeconds">{t('manualWorkout.holdSeconds')}</option>
           </select>
         </label>
-        {exercise.sets.map((set, setIndex) => <div key={setIndex} className="rounded-md bg-slate-50 p-3">
+        {exercise.sets.map((set, setIndex) => <div key={set.id} className="rounded-md bg-slate-50 p-3">
           <p className="mb-2 font-bold">{t('manualWorkout.setNumber', { number: setIndex + 1 })}</p>
           <div className="grid grid-cols-2 gap-3">
             <label className="text-sm font-bold">{t('manualWorkout.weight')}<input className={control} type="number" inputMode="decimal" min="0" max="1000" step="any" value={set.weightKg ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, weightKg: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
-            {(['reps', 'durationSeconds', 'holdSeconds'] as const).filter(field => field in set || (!('reps' in set) && !('durationSeconds' in set) && !('holdSeconds' in set) && field === doseModes[index])).map(field => <label key={field} className="text-sm font-bold">{t(`manualWorkout.${field}`)}<input className={control} type="number" inputMode="numeric" required min="1" max={field === 'reps' ? 1000 : 86400} step="1" value={set[field] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, [field]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>)}
+            {(['reps', 'durationSeconds', 'holdSeconds'] as const).filter(field => field in set || (!('reps' in set) && !('durationSeconds' in set) && !('holdSeconds' in set) && field === doseModes[index])).map(field => <label key={field} className="text-sm font-bold">{t(`manualWorkout.${field}`)}<input className={control} type="number" inputMode="numeric" min="1" max={field === 'reps' ? 1000 : 86400} step="1" value={set[field] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, completed: event.target.value === '' ? false : row.completed, [field]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>)}
           </div>
           <label className="mt-2 flex min-h-11 items-center gap-3 text-sm font-bold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, warmup: event.target.checked } : row) }))} />{t('manualWorkout.warmup')}</label>
+          <button type="button" aria-pressed={set.completed} className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => completeSet(index, setIndex)}>{t(set.completed ? 'manualWorkout.setDone' : 'manualWorkout.completeSet')}</button>
           {exercise.sets.length > 1 && <button className="focus-ring mt-2 min-h-11 text-sm font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: value.sets.filter((_, position) => position !== setIndex) }))}>{t('manualWorkout.removeSet')}</button>}
         </div>)}
         <div className="flex flex-wrap gap-4">
-          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, {}] }))}>{t('manualWorkout.addSet')}</button>}
+          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, { id: manualWorkoutId(), completed: false }] }))}>{t('manualWorkout.addSet')}</button>}
           {exercises.length > 1 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => removeExercise(index)}>{t('manualWorkout.removeExercise')}</button>}
         </div>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{equipmentIds[index] ? t('manualWorkout.selectedEquipment', { name: t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) }) : t('manualWorkout.equipment')}</summary><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">{equipmentChoices.map(({ id, Icon }) => <button key={id} type="button" aria-pressed={equipmentIds[index] === id} onClick={() => chooseEquipment(index, id)} className={`focus-ring flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-xs font-bold ${equipmentIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={22} aria-hidden="true" /><span>{t(`manualWorkout.equipmentChoices.${id}`)}</span></button>)}</div></details>
@@ -197,9 +239,12 @@ export default function ManualWorkoutPage() {
         </details>
       </fieldset>)}
       {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setLegacyRecords(current => [...current, false]); setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
-      <p className="rounded-md bg-calm-50 p-3 text-sm text-calm-800">{t('manualWorkout.cyclingSeparate')}</p>
-      {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
-      <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.save')}</button>
+      <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" min="1" max="1440" step="1" value={cyclingMinutes ?? ''} onChange={event => { setSaveStatus(false); setCyclingConfirmed(false); setCyclingMinutes(event.target.value === '' ? undefined : Number(event.target.value)); }} /></label>
+      <p className="text-sm text-slate-600">{t('manualWorkout.cyclingDraftHint')}</p>
+      <button type="button" aria-pressed={cyclingConfirmed} className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => { const confirmed = !cyclingConfirmed; setCyclingConfirmed(confirmed); persist(exercises, confirmed); }}>{t(cyclingConfirmed ? 'manualWorkout.cyclingDone' : 'manualWorkout.confirmCycling')}</button>
+      {error && <p role="alert" className="rounded-md bg-red-50 p-3 font-bold text-red-800">{t(error === 'conflict' ? 'manualWorkout.conflict' : error === 'storage' ? 'manualWorkout.storageError' : error === 'write' ? 'manualWorkout.writeError' : 'manualWorkout.saveError')}</p>}
+      {error === 'conflict' && <Link reloadDocument to={`/logs/new?draft=${encodeURIComponent(identity.current.id)}`} className="focus-ring block min-h-11 underline">{t('manualWorkout.reloadDraft')}</Link>}
+      <button className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white" type="submit">{t('manualWorkout.saveDraft')}</button>
     </form>
   </div>;
 }

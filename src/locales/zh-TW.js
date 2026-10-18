@@ -527,6 +527,20 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    conflict: "其他頁籤已有較新內容；此頁輸入尚未保存。請載入最新草稿後再編輯。",
+    reloadDraft: "載入最新草稿（取代此頁輸入）",
+
+    resume: "繼續記錄",
+    draftSaved: "已保存輸入與完成組數；未完成組不計入紀錄。",
+    viewSaved: "查看已保存紀錄",
+    completeSet: "完成並保存這組",
+    setDone: "已完成（點選取消）",
+    saveDraft: "保存目前輸入",
+    confirmCycling: "確認今天騎車時間",
+    cyclingDone: "騎車已確認（點選取消）",
+    cyclingDraftHint: "騎車隨第一個完成組一起列入紀錄；不需再另記同一趟騎車。",
+    cyclingTotal: "同次訓練騎車另有 {manual} 分鐘；所有騎車合計 {total} 分鐘。",
+
     reuse: "以此建立訓練",
     reuseSource: "沿用 {date} 的內容；請依今天狀態修改，疼痛與努力程度未帶入。",
     sourceMissing: "找不到來源紀錄，請返回紀錄頁重新選擇。",

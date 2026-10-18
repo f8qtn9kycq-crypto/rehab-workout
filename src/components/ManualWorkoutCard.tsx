@@ -1,3 +1,4 @@
+import { readManualDrafts } from '../services/manualWorkoutDraftStorage';
 import { Link } from 'react-router-dom';
 import { exercises as catalog } from '../data/exercises';
 import { equipmentChoiceIds } from '../data/manualWorkoutOptions';
@@ -29,9 +30,11 @@ export function isLegacyRevisedCatalogRecord(exercise: ManualExercise): boolean 
 
 export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout }) {
   const { t, language } = useI18n();
+  const inProgress = readManualDrafts().drafts.some(d => d.id === workout.id);
   return <article className="card space-y-2 p-4">
     <p className="text-lg font-black text-ink">{t('manualWorkout.recordTitle', { date: workout.date })}</p>
     <Link to={`/logs/new?from=${encodeURIComponent(workout.id)}`} className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.reuse')}</Link>
+    {inProgress && <Link to={`/logs/new?draft=${encodeURIComponent(workout.id)}`} className="focus-ring block min-h-11 font-bold text-calm-800 underline">{t('manualWorkout.resume')}</Link>}
     {workout.exercises.map((exercise, index) => {
       const catalogExercise = catalog.find(item => item.id === exercise.exerciseId);
       const legacyRevisedCatalog = isLegacyRevisedCatalogRecord(exercise);

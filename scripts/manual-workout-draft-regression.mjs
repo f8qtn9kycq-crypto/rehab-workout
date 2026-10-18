@@ -23,6 +23,14 @@ assert.equal(JSON.parse(data.get(HISTORY)).length,1,'repeated save updates one I
 draft.cyclingConfirmed=true;
 assert.equal(await api.persistManualDraft(draft),'ok');
 assert.equal(JSON.parse(data.get(HISTORY))[0].cyclingMinutes,30);
+draft.exercises[0].painBefore=0;
+assert.equal(await api.persistManualDraft(draft),'ok','completed sets allow partial feedback in draft');
+assert.equal(api.readManualDrafts().drafts[0].exercises[0].painBefore,0);
+assert.equal(JSON.parse(data.get(HISTORY))[0].exercises[0].painBefore,undefined,'partial pain never enters history');
+draft.exercises[0].painAfter=2;
+assert.equal(await api.persistManualDraft(draft),'ok');
+assert.equal(JSON.parse(data.get(HISTORY))[0].exercises[0].painBefore,0);
+assert.equal(JSON.parse(data.get(HISTORY))[0].exercises[0].painAfter,2);
 const parallel1=structuredClone(draft), parallel2=structuredClone(draft);
 const parallel=await Promise.all([api.persistManualDraft(parallel1),api.persistManualDraft(parallel2)]);
 assert.deepEqual(parallel,['ok','conflict'],'simultaneous same-draft writes cannot silently overwrite');

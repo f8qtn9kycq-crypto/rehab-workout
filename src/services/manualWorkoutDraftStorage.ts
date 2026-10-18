@@ -32,7 +32,7 @@ export function validDraft(value: unknown): value is ManualWorkoutDraft {
   } catch { return false; }
 }
 function validCompletedExercise(exercise: ManualExercise): boolean {
-  return !!exercise.name.trim() && validManualWorkout({ id: 'validation', date: localDate(), createdAt: new Date().toISOString(), exercises: [exercise] })
+  return !!exercise.name.trim() && validManualWorkout({ id: 'validation', date: localDate(), createdAt: new Date().toISOString(), exercises: [{ ...exercise, painBefore: undefined, painAfter: undefined }] })
     && (!exercise.exerciseId?.startsWith('custom-') || exercise.recordOnly === true);
 }
 export function readManualDrafts(): { drafts: ManualWorkoutDraft[]; error: boolean } {
@@ -45,9 +45,9 @@ export function readManualDrafts(): { drafts: ManualWorkoutDraft[]; error: boole
   } catch { return { drafts: [], error: true }; }
 }
 export function projectManualDraft(draft: ManualWorkoutDraft): ManualWorkout | null {
-  const exercises = draft.exercises.flatMap(({ id, legacy, previousNotes, doseMode, sets, ...exercise }) => {
+  const exercises = draft.exercises.flatMap(({ id, legacy, previousNotes, doseMode, sets, painBefore, painAfter, ...exercise }) => {
     const completed = sets.filter(set => set.completed).map(({ id, completed, ...set }) => set);
-    return completed.length ? [{ ...exercise, sets: completed }] : [];
+    return completed.length ? [{ ...exercise, sets: completed, ...(painBefore !== undefined && painAfter !== undefined ? { painBefore, painAfter } : {}) }] : [];
   });
   if (!exercises.length) return null;
   return { id: draft.id, date: draft.date, createdAt: draft.createdAt, exercises,

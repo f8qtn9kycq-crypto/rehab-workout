@@ -1,5 +1,9 @@
 export default {
   soreness: {
+    "legend": "Discomfort level colours",
+    "colorHint": "Colours show recorded severity, not clearance to train. A bold outline marks the region being edited. Unrecorded regions remain unknown.",
+    "bands": {"unknown": "Unknown", "zero": "0", "mild": "1–3", "moderate": "4–5", "high": "6–10"},
+
     "title": "Body discomfort diary",
     "entry": "Log body discomfort",
     "intro": "This is an observation diary, not training clearance or the pain rating before or after a session. Unrecorded regions are unknown, not zero.",

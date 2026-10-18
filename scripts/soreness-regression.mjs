@@ -7,6 +7,9 @@ async function load(entry) {
   const code = output.find(item => item.type === 'chunk').code;
   return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 }
+const { sorenessBand, sorenessTone } = await load('src/utils/sorenessPresentation.ts');
+for (const [value, expected] of [[undefined, 'unknown'], [0, 'zero'], [1, 'mild'], [3, 'mild'], [4, 'moderate'], [5, 'moderate'], [6, 'high'], [10, 'high'], [-1, 'unknown'], [11, 'unknown'], [NaN, 'unknown']]) assert.equal(sorenessBand(value), expected);
+assert.equal(new Set([undefined, 0, 3, 4, 6].map(v => sorenessTone(v).fill)).size, 5, 'unknown, zero and severity bands remain visually distinct');
 const s = await load('src/services/sorenessStorage.ts');
 const { sorenessGuidance } = await load('src/utils/sorenessGuidance.ts');
 const { anatomicalRegions } = await load('src/data/anatomicalRegions.ts');

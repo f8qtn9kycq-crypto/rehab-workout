@@ -24,6 +24,20 @@ async page => {
     if (!await page.locator('#region-editor-heading').evaluate(el => document.activeElement === el)) throw Error('editor focus');
     await page.getByRole('button', { name: '儲存記錄', exact: true }).click();
     if (await page.evaluate(k => localStorage.getItem(k), key)) throw Error('unknown saved');
+    if (await left.getAttribute('data-severity-band') !== 'unknown') throw Error('unknown severity colour');
+    for (const [value, band, fill] of [[0,'zero','#bfdbfe'],[3,'mild','#fde047'],[4,'moderate','#fdba74'],[5,'moderate','#fdba74'],[6,'high','#fca5a5'],[10,'high','#fca5a5']]) {
+      const option = page.getByRole('button', { name: String(value), exact: true });
+      await option.click();
+      if (await left.getAttribute('data-severity-band') !== band || await left.getAttribute('fill') !== fill) throw Error(`map colour ${value}`);
+      if (await option.getAttribute('aria-pressed') !== 'true' || !(await option.getAttribute('class')).includes('ring-2')) throw Error('severity selection lost');
+      const chip = page.locator('[aria-label="已選取"]').getByRole('button').first();
+      const fallback = select('左側 · 上斜方肌');
+      for (const target of [option, chip, fallback]) {
+        const bg = await target.evaluate(el => getComputedStyle(el).backgroundColor);
+        const expected = value === 0 ? 'rgb(219, 234, 254)' : value <= 3 ? 'rgb(254, 249, 195)' : value <= 5 ? 'rgb(255, 237, 213)' : 'rgb(254, 226, 226)';
+        if (bg !== expected) throw Error(`colour mismatch ${value}: ${bg}`);
+      }
+    }
     await page.getByRole('button', { name: '0', exact: true }).click();
     await page.getByRole('button', { name: '背面', exact: true }).click();
     if (!await svg.getByRole('button', { name: '左側 · 上斜方肌', exact: true }).getAttribute('transform')) throw Error('back left mirror');
@@ -33,6 +47,14 @@ async page => {
     await page.getByRole('button', { name: '4', exact: true }).click();
     await page.getByRole('button', { name: '6', exact: true }).click();
     await page.getByRole('checkbox', { name: /麻木/ }).check();
+    await page.getByRole('button', { name: '0', exact: true }).click();
+    const neuroRegion = svg.getByRole('button', { name: '右側 · 上斜方肌', exact: true });
+    if (await neuroRegion.getAttribute('fill') !== '#bfdbfe' || !await page.getByRole('alert').filter({ hasText: /停止訓練/ }).count()) throw Error('neuro warning must not recolour explicit zero');
+    await page.getByRole('button', { name: '6', exact: true }).click();
+    if (width === 375) {
+      await svg.screenshot({ path: `output/playwright/soreness-colors-${engine}-375.png` });
+      await page.locator('section[aria-labelledby="region-editor-heading"]').screenshot({ path: `output/playwright/soreness-editor-${engine}-375.png` });
+    }
     if (!await page.getByRole('alert').filter({ hasText: /停止訓練/ }).count()) throw Error('no warning');
     await page.getByRole('textbox', { name: /補充說明/ }).fill('<script>draft</script>');
     for (const zoom of ['full', 'neck', 'arms', 'torso', 'hip', 'lower']) { await page.getByRole('combobox').selectOption(zoom); if (!await svg.getAttribute('viewBox')) throw Error('zoom missing'); }
@@ -50,6 +72,9 @@ async page => {
     if (entries.length !== 1 || entries[0].regions.length !== 3 || entries[0].regions[0].severity !== 0) throw Error('duplicate/zero/regions');
     await page.reload();
     await page.getByRole('heading', { name: '最近記錄', exact: true }).waitFor();
+    const savedZero = page.locator('article li span').filter({ hasText: /^0\/10$/ }).first();
+    const savedHigh = page.locator('article li span').filter({ hasText: /^6\/10$/ });
+    if (await savedZero.evaluate(el => getComputedStyle(el).backgroundColor) !== 'rgb(219, 234, 254)' || await savedHigh.evaluate(el => getComputedStyle(el).backgroundColor) !== 'rgb(254, 226, 226)') throw Error('reload history colour');
     if (!await page.getByText('<script>draft</script>', { exact: true }).isVisible()) throw Error('note lost/unsafe');
     await page.evaluate(() => { window.confirm = () => false; });
     await page.getByRole('button', { name: /^刪除記錄/ }).click();

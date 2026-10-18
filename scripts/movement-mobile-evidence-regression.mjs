@@ -9,7 +9,7 @@ const headSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' })
 const assets = JSON.parse(readFileSync('src/data/movementArtManifest.json')).map(({ id }) => ({ id,
   sha256: createHash('sha256').update(readFileSync(`public/exercise-visuals/movements/${id}.png`)).digest('hex'),
 }));
-assert.equal(assets.length, 43);
+assert.equal(assets.length, 44);
 const fixture = { kind: 'browser-observations', headSha, capture: { tool: 'synthetic-regression-fixture', at: '2026-10-07T01:00:00+08:00' },
   results: assets.flatMap(asset => mobileSurfaces.flatMap(surface => mobileViewports.map(viewport => ({
     id: asset.id, sha256: asset.sha256, src: `/exercise-visuals/movements/${asset.id}.png`, surface, viewport,
@@ -18,7 +18,7 @@ const fixture = { kind: 'browser-observations', headSha, capture: { tool: 'synth
   })))),
 };
 const options = { headSha, assets };
-assert.deepEqual(validateMobileEvidence(fixture, options), { count: 516, assets: 43, dpr: 3 });
+assert.deepEqual(validateMobileEvidence(fixture, options), { count: 528, assets: 44, dpr: 3 });
 for (const [name, mutate, message] of [
   ['stale head', e => { e.headSha = '0'.repeat(40); }, /head SHA/],
   ['missing observation', e => e.results.pop(), /不完整/],

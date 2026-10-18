@@ -36,3 +36,7 @@ SHA-256：`036f309eea7c0e825b9b52619e09c9d1a6d752b2a27da0716ed4c52952af1222`。
 ## 使用者真人回報（2026-10-18）
 
 使用者於本聊天回覆「human check ok」，並授權「fix if blocked, merge if pass」。對應先前展示的側蹲內容與 runtime PNG `036f309eea7c0e825b9b52619e09c9d1a6d752b2a27da0716ed4c52952af1222`，本輪不改動動作或圖片。整體真人檢查：PASS（使用者回報）。未提供裝置與專業身分資訊，不推定為臨床核准或 iPhone Safari 真機證據。前節 NOT VERIFIED 為初次交付狀態，最新精確 head AI 審查與 CI 以 PR 留言為準。
+
+## CI 重製修正
+
+Linux CI 發現預設 PNG encoder 的位元組差異。新增同值 layout sidecar（136×148）以啟用既有 deterministic PNG 路徑，不修改 normalizer 或既有圖。與先前真人檢查版本逐像素 RGB 比較完全一致（320×184）；只改檔案編碼。最新 runtime SHA-256：`3eafbba84a9ca9d5a1baaeffc962f772aee276623838cc75eaebb4fa041e5ee7`。先前真人回報對應的視覺內容不變。

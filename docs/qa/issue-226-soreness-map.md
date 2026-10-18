@@ -59,3 +59,9 @@ CI、exact-head reviews 與 Preview URL 以 PR 即時紀錄為準；下列皆未
 本機 build／完整 npm test／safety-i18n／diff --check 重跑 PASS。色階函式涵蓋 undefined、0、1、3、4、5、6、10 與非法值。Chromium／WebKit × 320／375／390／1280px 色階互動矩陣 PASS：即時修改與跨視圖保留、未知與 0 分離、按鈕／SVG／清單一致、重載摘要顏色、神經症狀不改 0 顏色、既有資料鍵不變、儲存失敗重試與鍵盤操作。
 
 已目視檢查 WebKit 375px 人體圖與程度編輯器；更新八張頁面截圖，另有 `soreness-colors-{chromium,webkit}-375.png` 與 `soreness-editor-{chromium,webkit}-375.png` 展示實際填色及 0–10 選值。自動化／AI 目視不代表真人接受；請在新 head Preview 重新確認這兩項回饋。
+
+## Claude P1 修復：日期回調
+
+Claude 在 `ecfad6a` 指出已保存 D 日資料會於裝置回到 D−1 時被誤判 corrupt。父代理先以新回歸測試重現失敗，再將日期政策拆開：runtime validator 只檢查結構與真實日期，`saveSorenessEntry` 才拒絕未來日期。讀取不重寫資料；在 D−1 仍可讀舊 D、保存今天及刪除舊筆，新增未來 D 仍拒絕。沒有 migration 或安全門檻變更。
+
+本機 `npm run build`、完整 `npm test`、`npm run audit:safety-i18n`、`git diff --check` 重跑 PASS。此修復以記憶體 storage 與可還原的 Date 模擬驗證；不改 UI，未因本修復重跑視覺矩陣。先前真人 OK 與視覺證據僅代表其已觀察範圍，新 head 審查／CI 另記 PR。

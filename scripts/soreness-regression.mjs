@@ -29,8 +29,10 @@ assert.equal(s.saveSorenessEntry(e).error, 'invalid');
 for (const patch of [{ severity: undefined }, { severity: null }, { severity: -1 }, { severity: 11 }, { severity: 1.1 }, { tissue: 'joint' }, { side: 'center' }, { regionId: 'unknown' }, { symptoms: ['weak'] }, { symptoms: ['numb', 'numb'] }, { note: 'a'.repeat(501) }]) assert.equal(s.validSorenessEntry({ ...entry(), regions: [{ ...region, ...patch }] }), false, JSON.stringify(patch));
 assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, { ...region, side: 'right', severity: 6, symptoms: ['numb'] }] }), true);
 assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, region] }), false);
-for (const date of ['2025-02-29', '2026-04-31', '2026-2-01', '2999-01-01', '']) assert.equal(s.validSorenessEntry({ ...entry(), date }), false);
+for (const date of ['2025-02-29', '2026-04-31', '2026-2-01', '']) assert.equal(s.validSorenessEntry({ ...entry(), date }), false);
 assert.equal(s.validSorenessEntry({ ...entry(), date: '2024-02-29' }), true);
+assert.equal(s.validSorenessEntry({ ...entry(), date: '2999-01-01' }), true, 'structural validation is independent of clock');
+assert.equal(s.saveSorenessEntry({ ...entry(), date: '2999-01-01' }).error, 'invalid');
 for (const createdAt of ['yesterday', '2026-02-30T00:00:00.000Z']) assert.equal(s.validSorenessEntry({ ...entry(), createdAt }), false);
 assert.equal(s.validSorenessEntry({ ...entry(), id: 'bad' }), false);
 assert.equal(sorenessGuidance([{ severity: 3, symptoms: [] }]), 'observe');
@@ -38,6 +40,31 @@ assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }]), 'modify');
 assert.equal(sorenessGuidance([{ severity: 6, symptoms: [] }]), 'stop');
 assert.equal(sorenessGuidance([{ severity: 0, symptoms: ['numb'] }]), 'stop');
 assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }, { severity: 8, symptoms: [] }]), 'stop');
+// A valid saved local day must remain readable after travel or clock rollback.
+const OriginalDate = Date;
+const persisted = entry();
+const persistedRaw = JSON.stringify([persisted]);
+const originalRaw = data.get(s.SORENESS_KEY);
+data.set(s.SORENESS_KEY, persistedRaw);
+const earlier = new OriginalDate(); earlier.setDate(earlier.getDate() - 1);
+globalThis.Date = class extends OriginalDate {
+  constructor(...args) { if (args.length) super(...args); else super(earlier.getTime()); }
+  static now() { return earlier.getTime(); }
+};
+try {
+  assert.deepEqual(s.readSorenessEntries().entries, [persisted], 'saved D remains readable on D-1');
+  assert.equal(data.get(s.SORENESS_KEY), persistedRaw, 'reading never rewrites existing bytes');
+  assert.equal(s.saveSorenessEntry({ ...entry(), date: persisted.date }).error, 'invalid', 'new future date still rejected');
+  assert.equal(data.get(s.SORENESS_KEY), persistedRaw, 'future rejection preserves bytes');
+  const todayEntry = entry();
+  assert.equal(s.saveSorenessEntry(todayEntry).ok, true, 'can save D-1 alongside existing D');
+  assert.deepEqual(s.readSorenessEntries().entries, [todayEntry, persisted]);
+  assert.equal(s.deleteSorenessEntry(persisted.id).ok, true, 'can delete existing D on D-1');
+  assert.deepEqual(s.readSorenessEntries().entries, [todayEntry]);
+} finally {
+  globalThis.Date = OriginalDate;
+  data.set(s.SORENESS_KEY, originalRaw);
+}
 failWrite = true;
 const raw = data.get(s.SORENESS_KEY);
 assert.equal(s.saveSorenessEntry(entry()).error, 'write-failed');

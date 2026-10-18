@@ -27,10 +27,10 @@ export function sorenessId(): string {
   const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
-export function validSorenessEntry(value: unknown, today = localSorenessDate()): value is SorenessEntry {
+export function validSorenessEntry(value: unknown): value is SorenessEntry {
   if (!value || typeof value !== 'object') return false;
   const e = value as SorenessEntry;
-  if (typeof e.id !== 'string' || !uuid.test(e.id) || typeof e.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(e.date) || e.date > today) return false;
+  if (typeof e.id !== 'string' || !uuid.test(e.id) || typeof e.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(e.date)) return false;
   const date = new Date(`${e.date}T12:00:00`);
   if (!Number.isFinite(date.getTime()) || localSorenessDate(date) !== e.date) return false;
   if (typeof e.createdAt !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(e.createdAt) || !Number.isFinite(Date.parse(e.createdAt)) || new Date(e.createdAt).toISOString() !== e.createdAt) return false;
@@ -62,7 +62,8 @@ function write(entries: SorenessEntry[]): WriteResult {
 export function saveSorenessEntry(entry: SorenessEntry): WriteResult {
   const state = readSorenessEntries();
   if (state.error) return { ok: false, error: state.error };
-  if (!validSorenessEntry(entry) || state.entries.some(e => e.id === entry.id)) return { ok: false, error: 'invalid' };
+  // Only new observations are limited by today's local date; stored days survive clock changes.
+  if (!validSorenessEntry(entry) || entry.date > localSorenessDate() || state.entries.some(e => e.id === entry.id)) return { ok: false, error: 'invalid' };
   if (state.entries.length >= MAX_ENTRIES) return { ok: false, error: 'capacity' };
   return write([entry, ...state.entries]);
 }

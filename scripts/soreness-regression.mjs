@@ -1,0 +1,92 @@
+import assert from 'node:assert/strict';
+import { build } from 'vite';
+import { readFileSync } from 'node:fs';
+async function load(entry) {
+  const result = await build({ configFile: false, logLevel: 'silent', build: { lib: { entry, formats: ['es'] }, minify: false, rollupOptions: { output: { inlineDynamicImports: true } }, write: false } });
+  const output = Array.isArray(result) ? result[0].output : result.output;
+  const code = output.find(item => item.type === 'chunk').code;
+  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+}
+const { sorenessBand, sorenessTone } = await load('src/utils/sorenessPresentation.ts');
+for (const [value, expected] of [[undefined, 'unknown'], [0, 'zero'], [1, 'mild'], [3, 'mild'], [4, 'moderate'], [5, 'moderate'], [6, 'high'], [10, 'high'], [-1, 'unknown'], [11, 'unknown'], [NaN, 'unknown']]) assert.equal(sorenessBand(value), expected);
+assert.equal(new Set([undefined, 0, 3, 4, 6].map(v => sorenessTone(v).fill)).size, 5, 'unknown, zero and severity bands remain visually distinct');
+const s = await load('src/services/sorenessStorage.ts');
+const { sorenessGuidance } = await load('src/utils/sorenessGuidance.ts');
+const { anatomicalRegions } = await load('src/data/anatomicalRegions.ts');
+const data = new Map([['rehab.trainingLogs.v2', '[{"unchanged":true}]'], ['rehab.manualWorkouts.v1', 'original'], ['rehab.activities.v1', 'activity'], ['rehab.functionalOutcomes.v2', 'outcome']]);
+const before = [...data];
+let failRead = false, failWrite = false;
+globalThis.window = { localStorage: { getItem: key => { if (failRead) throw Error('read'); return data.get(key) ?? null; }, setItem: (key, value) => { if (failWrite) throw Error('quota'); data.set(key, value); }, removeItem: key => data.delete(key) } };
+const region = { regionId: 'traps', side: 'left', tissue: 'muscle', severity: 0, symptoms: [] };
+const entry = () => ({ id: s.sorenessId(), date: s.localSorenessDate(), createdAt: new Date().toISOString(), regions: [{ ...region }] });
+assert.equal(anatomicalRegions.length, 37);
+assert.equal(anatomicalRegions.filter(r => r.id === 'traps').length, 1);
+assert.equal(s.readSorenessEntries().error, undefined);
+const e = entry();
+assert.equal(s.saveSorenessEntry(e).ok, true);
+assert.equal(s.readSorenessEntries().entries[0].regions[0].severity, 0);
+assert.equal(s.saveSorenessEntry(e).error, 'invalid');
+for (const patch of [{ severity: undefined }, { severity: null }, { severity: -1 }, { severity: 11 }, { severity: 1.1 }, { tissue: 'joint' }, { side: 'center' }, { regionId: 'unknown' }, { symptoms: ['weak'] }, { symptoms: ['numb', 'numb'] }, { note: 'a'.repeat(501) }]) assert.equal(s.validSorenessEntry({ ...entry(), regions: [{ ...region, ...patch }] }), false, JSON.stringify(patch));
+assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, { ...region, side: 'right', severity: 6, symptoms: ['numb'] }] }), true);
+assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, region] }), false);
+for (const date of ['2025-02-29', '2026-04-31', '2026-2-01', '']) assert.equal(s.validSorenessEntry({ ...entry(), date }), false);
+assert.equal(s.validSorenessEntry({ ...entry(), date: '2024-02-29' }), true);
+assert.equal(s.validSorenessEntry({ ...entry(), date: '2999-01-01' }), true, 'structural validation is independent of clock');
+assert.equal(s.saveSorenessEntry({ ...entry(), date: '2999-01-01' }).error, 'invalid');
+for (const createdAt of ['yesterday', '2026-02-30T00:00:00.000Z']) assert.equal(s.validSorenessEntry({ ...entry(), createdAt }), false);
+assert.equal(s.validSorenessEntry({ ...entry(), id: 'bad' }), false);
+assert.equal(sorenessGuidance([{ severity: 3, symptoms: [] }]), 'observe');
+assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }]), 'modify');
+assert.equal(sorenessGuidance([{ severity: 6, symptoms: [] }]), 'stop');
+assert.equal(sorenessGuidance([{ severity: 0, symptoms: ['numb'] }]), 'stop');
+assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }, { severity: 8, symptoms: [] }]), 'stop');
+// A valid saved local day must remain readable after travel or clock rollback.
+const OriginalDate = Date;
+const persisted = entry();
+const persistedRaw = JSON.stringify([persisted]);
+const originalRaw = data.get(s.SORENESS_KEY);
+data.set(s.SORENESS_KEY, persistedRaw);
+const earlier = new OriginalDate(); earlier.setDate(earlier.getDate() - 1);
+globalThis.Date = class extends OriginalDate {
+  constructor(...args) { if (args.length) super(...args); else super(earlier.getTime()); }
+  static now() { return earlier.getTime(); }
+};
+try {
+  assert.deepEqual(s.readSorenessEntries().entries, [persisted], 'saved D remains readable on D-1');
+  assert.equal(data.get(s.SORENESS_KEY), persistedRaw, 'reading never rewrites existing bytes');
+  assert.equal(s.saveSorenessEntry({ ...entry(), date: persisted.date }).error, 'invalid', 'new future date still rejected');
+  assert.equal(data.get(s.SORENESS_KEY), persistedRaw, 'future rejection preserves bytes');
+  const todayEntry = entry();
+  assert.equal(s.saveSorenessEntry(todayEntry).ok, true, 'can save D-1 alongside existing D');
+  assert.deepEqual(s.readSorenessEntries().entries, [todayEntry, persisted]);
+  assert.equal(s.deleteSorenessEntry(persisted.id).ok, true, 'can delete existing D on D-1');
+  assert.deepEqual(s.readSorenessEntries().entries, [todayEntry]);
+} finally {
+  globalThis.Date = OriginalDate;
+  data.set(s.SORENESS_KEY, originalRaw);
+}
+failWrite = true;
+const raw = data.get(s.SORENESS_KEY);
+assert.equal(s.saveSorenessEntry(entry()).error, 'write-failed');
+assert.equal(s.deleteSorenessEntry(e.id).error, 'write-failed');
+assert.equal(data.get(s.SORENESS_KEY), raw);
+failWrite = false; failRead = true;
+assert.equal(s.saveSorenessEntry(entry()).error, 'read-failed');
+failRead = false;
+for (const corrupt of ['bad', '{}', JSON.stringify([e, e]), JSON.stringify([{ ...e, regions: [{ ...region, severity: null }] }])]) {
+  data.set(s.SORENESS_KEY, corrupt);
+  assert.equal(s.saveSorenessEntry(entry()).error, 'corrupt');
+  assert.equal(s.deleteSorenessEntry(e.id).error, 'corrupt');
+  assert.equal(data.get(s.SORENESS_KEY), corrupt);
+}
+data.set(s.SORENESS_KEY, JSON.stringify(Array.from({ length: 200 }, entry)));
+assert.equal(s.saveSorenessEntry(entry()).error, 'capacity');
+const first = s.readSorenessEntries().entries[0];
+assert.equal(s.deleteSorenessEntry(first.id).ok, true);
+assert.equal(s.readSorenessEntries().entries.length, 199);
+assert.deepEqual(before, [...data].filter(([key]) => key !== s.SORENESS_KEY));
+const { getAppStorageKeys, clearRehabLocalData } = await load('src/services/localStorageService.ts');
+assert.ok(getAppStorageKeys().includes(s.SORENESS_KEY));
+clearRehabLocalData(); assert.equal(data.has(s.SORENESS_KEY), false);
+assert.equal((readFileSync('src/main.tsx', 'utf8').match(/path="\/logs\/soreness"/g) ?? []).length, 1);
+console.log('PASS: soreness storage, guidance, identity, geometry count and clear-data regressions');

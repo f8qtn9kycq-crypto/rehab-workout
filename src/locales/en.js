@@ -527,6 +527,7 @@ export default {
     setSummary: 'Set {number}: {weight} × {reps} reps · {status}',
   },
   manualWorkout: {
+    recordedEquipment: "Recorded equipment: {name}",
     search: "Search exercises (Chinese or English)",
     noSearchResults: "No matching exercise. Add a personal exercise below.",
     setEquipment: "Equipment for this set",

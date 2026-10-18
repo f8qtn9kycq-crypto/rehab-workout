@@ -47,7 +47,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
         <p className="text-sm text-slate-600">{t('manualWorkout.artEquipmentHint')}</p>
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
-        <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {
+        <p className="break-words text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {
           const setEquipmentId = equipmentChoiceIds.find(id => id === set.equipmentId);
           const actualEquipment = setEquipmentId ? t(`manualWorkout.equipmentChoices.${setEquipmentId}`) : set.equipment ?? equipment;
           const prefix = [set.warmup ? t('manualWorkout.warmup') : '', actualEquipment, set.grip].filter(Boolean).join(' · ') + ' · ';

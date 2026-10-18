@@ -527,6 +527,7 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    recordedEquipment: "原紀錄器材：{name}",
     search: "搜尋動作（中文或英文）",
     noSearchResults: "找不到符合的動作，可在下方新增個人動作。",
     setEquipment: "這組器材",

@@ -57,3 +57,13 @@ Runtime SHA-256：`dc680a9efa202e930e33e7e3d1ea292ff5a952ecdaf5a53d7e6b51984050f
 - 詳細頁 320／375／390px viewport 的圖框分別為 254×146.046875、309×177.671875、324×186.296875 CSS px；natural size 320×184，載入皆成功、無水平溢位、無圖框裁切。這是同源 iframe 中實際 app DOM 量測，不是真機或獨立頂層手機瀏覽器。
 - 繁中與英文詳細頁均顯示專屬名稱、影片與書面內容，沒有引導開始按鈕。影片 iframe 指向 XPmdrYz50gA。
 - 實測畫面：`rear-foot-mobile.png`；具名風格比較：`rear-foot-comparison.html`，包含八張 frozen references 與新圖，原始尺寸及上述三種實測詳細頁圖框寬度。未執行獨立盲測；未量測 picker／Records 手機版，不宣稱該環境 PASS。
+
+## 難度版本修正
+
+使用者確認同一動作包含徒手與負重版本，負重屬中階至進階。名稱改為「後腳抬高蹲（徒手／啞鈴）」；equipment 包含 bodyweight、chair、dumbbell，dumbbell 為 progressionEquipment 而非必需器材。既有 advanced level 作整個動作的保守分類；中階至進階的負重難度以雙語進階欄位表達，不建立新 level enum。
+
+基礎書面步驟與未改動插圖仍為徒手扶穩；教練確認後的負重變化採一手扶穩、另一手輕啞鈴，保留低支撐、小幅度及同一停止規則。不得將本次文字修正當成負重插圖已驗收。Human Kinetics 來源明確列有 dumbbell weighted variation，但本 app 的扶穩單手版本是保守改編，非該來源的逐字處方。
+
+詳細頁總覽取消器材只顯示前兩個的限制，與動作卡既有全器材標籤一致，讓第三個啞鈴標籤可見；保留 flex-wrap。先前截圖與文字 QA 屬 4194f92，僅圖片 hash 未變；新 head 的標籤與文字需重新驗證。
+
+本次更新驗證：build、完整 npm test、安全/i18n、coverage 45/45 通過；增加同一 canonical ID 的啞鈴重量補記回歸。繁中/英文瀏覽器頁面顯示 bodyweight、chair、dumbbell 三標籤與中階至進階負重說明；320／375／390px 實際 app iframe 皆確認徒手/啞鈴可見且無水平溢位。最新總覽截圖 `rear-foot-tags.png`；原 mobile 插圖截圖僅作前版圖片參考。圖片 bytes 未變，本次不宣稱新增負重圖已驗證。

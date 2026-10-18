@@ -63,7 +63,7 @@ export default function ExerciseDetailPage() {
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
           <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>
-          {equipmentBadges.slice(0, 2).map((equipment) => (
+          {equipmentBadges.map((equipment) => (
             <span key={equipment} className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Dumbbell size={14} />{t(`equipmentLabels.${equipment}`)}</span>
           ))}
         </div>

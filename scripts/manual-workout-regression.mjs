@@ -281,9 +281,13 @@ assert.equal(rearFootSquat.youtubeEmbedUrl, 'https://www.youtube.com/embed/XPmdr
 assert.equal(rearFootSquat.youtubeSearchUrl, 'https://www.youtube.com/watch?v=XPmdrYz50gA');
 assert.equal(rearFootSquat.supportRequired, true, 'rear-foot elevation keeps mandatory support');
 assert.ok(rearFootSquat.requiredEquipment.includes('chair'), 'rear-foot support is not optional equipment');
-assert.ok(!rearFootSquat.equipment.some(id => ['dumbbell', 'barbell', 'kettlebell'].includes(id)), 'added load is not a default');
+assert.ok(rearFootSquat.equipment.includes('bodyweight') && rearFootSquat.equipment.includes('dumbbell'), 'both bodyweight and loaded versions are tagged');
+assert.deepEqual(rearFootSquat.progressionEquipment, ['dumbbell'], 'dumbbell loading is an explicit progression');
+assert.ok(!rearFootSquat.requiredEquipment.includes('dumbbell'), 'loading is not required for the base version');
 const rearFootEnglish = getEnglishExerciseContent(rearFootSquat);
 assert.match(rearFootEnglish.title, /Rear-foot-elevated split squat/);
+assert.match(rearFootSquat.progressions.join(' '), /中階至進階/);
+assert.match(rearFootEnglish.progressions.join(' '), /intermediate to advanced/);
 for (const content of [rearFootSquat, rearFootEnglish]) {
   for (const field of ['title', 'description', 'detail', 'durationText', 'benefits']) assert.ok(content[field]?.trim(), `rear-foot split squat has ${field} in both languages`);
   for (const field of ['steps', 'cautions', 'stopRules', 'regressions', 'progressions']) assert.ok(content[field]?.length && content[field].every(item => item.trim()), `rear-foot split squat has written ${field} in both languages`);
@@ -302,6 +306,12 @@ assert.match(readFileSync('src/pages/SessionPage.tsx', 'utf8'), /if \(exercise\.
 const rearFootRecord = {...dose, id:'rear-foot-squat-record', exercises:[{name:rearFootSquat.title, exerciseId:rearFootSquat.id, equipment:'bodyweight', equipmentId:'bodyweight', sets:[{reps:3}]}]};
 assert.equal(storage.saveManualWorkout(rearFootRecord), 'ok', 'rear-foot-elevated split squat can be recorded with its canonical ID');
 assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].exerciseId, rearFootSquat.id);
+const rearFootLoadedRecord = {...rearFootRecord, id:'rear-foot-loaded-record', exercises:[{...rearFootRecord.exercises[0], equipment:'dumbbell', equipmentId:'dumbbell', sets:[{reps:3, weightKg:2}]}]};
+assert.equal(storage.saveManualWorkout(rearFootLoadedRecord), 'ok', 'loaded variant uses the same canonical exercise');
+const savedRearFootLoaded = storage.readManualWorkouts().workouts.find(item => item.id === rearFootLoadedRecord.id).exercises[0];
+assert.equal(savedRearFootLoaded.exerciseId, rearFootSquat.id);
+assert.equal(savedRearFootLoaded.equipmentId, 'dumbbell');
+assert.equal(savedRearFootLoaded.sets[0].weightKg, 2);
 console.log('Rear-foot-elevated split squat regression passed: canonical ID, source video, bilingual safety content, required support, recommendation isolation and manual recording.');
 
 const custom = await loadModule('src/services/customExerciseStorage.ts');

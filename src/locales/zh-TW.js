@@ -527,6 +527,14 @@ export default {
     setSummary: '第 {number} 組：{weight} × {reps} 次・{status}',
   },
   manualWorkout: {
+    recordedEquipment: "原紀錄器材：{name}",
+    search: "搜尋動作（中文或英文）",
+    noSearchResults: "找不到符合的動作，可在下方新增個人動作。",
+    setEquipment: "這組器材",
+    grip: "這組握把／握法（選填）",
+    newSetEquipmentHint: "上方動作器材設定用於後續新增組；既有各組保留自己的器材。",
+    artEquipmentHint: "圖片為原動作示意；實際器材與握把請以各組文字為準。",
+
     conflict: "其他頁籤已有較新內容；此頁輸入尚未保存。請載入最新草稿後再編輯。",
     reloadDraft: "載入最新草稿（取代此頁輸入）",
 

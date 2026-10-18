@@ -1,3 +1,4 @@
+import { matchesManualExercise } from '../utils/manualWorkoutSearch';
 import { draftExercise, readManualDrafts, persistManualDraft, type DraftExercise, type ManualWorkoutDraft } from '../services/manualWorkoutDraftStorage';
 import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
 import FavoriteButton from '../components/FavoriteButton';
@@ -9,10 +10,10 @@ import { readCustomExercises, type CustomExercise } from '../services/customExer
 import LibraryMovementArt from '../components/LibraryMovementArt';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
-import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
+import { equipmentChoiceIds, quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
-import { copyManualExercises, readManualWorkouts, manualWorkoutId } from '../services/manualWorkoutStorage';
+import { copyManualExercises, readManualWorkouts, manualWorkoutId, snapshotSetEquipment } from '../services/manualWorkoutStorage';
 import { getLocalizedExercise } from '../utils/localizedExercise';
 import { manualWorkoutPainNotice } from '../utils/manualWorkoutPain';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
@@ -43,7 +44,7 @@ export default function ManualWorkoutPage() {
   });
   const source = sourceState.workout;
   const [previousNotes, setPreviousNotes] = useState(() => resumed?.exercises.map(e => e.previousNotes) ?? source?.exercises.map(e => e.notes) ?? [undefined]);
-  const [initialExercises] = useState(() => resumed?.exercises ?? (source ? copyManualExercises(source).map((e, i) => draftExercise(e, isLegacyRevisedCatalogRecord(e), source.exercises[i].notes)) : [emptyExercise()]));
+  const [initialExercises] = useState(() => resumed?.exercises.map(e => ({ ...e, sets: e.sets.map(set => snapshotSetEquipment(set, e)) })) ?? (source ? copyManualExercises(source).map((e, i) => draftExercise(e, isLegacyRevisedCatalogRecord(e), source.exercises[i].notes)) : [emptyExercise()]));
   const [legacyRecords, setLegacyRecords] = useState(() => initialExercises.map(e => e.legacy));
   const [customState, setCustomState] = useState(readCustomExercises);
   const [date, setDate] = useState(() => resumed?.date ?? localDate());
@@ -51,6 +52,7 @@ export default function ManualWorkoutPage() {
   const [doseModes, setDoseModes] = useState<('reps' | 'durationSeconds' | 'holdSeconds')[]>(() => initialExercises.map(exercise => exercise.doseMode));
   const [selectedIds, setSelectedIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.exerciseId ?? ''));
   const [equipmentIds, setEquipmentIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.equipmentId ?? ''));
+  const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
   const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
   const revision = useRef(resumed?.revision ?? 0);
@@ -76,7 +78,7 @@ export default function ManualWorkoutPage() {
     setSelectedIds(current => current.map((value, position) => position === index ? id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? '' : value));
     const selected = catalog.find(item => item.id === id);
-    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, completed: false })), name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
+    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, equipmentId: undefined, equipment: '', grip: undefined, completed: false })), name: selected ? getLocalizedExercise(selected, language).title : '', equipment: '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
     setEditingExerciseIndex(null);
@@ -85,7 +87,7 @@ export default function ManualWorkoutPage() {
   function chooseCustomExercise(index: number, exercise: CustomExercise): void {
     setSelectedIds(current => current.map((value, position) => position === index ? exercise.id : value));
     setEquipmentIds(current => current.map((value, position) => position === index ? exercise.equipmentId ?? '' : value));
-    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, completed: false })), name: exercise.name, kind: exercise.kind, recordOnly: true,
+    changeExercise(index, value => ({ ...draftExercise(), id: value.id, sets: value.sets.map(set => ({ ...set, equipmentId: exercise.equipmentId, equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '', grip: undefined, completed: false })), name: exercise.name, kind: exercise.kind, recordOnly: true,
       equipment: exercise.equipmentId ? t(`manualWorkout.equipmentChoices.${exercise.equipmentId}`) : '' }));
     setLegacyRecords(current => current.map((value, position) => position === index ? false : value));
     setPreviousNotes(current => current.map((value, position) => position === index ? undefined : value));
@@ -167,22 +169,30 @@ export default function ManualWorkoutPage() {
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.viewSaved')}</Link>
     <form onBlur={() => persist()} onSubmit={save} className="space-y-5">
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
-      {exercises.map((exercise, index) => <fieldset key={exercise.id} className="card space-y-4 p-4">
+      {exercises.map((exercise, index) => {
+        const query = searchQueries[exercise.id] ?? '';
+        const matchesCatalog = (item: typeof catalog[number]) => matchesManualExercise(query, [item.title, getLocalizedExercise(item, 'en').title]);
+        const matchingCustom = customState.exercises.filter(item => matchesManualExercise(query, [item.name]));
+        const hasMatches = catalog.some(matchesCatalog) || matchingCustom.length > 0;
+        return <fieldset key={exercise.id} className="card space-y-4 p-4">
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
           {(selectedIds[index] || ((source || resumed) && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {!legacyRecords[index] && hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
+            <p className="text-sm text-slate-600">{t('manualWorkout.artEquipmentHint')}</p>
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
+          <label className="block font-bold">{t('manualWorkout.search')}<input className={control} type="search" value={query} onChange={event => setSearchQueries(current => ({ ...current, [exercise.id]: event.target.value }))} /></label>
+          {query.trim() && !hasMatches && <p role="status">{t('manualWorkout.noSearchResults')}</p>}
           <div className="mt-3 space-y-5">
-            {quickExerciseGroups.map(group => <section key={group.id} aria-labelledby={`strength-group-${index}-${group.id}`}>
+            {quickExerciseGroups.map(group => <section key={group.id} hidden={!group.exerciseIds.some(id => { const item = catalog.find(e => e.id === id); return item && matchesCatalog(item); })} aria-labelledby={`strength-group-${index}-${group.id}`}>
               <h3 id={`strength-group-${index}-${group.id}`} className="mb-2 text-base font-black text-slate-800">{t(`manualWorkout.strengthGroups.${group.id}`)}</h3>
               <div className="grid grid-cols-1 gap-3">
                 {group.exerciseIds.map(id => {
                   const catalogExercise = catalog.find(item => item.id === id);
-                  return catalogExercise ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+                  return catalogExercise && matchesCatalog(catalogExercise) ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
                     <WorkoutMovementArt id={id} loading="eager" />
                     <span>{getLocalizedExercise(catalogExercise, language).title}</span>
                   </button><FavoriteButton id={id} title={getLocalizedExercise(catalogExercise, language).title} /></div> : null;
@@ -190,10 +200,10 @@ export default function ManualWorkoutPage() {
               </div>
             </section>)}
           </div>
-          <details className="mt-3 rounded-lg border border-slate-200 py-3"><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
-            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <div key={item.id}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
+          <details className="mt-3 rounded-lg border border-slate-200 py-3" open={query.trim() ? true : undefined}><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
+            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <div key={item.id} hidden={!matchesCatalog(item)}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
           </details>
-          <RecordOnlyExercisePicker exercises={customState.exercises} storageError={customState.error}
+          <RecordOnlyExercisePicker searchQuery={query} allowCreate={!query.trim() || !hasMatches} exercises={matchingCustom} storageError={customState.error}
             onSelect={exercise => chooseCustomExercise(index, exercise)}
             onCreated={exercise => { setCustomState(readCustomExercises()); chooseCustomExercise(index, exercise); }} />
           </>}
@@ -216,15 +226,23 @@ export default function ManualWorkoutPage() {
             <label className="text-sm font-bold">{t('manualWorkout.weight')}<input className={control} type="number" inputMode="decimal" min="0" max="1000" step="any" value={set.weightKg ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, weightKg: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
             {(['reps', 'durationSeconds', 'holdSeconds'] as const).filter(field => field in set || (!('reps' in set) && !('durationSeconds' in set) && !('holdSeconds' in set) && field === doseModes[index])).map(field => <label key={field} className="text-sm font-bold">{t(`manualWorkout.${field}`)}<input className={control} type="number" inputMode="numeric" min="1" max={field === 'reps' ? 1000 : 86400} step="1" value={set[field] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, completed: event.target.value === '' ? false : row.completed, [field]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>)}
           </div>
+          <label className="mt-2 block text-sm font-bold">{t('manualWorkout.setEquipment')}<select className={control} value={set.equipmentId ?? (set.equipment ? '__snapshot__' : '')} onChange={event => {
+            const equipmentId = event.target.value;
+            if (equipmentId === '__snapshot__') return;
+            setEquipmentIds(current => current.map((value, i) => i === index ? equipmentId : value));
+            changeExercise(index, value => ({ ...value, sets: value.sets.map((row, i) => i === setIndex ? { ...row, equipmentId: equipmentId || undefined, equipment: equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : '' } : row) }));
+          }}><option value="">{t('manualWorkout.unknown')}</option>{!set.equipmentId && set.equipment && <option value="__snapshot__">{t('manualWorkout.recordedEquipment', { name: set.equipment })}</option>}{set.equipmentId && !equipmentChoiceIds.some(id => id === set.equipmentId) && <option value={set.equipmentId}>{set.equipment || set.equipmentId}</option>}{equipmentChoiceIds.map(id => <option key={id} value={id}>{t(`manualWorkout.equipmentChoices.${id}`)}</option>)}</select></label>
+          <label className="mt-2 block text-sm font-bold">{t('manualWorkout.grip')}<input className={control} maxLength={100} value={set.grip ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, i) => i === setIndex ? { ...row, grip: event.target.value } : row) }))} /></label>
           <label className="mt-2 flex min-h-11 items-center gap-3 text-sm font-bold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, warmup: event.target.checked } : row) }))} />{t('manualWorkout.warmup')}</label>
           <button type="button" aria-pressed={set.completed} className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => completeSet(index, setIndex)}>{t(set.completed ? 'manualWorkout.setDone' : 'manualWorkout.completeSet')}</button>
           {exercise.sets.length > 1 && <button className="focus-ring mt-2 min-h-11 text-sm font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: value.sets.filter((_, position) => position !== setIndex) }))}>{t('manualWorkout.removeSet')}</button>}
         </div>)}
         <div className="flex flex-wrap gap-4">
-          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, { id: manualWorkoutId(), completed: false }] }))}>{t('manualWorkout.addSet')}</button>}
+          {exercise.sets.length < 20 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: [...value.sets, { id: manualWorkoutId(), completed: false, equipmentId: equipmentIds[index] || undefined, equipment: equipmentIds[index] ? t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) : '', grip: value.sets[value.sets.length - 1]?.grip }] }))}>{t('manualWorkout.addSet')}</button>}
           {exercises.length > 1 && <button className="focus-ring min-h-11 font-bold text-calm-800 underline" type="button" onClick={() => removeExercise(index)}>{t('manualWorkout.removeExercise')}</button>}
         </div>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{equipmentIds[index] ? t('manualWorkout.selectedEquipment', { name: t(`manualWorkout.equipmentChoices.${equipmentIds[index]}`) }) : t('manualWorkout.equipment')}</summary><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">{equipmentChoices.map(({ id, Icon }) => <button key={id} type="button" aria-pressed={equipmentIds[index] === id} onClick={() => chooseEquipment(index, id)} className={`focus-ring flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border p-2 text-center text-xs font-bold ${equipmentIds[index] === id ? 'border-calm-700 bg-calm-100 text-calm-900' : 'border-slate-300 bg-white text-ink'}`}><Icon size={22} aria-hidden="true" /><span>{t(`manualWorkout.equipmentChoices.${id}`)}</span></button>)}</div></details>
+        <p className="text-sm text-slate-600">{t('manualWorkout.newSetEquipmentHint')}</p>
         {previousNotes[index] && <p className="whitespace-pre-wrap break-words text-sm text-slate-600">{t('manualWorkout.previousNotes')}: {previousNotes[index]}</p>}
         <label className="block text-sm font-bold">{t('manualWorkout.notes')}<textarea maxLength={2000} className={control} value={exercise.notes ?? ''} onChange={event => changeExercise(index, value => ({ ...value, notes: event.target.value }))} /></label>
         <details className="rounded-md border border-slate-200 p-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{t('manualWorkout.feedback')}</summary>
@@ -237,7 +255,7 @@ export default function ManualWorkoutPage() {
             {painNotices[index] && <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-800">{t(painNotices[index] === 'stop' ? 'manualWorkout.stopWarning' : 'manualWorkout.warning')}</p>}
           </div>
         </details>
-      </fieldset>)}
+      </fieldset>;})}
       {exercises.length < 12 && <button className="focus-ring min-h-11 w-full rounded-md border border-calm-600 px-4 font-bold text-calm-800" type="button" onClick={() => { setLegacyRecords(current => [...current, false]); setPreviousNotes(current => [...current, undefined]); setExercises(current => [...current, emptyExercise()]); setDoseModes(current => [...current, 'reps']); setSelectedIds(current => [...current, '']); setEquipmentIds(current => [...current, '']); }}>{t('manualWorkout.addExercise')}</button>}
       <label className="block font-bold">{t('manualWorkout.cyclingMinutes')}<input className={control} type="number" min="1" max="1440" step="1" value={cyclingMinutes ?? ''} onChange={event => { setSaveStatus(false); setCyclingConfirmed(false); setCyclingMinutes(event.target.value === '' ? undefined : Number(event.target.value)); }} /></label>
       <p className="text-sm text-slate-600">{t('manualWorkout.cyclingDraftHint')}</p>

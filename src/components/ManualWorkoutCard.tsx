@@ -44,10 +44,13 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
       return <div key={index} className="border-t border-slate-100 pt-2">
         {!legacyRevisedCatalog && hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
         {(exercise.recordOnly || exercise.exerciseId?.startsWith('custom-')) && <p className="text-sm text-slate-600">{t('manualWorkout.recordOnly')}</p>}
+        <p className="text-sm text-slate-600">{t('manualWorkout.artEquipmentHint')}</p>
         <p className="font-bold text-ink">{name}{equipment ? ` · ${equipment}` : ''}</p>
         {(exercise.kind || exercise.bodyArea) && <p className="text-sm text-slate-600">{[exercise.kind ? t(`manualWorkout.${exercise.kind}`) : null, exercise.bodyArea ? t(`bodyAreas.${exercise.bodyArea}.label`) : null].filter(Boolean).join(' · ')}</p>}
-        <p className="text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {
-          const prefix = set.warmup ? `${t('manualWorkout.warmup')} · ` : '';
+        <p className="break-words text-sm text-slate-600">{exercise.sets.map((set, setIndex) => {
+          const setEquipmentId = equipmentChoiceIds.find(id => id === set.equipmentId);
+          const actualEquipment = setEquipmentId ? t(`manualWorkout.equipmentChoices.${setEquipmentId}`) : set.equipment ?? equipment;
+          const prefix = [set.warmup ? t('manualWorkout.warmup') : '', actualEquipment, set.grip].filter(Boolean).join(' · ') + ' · ';
           if (set.durationSeconds !== undefined || set.holdSeconds !== undefined) {
             const dose = [set.reps !== undefined ? t('manualWorkout.repsValue', { value: set.reps }) : null,
               set.durationSeconds !== undefined ? t('manualWorkout.durationValue', { value: set.durationSeconds }) : null,

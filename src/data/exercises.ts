@@ -999,8 +999,26 @@ export const exercises: Exercise[] = [
     description: "以可控制的輕槓鈴進行站姿負重深蹲。", detail: "可查詢的進階負重動作，不會進入保守推薦；深度依症狀與控制能力調整。", steps: ["確認槓鈴重量與取放方式可安全控制", "雙腳站穩，軀幹保持穩定，槓鈴置於上背而非頸部", "臀部向後、膝蓋與腳尖同向，只蹲到舒適且可控制的深度", "受控站回起始位置，不要憋氣或彈震"], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供髖部與腿部功能性肌力訓練參考。', cautions: ["先使用可完整控制的輕重量", "不要追求深度或重量，失去平衡時停止"], stopRules: ['膝或髖部疼痛增加', '失去平衡或頭暈'], regressions: ["改成無負重坐到站", "縮小下蹲深度"], progressions: ['控制穩定後增加次數'], equipment: ["barbell"], requiredEquipment: ["barbell"], recommendationSafetyLevel: 'advanced_only', safetyTags: ["deep_knee_flexion", "loaded_progression"], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: "https://www.youtube.com/results?search_query=barbell+squat+beginner+controlled+range", sourceRef: "catalog-only: user-selected loaded squat; reviewed-content-needed", catalogOnly: true
   },
   {
-    id: 'catalog-pull-up', title: '引體向上', joint: 'shoulder', bodyArea: 'shoulder', condition: '上肢拉力訓練（動作庫）', type: 'strength', level: 'advanced',
-    description: '以固定單槓進行自體重量拉起。', detail: '可查詢的進階動作，不是 Active Aging 預設推薦。', steps: ['確認單槓固定且高度安全', '雙手握槓並穩定肩胛', '以受控方式拉起', '慢慢放下，不要跳下'], sets: 2, reps: 3, holdSeconds: 0, restSeconds: 90, durationText: '2 組，每組 3 次', benefits: '提供背部與上肢拉力訓練參考。', cautions: ['需要穩固單槓與足夠握力', '不要甩動或跳下'], stopRules: ['肩部、手肘或背部疼痛', '失去握力或頭暈'], regressions: ['使用支援式拉力器材或彈力帶'], progressions: ['動作穩定後增加次數'], equipment: ['bodyweight'], requiredEquipment: ['bodyweight'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=assisted+pull+up+beginner', sourceRef: 'catalog-only: reviewed-content-needed', catalogOnly: true
+    id: 'catalog-pull-up',
+    title: '引體向上',
+    joint: 'shoulder', bodyArea: 'shoulder', condition: '上肢拉力訓練（動作庫）',
+    type: 'strength', level: 'advanced',
+    description: '以穩固單槓進行受控的自體重量拉起。',
+    detail: '進階動作庫參考，供查閱與補記已完成的訓練，不提供引導訓練，也不是 Active Aging 預設推薦。影片供動作參考，其中的進階變化式不作為預設。',
+    steps: ['確認單槓固定、握持處乾燥，並先確認能安全上下槓；需要時使用穩固且不滑動的踏台，不跳起抓槓', '雙手穩握單槓，肩膀與軀幹保持受控；若無法穩定支撐體重，不進行懸吊拉起', '緩慢彎曲手肘，僅拉到舒適且能控制的高度，不甩動、拱腰或勉強將下巴拉過槓', '受控慢慢下降，保留足夠握力安全回到踏台或地面，再鬆手，不跳下'],
+    sets: 2, reps: 3, holdSeconds: 0, restSeconds: 90,
+    durationText: 'App 參考量：2 組，每組 3 次，依實際完成量補記',
+    benefits: '提供背部與上肢拉力訓練參考。',
+    cautions: ['需要穩固單槓、足夠握力及安全上下槓方式；器材或支撐不穩時不要開始', '不要甩動、憋氣或勉強拉高；肩、手肘或背部不舒服時縮小幅度，疼痛超過 3/10 時先降階或休息', 'App 參考量不是影片處方或個人化建議，不需勉強完成組數或次數'],
+    stopRules: ['疼痛達 6/10、尖銳疼痛或症狀明顯加劇時停止', '失去握力、出現麻木、無力或頭暈時停止並安全下槓；有紅旗症狀時不要訓練'],
+    regressions: ['改用可穩定支撐的輔助式拉力器材，降低負荷並縮小幅度；無法安全上下槓時不要嘗試', '減少次數；仍不舒服時停止並尋求專業建議'],
+    progressions: ['無症狀且能全程控制、穩定上下槓後，再少量增加次數，不急著加重或拉高'],
+    equipment: ['bodyweight'], requiredEquipment: ['bodyweight'],
+    recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression'], avoidIfPainHigh: true,
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/OMaFvcCQV5M',
+    youtubeSearchUrl: 'https://www.youtube.com/watch?v=OMaFvcCQV5M',
+    sourceRef: 'catalog-only: GYMEFIT Pull-up (2019-08-20), https://www.youtube.com/watch?v=OMaFvcCQV5M; conservative app adaptation, transcript and detailed demonstration not verified, dosage not taken from video; reviewed-content-needed',
+    catalogOnly: true,
   },
   {
     id: 'catalog-dip', title: '雙槓撐體', joint: 'shoulder', bodyArea: 'shoulder', condition: '上肢推力訓練（動作庫）', type: 'strength', level: 'advanced',

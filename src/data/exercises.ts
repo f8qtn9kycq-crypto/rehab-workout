@@ -973,6 +973,28 @@ export const exercises: Exercise[] = [
     description: '站姿以可控制的輕槓鈴進行身體前方肩推。', detail: '可查詢的重訓動作範例，不會進入保守推薦。', steps: ['雙腳站穩，保持軀幹穩定', '槓鈴從身體前方、下巴至肩部高度開始，不放在頸後', '只在舒適且可控制的範圍內向上推', '緩慢回到身體前方的起始位置'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供肩部與上肢推力訓練參考。', cautions: ['避免疼痛或夾擠感', '不要追求過頭高度或重量'], stopRules: ['肩部尖銳疼痛', '手臂麻木、無力或胸悶'], regressions: ['減輕重量', '改做無重量肩部活動度'], progressions: ['無症狀且穩定時增加一到兩次'], equipment: ['barbell'], requiredEquipment: ['barbell'], recommendationSafetyLevel: 'advanced_only', safetyTags: ['aggressive_overhead_loading', 'loaded_progression'], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: 'https://www.youtube.com/results?search_query=standing+barbell+front+shoulder+press', sourceRef: 'catalog-only: user-selected front barbell press; reviewed-content-needed', catalogOnly: true
   },
   {
+    id: 'catalog-side-squat',
+    title: '側蹲（Side Squat）',
+    joint: 'hip', bodyArea: 'hip', condition: '下肢肌力與側向控制（動作庫）',
+    type: 'strength', level: 'intermediate',
+    description: '雙腳保持寬站距，臀部向後並將重心緩慢移向一側。',
+    detail: '動作庫參考，供查閱與補記已完成的訓練，不提供引導訓練。先採徒手、小幅度；影片中的進階幅度與負重不作為預設。',
+    steps: ['雙腳比肩略寬站穩，腳掌貼地；需要時扶穩固椅背', '臀部向後，緩慢將重心移向右側並彎曲右膝，左腿保持延伸但不鎖死', '右膝與腳尖同向，軀幹保持穩定；只下蹲到舒適且可控制的深度', '受控回到中間，再換左側；右側與左側各完成一次，分別計次'],
+    sets: 1, reps: 5, holdSeconds: 0, restSeconds: 60,
+    durationText: '參考量：1 組，每側 5 次，依實際完成量補記',
+    benefits: '提供臀腿肌力與側向重心控制的訓練參考。',
+    cautions: ['不要追求深蹲、過寬站距或負重，避免膝蓋內夾與腳跟離地', '髖、膝或背部不舒服時縮小幅度；疼痛超過 3/10 時先降階或休息', '椅子需穩固且不滑動；參考量不是影片處方或個人化建議'],
+    stopRules: ['疼痛達 6/10、尖銳疼痛或症狀明顯加劇時停止', '出現麻木、無力、頭暈或失去平衡時停止；有紅旗症狀時不要訓練'],
+    regressions: ['扶穩固椅背，縮小站距與下蹲幅度', '減少每側次數；仍不舒服時停止並尋求專業建議'],
+    progressions: ['無症狀且動作穩定後，再少量增加每側次數；不急著增加深度或重量'],
+    equipment: ['bodyweight', 'chair'], requiredEquipment: ['bodyweight'], optionalEquipment: ['chair'],
+    recommendationSafetyLevel: 'advanced_only', safetyTags: ['deep_knee_flexion', 'pain_sensitive'], avoidIfPainHigh: true,
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/kR7ykIAuq_0',
+    youtubeSearchUrl: 'https://www.youtube.com/watch?v=kR7ykIAuq_0',
+    sourceRef: 'catalog-only: GYMEFIT Side Squat (2022-02-17), https://www.youtube.com/watch?v=kR7ykIAuq_0; conservative app adaptation, dosage not taken from video; reviewed-content-needed',
+    catalogOnly: true,
+  },
+  {
     id: 'catalog-squat', title: "負重深蹲", joint: 'hip', bodyArea: 'hip', condition: '下肢肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
     description: "以可控制的輕槓鈴進行站姿負重深蹲。", detail: "可查詢的進階負重動作，不會進入保守推薦；深度依症狀與控制能力調整。", steps: ["確認槓鈴重量與取放方式可安全控制", "雙腳站穩，軀幹保持穩定，槓鈴置於上背而非頸部", "臀部向後、膝蓋與腳尖同向，只蹲到舒適且可控制的深度", "受控站回起始位置，不要憋氣或彈震"], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供髖部與腿部功能性肌力訓練參考。', cautions: ["先使用可完整控制的輕重量", "不要追求深度或重量，失去平衡時停止"], stopRules: ['膝或髖部疼痛增加', '失去平衡或頭暈'], regressions: ["改成無負重坐到站", "縮小下蹲深度"], progressions: ['控制穩定後增加次數'], equipment: ["barbell"], requiredEquipment: ["barbell"], recommendationSafetyLevel: 'advanced_only', safetyTags: ["deep_knee_flexion", "loaded_progression"], avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: "https://www.youtube.com/results?search_query=barbell+squat+beginner+controlled+range", sourceRef: "catalog-only: user-selected loaded squat; reviewed-content-needed", catalogOnly: true
   },

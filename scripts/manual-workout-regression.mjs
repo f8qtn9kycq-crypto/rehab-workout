@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import { build } from 'vite';
 import { execFileSync } from 'node:child_process';
+import { resolveMovementArtSource } from './movement-art-source.mjs';
 import { auditMovementArt } from './audit-movement-art.mjs';
 import en from '../src/locales/en.js';
 import zhTW from '../src/locales/zh-TW.js';
@@ -42,7 +43,7 @@ assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises 
 const libraryArtIds = artManifest.filter(entry => entry.group === 'library').map(entry => entry.id);
 const quickArtIds = artManifest.filter(entry => entry.group === 'quick').map(entry => entry.id);
 const additionalCatalogIds = quickIds;
-assert.equal(libraryArtIds.length, 35, 'all 35 additional library choices have movement art');
+assert.equal(libraryArtIds.length, 36, 'all 36 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
 const retainedCatalogArtIds = ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-lat-pulldown', 'catalog-seated-row', 'catalog-leg-extension'];
@@ -91,7 +92,7 @@ for (const entry of artManifest) {
   assert.equal(image.toString('hex', 0, 8), '89504e470d0a1a0a', `${entry.id} individual movement art is PNG`);
   assert.equal(image.readUInt32BE(16), 320, `${entry.id} uses the shared 320px canvas width`);
   assert.equal(image.readUInt32BE(20), 184, `${entry.id} uses the shared 184px canvas height`);
-  assert.ok(statSync(`public/exercise-visuals/movements/${entry.id}.png`).size < statSync(`scripts/assets/movement-art-sources/${entry.sheet}`).size, `${entry.id} is smaller than its full source sprite`);
+  assert.ok(statSync(`public/exercise-visuals/movements/${entry.id}.png`).size < statSync(resolveMovementArtSource(entry).path).size, `${entry.id} is smaller than its effective source`);
 }
 
 async function loadModule(entry) {
@@ -262,6 +263,16 @@ assert.equal(values.get(storage.MANUAL_WORKOUT_KEY),rawDose);
 window.localStorage.setItem=originalSetItem;
 for(const locale of [en,zhTW]) for(const key of ['doseMode','durationSeconds','holdSeconds','repsValue','durationValue','holdValue']) assert.equal(typeof locale.manualWorkout[key],'string',key);
 console.log('Actual dose regression passed: duration/hold/combined, bounds, no fake reps/pain, duplicate and write-failure preservation.');
+
+const sideSquat = canonicalExercises.find(exercise => exercise.id === 'catalog-side-squat');
+assert.ok(sideSquat?.catalogOnly, 'side squat remains catalog-only');
+assert.equal(sideSquat.youtubeEmbedUrl, 'https://www.youtube.com/embed/kR7ykIAuq_0');
+const { getEnglishExerciseContent } = await loadModule('src/data/exerciseTranslations.ts');
+assert.equal(getEnglishExerciseContent(sideSquat).title, 'Side squat');
+assert.ok(getEnglishExerciseContent(sideSquat).steps.at(-1).includes('each side separately'));
+const sideSquatRecord = {...dose, id:'side-squat-record', exercises:[{name:sideSquat.title, exerciseId:sideSquat.id, equipment:'bodyweight', equipmentId:'bodyweight', sets:[{reps:5}]}]};
+assert.equal(storage.saveManualWorkout(sideSquatRecord), 'ok', 'side squat can be recorded with its canonical ID');
+assert.equal(storage.readManualWorkouts().workouts[0].exercises[0].exerciseId, sideSquat.id);
 
 const custom = await loadModule('src/services/customExerciseStorage.ts');
 const { getExerciseById } = await loadModule('src/utils/exerciseModel.ts');

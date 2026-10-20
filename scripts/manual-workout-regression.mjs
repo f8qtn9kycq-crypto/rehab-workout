@@ -282,7 +282,9 @@ assert.equal(rearFootSquat.youtubeSearchUrl, 'https://www.youtube.com/watch?v=XP
 assert.equal(rearFootSquat.supportRequired, true, 'rear-foot elevation keeps mandatory support');
 assert.ok(rearFootSquat.requiredEquipment.includes('chair'), 'rear-foot support is not optional equipment');
 assert.ok(rearFootSquat.equipment.includes('bodyweight') && rearFootSquat.equipment.includes('dumbbell'), 'both bodyweight and loaded versions are tagged');
-assert.deepEqual(rearFootSquat.progressionEquipment, ['dumbbell'], 'dumbbell loading is an explicit progression');
+assert.deepEqual(rearFootSquat.progressionEquipment, ['dumbbell', 'kettlebell'], 'handheld loads are explicit progressions');
+assert.ok(rearFootSquat.equipment.includes('kettlebell'), 'loaded variants are not limited to dumbbells');
+assert.ok(!rearFootSquat.requiredEquipment.includes('kettlebell'), 'kettlebell is not required for bodyweight');
 assert.ok(!rearFootSquat.requiredEquipment.includes('dumbbell'), 'loading is not required for the base version');
 const rearFootEnglish = getEnglishExerciseContent(rearFootSquat);
 assert.match(rearFootEnglish.title, /Rear-foot-elevated split squat/);

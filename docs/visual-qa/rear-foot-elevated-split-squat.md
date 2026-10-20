@@ -67,3 +67,7 @@ Runtime SHA-256：`dc680a9efa202e930e33e7e3d1ea292ff5a952ecdaf5a53d7e6b51984050f
 詳細頁總覽取消器材只顯示前兩個的限制，與動作卡既有全器材標籤一致，讓第三個啞鈴標籤可見；保留 flex-wrap。先前截圖與文字 QA 屬 4194f92，僅圖片 hash 未變；新 head 的標籤與文字需重新驗證。
 
 本次更新驗證：build、完整 npm test、安全/i18n、coverage 45/45 通過；增加同一 canonical ID 的啞鈴重量補記回歸。繁中/英文瀏覽器頁面顯示 bodyweight、chair、dumbbell 三標籤與中階至進階負重說明；320／375／390px 實際 app iframe 皆確認徒手/啞鈴可見且無水平溢位。最新總覽截圖 `rear-foot-tags.png`；原 mobile 插圖截圖僅作前版圖片參考。圖片 bytes 未變，本次不宣稱新增負重圖已驗證。
+
+## 2026-10-20 合併前更新
+
+使用者明確授權「fix if blocked, merge if pass」。分支重疊 main 問題以乾淨 clone rebase 修正，原 checkout 未改動。另依回饋將名稱改為「後腳抬高蹲（徒手／負重）」；負重例子包含啞鈴、壺鈴等可穩定手持器材，canonical equipment 與 progressionEquipment 包含 dumbbell/kettlebell，皆非基礎必需器材。保留單手固定扶手、可控制輕負荷、中階至進階與同一停止規則，不提供槓鈴或其他會佔用扶穩手的預設。圖片 hash 與徒手基本步驟不變。舊 head 的檢查/審查僅歷史資料，新 head 重新驗證與Claude審查，以PR留言為準；尚未收到真人圖片結果，不推定真人/專業核准。

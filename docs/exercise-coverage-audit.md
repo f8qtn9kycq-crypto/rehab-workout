@@ -1,25 +1,25 @@
 # Exercise Coverage Audit
 
-Generated: 2026-10-17T16:18:03.251Z
+Generated: 2026-10-20T02:05:25.777Z
 
-Source commit: e10edc9
+Source commit: e929586
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
 ## 1. Executive summary
 
-- Total exercises audited: 44
-- Catalog-only entries included in coverage counts: 9. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
+- Total exercises audited: 45
+- Catalog-only entries included in coverage counts: 10. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
 - Audit body areas: shoulder_hip, shoulder_neck, knee, ankle
 - App body area enums: shoulder, hip, shoulder_neck, knee, ankle
 - Canonical equipment ids: bodyweight, dumbbell, barbell, machine, kettlebell, chair, wall, resistance_band, foam_roller
-- Raw equipment-field bodyArea + difficulty + equipment gaps: 82
+- Raw equipment-field bodyArea + difficulty + equipment gaps: 79
 - App-realistic filter dead-end combinations: 52
 - Canonical equipment with 0 exercises: foam_roller
 - Non-canonical exercise bodyArea values: None
 - Non-canonical exercise type values: None
 - Non-canonical exercise equipment values: None
-- Manual/backfill selectable canonical coverage: 44/44
+- Manual/backfill selectable canonical coverage: 45/45
 - Quick strength catalog-only isolation: 8/8
 
 Top 5 gaps:
@@ -72,6 +72,7 @@ Top 5 gaps:
 | 啞鈴胸推 | catalog-bench-press | shoulder_hip | strength | intermediate | dumbbell |
 | 槓鈴肩推 | catalog-shoulder-press | shoulder_hip | strength | intermediate | barbell |
 | 側蹲（Side Squat） | catalog-side-squat | shoulder_hip | strength | intermediate | bodyweight, chair |
+| 後腳抬高蹲（徒手／負重） | catalog-rear-foot-elevated-split-squat | shoulder_hip | strength | advanced | bodyweight, chair, dumbbell, kettlebell |
 | 負重深蹲 | catalog-squat | shoulder_hip | strength | intermediate | barbell |
 | 引體向上 | catalog-pull-up | shoulder_hip | strength | advanced | bodyweight |
 | 雙槓撐體 | catalog-dip | shoulder_hip | strength | advanced | bodyweight |
@@ -127,12 +128,13 @@ Top 5 gaps:
 | 坐姿屈膝提踵 | ankle-seated-soleus-raise | Yes | ankle | strength | chair | Recommendation eligible | None |
 | 單腳觸遠 | ankle-single-leg-reach | Yes | ankle | proprioception | chair | Recommendation eligible | None |
 | 側蹲（Side Squat） | catalog-side-squat | Yes | hip | strength | bodyweight, chair | catalogOnly: true | None |
+| 後腳抬高蹲（徒手／負重） | catalog-rear-foot-elevated-split-squat | Yes | hip | strength | bodyweight, chair, dumbbell, kettlebell | catalogOnly: true | None |
 
 ## 3. Difficulty coverage table
 
 | Body Area | Beginner | Intermediate | Advanced |
 | --- | --- | --- | --- |
-| shoulder_hip | 7 | 10 | 2 |
+| shoulder_hip | 7 | 10 | 3 |
 | shoulder_neck | 10 | 0 | 0 |
 | knee | 4 | 2 | 0 |
 | ankle | 6 | 2 | 1 |
@@ -141,12 +143,12 @@ Top 5 gaps:
 
 | Equipment | # Exercises | Body Areas Covered | Empty Levels |
 | --- | --- | --- | --- |
-| bodyweight | 12 | shoulder_hip, shoulder_neck, knee | None |
-| dumbbell | 2 | shoulder_hip | advanced |
+| bodyweight | 13 | shoulder_hip, shoulder_neck, knee | None |
+| dumbbell | 3 | shoulder_hip | None |
 | barbell | 2 | shoulder_hip | beginner, advanced |
 | machine | 3 | shoulder_hip, knee | beginner, advanced |
-| kettlebell | 1 | shoulder_hip | intermediate, advanced |
-| chair | 20 | shoulder_hip, shoulder_neck, knee, ankle | None |
+| kettlebell | 2 | shoulder_hip | intermediate |
+| chair | 21 | shoulder_hip, shoulder_neck, knee, ankle | None |
 | wall | 7 | shoulder_hip, shoulder_neck, knee, ankle | advanced |
 | resistance_band | 6 | shoulder_hip, shoulder_neck, ankle | advanced |
 | foam_roller | 0 | None | beginner, intermediate, advanced |
@@ -156,7 +158,7 @@ Top 5 gaps:
 | Type | Count | Body Areas Covered |
 | --- | --- | --- |
 | mobility | 8 | shoulder_hip, shoulder_neck, ankle |
-| strength | 26 | shoulder_hip, shoulder_neck, knee, ankle |
+| strength | 27 | shoulder_hip, shoulder_neck, knee, ankle |
 | stretch | 5 | shoulder_neck, ankle |
 | relaxation | 3 | shoulder_neck, knee |
 | balance | 1 | ankle |
@@ -164,7 +166,7 @@ Top 5 gaps:
 
 ## 6. Empty combinations table
 
-This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 82, but it should not be used as live UI dead-end evidence.
+This section models live filter compatibility, including bodyweight-required exercises and bodyweight fallback for support-only chair/wall exercises, following the minimal logic in src/utils/exerciseModel.ts. The raw equipment-field gap count is 79, but it should not be used as live UI dead-end evidence.
 
 | Body Area | Difficulty | Equipment | Result | Suggested Action |
 | --- | --- | --- | --- | --- |
@@ -247,7 +249,7 @@ This section models live filter compatibility, including bodyweight-required exe
 
 | Finding | Content Gap | Filter Bug | Recommendation Bug | Copy/UX Issue | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 52 app-realistic empty bodyArea + difficulty + equipment combinations; 82 raw equipment-field gaps. |
+| Some equipment/difficulty selections produce no matching exercise. | Yes | No current evidence | Potentially, if fallback crosses user intent later | No | 52 app-realistic empty bodyArea + difficulty + equipment combinations; 79 raw equipment-field gaps. |
 | Canonical foam_roller option has zero total exercise coverage. | Yes | No current evidence | No current evidence | Potentially | foam_roller appears in EQUIPMENT_IDS/EQUIPMENT_OPTIONS and has 0 exercises. |
 | Advanced coverage is sparse and absent outside ankle. | Yes | No current evidence | No current evidence | Potentially | shoulder_neck, knee |
 | 「為我推薦」 may be unclear to users. | No | No current evidence | No current evidence | Yes | Mode label exists, but the visible copy does not explain inputs used: assessment, equipment, pain, and logs. |

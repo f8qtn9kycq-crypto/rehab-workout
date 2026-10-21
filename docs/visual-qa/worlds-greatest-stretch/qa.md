@@ -22,7 +22,7 @@
 ## 本機驗證
 
 - `npm test`、`npm run build`、`audit:exercise-coverage`、`audit:safety-i18n`、`audit:movement-art`、`audit:movement-art-sources`、`git diff --check` 通過。
-- 46/46 canonical coverage；40 effective overrides 可 byte-for-byte 重建；既有 bundle 大小提醒仍在。只有此動作的來源與 runtime 圖被修改。
+- 47/47 canonical coverage；40 effective overrides 可 byte-for-byte 重建；既有 bundle 大小提醒仍在。只有此動作的來源與 runtime 圖被修改。
 - 既有分類 P1 一併修正：canonical catalog-only mobility 缺少 kind 時屬 rehab；不改明確 kind 優先序、不改非 catalog-only 復健分類、不改寫舊 storage。新增 regression 驗證此動作增加 rehab day 且 strength day=0，bench press 仍屬 strength，明確 kind 與輸入不可變性保持。
 - 中英文主步驟均已改成後膝離地；detail／regression／progression 不再引導跪地主版本。保留每側次數、下肘停留、App 回合／休息的原有來源邊界。
 - 真人風格、實體 iPhone Safari、production NOT VERIFIED。CI 與必要 AI review 綁定最終 head 留在 PR；舊 head 證據不冒充本次結果。

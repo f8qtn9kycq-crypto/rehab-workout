@@ -82,6 +82,8 @@ export interface Exercise {
   sourceRef: string;
   /** Catalog-only content is searchable but never enters conservative recommendations. */
   catalogOnly?: boolean;
+  /** Catalog reference without a prescribed dose; numeric dose fields are zero sentinels. */
+  dosageStatus?: 'unspecified';
 }
 
 export interface SessionLog {

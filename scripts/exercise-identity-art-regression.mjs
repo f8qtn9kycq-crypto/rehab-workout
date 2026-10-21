@@ -29,12 +29,37 @@ export function renderMissing() { return renderToStaticMarkup(<I18nProvider><Exe
   const app = await import(pathToFileURL(output));
   const values = new Map();
   globalThis.window={localStorage:{getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)}};
+  for (const exercise of app.exercises) {
+    if (exercise.dosageStatus === 'unspecified') {
+      assert.equal(exercise.catalogOnly, true, 'unspecified dose is catalog-only');
+      for (const field of ['sets', 'reps', 'holdSeconds', 'restSeconds']) assert.equal(exercise[field], 0);
+    }
+  }
   let comparisons=0;
   for(const language of ['zh-TW','en']) {
     values.set('rehab.language.v1',language);
     for(const exercise of app.exercises) {
       const card=app.renderCard(exercise);
       const source=card.match(/<img[^>]*src="([^"]+)"/)?.[1];
+      if (exercise.id === 'catalog-prone-ytw') {
+        assert(!source, 'new reference does not borrow unrelated movement art');
+        assert.equal(exercise.catalogOnly, true);
+        assert.equal(exercise.dosageStatus, 'unspecified');
+        for (const field of ['sets', 'reps', 'holdSeconds', 'restSeconds']) assert.equal(exercise[field], 0);
+        assert(!card.includes('grid-cols-3'), 'unspecified dose is not rendered as numeric prescription');
+        const detail = app.renderDetail(exercise);
+        assert(!detail.includes('/session/'), 'catalog reference has no guided entry');
+        assert.equal(exercise.youtubeEmbedUrl, 'https://www.youtube.com/embed/QdGTI4Lshg4');
+        assert(detail.includes('<button'), 'video open control remains available');
+        for (const section of ['steps','safety','adjustments']) assert(detail.includes(`id="${section}"`));
+        for (const markup of [app.renderIdentity(exercise), app.renderLog(exercise)]) {
+          assert(!markup.includes('<img'), 'no unrelated art in detail/records');
+          assert(markup.includes('role="img"'), 'accessible identity fallback remains');
+        }
+        assert(card.includes(language === 'en' ? 'No prescribed dose' : '未設定訓練劑量'));
+        comparisons++;
+        continue;
+      }
       assert(source,`library art exists: ${exercise.id}`);
       for(const compact of [false,true]) {
         const identity=app.renderIdentity(exercise,compact);

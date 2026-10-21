@@ -963,6 +963,28 @@ export const exercises: Exercise[] = [
     sourceRef: '互動式踝關節穩定性指南.txt'
   },
   {
+    id: 'catalog-prone-ytw', title: '俯臥 Y／T／W',
+    joint: 'shoulder', bodyArea: 'shoulder', condition: '肩胛與上背控制（動作庫）',
+    type: 'strength', level: 'intermediate',
+    description: '俯臥，以徒手依序完成 Y、T、W 形的小幅抬臂與受控放下。',
+    detail: '依 The Active Life 示範整理，供查閱與補記，不提供引導訓練。影片沒有提供組次、停留或休息時間；請記錄實際完成量，勿將影片長度當成訓練劑量。',
+    steps: ['俯臥在穩固平面，額頭可墊折好的衣物，保持頸部自然與呼吸順暢', 'Y：雙臂向頭頂斜前方張開，拇指朝上，小幅抬離地面後受控放下', 'T：雙臂向身體兩側展開，拇指朝上，小幅抬起後慢慢放下', 'W：手肘彎曲並靠近身體兩側，小幅抬起手臂後受控放下；不要抬頭或拱腰代償'],
+    // Zero sentinels represent an unspecified dose, never a training prescription.
+    sets: 0, reps: 0, holdSeconds: 0, restSeconds: 0, dosageStatus: 'unspecified',
+    durationText: '未設定訓練劑量；補記實際完成量',
+    benefits: '提供徒手肩胛與上背動作控制的示範參考。',
+    cautions: ['Y 包含過頭抬臂，不適合作為肩部不適者的預設動作；不追求高度或疼痛角度', '先採徒手，避免聳肩、憋氣、抬頭或拱腰；俯臥或上下地面困難時不要勉強', '疼痛超過 3/10 時降階或休息；術後或已有活動限制者先依醫師或物理治療師指示'],
+    stopRules: ['疼痛達 6/10、尖銳疼痛或症狀明顯加劇時停止', '麻木、無力、暈眩或呼吸不適時停止並建議諮詢醫師或物理治療師；有紅旗症狀時不訓練'],
+    regressions: ['縮小抬臂幅度；無法舒適完成某一形狀時略過，不強行完成整套', '俯臥不適時停止此動作，改查閱坐姿肩胛骨收縮運動'],
+    progressions: ['先提升徒手動作的穩定與回程控制；增加負重或訓練量前先與專業人員確認'],
+    equipment: ['bodyweight'], requiredEquipment: ['bodyweight'],
+    recommendationSafetyLevel: 'advanced_only', safetyTags: ['pain_sensitive'], avoidIfPainHigh: true,
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/QdGTI4Lshg4',
+    youtubeSearchUrl: 'https://www.youtube.com/watch?v=QdGTI4Lshg4',
+    sourceRef: 'catalog-only: The Active Life, Prone Y T W, https://www.youtube.com/watch?v=QdGTI4Lshg4; 30-second demonstration and English auto-generated captions inspected 2026-10-21; movement reference only, no dosage specified; app safety notes are editorial additions; independent Tier 3 review pending',
+    catalogOnly: true,
+  },
+  {
     id: 'catalog-bench-press', title: '啞鈴胸推', joint: 'shoulder', bodyArea: 'shoulder', condition: '胸部肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
     description: '躺在穩固平面，以輕啞鈴控制推起與放下。', detail: '可查詢的重訓動作範例；目前未開放引導訓練。',
     steps: ['躺在穩固平面，雙腳踩地', '啞鈴從胸側緩慢推起', '手肘不要過度向外張', '控制啞鈴回到胸側'], sets: 2, reps: 8, holdSeconds: 0, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供胸部與上肢推力訓練參考。',

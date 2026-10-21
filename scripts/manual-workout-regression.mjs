@@ -171,6 +171,8 @@ const { matchesManualExercise } = await loadModule('src/utils/manualWorkoutSearc
 const { getLocalizedExercise } = await loadModule('src/utils/localizedExercise.ts');
 const lat = canonicalExercises.find(e => e.id === 'catalog-lat-pulldown');
 const names = [lat.title, getLocalizedExercise(lat, 'en').title];
+assert.deepEqual(names, ['滑輪下拉', 'Lat pulldown'], 'lat pulldown uses the requested bilingual titles');
+assert.equal(matchesManualExercise('滑輪', names), true);
 assert.equal(matchesManualExercise('下拉', names), true);
 assert.equal(matchesManualExercise('LAT  PULL', names), true);
 assert.equal(matchesManualExercise('ＶｉＰＲ', ['ViPR 前滑']), true);

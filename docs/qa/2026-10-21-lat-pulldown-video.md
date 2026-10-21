@@ -1,17 +1,33 @@
-# 滑輪下拉影片來源更新
+# 滑輪下拉影片來源與握把說明
 
-- 範圍：既有 `catalog-lat-pulldown` 接上使用者指定的 YouTube `4Z9DgtQu-T4`，沿用 Side Squat／引體向上的資料欄位與既有影片元件。
-- 風險：Tier 3（動作內容來源）。ID、標題、插圖、器材、步驟、安全欄位、訓練量數值、catalog-only、推薦隔離與儲存契約維持既有內容。
-- 來源：https://www.youtube.com/watch?v=4Z9DgtQu-T4 。已移除分享追蹤參數；未取得可查證的字幕、影片內容或嵌入播放證據，不推定作者、動作細節或影片處方。
-- 雙語說明將既有 2 組 × 8 次標為 App 參考量，不視為影片處方或個人化建議。
+- 範圍：`catalog-lat-pulldown` 更名為「滑輪下拉／Lat pulldown」，接上指定 YouTube，補充長桿與左右獨立握把的簡短雙語說明。
+- 風險：Tier 3（動作內容）。ID、插圖、器材、安全欄位、劑量數值、catalog-only 與儲存契約不變；前方下拉步驟改為舒適可控制範圍，不強求碰胸，保留不拉頸後。
+- 舊「下拉機／Lat pulldown machine」記錄保留原名稱快照；沿用既有保守插圖判定，無資料遷移。新版名稱仍使用既有插圖。
 
-## 驗證
+## 影片證據與評估
 
-- 本機 `npm run build`、`npm test`、`npm run audit:exercise-coverage`、`npm run audit:safety-i18n`、`git diff --check` 通過。
-- Coverage：45/45；catalog-only 隔離通過。既有 build 有大型 bundle 提醒。
-- 未執行真人、真機、正式環境或影片播放驗證；CI 與獨立 Claude 審查以 PR 的精確 head 結果為準。
-- 手動驗收路徑：`/exercise/catalog-lat-pulldown?mode=all`，切換中英文，確認影片指向指定 ID、書面步驟與參考量可讀，且 catalog-only 不提供引導訓練。
+來源：[指定影片](https://www.youtube.com/watch?v=4Z9DgtQu-T4)，頻道「林勁瑋 x 大腦優先教練學院」，2023-02-17，片長 17:47。
+
+首次 web fetch 失敗；本輪透過瀏覽器成功開啟正片並定位檢視畫面及燒錄字幕。沒有可用 CC／逐字稿；本紀錄是局部片段評估，不是完整逐字分析或臨床審核。
+
+- 12:12：左右手各握獨立握把的示範。
+- 12:22–12:32：長桿／機械式與分離握把的對照；採用可直接確認的握把型式描述，不將長桿誤寫成只有唯一握距。
+- 12:42–12:57：下拉與單邊握持說明。
+- 13:17–13:27：手肘／拳頭相對位置與闊背肌感受提示；App 保守整理成可控制範圍，不要求碰胸。
+- 14:13：先控制核心與肩胛骨。
+
+頁面不加入寬窄握、正反握或中立握的效果排名，不把片名前鋸肌描述當診斷，不新增四足跪姿訓練。既有 2 組 × 8 次維持 App 參考量，非影片處方。
+
+## 驗證與驗收
+
+- 本機 build、完整 npm test、exercise coverage、safety-i18n、diff check：最終結果於 PR 精確 head 留言。
+- 回歸包含雙語新名稱、滑輪搜尋、舊名稱讀取／顯示／不遷移、新名稱插圖與器材不符保護。
+- 手動路徑：`/exercise/catalog-lat-pulldown?mode=all`。切換中英文，確認新名稱、兩種握把說明、舒適下拉範圍、參考量與 catalog-only 限制。
+- YouTube 原站正片已由瀏覽器定位播放；App 內 iframe 實際播放、真人、真機與正式環境尚未驗證。CI、獨立 Codex／Claude 與 PM synthesis 以 PR 精確 head 結果為準。
 
 ## 委派紀錄
 
-指定模型 gpt-6-luna / 實際模型 NOT VERIFIED；固定來源替換與雙語參考說明，repo Tier 3 / 子任務低風險，不決定動作安全或劑量。父代理檢查完整 diff 並執行上述驗證；整合時保留原座椅固定提醒，將技術查證限制留在來源與 QA 紀錄，縮短使用者說明。品質提升、時間與節費 NOT VERIFIED。
+- 初版：指定 gpt-6-luna／實際模型 NOT VERIFIED；固定來源替換，repo Tier 3／子任務低風險；父代理檢查 diff 並驗證。
+- 本輪：指定 gpt-6.1-sol medium／實際模型 NOT VERIFIED；repo Tier 3／名稱與既定相容性實作，完成雙語名稱及回歸測試；父代理查核差異與完整驗證，無重做。
+- 本輪：指定 gpt-6-astra high／實際模型 NOT VERIFIED；repo Tier 3／新動作提示與安全邊界只讀評估，指出握把結構概括超出來源，父代理採用更窄的直接觀察描述。此審查依父代理影片觀察，未由子代理獨立觀看，不取代 Claude 審查。
+- 品質提升、時間與節費成效 NOT VERIFIED。

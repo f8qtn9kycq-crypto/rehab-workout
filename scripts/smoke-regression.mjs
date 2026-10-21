@@ -290,10 +290,12 @@ section('assessment and exercise library reuse the interactive body map', () => 
   assertIncludes(source.exerciseFilter, 'availability={availability.bodyArea}', 'exercise body map keeps count-aware availability');
   assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
   assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
-  assertIncludes(source.bodyMapSelector, 'd={regionPaths[area]}', 'rehab body map highlights selectable body regions directly');
+  assertIncludes(source.bodyMapSelector, 'd={geometry.regions[area]}', 'rehab body map highlights selectable body regions directly');
   assertIncludes(source.bodyMapSelector, 'fillOpacity={active ? 0.42 : disabled ? 0.12 : 0.2}', 'selectable rehab regions stay visibly light while the selected region is slightly darker');
-  assertIncludes(source.bodyMapSelector, 'stroke="none"', 'body highlights reuse the human sketch as their only persistent outer contour');
-  assertIncludes(source.bodyMapSelector, 'strokeWidth="14"', 'body-map touch targets are larger than their visible highlights');
+  assertIncludes(source.bodyMapSelector, 'fillRule="evenodd"', 'body outline remains the final vector line-art layer');
+  assertIncludes(source.bodyMapSelector, 'clipPath={`url(#${clipId})`}', 'visual and hit regions are clipped to the same body outline');
+  assertIncludes(source.bodyMapSelector, 'useId()', 'multiple selectors keep independent SVG clip IDs');
+  assertIncludes(source.bodyMapSelector, 'min-h-11', 'native region buttons preserve 44px touch targets');
   assertIncludes(source.bodyMapSelector, 'focus-visible:stroke-calm-900', 'keyboard focus remains visible on the interactive body region');
   assertNotIncludes(source.bodyMapSelector, 'className={`focus-ring absolute', 'rehab body map does not overlay text boxes on the body');
   assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');

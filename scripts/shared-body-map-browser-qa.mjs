@@ -45,25 +45,24 @@ async page => {
         if (await button.getAttribute('aria-pressed') !== 'true') throw Error(`SVG keyboard ${name}`);
       }
     }
-    // Mount a second real selector alongside the library to verify clip IDs remain unique.
-    await page.evaluate(async () => {
-      const React = await import('/node_modules/.vite/deps/react.js');
-      const dom = await import('/node_modules/.vite/deps/react-dom_client.js');
-      const createRoot = dom.createRoot ?? dom.default.createRoot;
-      const {I18nProvider} = await import('/src/services/i18n.js');
-      const {default:BodyMapSelector} = await import('/src/components/BodyMapSelector.tsx');
-      const el=document.createElement('div');el.id='qa-second-map';document.body.appendChild(el);
-      const createElement = React.createElement ?? React.default.createElement;
-      createRoot(el, {identifierPrefix:'qa-second-'}).render(createElement(I18nProvider,null,createElement(BodyMapSelector,{selected:'all',onChange:()=>{},availability:{shoulder:0,shoulder_neck:1,hip:1,knee:1,ankle:1}})));
-    });
-    const second=page.locator('#qa-second-map');
+    if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw Error(`library overflow ${width}`);
+    if(width===375)await map.screenshot({path:'output/playwright/shared-body-library-375.png'});
+    const shoulderTarget = map.getByRole('button', {name:/^肩部復健/});
+    if (await shoulderTarget.getAttribute('aria-disabled') !== 'true') {
+      const bounds = await map.boundingBox();
+      await page.mouse.click(bounds.x + bounds.width * 650 / 1024, bounds.y + bounds.height * 390 / 1536);
+      if (await shoulderTarget.getAttribute('aria-pressed') !== 'true') throw Error('SVG pointer hit missed shoulder');
+    }
+    // Two real selectors in the same React tree; dev-only fixture avoids duplicate React imports.
+    await page.goto(`${base}/scripts/fixtures/shared-body-map.html`);
+    const first = page.getByTestId('first-map');
+    const second = page.getByTestId('second-map');
     await second.locator('clipPath').waitFor({state:'attached'});
     if (!await second.getByRole('button',{name:/^肩部復健/}).last().isDisabled()) throw Error('zero availability enabled');
     const ids=await page.locator('clipPath').evaluateAll(els=>els.map(e=>e.id));
-    if(new Set(ids).size!==ids.length)throw Error('duplicate clip IDs');
-    await second.evaluate(el=>el.remove());
-    if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw Error(`library overflow ${width}`);
-    if(width===375)await map.screenshot({path:'output/playwright/shared-body-library-375.png'});
+    if(ids.length!==2 || new Set(ids).size!==ids.length)throw Error('duplicate clip IDs');
+    await first.getByRole('button',{name:'髖部復健',exact:true}).last().click();
+    if(await second.getByRole('button',{name:/^髖部復健/}).last().getAttribute('aria-pressed')!=='false')throw Error('selection leaked between instances');
     results.push({width,records:'pass',library:'pass',uniqueClipIds:ids,overflow:false});
   }
   if(errors.length)throw Error(errors.join('\n'));

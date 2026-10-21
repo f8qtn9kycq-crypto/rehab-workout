@@ -311,6 +311,18 @@ const exerciseEnglishContent: Record<string, Partial<ExerciseDisplayFields>> = {
     benefits: 'Challenges ankle proprioception and balance control.',
     durationText: '3 sets per side',
   },
+  'catalog-prone-ytw': {
+    title: 'Prone Y T W',
+    description: 'Lie face down and gently lift and lower the arms in Y, T and W shapes without weights.',
+    detail: 'Based on The Active Life demonstration, for browsing and recording only; guided training is unavailable. The video specifies no sets, reps, holds or rest periods. Record what you actually completed; video length is not a training dose.',
+    steps: ['Lie face down on a stable surface. Rest the forehead on folded clothing if needed, keeping the neck neutral and breathing freely.', 'Y: Reach the arms diagonally overhead with thumbs up. Lift slightly off the floor, then lower with control.', 'T: Extend the arms out to the sides, thumbs up. Lift slightly, then lower slowly.', 'W: Bend the elbows near the sides. Lift the arms slightly, then lower with control; avoid lifting the head or arching the back.'],
+    durationText: 'No prescribed dose; record the amount actually completed',
+    benefits: 'Provides a bodyweight reference for shoulder-blade and upper-back movement control.',
+    cautions: ['Y includes overhead reaching and is not a default for shoulder discomfort. Do not force height or a painful range.', 'Use no weights. Avoid shrugging, holding your breath, lifting the head or arching the back. Do not force lying prone or getting on and off the floor.', 'Regress or rest when pain exceeds 3/10. Follow professional guidance for postoperative or existing movement restrictions.'],
+    stopRules: ['Stop for pain of 6/10 or higher, sharp pain or clearly worsening symptoms.', 'Stop for numbness, weakness, dizziness or breathing discomfort and consult a physician or physical therapist. Do not train with red-flag symptoms.'],
+    regressions: ['Reduce the lifting range. Skip any shape you cannot perform comfortably rather than forcing the full sequence.', 'If lying prone is uncomfortable, stop this exercise and consult the seated scapular squeeze reference.'],
+    progressions: ['Improve unloaded movement stability and controlled lowering first. Check with a qualified professional before adding weight or training volume.'],
+  },
   'catalog-bench-press': { title: 'Dumbbell bench press', description: 'Press light dumbbells from the chest with control.', detail: 'A catalog-only resistance example; guided training is not available yet.', steps: ['Lie on a stable surface with feet supported.', 'Press the dumbbells slowly from the chest.', 'Keep the elbows from flaring excessively.', 'Lower the dumbbells with control.'], benefits: 'Provides a chest and upper-body pushing reference.', durationText: '2 sets of 8 reps' },
   'catalog-shoulder-press': { title: 'Barbell shoulder press', description: 'Use a controllable light barbell for a standing front shoulder press.', detail: 'Catalog-only resistance content; do not use as a default recommendation when shoulder symptoms are present.', steps: ['Stand with stable feet and a steady torso.', 'Start with the barbell in front of the body at chin-to-shoulder height, never behind the neck.', 'Press only through a comfortable, controlled range.', 'Lower slowly to the starting position in front of the body.'], benefits: 'Provides an upper-body pushing reference.', durationText: '2 sets of 8 reps' },
   'catalog-side-squat': {

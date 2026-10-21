@@ -33,7 +33,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
           </span>
         ))}
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
+      {!(exercise.catalogOnly && exercise.dosageStatus === 'unspecified') && <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
         <div className="rounded-md bg-slate-50 p-2">
           <strong className="block text-slate-900">{exercise.sets}</strong>{t('exercises.setsUnit')}
         </div>
@@ -43,7 +43,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
         <div className="rounded-md bg-slate-50 p-2">
           <strong className="block text-slate-900">{exercise.restSeconds}</strong>{t('exercises.restUnit')}
         </div>
-      </div>
+      </div>}
       <Link
         to={`/exercise/${exercise.id}${detailSearch}`}
         className="focus-ring mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-calm-700 px-4 font-semibold text-white"

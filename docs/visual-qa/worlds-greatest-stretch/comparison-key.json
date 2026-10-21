@@ -2,7 +2,7 @@
   "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
   "approvalScope": "User-designated visual style and look/feel only; not movement or clinical approval",
   "mobileMeasurements": "docs/visual-qa/worlds-greatest-stretch/mobile-measurements.json",
-  "mobileMeasurementsSha256": "de10f58998d0171b93b72330dc550c1fc9abff8c5ab5ccac5645f81146af1950",
+  "mobileMeasurementsSha256": "f059e6c382eb7d6b8093e3d7a06a3df60be58ae723125e63b0f0f9bb0b470815",
   "references": [
     {
       "id": "benchPress",
@@ -61,7 +61,7 @@
     {
       "id": "catalog-worlds-greatest-stretch",
       "path": "public/exercise-visuals/movements/catalog-worlds-greatest-stretch.png",
-      "sha256": "f364e6edaeadfd77b28a333dfbf8d15c96c0e5a44bb9ba174cb73b9cfa5a27cd"
+      "sha256": "e56a03e5ed57bd48325bf88ad1938fa8d0997ca6fb5d713d52aa8323106caadf"
     }
   ],
   "status": "Named comparison only; style NOT VERIFIED; not independent blind screening"

@@ -325,6 +325,37 @@ const exerciseEnglishContent: Record<string, Partial<ExerciseDisplayFields>> = {
   },
   'catalog-bench-press': { title: 'Dumbbell bench press', description: 'Press light dumbbells from the chest with control.', detail: 'A catalog-only resistance example; guided training is not available yet.', steps: ['Lie on a stable surface with feet supported.', 'Press the dumbbells slowly from the chest.', 'Keep the elbows from flaring excessively.', 'Lower the dumbbells with control.'], benefits: 'Provides a chest and upper-body pushing reference.', durationText: '2 sets of 8 reps' },
   'catalog-shoulder-press': { title: 'Barbell shoulder press', description: 'Use a controllable light barbell for a standing front shoulder press.', detail: 'Catalog-only resistance content; do not use as a default recommendation when shoulder symptoms are present.', steps: ['Stand with stable feet and a steady torso.', 'Start with the barbell in front of the body at chin-to-shoulder height, never behind the neck.', 'Press only through a comfortable, controlled range.', 'Lower slowly to the starting position in front of the body.'], benefits: 'Provides an upper-body pushing reference.', durationText: '2 sets of 8 reps' },
+  'catalog-worlds-greatest-stretch': {
+    "title": "World’s greatest stretch",
+    "description": "Combine a rear-knee-down lunge with an elbow lowering and thoracic rotation.",
+    "detail": "An App adaptation using a small range and the rear knee on the floor, for browsing and recording completed exercise. Excluded from guided training and conservative recommendations. Requires safe floor transfers and arm support; do not chase the video’s depth or arm height.",
+    "steps": [
+      "Half-kneel on a non-slip surface with the right foot planted in front and the left knee and shin on the floor. Use thin padding under the rear knee if needed. Place the left hand on the floor inside the right foot and find a comfortable shallow lunge.",
+      "Keep the trunk controlled and slowly lower the right elbow toward the inside of the right foot, only as far as comfortable. Pause for up to 5 seconds; do not force the elbow to the floor or press the hips down.",
+      "Let the right knee open slightly outward within a controlled range while keeping the whole right foot planted. Do not push the knee with the elbow.",
+      "Keep the left hand and legs supported. Slowly rotate the chest to the right, letting the right arm rise only to a comfortable height. Avoid swinging, forcing the neck, or arching the lower back.",
+      "Return the right hand to the floor for support: this completes one right-side movement. Change sides safely and mirror the sequence. Count each side separately and record the amount actually completed."
+    ],
+    "durationText": "App reference: 1 round, up to 5 reps per side; elbow phase up to 5 sec; 60-sec rest is a reference only",
+    "benefits": "Provides a reference for hip and thoracic mobility practice.",
+    "cautions": [
+      "Classified as intermediate by the App. Rear-knee-down and small-range adaptations are not suitable for everyone. Do not attempt without safe floor transfers and arm support.",
+      "Do not chase a deep lunge, elbow-to-floor contact, or a vertical arm. Exit the position for hip pinching, knee pressure, or wrist or shoulder discomfort.",
+      "Stop this version and regress or rest when pain exceeds 3/10. Do not push through pain to finish reps, hold the breath, or bounce.",
+      "The video demonstrates 5 complete movements per side. The App’s 1 round and 60-second rest are interface references, not the video prescription or personalized advice."
+    ],
+    "stopRules": [
+      "Stop for pain of 6/10 or higher, sharp pain, or clearly worsening symptoms; seek advice from a physician or physical therapist.",
+      "Stop for numbness, weakness, dizziness, or loss of support. Do not train with red-flag symptoms."
+    ],
+    "regressions": [
+      "Reduce the lunge and rotation range; rest the right hand on the front thigh instead of lowering the elbow or raising the arm. Keep the rear knee down.",
+      "Reduce reps or skip uncomfortable stages. Stop if supporting, kneeling, or getting up cannot be done comfortably and safely; seek advice from a physician or physical therapist."
+    ],
+    "progressions": [
+      "Once symptom-free and controlled through all stages, improve smoothness and control first. Lifting the rear knee, increasing depth, and loading are not default progressions."
+    ]
+  },
   'catalog-side-squat': {
     title: 'Side squat',
     description: 'Keep a wide stance and move the hips back as you shift weight slowly to one side.',

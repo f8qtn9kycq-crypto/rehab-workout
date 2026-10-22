@@ -1,5 +1,6 @@
 export default {
   soreness: {
+    trends: {"title": "Soreness observations", "note": "Only recorded values from 1–10 are shown as separate points, without filling gaps or connecting lines. Zero values are excluded; a gap does not mean recovery. Front, back, body side, and legacy entries with no recorded view stay separate.", "noRecords": "Add a soreness observation to see changes at the same position.", "position": "Observed position", "range": "Observation period", "days": "Last {count} days", "empty": "No observations from 1–10 for this position in the selected period.", "values": "Recorded observations"},
 
     "center": "Midline",
     "legacyView": "Legacy entry · front/back unspecified",

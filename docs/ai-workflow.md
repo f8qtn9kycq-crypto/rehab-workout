@@ -67,6 +67,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`: repo-tracked Codex skill for implementing a GitHub issue and opening a PR.
+- `ai/skills/rehab-exercise-youtube/SKILL.md`：為既有動作更新 YouTube、或依影片新增動作的可重複流程；涵蓋來源查證、雙語內容、相容性、驗證與審查。從 repo 根目錄讀取該技能；來源紀錄範本與下次使用指令均由技能連結。
 
 ## Project Source Hygiene
 

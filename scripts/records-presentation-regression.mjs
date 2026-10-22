@@ -53,6 +53,17 @@ console.log('Records presentation regression passed: activity-only, guided-only,
 const manual = {id:'manual-1', date:'2026-09-19', createdAt:'2026-09-19T10:00:00Z', exercises:[{name:'Bench',equipment:'',exerciseId:'catalog-bench-press',sets:[{reps:8}]}]};
 const mixed = {...manual, id:'mixed', cyclingMinutes:10, exercises:[...manual.exercises,{name:'Mobility',equipment:'',kind:'mobility',sets:[{reps:1}]},{name:'Old name',equipment:'',sets:[{reps:4}]}]};
 assert.deepEqual(recordCategories({source:'manual',workout:manual}),['strength']);
+const stretchWorkout = {...manual, id:'stretch-only', exercises:[{...manual.exercises[0], name:'World’s greatest stretch', exerciseId:'catalog-worlds-greatest-stretch'}]};
+const stretchSnapshot = JSON.stringify(stretchWorkout);
+assert.deepEqual(recordCategories({source:'manual',workout:stretchWorkout}),['rehab'],'canonical catalog-only mobility without kind is rehab');
+const stretchWeek = buildRecordsPresentation([],[],[],today,[stretchWorkout]);
+assert.deepEqual(stretchWeek.weeklyCategoryDays,{rehab:1,strength:0,cardio:0,unknown:0},'stretch alone adds a rehab day, never a strength day');
+for (const [kind, expected] of [['strength','strength'],['mobility','rehab']]) {
+  const explicit = {...stretchWorkout,exercises:[{...stretchWorkout.exercises[0],kind}]};
+  assert.deepEqual(recordCategories({source:'manual',workout:explicit}),[expected],'explicit saved kind retains priority');
+}
+assert.equal(JSON.stringify(stretchWorkout),stretchSnapshot,'category fallback never migrates or mutates the stored workout');
+
 assert.deepEqual(recordCategories({source:'manual',workout:mixed}),['rehab','strength','cardio','unknown']);
 assert.deepEqual(recordCategories({source:'manual',workout:{...manual,exercises:[{...manual.exercises[0],exerciseId:'missing-id'}]}}),['unknown']);
 assert.deepEqual(recordCategories({source:'manual',workout:{...manual,exercises:[{...manual.exercises[0],exerciseId:'ankle-circles'}]}}),['rehab']);

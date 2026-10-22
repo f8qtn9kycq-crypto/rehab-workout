@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
-    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout && npm run test:pr183 && node scripts/movement-mobile-evidence-regression.mjs && npm run test:goal-plan && npm run test:saved-routines && npm run test:favorites && node scripts/exercise-identity-art-regression.mjs && node scripts/weekly-schedule-entry-regression.mjs && node scripts/saved-routine-navigation-regression.mjs && node scripts/manual-workout-draft-regression.mjs && npm run test:soreness",
+    "test": "npm run test:smoke && npm run test:migration && npm run test:session-save-guard && npm run test:home-entry && npm run test:progress && npm run test:records-presentation && npm run audit:visible-i18n && npm run test:activities && npm run test:set-logging && npm run test:manual-workout && npm run test:pr183 && node scripts/movement-mobile-evidence-regression.mjs && npm run test:goal-plan && npm run test:saved-routines && npm run test:favorites && node scripts/exercise-identity-art-regression.mjs && node scripts/weekly-schedule-entry-regression.mjs && node scripts/saved-routine-navigation-regression.mjs && node scripts/manual-workout-draft-regression.mjs && npm run test:soreness && npm run test:records-body-area",
     "audit:movement-art": "node scripts/audit-movement-art.mjs",
     "audit:movement-art-sources": "python3 scripts/verify-movement-overrides.py",
     "test:manual-workout": "node scripts/manual-workout-regression.mjs",
@@ -23,7 +23,8 @@
     "test:goal-plan": "node scripts/goal-plan-regression.mjs",
     "test:saved-routines": "node scripts/saved-routine-regression.mjs",
     "test:favorites": "node scripts/favorites-regression.mjs",
-    "test:soreness": "node scripts/soreness-regression.mjs"
+    "test:soreness": "node scripts/soreness-regression.mjs && node scripts/soreness-v2-storage-regression.mjs",
+    "test:records-body-area": "node scripts/records-body-area-regression.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

@@ -7,6 +7,7 @@ import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import ManualWorkoutCard from '../components/ManualWorkoutCard';
+import BodyMapSelector from '../components/BodyMapSelector';
 import TrainingSetSummary from '../components/TrainingSetSummary';
 import { Link, useLocation } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
@@ -19,6 +20,7 @@ import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../serv
 import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
 import { buildRecordsPresentation, recordCategories, TRAINING_CATEGORIES } from '../utils/recordsPresentation';
+import { filterRecordsDays, matchingManualExercises } from '../utils/recordsBodyArea';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
   return (
@@ -39,11 +41,14 @@ export default function LogsPage() {
   const [draftState, setDraftState] = useState(readManualDrafts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
+  const [bodyArea, setBodyArea] = useState<BodyArea | 'all'>('all');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
   const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts), [logs, activities, outcomes, manualWorkouts]);
   const savedManualId = (location.state as { manualSavedId?: string } | null)?.manualSavedId;
   const savedManualWorkout = manualWorkouts.find(workout => workout.id === savedManualId);
   const latestOutcome = presentation.validOutcomes[0] ?? null;
+  const recentDays = useMemo(() => filterRecordsDays(presentation.days, bodyArea, logs).slice(0, 5), [presentation.days, bodyArea, logs]);
+  const selectedAreaLabel = bodyArea === 'all' ? t('records.bodyArea.all') : t(`bodyAreas.${bodyArea}.label`);
 
   function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(language);
@@ -92,11 +97,19 @@ export default function LogsPage() {
       {draftState.drafts.map(d => <Link key={d.id} to={`/logs/new?draft=${encodeURIComponent(d.id)}`} className="focus-ring block min-h-11 font-bold text-calm-800 underline">{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
       <a href="#records-cycling" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('activities.cycling')}</a>
 
+      <section className="card space-y-3 p-5" aria-labelledby="records-body-area-title">
+        <h2 id="records-body-area-title" className="text-xl font-black text-ink">{t('records.bodyArea.title')}</h2>
+        <p className="text-sm leading-6 text-slate-600">{t('records.bodyArea.hint')}</p>
+        <BodyMapSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('records.bodyArea.title')} />
+        <p role="status" className="text-sm font-semibold text-calm-800">{t('records.bodyArea.selected', { area: selectedAreaLabel })}</p>
+        <button type="button" onClick={() => setBodyArea('all')} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('records.bodyArea.clear')}</button>
+      </section>
+
       <section className="space-y-4" aria-labelledby="records-recent-title">
         <SectionHeader id="records-recent-title" title={t('records.recent.title')} subtitle={t('records.recent.subtitle')} icon={History} />
-        {presentation.hasActivityHistory ? (
+        {recentDays.length > 0 ? (
           <div className="space-y-3">
-            {presentation.days.slice(0, 5).map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
+            {recentDays.map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
               <h3 className="text-lg font-black text-ink">{day.date}</h3>
               {day.items.map(item => <div key={item.id} className="space-y-2">
                 <p className="flex flex-wrap gap-2 text-sm font-semibold text-calm-800">
@@ -110,7 +123,10 @@ export default function LogsPage() {
                 <TrainingSetSummary sets={item.log.sets} />
               </article>
             ) : item.source === 'manual' ? (
-              <ManualWorkoutCard key={item.id} workout={item.workout} />
+              <div className="space-y-2">
+                {bodyArea !== 'all' && <p className="text-sm font-semibold text-calm-800">{t('records.bodyArea.matching', { names: matchingManualExercises(item, bodyArea).map(exercise => exercise.name).join(t('progress.areaSeparator')) })}</p>}
+                <ManualWorkoutCard key={item.id} workout={item.workout} />
+              </div>
             ) : (
               <article key={item.id} className="card p-4">
                 <ActivityIdentityVisual activity={item.activity} />
@@ -124,7 +140,10 @@ export default function LogsPage() {
               )}</div>)}
             </section>)}
           </div>
-        ) : <div className="card p-5 text-sm leading-6 text-slate-600">{t('records.recent.empty')}</div>}
+        ) : <div className="card space-y-2 p-5 text-sm leading-6 text-slate-600">
+          <p>{bodyArea === 'all' ? t('records.recent.empty') : t('records.bodyArea.empty', { area: selectedAreaLabel })}</p>
+          {bodyArea !== 'all' && <button type="button" onClick={() => setBodyArea('all')} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('records.bodyArea.clear')}</button>}
+        </div>}
       </section>
 
       <section className="space-y-4" aria-labelledby="records-week-title">

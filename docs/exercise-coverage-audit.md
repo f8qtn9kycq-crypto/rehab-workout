@@ -1,15 +1,15 @@
 # Exercise Coverage Audit
 
-Generated: 2026-10-20T02:05:25.777Z
+Generated: 2026-10-21T15:33:36.880Z
 
-Source commit: e929586
+Source commit: 4138e2e
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
 ## 1. Executive summary
 
-- Total exercises audited: 45
-- Catalog-only entries included in coverage counts: 10. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
+- Total exercises audited: 47
+- Catalog-only entries included in coverage counts: 12. These are searchable for reading only; these counts do not imply recommendation or guided-session availability.
 - Audit body areas: shoulder_hip, shoulder_neck, knee, ankle
 - App body area enums: shoulder, hip, shoulder_neck, knee, ankle
 - Canonical equipment ids: bodyweight, dumbbell, barbell, machine, kettlebell, chair, wall, resistance_band, foam_roller
@@ -19,7 +19,7 @@ Scope: audit only. This report does not add exercise content, change recommendat
 - Non-canonical exercise bodyArea values: None
 - Non-canonical exercise type values: None
 - Non-canonical exercise equipment values: None
-- Manual/backfill selectable canonical coverage: 45/45
+- Manual/backfill selectable canonical coverage: 47/47
 - Quick strength catalog-only isolation: 8/8
 
 Top 5 gaps:
@@ -69,6 +69,7 @@ Top 5 gaps:
 | 靠牆屈膝小腿伸展 | ankle-soleus-stretch | ankle | stretch | beginner | wall |
 | 坐姿屈膝提踵 | ankle-seated-soleus-raise | ankle | strength | beginner | chair |
 | 單腳觸遠 | ankle-single-leg-reach | ankle | proprioception | advanced | chair |
+| 俯臥 Y／T／W | catalog-prone-ytw | shoulder_hip | strength | intermediate | bodyweight |
 | 啞鈴胸推 | catalog-bench-press | shoulder_hip | strength | intermediate | dumbbell |
 | 槓鈴肩推 | catalog-shoulder-press | shoulder_hip | strength | intermediate | barbell |
 | 側蹲（Side Squat） | catalog-side-squat | shoulder_hip | strength | intermediate | bodyweight, chair |
@@ -79,6 +80,7 @@ Top 5 gaps:
 | 下拉機 | catalog-lat-pulldown | shoulder_hip | strength | intermediate | machine |
 | 機械坐姿划船 | catalog-seated-row | shoulder_hip | strength | intermediate | machine |
 | 機械膝伸 | catalog-leg-extension | knee | strength | intermediate | machine |
+| 弓步轉體伸展 | catalog-worlds-greatest-stretch | shoulder_hip | mobility | intermediate | bodyweight |
 
 ## Manual/backfill canonical coverage
 
@@ -127,14 +129,16 @@ Top 5 gaps:
 | 靠牆屈膝小腿伸展 | ankle-soleus-stretch | Yes | ankle | stretch | wall | Recommendation eligible | None |
 | 坐姿屈膝提踵 | ankle-seated-soleus-raise | Yes | ankle | strength | chair | Recommendation eligible | None |
 | 單腳觸遠 | ankle-single-leg-reach | Yes | ankle | proprioception | chair | Recommendation eligible | None |
+| 俯臥 Y／T／W | catalog-prone-ytw | Yes | shoulder | strength | bodyweight | catalogOnly: true | None |
 | 側蹲（Side Squat） | catalog-side-squat | Yes | hip | strength | bodyweight, chair | catalogOnly: true | None |
 | 後腳抬高蹲（徒手／負重） | catalog-rear-foot-elevated-split-squat | Yes | hip | strength | bodyweight, chair, dumbbell, kettlebell | catalogOnly: true | None |
+| 弓步轉體伸展 | catalog-worlds-greatest-stretch | Yes | hip | mobility | bodyweight | catalogOnly: true | None |
 
 ## 3. Difficulty coverage table
 
 | Body Area | Beginner | Intermediate | Advanced |
 | --- | --- | --- | --- |
-| shoulder_hip | 7 | 10 | 3 |
+| shoulder_hip | 7 | 12 | 3 |
 | shoulder_neck | 10 | 0 | 0 |
 | knee | 4 | 2 | 0 |
 | ankle | 6 | 2 | 1 |
@@ -143,7 +147,7 @@ Top 5 gaps:
 
 | Equipment | # Exercises | Body Areas Covered | Empty Levels |
 | --- | --- | --- | --- |
-| bodyweight | 13 | shoulder_hip, shoulder_neck, knee | None |
+| bodyweight | 15 | shoulder_hip, shoulder_neck, knee | None |
 | dumbbell | 3 | shoulder_hip | None |
 | barbell | 2 | shoulder_hip | beginner, advanced |
 | machine | 3 | shoulder_hip, knee | beginner, advanced |
@@ -157,8 +161,8 @@ Top 5 gaps:
 
 | Type | Count | Body Areas Covered |
 | --- | --- | --- |
-| mobility | 8 | shoulder_hip, shoulder_neck, ankle |
-| strength | 27 | shoulder_hip, shoulder_neck, knee, ankle |
+| mobility | 9 | shoulder_hip, shoulder_neck, ankle |
+| strength | 28 | shoulder_hip, shoulder_neck, knee, ankle |
 | stretch | 5 | shoulder_neck, ankle |
 | relaxation | 3 | shoulder_neck, knee |
 | balance | 1 | ankle |

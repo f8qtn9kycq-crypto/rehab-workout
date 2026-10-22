@@ -1,0 +1,198 @@
+{
+  "capture": {
+    "tool": "cua_repl / local Chromium DOM",
+    "date": "2026-10-21",
+    "scope": "picker image widths only; not physical iPhone or full mobile matrix"
+  },
+  "results": [
+    {
+      "id": "benchPress",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "7c0cba388bbf4bc0e653607d0864690c834adad534ad5da2967af6bef0f7ecd0"
+    },
+    {
+      "id": "shoulderPress",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba"
+    },
+    {
+      "id": "squat",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "viewport": 390,
+      "surface": "quick-picker",
+      "width": 308,
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    },
+    {
+      "id": "catalog-worlds-greatest-stretch",
+      "viewport": 390,
+      "surface": "more-picker",
+      "width": 306,
+      "sha256": "e56a03e5ed57bd48325bf88ad1938fa8d0997ca6fb5d713d52aa8323106caadf"
+    },
+    {
+      "id": "benchPress",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "7c0cba388bbf4bc0e653607d0864690c834adad534ad5da2967af6bef0f7ecd0"
+    },
+    {
+      "id": "shoulderPress",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba"
+    },
+    {
+      "id": "squat",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "viewport": 375,
+      "surface": "quick-picker",
+      "width": 293,
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    },
+    {
+      "id": "catalog-worlds-greatest-stretch",
+      "viewport": 375,
+      "surface": "more-picker",
+      "width": 291,
+      "sha256": "e56a03e5ed57bd48325bf88ad1938fa8d0997ca6fb5d713d52aa8323106caadf"
+    },
+    {
+      "id": "benchPress",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "7c0cba388bbf4bc0e653607d0864690c834adad534ad5da2967af6bef0f7ecd0"
+    },
+    {
+      "id": "shoulderPress",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba"
+    },
+    {
+      "id": "squat",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "viewport": 320,
+      "surface": "quick-picker",
+      "width": 238,
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    },
+    {
+      "id": "catalog-worlds-greatest-stretch",
+      "viewport": 320,
+      "surface": "more-picker",
+      "width": 236,
+      "sha256": "e56a03e5ed57bd48325bf88ad1938fa8d0997ca6fb5d713d52aa8323106caadf"
+    }
+  ]
+}

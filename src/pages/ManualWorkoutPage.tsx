@@ -1,3 +1,5 @@
+import RecordingEquipmentFields from '../components/RecordingEquipmentFields';
+import { readLibraryRecordingSelection } from '../utils/libraryRecording';
 import { matchesManualExercise } from '../utils/manualWorkoutSearch';
 import { draftExercise, readManualDrafts, persistManualDraft, type DraftExercise, type ManualWorkoutDraft } from '../services/manualWorkoutDraftStorage';
 import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
@@ -10,7 +12,7 @@ import { readCustomExercises, type CustomExercise } from '../services/customExer
 import LibraryMovementArt from '../components/LibraryMovementArt';
 import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { exercises as catalog } from '../data/exercises';
-import { equipmentChoiceIds, quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
+import { quickExerciseCatalogIds, quickExerciseGroups } from '../data/manualWorkoutOptions';
 import { localDate } from '../services/activityStorage';
 import { useI18n } from '../services/i18n';
 import { copyManualExercises, readManualWorkouts, manualWorkoutId, snapshotSetEquipment } from '../services/manualWorkoutStorage';
@@ -43,8 +45,18 @@ export default function ManualWorkoutPage() {
     return { requested: !!id, workout: state.error ? undefined : state.workouts.find(row => row.id === id) };
   });
   const source = sourceState.workout;
+  const [librarySelection] = useState(() => params.has('from') || params.has('draft') ? null : readLibraryRecordingSelection(`?${params.toString()}`));
+  const [invalidLibrarySelection] = useState(() => !params.has('from') && !params.has('draft') && params.has('exercise') && !librarySelection);
+  const [libraryExercise] = useState(() => {
+    if (!librarySelection) return null;
+    const exercise = catalog.find(item => item.id === librarySelection.exerciseId)!;
+    const equipmentId = librarySelection.equipmentId;
+    const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : '';
+    return draftExercise({ name: getLocalizedExercise(exercise, language).title, exerciseId: exercise.id, equipmentId, equipment,
+      sets: [{ equipmentId, equipment, grip: librarySelection.grip }] });
+  });
   const [previousNotes, setPreviousNotes] = useState(() => resumed?.exercises.map(e => e.previousNotes) ?? source?.exercises.map(e => e.notes) ?? [undefined]);
-  const [initialExercises] = useState(() => resumed?.exercises.map(e => ({ ...e, sets: e.sets.map(set => snapshotSetEquipment(set, e)) })) ?? (source ? copyManualExercises(source).map((e, i) => draftExercise(e, isLegacyRevisedCatalogRecord(e), source.exercises[i].notes)) : [emptyExercise()]));
+  const [initialExercises] = useState(() => resumed?.exercises.map(e => ({ ...e, sets: e.sets.map(set => snapshotSetEquipment(set, e)) })) ?? (source ? copyManualExercises(source).map((e, i) => draftExercise(e, isLegacyRevisedCatalogRecord(e), source.exercises[i].notes)) : [libraryExercise ?? emptyExercise()]));
   const [legacyRecords, setLegacyRecords] = useState(() => initialExercises.map(e => e.legacy));
   const [customState, setCustomState] = useState(readCustomExercises);
   const [date, setDate] = useState(() => resumed?.date ?? localDate());
@@ -112,6 +124,7 @@ export default function ManualWorkoutPage() {
 
   async function persist(nextExercises = exercises, cycleConfirmed = cyclingConfirmed): Promise<boolean> {
     setSaveStatus(false);
+    if (invalidLibrarySelection) { setError('input'); return false; }
     if (draftState.error || missingResume || (sourceState.requested && !source)) { setError('storage'); return false; }
     const draft: ManualWorkoutDraft = {
       ...identity.current, revision: revision.current, date, cyclingMinutes, cyclingConfirmed: cycleConfirmed,
@@ -162,10 +175,11 @@ export default function ManualWorkoutPage() {
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center text-calm-800 underline">{t('manualWorkout.back')}</Link>
     <div><h1 className="text-3xl font-black text-ink">{t('manualWorkout.title')}</h1><p className="mt-2 leading-7 text-slate-600">{t('manualWorkout.hint')}</p></div>
     {source && <p role="status" className="rounded-md bg-calm-50 p-3">{t('manualWorkout.reuseSource', { date: source.date })}</p>}
+    {invalidLibrarySelection && <p role="alert">{t('detail.recordingSelectionUnavailable')}</p>}
     {sourceState.requested && !source && <p role="alert">{t('manualWorkout.sourceMissing')}</p>}
     {!resumed && !source && draftState.drafts.filter(d => d.date === localDate()).map(d => <Link key={d.id} className="focus-ring block min-h-11 font-bold text-calm-800 underline" to={`/logs/new?draft=${encodeURIComponent(d.id)}`} reloadDocument>{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
     {(draftState.error || missingResume) && <p role="alert">{t('manualWorkout.storageError')}</p>}
-    {saveStatus && <p role="status">{t('manualWorkout.draftSaved')}</p>}
+    <p role="status" className={saveStatus ? undefined : 'invisible'}>{t('manualWorkout.draftSaved')}</p>
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.viewSaved')}</Link>
     <form onBlur={() => persist()} onSubmit={save} className="space-y-5">
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
@@ -226,13 +240,10 @@ export default function ManualWorkoutPage() {
             <label className="text-sm font-bold">{t('manualWorkout.weight')}<input className={control} type="number" inputMode="decimal" min="0" max="1000" step="any" value={set.weightKg ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, weightKg: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>
             {(['reps', 'durationSeconds', 'holdSeconds'] as const).filter(field => field in set || (!('reps' in set) && !('durationSeconds' in set) && !('holdSeconds' in set) && field === doseModes[index])).map(field => <label key={field} className="text-sm font-bold">{t(`manualWorkout.${field}`)}<input className={control} type="number" inputMode="numeric" min="1" max={field === 'reps' ? 1000 : 86400} step="1" value={set[field] ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, completed: event.target.value === '' ? false : row.completed, [field]: event.target.value === '' ? undefined : Number(event.target.value) } : row) }))} /></label>)}
           </div>
-          <label className="mt-2 block text-sm font-bold">{t('manualWorkout.setEquipment')}<select className={control} value={set.equipmentId ?? (set.equipment ? '__snapshot__' : '')} onChange={event => {
-            const equipmentId = event.target.value;
-            if (equipmentId === '__snapshot__') return;
-            setEquipmentIds(current => current.map((value, i) => i === index ? equipmentId : value));
-            changeExercise(index, value => ({ ...value, sets: value.sets.map((row, i) => i === setIndex ? { ...row, equipmentId: equipmentId || undefined, equipment: equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : '' } : row) }));
-          }}><option value="">{t('manualWorkout.unknown')}</option>{!set.equipmentId && set.equipment && <option value="__snapshot__">{t('manualWorkout.recordedEquipment', { name: set.equipment })}</option>}{set.equipmentId && !equipmentChoiceIds.some(id => id === set.equipmentId) && <option value={set.equipmentId}>{set.equipment || set.equipmentId}</option>}{equipmentChoiceIds.map(id => <option key={id} value={id}>{t(`manualWorkout.equipmentChoices.${id}`)}</option>)}</select></label>
-          <label className="mt-2 block text-sm font-bold">{t('manualWorkout.grip')}<input className={control} maxLength={100} value={set.grip ?? ''} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, i) => i === setIndex ? { ...row, grip: event.target.value } : row) }))} /></label>
+          <RecordingEquipmentFields value={set} onChange={update => {
+            if ('equipmentId' in update) setEquipmentIds(current => current.map((value, i) => i === index ? update.equipmentId ?? '' : value));
+            changeExercise(index, value => ({ ...value, sets: value.sets.map((row, i) => i === setIndex ? { ...row, ...update } : row) }));
+          }} />
           <label className="mt-2 flex min-h-11 items-center gap-3 text-sm font-bold"><input type="checkbox" checked={set.warmup ?? false} onChange={event => changeExercise(index, value => ({ ...value, sets: value.sets.map((row, position) => position === setIndex ? { ...row, warmup: event.target.checked } : row) }))} />{t('manualWorkout.warmup')}</label>
           <button type="button" aria-pressed={set.completed} className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => completeSet(index, setIndex)}>{t(set.completed ? 'manualWorkout.setDone' : 'manualWorkout.completeSet')}</button>
           {exercise.sets.length > 1 && <button className="focus-ring mt-2 min-h-11 text-sm font-bold text-calm-800 underline" type="button" onClick={() => changeExercise(index, value => ({ ...value, sets: value.sets.filter((_, position) => position !== setIndex) }))}>{t('manualWorkout.removeSet')}</button>}

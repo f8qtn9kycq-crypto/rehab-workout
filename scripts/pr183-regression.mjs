@@ -20,6 +20,8 @@ export function renderArt(id) {
 export { readManualWorkouts, MANUAL_WORKOUT_KEY } from '../src/services/manualWorkoutStorage';
 export { getSavedAssessment } from '../src/services/assessmentStorage';
 export { assessmentStorageKey } from '../src/data/safety';
+import { ASSESSMENT_EQUIPMENT_OPTIONS } from '../src/data/equipmentOptions';
+export const assessmentEquipmentIds = ASSESSMENT_EQUIPMENT_OPTIONS.map(item => item.id);
 export function renderRecord(workout) {
   return renderToStaticMarkup(<MemoryRouter><I18nProvider><ManualWorkoutCard workout={workout} /></I18nProvider></MemoryRouter>);
 }
@@ -69,7 +71,8 @@ export function renderAssessment() {
     assert(app.renderRecord(current).includes('/movements/shoulderPress.png'), 'new barbell title identifies optional-equipment records');
     const assessment = app.renderAssessment();
     assert(!assessment.includes(language === 'en' ? '>Barbell<' : '>槓鈴<'), 'barbell is absent from the actual Assessment UI');
-    assert(assessment.includes(language === 'en' ? '>Dumbbell<' : '>啞鈴<'), 'existing assessment equipment remains available');
+    assert(app.assessmentEquipmentIds.includes('dumbbell') && !app.assessmentEquipmentIds.includes('barbell'), 'existing conservative equipment remains available in the settings step');
+    assert(assessment.includes(language === 'en' ? 'Continue to training settings' : '繼續設定今天訓練'), 'equipment is progressively disclosed after the condition step; browser QA verifies actual settings controls');
   }
   for (const [id, art, oldName, newName, oldEquipment, newEquipment] of [
     ['catalog-squat', 'squat', '深蹲', '負重深蹲', 'chair', 'barbell'],
@@ -143,7 +146,7 @@ export function renderAssessment() {
   values.set(app.assessmentStorageKey, savedAssessment);
   assert.deepEqual(app.getSavedAssessment().equipment, ['barbell', 'bodyweight'], 'previously saved assessment equipment remains readable');
   assert.equal(values.get(app.assessmentStorageKey), savedAssessment, 'hiding an assessment option does not migrate saved assessment data');
-  console.log('PR183 regression passed: bilingual legacy/current record rendering, unchanged storage, and actual Assessment equipment UI.');
+  console.log('PR183 regression passed: bilingual legacy/current record rendering, unchanged storage, and conservative Assessment equipment contract (settings interaction verified separately).');
 } finally {
   rmSync(temporary, { recursive: true, force: true });
 }

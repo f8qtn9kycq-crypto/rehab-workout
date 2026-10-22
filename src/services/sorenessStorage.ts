@@ -73,3 +73,16 @@ export function deleteSorenessEntry(id: string): WriteResult {
   if (!state.entries.some(e => e.id === id)) return { ok: false, error: 'invalid' };
   return write(state.entries.filter(e => e.id !== id));
 }
+
+/** Additive native backup restore: validate the entire batch before any write. */
+export function restoreSorenessBackup(value: unknown): WriteResult {
+  const state = readSorenessEntries();
+  if (state.error) return { ok: false, error: state.error };
+  if (!value || typeof value !== 'object') return { ok: false, error: 'invalid' };
+  const backup = value as { format?: unknown; schemaVersion?: unknown; entries?: unknown };
+  if (backup.format !== 'rehab.sorenessEntries' || backup.schemaVersion !== 1 || !Array.isArray(backup.entries) || backup.entries.length > MAX_ENTRIES || !backup.entries.every(validSorenessEntry) || new Set(backup.entries.map(e => e.id)).size !== backup.entries.length) return { ok: false, error: 'invalid' };
+  const existing = new Set(state.entries.map(e => e.id));
+  const additions = backup.entries.filter(e => !existing.has(e.id));
+  if (state.entries.length + additions.length > MAX_ENTRIES) return { ok: false, error: 'capacity' };
+  return additions.length ? write([...state.entries, ...additions]) : { ok: true };
+}

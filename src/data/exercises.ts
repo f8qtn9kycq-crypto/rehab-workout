@@ -1079,6 +1079,63 @@ export const exercises: Exercise[] = [
   {
     id: 'catalog-leg-extension', title: "機械膝伸", joint: 'knee', bodyArea: 'knee', condition: '大腿前側肌力訓練（動作庫）', type: 'strength', level: 'intermediate',
     description: "坐在膝伸訓練機上，以可控制的輕阻力緩慢伸直雙膝。", detail: "可查詢的機械膝伸動作，不會進入保守推薦；座椅與轉軸需調整適合。", steps: ["調整座椅與靠背，膝關節對齊器材轉軸，小腿墊置於腳踝上方", "大腿保持穩定，雙膝慢慢伸直到舒適且可控制的角度", "短暫停留，不鎖死膝蓋或用力甩起", "控制雙腿慢慢回到起始位置"], sets: 2, reps: 8, holdSeconds: 1, restSeconds: 60, durationText: '2 組，每組 8 次', benefits: '提供大腿前側肌力與膝關節控制訓練參考。', cautions: ["先用輕阻力確認座椅、轉軸與小腿墊位置", "只使用不增加疼痛的幅度，不鎖死膝蓋"], stopRules: ['膝蓋疼痛明顯增加或出現尖銳疼痛', '膝蓋不穩、卡住或腫脹增加'], regressions: ["降低機械阻力並縮小幅度", "減少次數或改為無負重坐姿伸膝"], progressions: ['動作穩定且無症狀後再逐步增加次數或阻力'], equipment: ["machine"], requiredEquipment: ["machine"], recommendationSafetyLevel: 'advanced_only', safetyTags: ['loaded_progression', 'pain_sensitive'], supportRequired: true, avoidIfPainHigh: true, youtubeEmbedUrl: '', youtubeSearchUrl: "https://www.youtube.com/results?search_query=leg+extension+machine+beginner+controlled", sourceRef: "catalog-only: user-selected bilateral leg extension machine; reviewed-content-needed", catalogOnly: true
+  },
+  {
+    "id": "catalog-worlds-greatest-stretch",
+    "title": "弓步轉體伸展",
+    "joint": "hip",
+    "bodyArea": "hip",
+    "condition": "髖部與胸椎活動度（動作庫）",
+    "type": "mobility",
+    "level": "intermediate",
+    "description": "以後腳前掌支撐、後膝離地的弓步，配合前側手肘下移與胸椎轉體。",
+    "detail": "World’s Greatest Stretch 的後膝離地版本，供查閱與補記，不提供引導訓練或保守推薦。後腿向後伸展，以後腳前掌支撐、腳跟抬起；需要能安全上下地面並維持手腳支撐。不追求深度或抬手高度。",
+    "steps": [
+      "在防滑平面上以雙手支撐，右腳向前跨到右手外側，右腳全腳掌踩穩。左腿向後伸展，以左腳前掌支撐、腳跟抬起，左膝保持離地，不鎖死膝蓋；先確認手腳能穩定承重。",
+      "左手持續支撐地面，右手肘緩慢向右腳內側下移，左膝維持離地，只到舒適位置，可短暫停留至 5 秒；不要求手肘碰地，不把髖部壓向地面。",
+      "右膝在可控制範圍內輕微朝外打開，右腳全腳掌保持踩穩；不以手肘強推膝蓋，後腳前掌與左手持續支撐。",
+      "支撐點不變，上胸緩慢朝右側轉開，右手隨胸部向上伸到舒適高度；左腿仍向後伸展、左膝離地，不甩動、不勉強轉頸或拱腰。",
+      "右手回到地面支撐，算右側 1 個完整動作；先穩定雙手支撐，再安全換邊。每側分別計次，依實際完成量補記。"
+    ],
+    "sets": 1,
+    "reps": 5,
+    "holdSeconds": 5,
+    "restSeconds": 60,
+    "durationText": "App 參考：1 回合，每側至多 5 次；下肘階段停留至 5 秒，休息 60 秒僅供參考",
+    "benefits": "提供髖部與胸椎活動度練習的動作參考。",
+    "cautions": [
+      "App 分為中階；需要能安全上下地面並以手臂、前腳及後腳前掌支撐。無法穩定維持後膝離地時不要勉強，先退出本版本，改用降階或休息。",
+      "不要追求深弓步、手肘碰地或手臂垂直。髖前側夾擠、膝蓋壓迫、手腕或肩部不舒服時退出該姿勢。",
+      "疼痛超過 3/10 時停止這個版本，降階或休息。不要忍痛完成次數，也不要憋氣、彈震或用腰部硬撐後腿。",
+      "影片示例為每側 5 個完整動作；App 的 1 回合及 60 秒休息是介面參考，並非影片處方或個人化建議。"
+    ],
+    "stopRules": [
+      "疼痛達 6/10、尖銳疼痛或症狀明顯加劇時停止，建議諮詢醫師或物理治療師。",
+      "出現麻木、無力、頭暈或失去支撐時停止；有紅旗症狀時不要訓練。"
+    ],
+    "regressions": [
+      "縮小弓步與轉體幅度，雙手先保持地面支撐，可省略下肘或抬手；若仍無法穩定維持後膝離地，退出本動作並休息。",
+      "減少次數或略過不舒服階段；無法舒適支撐或安全起身時停止，建議諮詢醫師或物理治療師。"
+    ],
+    "progressions": [
+      "能無症狀且穩定維持後腳前掌支撐、後膝離地後，先改善各階段連貫與控制；不以壓低髖部、加深弓步或加重作為預設進階。"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "requiredEquipment": [
+      "bodyweight"
+    ],
+    "recommendationSafetyLevel": "advanced_only",
+    "safetyTags": [
+      "pain_sensitive"
+    ],
+    "supportRequired": true,
+    "avoidIfPainHigh": true,
+    "youtubeEmbedUrl": "https://www.youtube.com/embed/-CiWQ2IvY34",
+    "youtubeSearchUrl": "https://www.youtube.com/watch?v=-CiWQ2IvY34",
+    "sourceRef": "docs/research/worlds-greatest-stretch.md; catalog-only; reviewed-content-needed",
+    "catalogOnly": true
   }
 ];
 

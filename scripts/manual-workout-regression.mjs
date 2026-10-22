@@ -43,7 +43,7 @@ assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises 
 const libraryArtIds = artManifest.filter(entry => entry.group === 'library').map(entry => entry.id);
 const quickArtIds = artManifest.filter(entry => entry.group === 'quick').map(entry => entry.id);
 const additionalCatalogIds = quickIds;
-assert.equal(libraryArtIds.length, 37, 'all 37 additional library choices have movement art');
+assert.equal(libraryArtIds.length, 38, 'all 38 additional library choices have movement art');
 assert.equal(new Set(libraryArtIds).size, libraryArtIds.length, 'library movement-art ids are unique');
 assert.ok(additionalCatalogIds.every(id => !libraryArtIds.includes(id)), 'excluded quick-equivalent catalog ids are not assigned duplicate library art');
 const retainedCatalogArtIds = ['catalog-bench-press', 'catalog-shoulder-press', 'catalog-squat', 'catalog-lat-pulldown', 'catalog-seated-row', 'catalog-leg-extension'];

@@ -1,0 +1,40 @@
+[
+  {
+    "browser": "chromium",
+    "positions": 95,
+    "widths": [
+      320,
+      375,
+      390,
+      1280
+    ],
+    "frontBackIndependent": true,
+    "midline": true,
+    "legacyBytesPreserved": true,
+    "tombstoneReload": true,
+    "keyboardSpace": true,
+    "layerAndZoom": true,
+    "unknownCannotSave": true,
+    "multipleInstanceIsolation": true,
+    "errors": []
+  },
+  {
+    "browser": "webkit",
+    "positions": 95,
+    "widths": [
+      320,
+      375,
+      390,
+      1280
+    ],
+    "frontBackIndependent": true,
+    "midline": true,
+    "legacyBytesPreserved": true,
+    "tombstoneReload": true,
+    "keyboardSpace": true,
+    "layerAndZoom": true,
+    "unknownCannotSave": true,
+    "multipleInstanceIsolation": true,
+    "errors": []
+  }
+]

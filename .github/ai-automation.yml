@@ -88,7 +88,7 @@ validation:
     - verify SafetyGate cannot be bypassed
     - verify pain >=6 blocks training
     - verify red flags block training
-    - verify SessionRouteGuard behavior
+    - verify SafetyRouteGuard behavior
     - verify LocalStorage compatibility
     - consider iOS Safari and SPA routing risk
   docs_only:
@@ -119,7 +119,7 @@ risk_tiers:
       chatgpt_pm_synthesis: recommended_for_conflicting_findings_or_merge_gate
     auto_merge_eligible: false
   Tier 3:
-    description: architecture, data migration, security, safety logic, or exercise content changes
+    description: architecture, data migration, security, safety logic, recommendation safety rules, or exercise content changes
     review_routing:
       codex_review: required
       claude_review: required
@@ -148,6 +148,11 @@ pull_request_state_policy:
 
 approval_policy:
   sole_contributor:
+    applies_only_when:
+      - live_repository_collaborator_count_is_exactly_one
+      - pull_request_author_is_that_collaborator
+    identity_unverifiable_behavior: do_not_assume_sole_contributor_eligibility
+    otherwise: follow_live_branch_protection_rulesets_and_requested_review_requirements
     formal_self_approval_required: false
     merge_readiness_default:
       - required_AI_review_routing_complete
@@ -188,6 +193,19 @@ auto_merge:
     - post_merge_runtime_validation_is_listed_when_behavior_depends_on_real_GitHub_events
 
 control_plane:
+  tier_3_ai_review_request:
+    automatic_events:
+      - pull_request_target.opened
+      - pull_request_target.reopened
+      - pull_request_target.synchronize
+      - pull_request_target.ready_for_review
+    requirements:
+      - use_trusted_default_branch_workflow_only
+      - never_checkout_or_execute_pull_request_code
+      - require_risk_tier_3_label_or_checked_template_field
+      - request_Claude_and_ChatGPT_PM_for_exact_head
+      - deduplicate_by_exact_head_sha
+      - treat_request_as_pending_until_attributable_results_exist
   chatgpt_pm_synthesis:
     request_triggers:
       - PR body or label requires synthesis by risk tier or conflicting findings
@@ -242,7 +260,7 @@ boundaries:
     - safety thresholds
     - red-flag blocking
     - SafetyGate bypass rules
-    - SessionRouteGuard
+    - SafetyRouteGuard
     - LocalStorage schema compatibility
     - recommendation safety filters
     - exercise content coverage

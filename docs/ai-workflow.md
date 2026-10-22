@@ -67,6 +67,7 @@ Use this map instead of pasting the full product spec into ChatGPT Project Instr
 - `docs/mobile-ux-guidelines.md`: mobile-first UX, iOS Safari, touch targets, exercise detail IA, YouTube iframe, and LocalStorage expectations.
 - `docs/localization-style-guide.md`: zh-TW / English tone, glossary, safety wording, and translation QA.
 - `ai/skills/rehab-workout-issue-to-pr/SKILL.md`: repo-tracked Codex skill for implementing a GitHub issue and opening a PR.
+- `ai/skills/rehab-exercise-youtube/SKILL.md`：為既有動作更新 YouTube、或依影片新增動作的可重複流程；涵蓋來源查證、雙語內容、相容性、驗證與審查。從 repo 根目錄讀取該技能；來源紀錄範本與下次使用指令均由技能連結。
 
 ## Project Source Hygiene
 
@@ -197,7 +198,7 @@ Do not let Perplexity directly edit code.
 
 ## Risk Tiers
 
-Use the PR template as source of truth.
+風險分級與審查路由以 `AGENTS.md`、`REVIEW.md` 與 `.github/ai-automation.yml` 為契約，PR template 用於記錄適用項目及證據。純文件描述現有行為為 Tier 0；產品變更依最高受影響風險分級。
 
 ### Tier 0 — Docs / workflow only
 
@@ -233,11 +234,11 @@ Requirements:
 - no safety behavior changes
 - no recommendation behavior changes unless explicitly scoped
 
-### Tier 2 — Product flow / state / routing
+### Tier 2 — 安全相關流程／state／routing／session／storage
 
 Examples:
 
-- session flow
+- session flow（不含安全邏輯變更）
 - route guards
 - LocalStorage behavior
 - recommendation filtering
@@ -249,37 +250,32 @@ Requirements:
 - relevant tests/audits pass
 - safety regression check
 - iOS Safari / mobile QA
-- Claude review recommended
+- Codex 審查必要；Claude 建議，衝突或 merge gate 時建議 ChatGPT PM synthesis
 
-### Tier 3 — Safety / content / recommendation logic
+### Tier 3 — 架構／資料遷移／安全性／安全邏輯／推薦安全／動作內容
 
 Examples:
 
-- SafetyGate
-- PainScale
-- red flags
-- Recovery Mode
-- recommendation safety
-- exercise content additions
+- 架構變更、資料遷移或安全性變更
+- SafetyGate、PainScale、red flags 或 Recovery Mode 的安全邏輯
+- 推薦安全規則
+- 動作內容變更
 
 Requirements:
 
 - build passes
 - audit passes
-- safety review required
+- Codex 與 Claude 審查必要，ChatGPT PM synthesis 合併前必要；結果綁定精確 head
 - no diagnosis/cure claims
 - stricter merge gate
 
-### Sole-contributor approval exception
+### Sole-contributor approval policy
 
-The repo uses a conditional sole-contributor exception for the human approval
-step. Before delivery, verify through GitHub that exactly one collaborator has
-repository access and that the PR author is that collaborator. If GitHub rejects
-self-approval, an exact-head human walkthrough comment can serve as approval
-evidence. This does not replace Claude Tier 3 review, ChatGPT PM synthesis,
-checks, thread review, safety gates, or mergeability checks, and must never be
-represented as a formal GitHub `APPROVE` review. Adding a second contributor
-automatically disables the exception.
+每次交付前核對即時 collaborator 清單及 PR author。只有 collaborator 恰為一人、且 PR author 為該人時，才適用 sole-contributor 政策；無法查證時不得推定符合條件。
+
+Tier 0–2 不以作者無法 self-approve 作為預設阻塞；仍需適用的 AI 審查、精確 head checks、無 active requested changes／blocking threads、clean mergeability 及驗收通過。Tier 3 保留必要 Claude 審查與 ChatGPT PM synthesis。真人 walkthrough 依 `AGENTS.md`／`REVIEW.md` 的安全邏輯、破壞性或不可逆資料遷移、安全敏感行為、無法可靠自動驗證或明確驗收需求判定，並綁定精確 head。
+
+AI 或 walkthrough 結果不得宣稱為正式 GitHub `APPROVE`；條件不符或新增 collaborator 時，遵循實際 branch protection、ruleset 與 requested-review 要求，不另設一律真人核准的門檻。
 
 ## Default Validation
 

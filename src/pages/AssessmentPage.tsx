@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, MapPin } from 'lucide-react';
-import BodyAreaSelector from '../components/BodyAreaSelector';
+import BodyMapSelector from '../components/BodyMapSelector';
 import PainScale from '../components/PainScale';
-import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
+import { ASSESSMENT_EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import type { BodyArea, Equipment } from '../types/rehab';
@@ -19,6 +19,11 @@ export default function AssessmentPage() {
   });
   const [showBodyAreaPicker, setShowBodyAreaPicker] = useState(!hasPreselectedBodyArea);
   const [step, setStep] = useState<'condition' | 'settings'>('condition');
+  const stepHeading = useRef<HTMLHeadingElement>(null);
+  const previousStep = useRef(step);
+  useEffect(() => {
+    if (previousStep.current !== step) { stepHeading.current?.focus(); previousStep.current = step; }
+  }, [step]);
   const [pain, setPain] = useState(0);
   const [confidence, setConfidence] = useState(3);
   const [functionalBaseline, setFunctionalBaseline] = useState(5);
@@ -56,7 +61,7 @@ export default function AssessmentPage() {
             {showBodyAreaPicker ? (
               <div className="space-y-3">
                 <h2 className="text-lg font-bold text-slate-800">{t('assessment.bodyAreaLabel')}</h2>
-                <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('assessment.bodyAreaLabel')} />
+                <BodyMapSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('assessment.bodyAreaLabel')} />
                 {hasPreselectedBodyArea ? (
                   <button type="button" onClick={() => setShowBodyAreaPicker(false)} className="focus-ring min-h-11 w-full rounded-md border border-slate-300 px-4 py-2 font-bold text-slate-700">
                     {t('assessment.keepSelectedArea', { bodyArea: t(`bodyAreas.${bodyArea}.label`) })}
@@ -79,7 +84,7 @@ export default function AssessmentPage() {
             )}
 
             <div className="space-y-5" aria-labelledby="assessment-condition-title">
-              <h2 id="assessment-condition-title" className="text-lg font-bold text-slate-800">{t('assessment.conditionTitle')}</h2>
+              <h2 ref={stepHeading} tabIndex={-1} id="assessment-condition-title" className="text-lg font-bold text-slate-800">{t('assessment.conditionTitle')}</h2>
               <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
               <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
               <PainScale label={t('assessment.functionalLabel')} value={functionalBaseline} onChange={setFunctionalBaseline} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`outcomes.scoreLabels.${value}`)]))} />
@@ -93,7 +98,7 @@ export default function AssessmentPage() {
         ) : (
           <>
             <div>
-              <h2 className="text-lg font-bold text-slate-800">{t('assessment.settingsTitle')}</h2>
+              <h2 ref={stepHeading} tabIndex={-1} className="text-lg font-bold text-slate-800">{t('assessment.settingsTitle')}</h2>
               <p className="mt-1 text-sm leading-6 text-slate-600">
                 {t('assessment.settingsSummary', {
                   bodyArea: t(`bodyAreas.${bodyArea}.label`),
@@ -104,7 +109,7 @@ export default function AssessmentPage() {
             <div>
               <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
               <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
-                {EQUIPMENT_OPTIONS.map((item) => (
+                {ASSESSMENT_EQUIPMENT_OPTIONS.map((item) => (
                   <button key={item.id} type="button" aria-pressed={equipment.includes(item.id)} onClick={() => toggle(item.id)} className={`focus-ring min-h-11 rounded-md px-3 py-2 font-semibold ${equipment.includes(item.id) ? 'bg-calm-700 text-white' : 'bg-slate-100 text-slate-700'}`}>
                     {t(`equipmentLabels.${item.id}`)}
                   </button>

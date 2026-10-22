@@ -1,8 +1,12 @@
+import ExerciseRecordingSetup from '../components/ExerciseRecordingSetup';
 import { Clock, Dumbbell, Layers3, MapPin, PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import SavedRoutineReturnLink from '../components/SavedRoutineReturnLink';
+import { getSavedRoutineContext } from '../utils/savedRoutineNavigation';
 import ExerciseDetailModal from '../components/ExerciseDetailModal';
 import YouTubeEmbed from '../components/YouTubeEmbed';
+import WorkoutMovementArt, { hasWorkoutMovementArt } from '../components/WorkoutMovementArt';
 import { useI18n } from '../services/i18n';
 import { getExerciseById, getExerciseEquipment } from '../utils/exerciseModel';
 import { getLocalizedExercise } from '../utils/localizedExercise';
@@ -16,11 +20,16 @@ export default function ExerciseDetailPage() {
   const backTarget = `/exercises${location.search}`;
 
   useEffect(() => {
-    window.scrollTo({ left: 0, top: 0 });
-  }, [exerciseId]);
+    if (location.hash === '#record') {
+      const frame = window.requestAnimationFrame(() => document.getElementById('record')?.scrollIntoView({ block: 'start' }));
+      return () => window.cancelAnimationFrame(frame);
+    }
+    if (!location.hash) window.scrollTo({ left: 0, top: 0 });
+  }, [exerciseId, location.hash]);
 
   if (!exercise) return <Navigate to="/exercises" replace />;
 
+  const routine = getSavedRoutineContext(location.search, exercise.id);
   const displayExercise = getLocalizedExercise(exercise, language);
   const stopRules = displayExercise.stopRules.length > 0 ? displayExercise.stopRules : [t('detail.defaultStopRule')];
   const regressions = displayExercise.regressions.length > 0 ? displayExercise.regressions : [t('detail.defaultStopRule')];
@@ -31,7 +40,8 @@ export default function ExerciseDetailPage() {
     ['steps', t('detail.sectionSteps')],
     ['safety', t('detail.sectionSafety')],
     ['adjustments', t('detail.sectionAdjustments')],
-    ['start', t('detail.sectionStart')],
+    ['record', t('detail.recordingSetup')],
+    ...(!exercise.catalogOnly ? [['start', t('detail.sectionStart')] as const] : []),
   ] as const;
 
   return (
@@ -51,23 +61,30 @@ export default function ExerciseDetailPage() {
           ))}
         </nav>
       </div>
-      <section id="overview" className="card scroll-mt-40 space-y-5 p-4">
+      <SavedRoutineReturnLink exerciseId={exercise.id} />
+      <section id="overview" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-5 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionOverview')}</h2>
         <div className="flex flex-wrap gap-2 text-sm font-semibold">
           <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
           <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>
-          {equipmentBadges.slice(0, 2).map((equipment) => (
+          {equipmentBadges.map((equipment) => (
             <span key={equipment} className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Dumbbell size={14} />{t(`equipmentLabels.${equipment}`)}</span>
           ))}
         </div>
         <div>
           <h1 className="text-3xl font-bold text-ink">{displayExercise.title}</h1>
           <p className="mt-2 text-lg text-slate-600">{displayExercise.description}</p>
+          {exercise.catalogOnly && <p className="mt-3 rounded-md bg-calm-100 p-3 font-semibold text-calm-800">{t('detail.catalogOnlyNotice')}</p>}
         </div>
+        {hasWorkoutMovementArt(exercise.id) && (
+          <div className="mx-auto w-full max-w-sm">
+            <WorkoutMovementArt id={exercise.id} loading="eager" />
+          </div>
+        )}
         <YouTubeEmbed title={displayExercise.title} url={exercise.youtubeEmbedUrl} fallbackUrl={exercise.youtubeSearchUrl} />
-        <button onClick={() => setModalOpen(true)} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
+        <button onClick={(event) => { event.currentTarget.focus(); setModalOpen(true); }} className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 font-bold text-slate-800">
           <PlayCircle size={20} />
           {t('detail.enlargeVideo')}
         </button>
@@ -76,7 +93,7 @@ export default function ExerciseDetailPage() {
           <p className="mt-3"><strong>{t('detail.benefits')}:</strong> {displayExercise.benefits}</p>
         </div>
       </section>
-      <section id="steps" className="card scroll-mt-40 p-4">
+      <section id="steps" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionSteps')}</h2>
         <ol className="mt-3 space-y-2">
           {displayExercise.steps.map((step, index) => (
@@ -84,7 +101,7 @@ export default function ExerciseDetailPage() {
           ))}
         </ol>
       </section>
-      <section id="safety" className="card scroll-mt-40 space-y-4 p-4">
+      <section id="safety" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionSafety')}</h2>
         <div>
           <h3 className="font-bold text-slate-900">{t('detail.safetyCautions')}</h3>
@@ -99,7 +116,7 @@ export default function ExerciseDetailPage() {
           </ul>
         </div>
       </section>
-      <section id="adjustments" className="card scroll-mt-40 space-y-4 p-4">
+      <section id="adjustments" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionAdjustments')}</h2>
         <div>
           <h3 className="font-bold text-slate-900">{t('detail.regressions')}</h3>
@@ -116,7 +133,7 @@ export default function ExerciseDetailPage() {
           </div>
         ) : null}
       </section>
-      <section id="start" className="card scroll-mt-40 space-y-4 p-4">
+      {!exercise.catalogOnly && <section id="start" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-4 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionStart')}</h2>
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
           <div className="rounded-md bg-slate-50 p-2"><strong className="block text-xl">{exercise.sets}</strong>{t('exercises.setsUnit')}</div>
@@ -131,10 +148,11 @@ export default function ExerciseDetailPage() {
             ))}
           </div>
         </div>
-        <Link to={`/session/${exercise.id}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
+        <Link to={`/session/${exercise.id}${routine ? `?routine=${encodeURIComponent(routine.id)}` : ''}`} className="focus-ring flex min-h-12 items-center justify-center rounded-md bg-calm-700 px-4 font-bold text-white">
           {t('detail.startSession')}
         </Link>
-      </section>
+      </section>}
+      <ExerciseRecordingSetup key={exercise.id} exercise={exercise} />
       <ExerciseDetailModal exercise={exercise} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );

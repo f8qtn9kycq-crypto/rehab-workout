@@ -55,6 +55,23 @@ Backlog only. Do not block merge.
 - For Tier 2+ PRs, explicitly verify SafetyGate, pain rules, red-flag blocking, session route guards, LocalStorage compatibility, and iOS Safari / SPA routing risk.
 - Treat iOS Safari / physical-device testing as a targeted gate, not a blanket gate. Require it only when the changed behavior depends on device/browser behavior that cannot be covered reliably by automated or scripted QA, or when an explicit acceptance criterion requires it.
 
+## 精確 head 審查與合併門檻
+
+- 記錄 repo、PR、base、head branch 與當前 head SHA；push／rebase／head 改變後，先前審查與 QA 不得直接沿用。
+- 從即時 branch protection／ruleset 取得 required contexts 與 GitHub App；使用 Check Runs API 核對同一 head SHA 的成功結果。較新的必要 run 尚在執行或失敗時，不以較早成功結果覆蓋。
+- Legacy Commit Status 為空不代表 CI 失敗；若相符的 required Check Run 已成功，採用該證據。缺少／過期／Pending／失敗的必要證據不能判 Pass，不建立 synthetic status。
+- 檢查未解決的 blocking review threads、active requested changes、必要 review、Draft、衝突及 mergeability；未知／不穩定的狀態重新查詢後才判定。
+- 分別報告產品／程式就緒與 workflow／合併就緒。記錄本機、CI、瀏覽器自動化、真人、真機及 production 證據範圍；未量測效能不得宣稱效能最佳化通過。
+- 合併前重新核對上述門檻，並以 expected head SHA 執行已授權的合併；本文件與 Pass 結果本身不提供合併授權。
+
+## 彈窗 UX 審查
+
+變更彈窗時驗證背景隔離、初始焦點、Tab／Shift+Tab 循環、enabled 控制項、Escape 的明確語意、關閉後返回觸發按鈕，以及小視窗內控制項可見／可捲動。影片彈窗關閉後應卸載 iframe；退出訓練彈窗的取消／繼續不應改變進度或寫入紀錄。跨來源播放器自行處理的按鍵需另標示證據邊界。
+
+## Exercise illustration review
+
+For changed exercise illustrations or image-ID aliases, apply `docs/exercise-visual-qa.md` and record separate visual, movement, safety-representation and mobile results. Evaluate concrete reference/step mismatches, not subjective taste; a shared URL is not proof of correct movement semantics.
+
 ## Draft and ready-for-review policy
 
 Draft means implementation or required automated evidence is incomplete. Once implementation is complete, current-head required checks pass, and there is no known blocking P0/P1, mark the PR Ready for review.

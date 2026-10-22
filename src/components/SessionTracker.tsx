@@ -4,30 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
 import { getOutcomeEntries } from '../services/outcomeStorage';
-import type { BodyArea, Exercise, FunctionalOutcomeEntry, TrainingSet } from '../types/rehab';
+import type { Exercise, TrainingLogEntry, TrainingSet } from '../types/rehab';
+import { hasRecentOutcome } from '../utils/homeNextAction';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
+import { persistSessionLogOnce } from '../utils/sessionSave';
 import PainScale from './PainScale';
 import ActiveSessionPanel from './ActiveSessionPanel';
 import TrainingSetEditor from './TrainingSetEditor';
+import ExerciseIdentityVisual from './ExerciseIdentityVisual';
+import SavedRoutineReturnLink from './SavedRoutineReturnLink';
+import TrainingSetSummary from './TrainingSetSummary';
 
 interface SessionTrackerProps {
   exercise: Exercise;
   onNavigateBack: () => void;
 }
 
-type SessionPhase = 'before' | 'active' | 'finish' | 'outcomePrompt';
+type SessionPhase = 'before' | 'active' | 'finish' | 'saved';
 
-const recentOutcomeWindowMs = 1000 * 60 * 60 * 24 * 14;
 const DIFFICULTY_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
-
-function hasRecentOutcomeForBodyArea(outcomes: FunctionalOutcomeEntry[], bodyArea: BodyArea, today = new Date()): boolean {
-  return outcomes.some((outcome) => {
-    if (outcome.bodyArea !== bodyArea) return false;
-    const outcomeDate = new Date(outcome.date);
-    return !Number.isNaN(outcomeDate.getTime()) && today.getTime() - outcomeDate.getTime() <= recentOutcomeWindowMs;
-  });
-}
 
 export default function SessionTracker({ exercise, onNavigateBack }: SessionTrackerProps) {
   const navigate = useNavigate();
@@ -44,31 +40,49 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   const [notes, setNotes] = useState('');
   const [stoppedEarly, setStoppedEarly] = useState(false);
   const [stopReason, setStopReason] = useState('');
+  const [savedLog, setSavedLog] = useState<TrainingLogEntry | null>(null);
+  const [needsOutcomeCheckIn, setNeedsOutcomeCheckIn] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [trainingSets, setTrainingSets] = useState<TrainingSet[]>([]);
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const backButtonRef = useRef<HTMLButtonElement>(null);
   const exitButtonRef = useRef<HTMLButtonElement>(null);
   const continueSessionButtonRef = useRef<HTMLButtonElement>(null);
+  const exitDialogRef = useRef<HTMLDialogElement>(null);
+  const savedTitleRef = useRef<HTMLHeadingElement>(null);
   const lastExitTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const saveInProgressRef = useRef(false);
 
   const painBlocksStart = shouldStopForPain(painBefore);
   const recoveryModeSuggested = shouldUseRecoveryMode(painBefore);
   const painAfterWarning = shouldWarnForPainIncrease(painBefore, painAfter);
   const canStart = hasPainValue(painBefore) && !painBlocksStart;
   const canSaveLog = hasPainValue(painBefore) && hasPainValue(painAfter);
-  const hasStartedExercise = phase !== 'before' && phase !== 'outcomePrompt';
+  const hasStartedExercise = phase === 'active' || phase === 'finish';
   const canSaveExitLog = hasStartedExercise && hasPainValue(painBefore) && hasPainValue(painAfter);
   const recoverySuggestion = exercise.regressions?.[0];
   const supportsSetDetails = exercise.type === 'strength' && exercise.equipment.some(item => item === 'dumbbell' || item === 'kettlebell');
 
   useEffect(() => {
-    if (exitDialogOpen) {
-      continueSessionButtonRef.current?.focus();
-      return;
-    }
+    const dialog = exitDialogRef.current;
+    if (!exitDialogOpen || !dialog) return;
 
-    lastExitTriggerRef.current?.focus();
+    dialog.showModal();
+    continueSessionButtonRef.current?.focus();
+
+    return () => {
+      dialog.close();
+      const trigger = lastExitTriggerRef.current;
+      if (trigger?.isConnected) trigger.focus();
+    };
   }, [exitDialogOpen]);
+
+  useEffect(() => {
+    if (phase !== 'saved') return;
+
+    const focusFrame = window.requestAnimationFrame(() => savedTitleRef.current?.focus());
+    return () => window.cancelAnimationFrame(focusFrame);
+  }, [phase]);
 
   function completedRepCount(): number {
     return completedSets > 0 ? exercise.reps : 0;
@@ -118,14 +132,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       sets: trainingSets.length > 0 ? trainingSets : undefined,
     });
 
-    saveLog(log);
-
-    if (!hasRecentOutcomeForBodyArea(getOutcomeEntries(), exercise.bodyArea)) {
-      setPhase('outcomePrompt');
-      return;
-    }
-
-    navigate('/logs');
+    persistAndConfirm(log);
   }
 
   function saveAndExit(): void {
@@ -142,10 +149,26 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
       recoveryMode: useRecoveryMode,
       notes,
       stopReason: USER_EXIT_REASON_CODE,
+      sets: trainingSets.length > 0 ? trainingSets : undefined,
     });
 
-    saveLog(log);
-    navigate('/logs');
+    persistAndConfirm(log);
+  }
+
+  function persistAndConfirm(log: TrainingLogEntry): void {
+    setSaveError(false);
+
+    const saveResult = persistSessionLogOnce(saveInProgressRef, log, saveLog);
+    if (saveResult === 'duplicate') return;
+    if (saveResult === 'failed') {
+      setSaveError(true);
+      return;
+    }
+
+    setExitDialogOpen(false);
+    setSavedLog(log);
+    setNeedsOutcomeCheckIn(!hasRecentOutcome(getOutcomeEntries(), log.bodyArea));
+    setPhase('saved');
   }
 
   function exitWithoutSaving(): void {
@@ -157,7 +180,11 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     navigate('/logs#function-check-in');
   }
 
-  function skipOutcomePrompt(): void {
+  function returnHome(): void {
+    navigate('/');
+  }
+
+  function viewSavedLog(): void {
     navigate('/logs');
   }
 
@@ -200,8 +227,22 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   );
 
   const exitDialog = exitDialogOpen ? (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/45 px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 sm:items-center sm:justify-center sm:py-5" role="dialog" aria-modal="true" aria-labelledby="session-exit-title" aria-describedby="session-exit-description">
-      <div className="w-full max-w-md rounded-lg bg-white p-4 shadow-xl">
+    <dialog
+      ref={exitDialogRef}
+      className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none items-end border-0 bg-transparent px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-5 backdrop:bg-slate-950/45 open:flex sm:items-center sm:justify-center sm:py-5"
+      aria-labelledby="session-exit-title"
+      aria-describedby="session-exit-description"
+      onCancel={(event) => { event.preventDefault(); setExitDialogOpen(false); }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Tab') return;
+        const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)'));
+        const current = controls.findIndex(control => control === document.activeElement);
+        if (current < 0 || controls.length === 0) return;
+        event.preventDefault();
+        controls[(current + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
+      }}
+    >
+      <div className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white p-4 shadow-xl">
         <div className="flex items-center gap-2 text-red-800">
           <AlertTriangle size={22} />
           <h2 id="session-exit-title" className="text-xl font-bold">{t('session.exitTitle')}</h2>
@@ -218,6 +259,11 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             {painAfterWarning ? (
               <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
                 {t('session.painAfterWarning')}
+              </div>
+            ) : null}
+            {saveError ? (
+              <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                {t('session.saveError')}
               </div>
             ) : null}
           </div>
@@ -253,7 +299,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   ) : null;
 
   if (phase === 'before') {
@@ -297,25 +343,45 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
     );
   }
 
-  if (phase === 'outcomePrompt') {
+  if (phase === 'saved' && savedLog) {
     return (
       <>
         {sessionHeader}
-        <section className="card space-y-5 p-4" aria-labelledby="session-outcome-prompt-title">
+        <section className="card space-y-5 p-4" aria-labelledby="session-saved-title">
           <div className="flex items-center gap-2 text-calm-700">
             <ClipboardCheck size={24} />
-            <h1 id="session-outcome-prompt-title" className="text-2xl font-bold text-ink">{t('session.outcomePromptTitle')}</h1>
+            <h1 ref={savedTitleRef} id="session-saved-title" tabIndex={-1} className="focus-ring text-2xl font-bold text-ink">{t('session.savedTitle')}</h1>
           </div>
-          <p className="leading-7 text-slate-700">{t('session.outcomePromptBody')}</p>
-          <div className="rounded-lg border border-calm-100 bg-calm-50 p-4 text-sm leading-6 text-calm-800">
-            {t('session.outcomePromptSaved')}
+          <p role="status" aria-live="polite" className="leading-7 text-slate-700">{t('session.savedLocally')}</p>
+          <ExerciseIdentityVisual exercise={exercise} />
+          <div className="rounded-lg border border-calm-100 bg-calm-50 p-4">
+            <p className="text-lg font-black text-ink">
+              {t('session.savedPain', { before: savedLog.painBefore, after: savedLog.painAfter })}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-calm-800">
+              {t(savedLog.stoppedEarly ? 'session.savedStoppedEarly' : 'session.savedCompleted', {
+                completed: savedLog.setsCompleted,
+                planned: savedLog.plannedSets,
+              })}
+            </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <button type="button" onClick={addOutcomeNow} className="focus-ring min-h-11 rounded-md bg-calm-700 px-4 py-3 font-bold text-white">
-              {t('session.outcomePromptAdd')}
+          <TrainingSetSummary sets={savedLog.sets} />
+          {painAfterWarning ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+              {t('session.painAfterWarning')}
+            </div>
+          ) : null}
+          <SavedRoutineReturnLink exerciseId={exercise.id} />
+          <div>
+            <button
+              type="button"
+              onClick={needsOutcomeCheckIn ? addOutcomeNow : returnHome}
+              className="focus-ring min-h-14 w-full rounded-md bg-calm-700 px-4 py-3 text-lg font-bold text-white"
+            >
+              {t(needsOutcomeCheckIn ? 'session.savedAddOutcome' : 'session.savedReturnHome')}
             </button>
-            <button type="button" onClick={skipOutcomePrompt} className="focus-ring min-h-11 rounded-md border border-slate-200 bg-white px-4 py-3 font-bold text-slate-700">
-              {t('session.outcomePromptSkip')}
+            <button type="button" onClick={viewSavedLog} className="focus-ring mt-2 min-h-11 w-full rounded-md px-4 py-2 font-bold text-slate-600 underline underline-offset-4">
+              {t('session.savedViewRecords')}
             </button>
           </div>
         </section>
@@ -333,6 +399,7 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
             <CheckCircle2 className="text-calm-700" />
             <h1 className="text-2xl font-bold text-ink">{t('session.finishTitle')}</h1>
           </div>
+          <ExerciseIdentityVisual exercise={exercise} />
           <PainScale label={t('session.painAfter')} value={painAfter} onChange={setPainAfter} zeroLabel={t('session.confirmNoPain')} />
           {!hasPainValue(painAfter) ? (
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-700">
@@ -362,6 +429,11 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
               <span className="mb-2 block font-semibold text-slate-800">{t('session.stopReason')}</span>
               <input value={stopReason} onChange={(event) => setStopReason(event.target.value)} placeholder={t('session.earlyStopDefault')} className="focus-ring min-h-11 w-full rounded-md border border-slate-200 px-3" />
             </label>
+          ) : null}
+          {saveError ? (
+            <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+              {t('session.saveError')}
+            </div>
           ) : null}
           <button type="button" disabled={!canSaveLog} onClick={completeLog} className="focus-ring min-h-11 w-full rounded-md bg-calm-700 px-4 py-3 font-bold text-white disabled:bg-slate-300">
             {t('session.saveLog')}

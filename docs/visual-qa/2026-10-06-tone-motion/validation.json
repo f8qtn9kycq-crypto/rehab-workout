@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-06",
+  "build": "PASS",
+  "tests": "PASS",
+  "integrity": {
+    "assets": 43,
+    "frozenReferences": 8,
+    "result": "PASS"
+  },
+  "effectiveSources": {
+    "count": 37,
+    "result": "PASS",
+    "byteForByte": true
+  },
+  "safetyI18n": "PASS",
+  "coverage": "43/43 PASS; catalog-only isolation PASS",
+  "mobile": "DPR1 scoped; see mobile-results.json",
+  "humanStyle": "PENDING — latest feedback supersedes previous overall Pass",
+  "movementSafety": "NOT VERIFIED",
+  "DPR3": "NOT VERIFIED",
+  "unchangedRuntime": 27,
+  "changedRuntime": 16,
+  "completeGenerator": "Non-targeted Swift compiler sandbox failed; supported --ids regenerated exactly 16 changed Python overrides; 27 other runtime images unchanged."
+}

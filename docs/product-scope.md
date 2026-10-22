@@ -39,19 +39,25 @@ Mobile is the primary design target. Desktop must remain usable, but should not 
 
 ## Product Journey
 
-The target user journey is:
+目前首次使用的主要引導路徑（依 `src/main.tsx`、`OnboardingFlow`、`SafetyGate` 與 `SessionTracker`）：
 
 ```text
-Assessment
-→ Safety Gate
-→ Today's Suitable Exercises
+首次使用引導
+→ Safety Gate（當日安全確認）
+→ Assessment（部位／疼痛與活動狀態）
+→ 建議動作與文字／安全說明
+→ 訓練前疼痛選擇
 → Guided Session
-→ Pain Tracking
-→ Recovery Guidance
+→ 訓練後疼痛與儲存
 → Training Logs
 ```
 
-The app is not just an exercise library. It is a safety-aware rehab workflow.
+首頁依當日安全確認、評估、最近紀錄與功能追蹤決定一個主要下一步；不是每次回首頁都重新走首次使用流程。安全規則以 `docs/safety-rules.md` 為準。
+
+另有兩條明確入口：
+
+- 唯讀瀏覽：動作庫、詳情、知識與常用組合可先閱讀，不代表已取得開始訓練資格；進入 session 仍經當日安全確認與訓練前疼痛選擇。`catalogOnly` 健身動作不提供引導 session。
+- 補記訓練：`/logs/new` 回顧已完成的活動，與即時引導訓練分開。未明確輸入的選填疼痛不自行推定，補記不授予訓練安全資格。
 
 ## Product Principles
 

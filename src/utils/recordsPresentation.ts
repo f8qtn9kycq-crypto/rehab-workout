@@ -1,0 +1,121 @@
+import { exercises } from '../data/exercises';
+import type { Activity } from '../services/activityStorage';
+import type { ManualWorkout } from '../services/manualWorkoutStorage';
+import type { FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
+
+export type RecordsActivityItem =
+  | { id: string; source: 'training'; date: string; log: TrainingLogEntry }
+  | { id: string; source: 'activity'; date: string; activity: Activity }
+  | { id: string; source: 'manual'; date: string; workout: ManualWorkout };
+
+export const TRAINING_CATEGORIES = ['rehab', 'strength', 'cardio', 'unknown'] as const;
+export type TrainingCategory = typeof TRAINING_CATEGORIES[number];
+const catalogById = new Map(exercises.map(exercise => [exercise.id, exercise]));
+
+export function recordCategories(item: RecordsActivityItem, logs: TrainingLogEntry[] = []): TrainingCategory[] {
+  if (item.source === 'training') return ['rehab'];
+  if (item.source === 'activity') {
+    if (item.activity.kind === 'cycling') return ['cardio'];
+    return item.activity.exerciseLogIds.some(id => logs.some(log => log.id === id))
+      ? ['rehab', 'strength'] : ['strength'];
+  }
+  const categories = item.workout.exercises.map((exercise): TrainingCategory => {
+    if (exercise.kind === 'strength') return 'strength';
+    if (exercise.kind === 'mobility') return 'rehab';
+    const canonical = exercise.exerciseId ? catalogById.get(exercise.exerciseId) : undefined;
+    if (!canonical) return 'unknown';
+    return canonical.catalogOnly && canonical.type !== 'mobility' ? 'strength' : 'rehab';
+  });
+  if (item.workout.cyclingMinutes !== undefined) categories.push('cardio');
+  return TRAINING_CATEGORIES.filter(category => categories.includes(category));
+}
+
+export interface RecordsPresentation {
+  recentActivities: RecordsActivityItem[];
+  days: { date: string; items: RecordsActivityItem[] }[];
+  weeklyActivityCount: number;
+  weeklyActiveDays: number;
+  weeklyCategoryDays: Record<TrainingCategory, number>;
+  hasActivityHistory: boolean;
+  validOutcomes: FunctionalOutcomeEntry[];
+}
+
+function validDate(value: string, today: Date): Date | null {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) && date <= today ? date : null;
+}
+
+function activityDate(value: string, today: Date): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const date = new Date(`${value}T12:00:00`);
+  if (!Number.isFinite(date.getTime())) return null;
+  const normalized = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  return normalized === value && value <= todayKey ? date : null;
+}
+
+function startOfWeek(today: Date): Date {
+  const start = new Date(today);
+  const distanceFromMonday = start.getDay() === 0 ? 6 : start.getDay() - 1;
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - distanceFromMonday);
+  return start;
+}
+
+export function buildRecordsPresentation(
+  logs: TrainingLogEntry[],
+  activities: Activity[],
+  outcomes: FunctionalOutcomeEntry[],
+  today = new Date(),
+  manualWorkouts: ManualWorkout[] = [],
+): RecordsPresentation {
+  const validLogs = logs.filter(log => validDate(log.date ?? log.completedAt, today));
+  const validActivities = activities.filter(activity => activityDate(activity.date, today));
+  const linkedLogIds = new Set(validActivities.flatMap(activity => activity.kind === 'resistance' ? activity.exerciseLogIds : []));
+
+  const trainingItems: RecordsActivityItem[] = validLogs
+    .filter(log => !linkedLogIds.has(log.id))
+    .map(log => ({
+      id: `training:${log.id}`,
+      source: 'training',
+      date: log.date ?? log.completedAt,
+      log,
+    }));
+
+  const activityItems: RecordsActivityItem[] = validActivities.map(activity => ({
+      id: `activity:${activity.id}`,
+      source: 'activity',
+      date: `${activity.date}T12:00:00`,
+      activity,
+    }));
+
+  const manualItems: RecordsActivityItem[] = manualWorkouts
+    .filter(workout => activityDate(workout.date, today))
+    .map(workout => ({ id: `manual:${workout.id}`, source: 'manual', date: `${workout.date}T12:00:00`, workout }));
+
+  const recentActivities = [...trainingItems, ...activityItems, ...manualItems]
+    .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)));
+  const byDay = new Map<string, RecordsActivityItem[]>();
+  for (const item of recentActivities) {
+    const date = new Date(item.date);
+    const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    byDay.set(day, [...(byDay.get(day) ?? []), item]);
+  }
+  const weekStart = startOfWeek(today);
+  const weeklyDays = [...byDay].filter(([date]) => new Date(`${date}T12:00:00`) >= weekStart);
+  const weeklyCategoryDays = Object.fromEntries(TRAINING_CATEGORIES.map(category => [
+    category, weeklyDays.filter(([, items]) => items.some(item => recordCategories(item, validLogs).includes(category))).length,
+  ])) as Record<TrainingCategory, number>;
+
+  return {
+    recentActivities,
+    days: [...byDay].map(([date, items]) => ({ date, items })),
+    weeklyActivityCount: recentActivities.filter(item => new Date(item.date) >= weekStart).length,
+    weeklyActiveDays: weeklyDays.length,
+    weeklyCategoryDays,
+    hasActivityHistory: recentActivities.length > 0,
+    validOutcomes: outcomes
+      .filter(outcome => validDate(outcome.date, today))
+      .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date))),
+  };
+}

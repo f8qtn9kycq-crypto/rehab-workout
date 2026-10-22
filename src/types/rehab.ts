@@ -9,6 +9,8 @@ export type Joint = BodyArea;
 export const EQUIPMENT_IDS = {
   BODYWEIGHT: 'bodyweight',
   DUMBBELL: 'dumbbell',
+  BARBELL: 'barbell',
+  MACHINE: 'machine',
   KETTLEBELL: 'kettlebell',
   CHAIR: 'chair',
   WALL: 'wall',
@@ -78,6 +80,10 @@ export interface Exercise {
   youtubeEmbedUrl: string;
   youtubeSearchUrl: string;
   sourceRef: string;
+  /** Catalog-only content is searchable but never enters conservative recommendations. */
+  catalogOnly?: boolean;
+  /** Catalog reference without a prescribed dose; numeric dose fields are zero sentinels. */
+  dosageStatus?: 'unspecified';
 }
 
 export interface SessionLog {

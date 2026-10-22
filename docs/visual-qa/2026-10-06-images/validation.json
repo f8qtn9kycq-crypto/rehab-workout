@@ -1,0 +1,14 @@
+{
+  "tests": "PASS",
+  "build": "PASS",
+  "safety-i18n": "PASS",
+  "coverage": "43/43; catalog-only isolated",
+  "frozenReferences": "8 hashes retained",
+  "effectiveSourceReproduction": "10 byte-identical overrides",
+  "unchangedRuntime": "33/43 byte-identical to PR previous head and main",
+  "mobile": "129 picker observations, no overflow, 43 loaded images at each viewport; shoulder selected 320px loaded same URL, 230px frame",
+  "dpr3": "NOT VERIFIED in this desktop pass",
+  "physicalSafari": "NOT VERIFIED",
+  "humanStyle": "NOT VERIFIED",
+  "claude": "Pending exact-head result"
+}

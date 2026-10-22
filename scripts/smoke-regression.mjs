@@ -12,6 +12,7 @@ const files = {
   redFlagChecklist: 'src/components/RedFlagChecklist.tsx',
   safetyUtils: 'src/utils/safety.ts',
   painRules: 'src/utils/painRules.ts',
+  sessionSave: 'src/utils/sessionSave.ts',
   sessionTracker: 'src/components/SessionTracker.tsx',
   activeSessionPanel: 'src/components/ActiveSessionPanel.tsx',
   sessionPage: 'src/pages/SessionPage.tsx',
@@ -26,6 +27,14 @@ const files = {
   functionalOutcomeCheckIn: 'src/components/FunctionalOutcomeCheckIn.tsx',
   trainingLog: 'src/components/TrainingLog.tsx',
   localizedExercise: 'src/utils/localizedExercise.ts',
+  recordsPresentation: 'src/utils/recordsPresentation.ts',
+  exerciseIdentityVisual: 'src/components/ExerciseIdentityVisual.tsx',
+  activityIdentityVisual: 'src/components/ActivityIdentityVisual.tsx',
+  bodyTrainingEntry: 'src/components/BodyTrainingEntry.tsx',
+  bodyMapSelector: 'src/components/BodyMapSelector.tsx',
+  muscleMapSelector: 'src/components/MuscleMapSelector.tsx',
+  assessmentPage: 'src/pages/AssessmentPage.tsx',
+  exerciseFilter: 'src/components/ExerciseFilter.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
   assessmentPage: 'src/pages/AssessmentPage.tsx',
@@ -39,6 +48,8 @@ const files = {
   localeZh: 'src/locales/zh-TW.js',
   localDataLocale: 'src/locales/localData.js',
   rehabTypes: 'src/types/rehab.ts',
+  exercisesData: 'src/data/exercises.ts',
+  recommendationEngine: 'src/utils/recommendationEngine.ts',
 };
 
 function readSource(filePath) {
@@ -213,7 +224,14 @@ section('session logs persist with required fields and refresh-safe readers', ()
   assertIncludes(source.trainingLogStopReasons, 'legacyEarlyStopReasonLabels.has(stopReason)', 'legacy translated early-stop labels are localized at render time');
   assertIncludes(source.sessionTracker, 'normalizeStopReasonForSave(stopReason, stoppedEarly, notes)', 'session save normalizes built-in stop reason while preserving notes fallback');
   assertIncludes(source.trainingLog, 'getLocalizedStopReasonLabel(log, t)', 'training history localizes built-in stop reasons');
-  assertIncludes(source.sessionTracker, 'saveLog(log)', 'session completion saves log');
+  assertIncludes(source.sessionTracker, 'persistSessionLogOnce(saveInProgressRef, log, saveLog)', 'session confirmation uses the behavioral duplicate-save guard');
+  assertIncludes(source.sessionSave, "if (lock.current) return 'duplicate'", 'duplicate session save activation is blocked synchronously');
+  assertIncludes(source.sessionSave, "return 'failed'", 'failed session persistence is reported for retry');
+  assertIncludes(source.sessionTracker, "t('session.saveError')", 'session exposes local save failure without claiming success');
+  assertIncludes(source.sessionTracker, "setPhase('saved')", 'session completion confirms the saved state before navigation');
+  assertIncludes(source.sessionTracker, 'hasRecentOutcome(getOutcomeEntries(), log.bodyArea)', 'saved next step uses same-area recent outcome rules');
+  assertIncludes(source.sessionTracker, "savedLog.stoppedEarly ? 'session.savedStoppedEarly' : 'session.savedCompleted'", 'saved confirmation distinguishes completed and stopped-early sessions');
+  assertIncludes(source.sessionTracker, "needsOutcomeCheckIn ? addOutcomeNow : returnHome", 'saved confirmation exposes one contextual primary action');
   assertIncludes(source.sessionTracker, "navigate('/logs')", 'saved session routes to logs');
 });
 
@@ -230,13 +248,71 @@ section('functional outcomes persist and progress renders from stored data', () 
   assertIncludes(source.logsPage, 'buildWeeklyProgressSummary(logs, outcomes)', 'logs page builds progress summary');
   assertIncludes(source.localizedExercise, 'getLocalizedTrainingLogTitle(', 'localized saved-log title helper exists');
   assertIncludes(source.localizedExercise, 'getExerciseById(log.exerciseId)', 'saved logs localize from stable exercise id');
-  assertIncludes(source.logsPage, 'getLocalizedTrainingLogTitle(latestLog, language, fallbackTitle)', 'latest training summary uses localized saved-log title');
+  assertIncludes(source.logsPage, 'buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts)', 'Records unifies guided logs, activities, and manual workouts through the presentation adapter');
+  assertIncludes(source.recordsPresentation, "source: 'training'", 'presentation adapter includes guided sessions');
+  assertIncludes(source.recordsPresentation, "source: 'activity'", 'presentation adapter includes standalone activities');
+  assertIncludes(source.recordsPresentation, "source: 'manual'", 'presentation adapter includes retrospective workouts');
+  assertIncludes(source.recordsPresentation, '.filter(log => !linkedLogIds.has(log.id))', 'logs linked to a resistance aggregate are not duplicated');
+  assertIncludes(source.exerciseIdentityVisual, 'getLocalizedTrainingLogTitle(log, language', 'exercise visual uses localized saved-log title');
+  assertIncludes(source.exerciseIdentityVisual, "muscles: '/exercise-visuals/hip-sit-to-stand-muscles.svg'", 'supported resistance visual includes a separate muscle map');
+  assertIncludes(source.exerciseIdentityVisual, '<WorkoutMovementArt id={sourceExercise.id}', 'supported resistance visual uses canonical movement art');
+  assertNotIncludes(source.exerciseIdentityVisual, '/hip-sit-to-stand.svg', 'obsolete second pose system stays removed');
+  assertIncludes(source.exerciseIdentityVisual, 'onError={() => markFailed(item.kind)}', 'each exercise image has an independent failure fallback');
+  assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.primaryLabel')", 'exercise visual keeps a textual primary-region label');
+  assertIncludes(source.exerciseIdentityVisual, "t('exerciseVisual.secondaryLabel')", 'exercise visual keeps a textual secondary-region label');
+  assertIncludes(source.activityIdentityVisual, 'const Icon = isCycling ? Bike : Dumbbell', 'cycling uses one dedicated cycling icon mapping');
+  assertIncludes(source.activityIdentityVisual, "'activityVisual.cyclingAlt'", 'cycling icon has a localized accessible name');
+  assertNotIncludes(source.activityIdentityVisual, 'muscleMap', 'cycling activity visual does not render a muscle map');
+  assertIncludes(source.logsPage, '<ActivityIdentityVisual activity={item.activity} />', 'Records uses the unified standalone activity visual');
+  assertIncludes(source.sessionTracker, '<ExerciseIdentityVisual exercise={exercise} />', 'record input and saved confirmation share the exercise visual');
   assertIncludes(source.logsPage, '<ProgressSummary summary={summary} />', 'progress summary renders');
   assertIncludes(source.logsPage, '<FunctionalOutcomeCheckIn outcomes={outcomes} onSave={saveOutcome} />', 'outcome check-in renders');
   assertIncludes(source.logsPage, '<TrainingLog logs={logs} onLogsChange={setLogs} />', 'training log renders and refreshes after set-detail edits');
-  assertIncludes(source.trainingLog, 'getLocalizedTrainingLogTitle(log, language, fallbackTitle)', 'training history uses localized saved-log title');
+  assertIncludes(source.trainingLog, '<ExerciseIdentityVisual log={log} compact />', 'training history uses the shared localized exercise identity');
   assertIncludes(source.logService, 'updateTrainingLogSets', 'set-detail edits update an existing training log');
   assertIncludes(source.sessionTracker, "item === 'dumbbell' || item === 'kettlebell'", 'set details are optional and limited to loadable strength sessions');
+});
+
+section('body entry separates training goals from sore-area guidance', () => {
+  assertIncludes(source.bodyTrainingEntry, "t('bodyEntry.modeLabel')", 'body entry exposes an accessible goal group label');
+  assertIncludes(source.bodyTrainingEntry, 't(`bodyEntry.${kind}Hint`)', 'body entry explains the selected goal before the body map');
+  assertIncludes(source.localeZh, "rehab: '復健'", 'zh-TW uses concise rehab mode copy');
+  assertIncludes(source.localeZh, "resistance: '重訓'", 'zh-TW uses concise strength mode copy');
+  assertIncludes(source.localeZh, "cycling: '騎車'", 'zh-TW uses concise cycling mode copy');
+  assertIncludes(source.localeEn, "rehab: 'Rehab'", 'English uses concise rehab mode copy');
+  assertIncludes(source.localeEn, "resistance: 'Strength'", 'English uses concise strength mode copy');
+  assertIncludes(source.localeEn, "cycling: 'Cycling'", 'English uses concise cycling mode copy');
+  assertIncludes(source.localeZh, "legs: '下肢'", 'zh-TW names the combined hip and leg region as lower body');
+  assertIncludes(source.localeEn, "legs: 'Lower body'", 'English names the combined hip and leg region as lower body');
+  assertIncludes(source.muscleMapSelector, 'M101 205 Q140 220 179 205', 'lower-body highlight includes the hip region');
+});
+
+section('Records keeps one clear start action and catalog-only exercises stay out of recommendations', () => {
+  assertIncludes(source.logsPage, "t('logs.startTraining')", 'Records exposes one localized start-training CTA');
+  assertIncludes(source.logsPage, 'to="/exercises?mode=all"', 'Records sends exercise discovery to the library');
+  assertNotIncludes(source.logsPage, '<BodyTrainingEntry', 'Records does not duplicate the full exercise discovery surface');
+  assertIncludes(source.rehabTypes, 'catalogOnly?: boolean', 'exercise schema marks catalog-only content explicitly');
+  assertIncludes(source.exercisesData, "sourceRef: 'catalog-only: reviewed-content-needed'", 'catalog-only exercise content is traceable');
+  assertIncludes(source.exercisesData, 'catalogOnly: true', 'catalog-only exercises are marked in data');
+  assertIncludes(source.recommendationEngine, 'if (exercise.catalogOnly) return false', 'recommendations exclude catalog-only exercises');
+});
+
+section('assessment and exercise library reuse the interactive body map', () => {
+  assertIncludes(source.assessmentPage, '<BodyMapSelector selected={bodyArea}', 'assessment selects the saved body area with the shared body map');
+  assertIncludes(source.exerciseFilter, '<BodyMapSelector', 'exercise library filters with the shared body map');
+  assertIncludes(source.exerciseFilter, 'availability={availability.bodyArea}', 'exercise body map keeps count-aware availability');
+  assertIncludes(source.bodyMapSelector, 'disabled={disabled}', 'shared body map disables unavailable unselected areas');
+  assertIncludes(source.bodyMapSelector, 'aria-label={accessibleLabel}', 'shared body map exposes area and availability labels');
+  assertIncludes(source.bodyMapSelector, 'd={geometry.regions[area]}', 'rehab body map highlights selectable body regions directly');
+  assertIncludes(source.bodyMapSelector, 'fillOpacity={active ? 0.42 : disabled ? 0.12 : 0.2}', 'selectable rehab regions stay visibly light while the selected region is slightly darker');
+  assertIncludes(source.bodyMapSelector, 'fillRule="evenodd"', 'body outline remains the final vector line-art layer');
+  assertIncludes(source.bodyMapSelector, 'clipPath={`url(#${clipId})`}', 'visual and hit regions are clipped to the same body outline');
+  assertIncludes(source.bodyMapSelector, 'useId()', 'multiple selectors keep independent SVG clip IDs');
+  assertIncludes(source.bodyMapSelector, 'min-h-11', 'native region buttons preserve 44px touch targets');
+  assertIncludes(source.bodyMapSelector, 'focus-visible:stroke-calm-900', 'keyboard focus remains visible on the interactive body region');
+  assertNotIncludes(source.bodyMapSelector, 'className={`focus-ring absolute', 'rehab body map does not overlay text boxes on the body');
+  assertNotIncludes(source.bodyMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'rehab body map does not offer an unnecessary front/back switch');
+  assertIncludes(source.muscleMapSelector, "t(value ? 'bodyEntry.back' : 'bodyEntry.front')", 'resistance muscle map keeps the front/back switch');
 });
 
 section('clear local data is explicit and confirmed', () => {
@@ -278,7 +354,10 @@ section('routine builder and education pages remain reachable', () => {
   assertIncludes(source.mobileNav, "to: '/routine'", 'routine reachable from mobile More');
   assertIncludes(source.desktopNav, "to: '/routine'", 'routine reachable on desktop');
   if (source.homePage.includes('WeeklyRoutineBuilder') || source.homePage.includes('home.summaryLabel')) fail('home must not render routine or summary clutter');
-  if ((source.homePage.match(/<Link\s/g) ?? []).length !== 1) fail('home must have exactly one primary link');
+  if ((source.homePage.match(/to=\{nextAction.href\}/g) ?? []).length !== 1) fail('home must keep exactly one primary next-action link');
+  assertIncludes(source.homePage, 'to="/logs/new"', 'retrospective Quick Log is reachable directly from Today');
+  assertIncludes(source.homePage, "t('home.quickLogHint')", 'Quick Log explains record-only boundary');
+  assertMatch(source.homePage, /<details[^>]*>[\s\S]*<ActivityTracking[^\n]*\/>[\s\S]*<\/details>/, 'activity form stays behind native disclosure');
   assertIncludes(source.weeklyRoutineBuilder, 'weeklyRoutines', 'routine definitions');
   assertIncludes(source.weeklyRoutineBuilder, "to={`/session/${exercise.id}`}", 'routine starts existing session route');
   assertIncludes(source.weeklyRoutineBuilder, "t('weeklyRoutine.sessionGuardHint')", 'routine includes safety guard hint');

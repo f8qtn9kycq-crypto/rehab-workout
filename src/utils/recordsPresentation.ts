@@ -24,7 +24,7 @@ export function recordCategories(item: RecordsActivityItem, logs: TrainingLogEnt
     if (exercise.kind === 'mobility') return 'rehab';
     const canonical = exercise.exerciseId ? catalogById.get(exercise.exerciseId) : undefined;
     if (!canonical) return 'unknown';
-    return canonical.catalogOnly ? 'strength' : 'rehab';
+    return canonical.catalogOnly && canonical.type !== 'mobility' ? 'strength' : 'rehab';
   });
   if (item.workout.cyclingMinutes !== undefined) categories.push('cardio');
   return TRAINING_CATEGORIES.filter(category => categories.includes(category));

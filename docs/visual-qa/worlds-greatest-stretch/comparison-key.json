@@ -1,0 +1,68 @@
+{
+  "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
+  "approvalScope": "User-designated visual style and look/feel only; not movement or clinical approval",
+  "mobileMeasurements": "docs/visual-qa/worlds-greatest-stretch/mobile-measurements.json",
+  "mobileMeasurementsSha256": "f059e6c382eb7d6b8093e3d7a06a3df60be58ae723125e63b0f0f9bb0b470815",
+  "references": [
+    {
+      "id": "benchPress",
+      "catalogId": "catalog-bench-press",
+      "path": "docs/visual-qa/frozen-references/benchPress.png",
+      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a",
+      "runtimePath": "public/exercise-visuals/movements/benchPress.png",
+      "replacementReason": "\u5b8c\u6574\u5716\u7247\u4fee\u6b63\u6388\u6b0a\uff1a\u80f8\u63a8\u5716\u7247\u6539\u70ba\u6587\u5b57\u65e2\u6709\u8981\u6c42\u7684\u555e\u9234\uff1b\u539f\u98a8\u683c\u53c3\u8003\u8207 hash \u4fdd\u7559\u3002\u65b0\u7248\u5f85\u771f\u4eba\u9a57\u6536\u3002"
+    },
+    {
+      "id": "shoulderPress",
+      "catalogId": "catalog-shoulder-press",
+      "path": "docs/visual-qa/frozen-references/shoulderPress.png",
+      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa",
+      "runtimePath": "public/exercise-visuals/movements/shoulderPress.png",
+      "replacementReason": "\u4f7f\u7528\u8005\u8981\u6c42\u4fee\u6b63\u70ba\u8eab\u9ad4\u524d\u65b9\u4e0b\u5df4\u81f3\u80a9\u9ad8\u5ea6\u7684\u69d3\u9234\u8d77\u59cb\u59ff\u52e2\uff1b\u539f\u98a8\u683c\u53c3\u8003\u8207 hash \u4fdd\u7559\uff0c\u65b0\u5716\u5f85\u771f\u4eba\u9a57\u6536\u3002"
+    },
+    {
+      "id": "squat",
+      "catalogId": "catalog-squat",
+      "path": "public/exercise-visuals/movements/squat.png",
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "catalogId": "catalog-pull-up",
+      "path": "public/exercise-visuals/movements/pullUp.png",
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "catalogId": "catalog-dip",
+      "path": "public/exercise-visuals/movements/dip.png",
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "catalogId": "catalog-lat-pulldown",
+      "path": "public/exercise-visuals/movements/latPulldown.png",
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "catalogId": "catalog-seated-row",
+      "path": "public/exercise-visuals/movements/seatedRow.png",
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "catalogId": "catalog-leg-extension",
+      "path": "public/exercise-visuals/movements/legExtension.png",
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "catalog-worlds-greatest-stretch",
+      "path": "public/exercise-visuals/movements/catalog-worlds-greatest-stretch.png",
+      "sha256": "e56a03e5ed57bd48325bf88ad1938fa8d0997ca6fb5d713d52aa8323106caadf"
+    }
+  ],
+  "status": "Named comparison only; style NOT VERIFIED; not independent blind screening"
+}

@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import { build } from 'vite';
+import { readFileSync } from 'node:fs';
+async function load(entry) {
+  const result = await build({ configFile: false, logLevel: 'silent', build: { lib: { entry, formats: ['es'] }, minify: false, rollupOptions: { output: { inlineDynamicImports: true } }, write: false } });
+  const output = Array.isArray(result) ? result[0].output : result.output;
+  const code = output.find(item => item.type === 'chunk').code;
+  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
+}
+const { sorenessBand, sorenessTone } = await load('src/utils/sorenessPresentation.ts');
+for (const [value, expected] of [[undefined, 'unknown'], [0, 'zero'], [1, 'mild'], [3, 'mild'], [4, 'moderate'], [5, 'moderate'], [6, 'high'], [10, 'high'], [-1, 'unknown'], [11, 'unknown'], [NaN, 'unknown']]) assert.equal(sorenessBand(value), expected);
+assert.equal(new Set([undefined, 0, 3, 4, 6].map(v => sorenessTone(v).fill)).size, 5, 'unknown, zero and severity bands remain visually distinct');
+const s = await load('src/services/sorenessStorage.ts');
+const { sorenessGuidance } = await load('src/utils/sorenessGuidance.ts');
+const { anatomicalRegions } = await load('src/data/anatomicalRegions.ts');
+const region = { regionId: 'traps', side: 'left', tissue: 'muscle', severity: 0, symptoms: [] };
+const entry = () => ({ id: s.sorenessId(), date: s.localSorenessDate(), createdAt: new Date().toISOString(), regions: [{ ...region }] });
+assert.equal(anatomicalRegions.length, 37);
+assert.equal(anatomicalRegions.filter(r => r.id === 'traps').length, 1);
+assert.equal(s.validSorenessEntry(entry()), true, 'legacy observations remain valid without a view');
+assert.equal(s.validNewSorenessEntry(entry()), false, 'new observations require a view');
+for (const patch of [{ severity: undefined }, { severity: null }, { severity: -1 }, { severity: 11 }, { severity: 1.1 }, { tissue: 'joint' }, { side: 'center' }, { regionId: 'unknown' }, { symptoms: ['weak'] }, { symptoms: ['numb', 'numb'] }, { note: 'a'.repeat(501) }]) assert.equal(s.validSorenessEntry({ ...entry(), regions: [{ ...region, ...patch }] }), false, JSON.stringify(patch));
+assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, { ...region, side: 'right', severity: 6, symptoms: ['numb'] }] }), true);
+assert.equal(s.validSorenessEntry({ ...entry(), regions: [region, region] }), false);
+for (const date of ['2025-02-29', '2026-04-31', '2026-2-01', '']) assert.equal(s.validSorenessEntry({ ...entry(), date }), false);
+assert.equal(s.validSorenessEntry({ ...entry(), date: '2024-02-29' }), true);
+assert.equal(s.validSorenessEntry({ ...entry(), date: '2999-01-01' }), true, 'structural validation is independent of clock');
+for (const createdAt of ['yesterday', '2026-02-30T00:00:00.000Z']) assert.equal(s.validSorenessEntry({ ...entry(), createdAt }), false);
+assert.equal(s.validSorenessEntry({ ...entry(), id: 'bad' }), false);
+assert.equal(sorenessGuidance([{ severity: 3, symptoms: [] }]), 'observe');
+assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }]), 'modify');
+assert.equal(sorenessGuidance([{ severity: 6, symptoms: [] }]), 'stop');
+assert.equal(sorenessGuidance([{ severity: 0, symptoms: ['numb'] }]), 'stop');
+assert.equal(sorenessGuidance([{ severity: 4, symptoms: [] }, { severity: 8, symptoms: [] }]), 'stop');
+assert.equal((readFileSync('src/main.tsx', 'utf8').match(/path="\/logs\/soreness"/g) ?? []).length, 1);
+console.log('PASS: soreness guidance, legacy validation, presentation and route regressions');

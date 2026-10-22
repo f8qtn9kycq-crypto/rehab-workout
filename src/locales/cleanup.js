@@ -8,6 +8,12 @@ export default {
       equipmentTooNarrowEmpty: 'No exercises match the selected equipment. Try clearing equipment filters or choosing bodyweight support.',
     },
     records: {
+      bodyArea: {
+        title: 'Recent activities by body area',
+        hint: 'Filters only recent activities below. Weekly summaries, recovery tracking and full history include all records.',
+        all: 'All body areas', clear: 'Clear body area filter', selected: 'Showing: {area}',
+        empty: 'No recent activities recorded for {area}.', matching: 'Matching exercises: {names}',
+      },
       categories: { rehab: 'Rehab / mobility', strength: 'Strength', cardio: 'Cardio', unknown: 'Unclassified' },
       sources: { training: 'Guided training', manual: 'Workout backfill', activity: 'Activity record' },
       recent: {
@@ -263,6 +269,12 @@ export default {
       equipmentTooNarrowEmpty: '目前選擇的器材沒有符合動作。可以清除器材篩選，或改選徒手支撐動作。',
     },
     records: {
+      bodyArea: {
+        title: '依身體部位查看近期活動',
+        hint: '只篩選下方近期活動；每週摘要、恢復追蹤與完整歷史保持全部紀錄。',
+        all: '全部部位', clear: '清除部位篩選', selected: '目前顯示：{area}',
+        empty: '目前沒有「{area}」的近期活動紀錄。', matching: '符合部位的動作：{names}',
+      },
       categories: { rehab: '復健／活動度', strength: '肌力', cardio: '有氧', unknown: '未分類' },
       sources: { training: '引導訓練', manual: '補記訓練', activity: '活動紀錄' },
       recent: {

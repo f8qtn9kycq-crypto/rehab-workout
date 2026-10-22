@@ -73,7 +73,7 @@ export function renderAssessment() {
   }
   for (const [id, art, oldName, newName, oldEquipment, newEquipment] of [
     ['catalog-squat', 'squat', '深蹲', '負重深蹲', 'chair', 'barbell'],
-    ['catalog-lat-pulldown', 'latPulldown', '彈力帶下拉', '下拉機', 'resistance_band', 'machine'],
+    ['catalog-lat-pulldown', 'latPulldown', '彈力帶下拉', '滑輪下拉', 'resistance_band', 'machine'],
     ['catalog-seated-row', 'seatedRow', '坐姿彈力帶划船', '機械坐姿划船', 'resistance_band', 'machine'],
     ['catalog-leg-extension', 'legExtension', '椅上單腿伸膝', '機械膝伸', 'chair', 'machine'],
   ]) {
@@ -89,6 +89,28 @@ export function renderAssessment() {
     assert(!app.renderRecord(record).includes('/movements/' + art + '.png'), id + ': legacy optional equipment protected');
     Object.assign(record.exercises[0], { name: newName, equipmentId: newEquipment });
     assert(app.renderRecord(record).includes('/movements/' + art + '.png'), id + ': current meaning keeps art');
+  }
+  for (const [language, oldName, currentName] of [
+    ['zh-TW', '下拉機', '滑輪下拉'],
+    ['en', 'Lat pulldown machine', 'Lat pulldown'],
+  ]) {
+    values.set('rehab.language.v1', language);
+    const record = { id: 'legacy-lat-name', date: '2026-10-05', createdAt: '2026-10-05T01:00:00Z', exercises: [{
+      exerciseId: 'catalog-lat-pulldown', name: oldName, equipment: 'machine', equipmentId: 'machine', sets: [{ reps: 8 }],
+    }] };
+    const raw = JSON.stringify([record]);
+    values.set(app.MANUAL_WORKOUT_KEY, raw);
+    const stored = app.readManualWorkouts().workouts[0];
+    assert.equal(stored.exercises[0].name, oldName, 'previous machine title remains readable');
+    const html = app.renderRecord(stored);
+    assert(html.includes('>' + oldName + ' · '), 'previous machine title remains visible as its saved snapshot');
+    assert(!html.includes('/movements/latPulldown.png'), 'previous title retains conservative revised-art protection');
+    assert.equal(values.get(app.MANUAL_WORKOUT_KEY), raw, 'renaming the catalog does not migrate saved machine records');
+    const current = structuredClone(record);
+    current.exercises[0].name = currentName;
+    assert(app.renderRecord(current).includes('/movements/latPulldown.png'), 'current title keeps the existing machine illustration');
+    current.exercises[0].equipmentId = 'resistance_band';
+    assert(!app.renderRecord(current).includes('/movements/latPulldown.png'), 'renaming does not bypass equipment identity protection');
   }
   for (const language of ['zh-TW', 'en']) {
     values.set('rehab.language.v1', language);

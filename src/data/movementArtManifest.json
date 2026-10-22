@@ -42,5 +42,7 @@
   {"id": "ankle-soleus-stretch", "group": "library", "sheet": "manual-workout-library-line-art-v2.png", "columns": 5, "rows": 7, "column": 2, "row": 6, "overrideSource": "overrides/style-v8/ankle-soleus-stretch.png"},
   {"id": "ankle-seated-soleus-raise", "group": "library", "sheet": "manual-workout-library-line-art-v2.png", "columns": 5, "rows": 7, "column": 3, "row": 6, "overrideSource": "overrides/style-v7/ankle-seated-soleus-raise.png"},
   {"id": "ankle-single-leg-reach", "group": "library", "sheet": "manual-workout-library-line-art-v2.png", "columns": 5, "rows": 7, "column": 4, "row": 6, "overrideSource": "overrides/style-v6/ankle-single-leg-reach.png"},
-  {"id": "catalog-side-squat", "group": "library", "overrideSource": "overrides/side-squat/catalog-side-squat.png"}
+  {"id": "catalog-side-squat", "group": "library", "overrideSource": "overrides/side-squat/catalog-side-squat.png"},
+  {"id": "catalog-rear-foot-elevated-split-squat", "group": "library", "overrideSource": "overrides/rear-foot-elevated-split-squat/catalog-rear-foot-elevated-split-squat.png"},
+  {"id": "catalog-worlds-greatest-stretch", "group": "library", "overrideSource": "overrides/worlds-greatest-stretch/catalog-worlds-greatest-stretch.png"}
 ]

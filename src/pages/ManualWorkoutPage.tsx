@@ -179,7 +179,7 @@ export default function ManualWorkoutPage() {
     {sourceState.requested && !source && <p role="alert">{t('manualWorkout.sourceMissing')}</p>}
     {!resumed && !source && draftState.drafts.filter(d => d.date === localDate()).map(d => <Link key={d.id} className="focus-ring block min-h-11 font-bold text-calm-800 underline" to={`/logs/new?draft=${encodeURIComponent(d.id)}`} reloadDocument>{t('manualWorkout.resume')}: {d.date} · {d.exercises.map(e => e.name).filter(Boolean).join('、')}</Link>)}
     {(draftState.error || missingResume) && <p role="alert">{t('manualWorkout.storageError')}</p>}
-    {saveStatus && <p role="status">{t('manualWorkout.draftSaved')}</p>}
+    <p role="status" className={saveStatus ? undefined : 'invisible'}>{t('manualWorkout.draftSaved')}</p>
     <Link to="/logs" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('manualWorkout.viewSaved')}</Link>
     <form onBlur={() => persist()} onSubmit={save} className="space-y-5">
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>

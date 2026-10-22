@@ -10,7 +10,7 @@ export default function RecordingEquipmentFields({ value, onChange }: { value: S
   const control = 'focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2';
   return <div className="space-y-3">
     <label className="mt-2 block text-sm font-bold">{t('manualWorkout.setEquipment')}
-      <select className={control} value={value.equipmentId ?? (value.equipment ? '__snapshot__' : '')} onChange={event => {
+      <select className={`${control} h-11 appearance-none`} value={value.equipmentId ?? (value.equipment ? '__snapshot__' : '')} onChange={event => {
         const equipmentId = event.target.value;
         if (equipmentId === '__snapshot__') return;
         onChange({ equipmentId: equipmentId || undefined, equipment: equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : '' });

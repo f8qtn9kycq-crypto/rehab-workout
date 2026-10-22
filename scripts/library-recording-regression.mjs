@@ -42,6 +42,8 @@ export function manual(search) {return renderToStaticMarkup(<MemoryRouter initia
       assert.equal(detail.includes(`href="/session/${exercise.id}"`),!exercise.catalogOnly,'guided eligibility unchanged');
       assert(api.card(exercise).includes(`/exercise/${exercise.id}?mode=all#record`),'card keeps library context and points to setup');
     }
+    assert(api.detail('hip-sit-to-stand').includes('value="chair" selected'),'required chair wins over globally sorted optional bodyweight');
+    assert(api.detail('catalog-rear-foot-elevated-split-squat').includes('value="chair" selected'),'required support wins over optional loaded progressions');
     const markup=api.manual(url.slice(url.indexOf('?')));
     assert(markup.includes('value="V 握把 &amp; &lt;test&gt;"'),'grip is escaped and copied');
     assert(markup.includes('value="cable" selected'),'recording equipment is selected');

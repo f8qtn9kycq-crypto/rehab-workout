@@ -262,6 +262,12 @@ Audit output should help identify:
 
 手動 `ManualSet` 可選擇 `equipmentId`、`equipment`（快照文字）與 `grip`（最多 100 字）。舊紀錄缺少每組器材時，顯示沿用動作層級器材；編輯／帶入時建立每組快照，後續預設器材變更不回寫既有組。明確空白器材保留為未知，不繼承後續預設。握把／器材文字不代表圖片已驗證為該器材變體；canonical ID、圖片及安全推薦不變。動作搜尋只比對中英文名稱與個人動作名稱，不改動作識別。
 
+### 動作庫與紀錄的器材設定一致性
+
+動作卡片連至詳情的「記錄器材／握把」區，詳情與每組紀錄共用器材／握把欄位。`/logs/new?exercise=<canonical-id>&equipment=<recording-equipment-id>&grip=<text>` 只預選第一組的紀錄資料，不填入重量、劑量、完成狀態或疼痛。既有 `draft`／`from` 來源優先，不被器材參數覆寫。無效 canonical ID、未知紀錄器材或超過 100 字的握把拒絕帶入，不建立紀錄。
+
+原動作示範器材與紀錄用器材明確區分；選擇器材／握把不修改 canonical 動作、圖說、影片、安全篩選或引導訓練。`catalogOnly` 仍不進入引導或推薦。
+
 ### 未指定劑量的動作庫參考
 
 `dosageStatus: 'unspecified'` 僅用於 `catalogOnly: true`。當來源未提供劑量時，sets、reps、holdSeconds、restSeconds 均為 0（內部未指定值，不是處方）；卡片不顯示這些數字，雙語 durationText 提醒補記實際完成量。詳細頁保留文字及影片，且不提供引導訓練。不得將此類資料加入推薦或用占位值建立訓練。

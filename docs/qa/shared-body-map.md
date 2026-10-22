@@ -3,7 +3,7 @@
 ## 範圍與視覺來源
 
 - Tier 1：人體圖呈現與近期紀錄唯讀篩選。沒有修改安全規則、推薦、動作內容、LocalStorage schema 或正式痠痛地圖。
-- 基底：`89f91e7bc2d9ef1f1f5384ed94d92f5bb9703f28`。沿用 `public/exercise-visuals/body-map-line-art.png` 的原始 1024×1536 座標及人物比例，將線條輪廓描繪為向量填色路徑；沒有內嵌 PNG。
+- 基底：`2b7c4bb9634cb11aa6ed23e18afaf6bf0379ee0f`。沿用 `public/exercise-visuals/body-map-line-art.png` 的原始 1024×1536 座標及人物比例，將線條輪廓描繪為向量填色路徑；沒有內嵌 PNG。
 - 原始 PNG SHA-256：`c05809f44862a211481c2c13b466cf3ae239ecf721f4b7449161f2776e9e0b9a`。
 - 向量來源與部位幾何：`src/data/bodyMapGeometry.json`，SHA-256 `297dc11a4cdf32a052a8f984c613da7c753321de0b77cf9a82a1a4cdd18fec6f`。後續編修以此路徑資料為來源；禁止只替換底圖而沿用不同座標色塊。
 - 使用者已在本對話確認原圖比例向量原型。這不等於實作後的真人 walkthrough、臨床解剖核准或真機證據。
@@ -21,8 +21,8 @@
 
 - `npm run build`：PASS；既有大於 500 kB bundle 提示仍存在，未宣稱效能改善。
 - `npm test`：PASS，包含新的 `test:records-body-area`。
-- `npm run audit:exercise-coverage`：PASS；46 個動作，內容與 coverage 未改變；未保留只有時間／來源 SHA 的 audit report 差異。
-- `npm run audit:movement-art`：PASS，8 個 frozen reference 與 45 個圖片／來源完整；不是風格人工核准。
+- `npm run audit:exercise-coverage`：PASS；47 個動作，內容與 coverage 未改變；未保留只有時間／來源 SHA 的 audit report 差異。
+- `npm run audit:movement-art`：PASS，8 個 frozen reference 與 46 個圖片／來源完整；不是風格人工核准。
 - `npm run audit:safety-i18n`：PASS。
 - Chromium 本機自動化：320、375、390、1280px PASS。篩選、混合卡片保留、清除、空結果、SVG 滑鼠命中、Enter／Space、可用性、重複元件 ID、資料不變、週統計不變、無水平溢出。
 - 可重跑程式：`scripts/shared-body-map-browser-qa.mjs`（在獨立 Playwright profile，以 `http://127.0.0.1:4178` dev server 執行）。多元件檢查使用 `scripts/fixtures/shared-body-map.html`／`.tsx`，透過 Vite 載入真實元件；因此使用 dev server 而非 production preview。
@@ -38,3 +38,7 @@ PR 建立後，以當前 head 觸發建議 Codex review，CI 與外部結果依 
 ## 第二階段邊界
 
 下一輪僅製作詳細痠痛地圖的同畫風互動原型。37 個區域 ID、左右側、正背面、肌肉／關節、放大及多部位保留；位置仍屬觀察示意。正式痠痛地圖與安全規則不在本 PR 替換。
+
+## 同步 main 後的證據刷新
+
+執行基準 `adcb8d1a241bb08d5f980a9c6409effe72154324` 已合併最新 main，build、完整 npm test、exercise coverage（47 動作）及 movement-art audit（46 圖片）通過；Chromium 320／375／390／1280px 的原有互動腳本全部重跑通過。這次僅同步 QA 文字；最終提交 SHA、CI、獨立審查及合併門檻依 PR 的當前 head 留言核對，不以本段代替。

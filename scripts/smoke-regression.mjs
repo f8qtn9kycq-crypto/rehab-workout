@@ -37,7 +37,6 @@ const files = {
   exerciseFilter: 'src/components/ExerciseFilter.tsx',
   trainingLogStopReasons: 'src/utils/trainingLogStopReasons.ts',
   homePage: 'src/pages/HomePage.tsx',
-  assessmentPage: 'src/pages/AssessmentPage.tsx',
   routinePage: 'src/pages/RoutinePage.tsx',
   mobileNav: 'src/components/MobileBottomNav.tsx',
   desktopNav: 'src/components/DesktopNav.tsx',

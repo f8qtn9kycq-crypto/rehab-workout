@@ -1,10 +1,9 @@
 import {
-  BODY_AREAS,
   type BodyArea,
   type ExerciseFilterMode,
   type ExerciseFilters,
 } from '../types/rehab';
-import BodyAreaIcon from './BodyAreaIcon';
+import BodyMapSelector from './BodyMapSelector';
 import { useI18n } from '../services/i18n';
 
 export interface FilterAvailability {
@@ -33,18 +32,6 @@ export default function ExerciseFilter({
       duration: 'all',
       painSensitive: false,
     });
-  }
-
-  function getCountLabel(count: number): string {
-    return t('exercises.countBadge', { count });
-  }
-
-  function getDisabledLabel(label: string): string {
-    return t('exercises.unavailableFilter', { label });
-  }
-
-  function getBodyAreaDisabled(bodyArea: BodyArea): boolean {
-    return filters.bodyArea !== bodyArea && availability.bodyArea[bodyArea] === 0;
   }
 
   const hasActiveFilters = filters.mode !== 'recommended' || filters.bodyArea !== 'all';
@@ -84,37 +71,12 @@ export default function ExerciseFilter({
 
       <div>
         <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.bodyArea')}</span>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {BODY_AREAS.map((bodyArea) => {
-            const count = availability.bodyArea[bodyArea];
-            const disabled = getBodyAreaDisabled(bodyArea);
-            const label = t(`bodyAreas.${bodyArea}.label`);
-
-            return (
-              <button
-                key={bodyArea}
-                type="button"
-                disabled={disabled}
-                aria-pressed={filters.bodyArea === bodyArea}
-                aria-label={disabled ? getDisabledLabel(label) : `${label} ${getCountLabel(count)}`}
-                title={disabled ? getDisabledLabel(label) : undefined}
-                onClick={() => onChange({ ...filters, bodyArea })}
-                className={`focus-ring min-h-11 rounded-md px-2 py-2 text-sm font-semibold ${
-                  filters.bodyArea === bodyArea
-                    ? 'border-2 border-calm-900 bg-calm-700 text-white'
-                    : disabled
-                      ? 'cursor-not-allowed border border-slate-100 bg-slate-50 text-slate-400'
-                      : 'border border-slate-200 bg-slate-100 text-slate-700'
-                }`}
-              >
-                <span className="flex items-center justify-center gap-2 leading-5"><BodyAreaIcon area={bodyArea} size={18} />{label}</span>
-                <span className={`mt-1 inline-flex rounded px-1.5 py-0.5 text-xs ${filters.bodyArea === bodyArea ? 'bg-white/20' : 'bg-white/70'}`}>
-                  {getCountLabel(count)}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <BodyMapSelector
+          selected={filters.bodyArea}
+          availability={availability.bodyArea}
+          ariaLabel={t('exercises.bodyArea')}
+          onChange={(bodyArea) => onChange({ ...filters, bodyArea })}
+        />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

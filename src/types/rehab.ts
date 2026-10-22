@@ -9,6 +9,8 @@ export type Joint = BodyArea;
 export const EQUIPMENT_IDS = {
   BODYWEIGHT: 'bodyweight',
   DUMBBELL: 'dumbbell',
+  BARBELL: 'barbell',
+  MACHINE: 'machine',
   KETTLEBELL: 'kettlebell',
   CHAIR: 'chair',
   WALL: 'wall',
@@ -78,6 +80,10 @@ export interface Exercise {
   youtubeEmbedUrl: string;
   youtubeSearchUrl: string;
   sourceRef: string;
+  /** Catalog-only content is searchable but never enters conservative recommendations. */
+  catalogOnly?: boolean;
+  /** Catalog reference without a prescribed dose; numeric dose fields are zero sentinels. */
+  dosageStatus?: 'unspecified';
 }
 
 export interface SessionLog {
@@ -90,6 +96,12 @@ export interface SessionLog {
   painBefore: number;
   painAfter: number;
   notes: string;
+}
+
+export interface TrainingSet {
+  weightKg?: number;
+  reps?: number;
+  completed: boolean;
 }
 
 export type SessionCompletionStatus = 'completed' | 'stopped_early';
@@ -108,6 +120,8 @@ export interface TrainingLogEntry extends SessionLog {
   completionStatus: SessionCompletionStatus;
   stopReason: string;
   painDelta: number;
+  /** Optional per-set detail; legacy aggregate fields remain readable. */
+  sets?: TrainingSet[];
 }
 
 export interface FunctionalOutcomeEntry {

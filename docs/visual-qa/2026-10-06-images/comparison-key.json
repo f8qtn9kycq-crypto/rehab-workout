@@ -1,0 +1,111 @@
+{
+  "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
+  "approvalScope": "User-designated visual style and look/feel only; not movement or clinical approval",
+  "mobileMeasurements": "docs/visual-qa/2026-10-06-images/mobile-results.json",
+  "mobileMeasurementsSha256": "3a9288d14590b387df5d755dbb4f9df3f952a2119d37c872891e3b2788ca4c18",
+  "references": [
+    {
+      "id": "benchPress",
+      "catalogId": "catalog-bench-press",
+      "path": "public/exercise-visuals/movements/benchPress.png",
+      "sha256": "3412e6a3be607b8c561d861fd00cbe48b07ec94084ff92cdcc421bf0dff1008a"
+    },
+    {
+      "id": "shoulderPress",
+      "catalogId": "catalog-shoulder-press",
+      "path": "docs/visual-qa/frozen-references/shoulderPress.png",
+      "sha256": "ea121e2bf5b16c54a6791cbf44abcd08f9b6ecf2d1f0065861d0e972058cc9aa",
+      "runtimePath": "public/exercise-visuals/movements/shoulderPress.png",
+      "replacementReason": "\u4f7f\u7528\u8005\u8981\u6c42\u4fee\u6b63\u70ba\u8eab\u9ad4\u524d\u65b9\u4e0b\u5df4\u81f3\u80a9\u9ad8\u5ea6\u7684\u69d3\u9234\u8d77\u59cb\u59ff\u52e2\uff1b\u539f\u98a8\u683c\u53c3\u8003\u8207 hash \u4fdd\u7559\uff0c\u65b0\u5716\u5f85\u771f\u4eba\u9a57\u6536\u3002"
+    },
+    {
+      "id": "squat",
+      "catalogId": "catalog-squat",
+      "path": "public/exercise-visuals/movements/squat.png",
+      "sha256": "5cb17d7496ec2763a3339f199bb7c9f44d2d79a896f866c26c8a2885270064ce"
+    },
+    {
+      "id": "pullUp",
+      "catalogId": "catalog-pull-up",
+      "path": "public/exercise-visuals/movements/pullUp.png",
+      "sha256": "7e9b20e6242f19b0622488a283bcc6b91063ecaf07ab9198f94b70c527627be6"
+    },
+    {
+      "id": "dip",
+      "catalogId": "catalog-dip",
+      "path": "public/exercise-visuals/movements/dip.png",
+      "sha256": "d1fd5669361207b355c974efcdaa7e4340a12fcdc60b22823315e80394b1f931"
+    },
+    {
+      "id": "latPulldown",
+      "catalogId": "catalog-lat-pulldown",
+      "path": "public/exercise-visuals/movements/latPulldown.png",
+      "sha256": "70428db979bbba43c8fc28dc2fd88935842f40940fa079995ed0b69ba50e88c0"
+    },
+    {
+      "id": "seatedRow",
+      "catalogId": "catalog-seated-row",
+      "path": "public/exercise-visuals/movements/seatedRow.png",
+      "sha256": "03dcef97b490925a8ae684c4fbd22d595f47cd4aa6726922b63ce57148885565"
+    },
+    {
+      "id": "legExtension",
+      "catalogId": "catalog-leg-extension",
+      "path": "public/exercise-visuals/movements/legExtension.png",
+      "sha256": "0e6759a9db4d34b0036289399e1b035cdbef34b734722760fa56df84783e954b"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "shoulderPress",
+      "path": "public/exercise-visuals/movements/shoulderPress.png",
+      "sha256": "4ca36983ecc9601c0df394990dab30080b26ea3119fd2d38574b607879ad12ba"
+    },
+    {
+      "id": "shoulder-flexion",
+      "path": "public/exercise-visuals/movements/shoulder-flexion.png",
+      "sha256": "97b033fbe2f86b3701aaa02db143190526f775064af344c8d37f54fb4af75dee"
+    },
+    {
+      "id": "shoulder-scapular-squeeze",
+      "path": "public/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "sha256": "fb9ee1daab83df46c98386923f173be44ae44ef97202e60c230e02da50644364"
+    },
+    {
+      "id": "shoulder-external-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "sha256": "be49006946a8544631f0f76f64fb885180d818242d05929e2376ee9d0992fbe6"
+    },
+    {
+      "id": "shoulder-internal-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "sha256": "d80104b7d8cddb096a31e707ae7a6f440951616d80f26714af32c717c9d53953"
+    },
+    {
+      "id": "glute-bridge",
+      "path": "public/exercise-visuals/movements/glute-bridge.png",
+      "sha256": "fe7d868f16fb8caf2681aa0bd69e1203f9ef21fdb179799864d22e8027ae23e1"
+    },
+    {
+      "id": "hip-clamshell",
+      "path": "public/exercise-visuals/movements/hip-clamshell.png",
+      "sha256": "42dbb4755f215f85f1f15baac4fc8ee0076663c77784dad7485a343770bb8b3f"
+    },
+    {
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "path": "public/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "sha256": "63a64f2677013ea818c8273a4989ec377c80f1bee39d15041501fbd4baf201be"
+    },
+    {
+      "id": "knee-straight-leg-raise",
+      "path": "public/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "sha256": "86e95d3dd561da9cf9dee07f3d1853ef79d6bc89dc61139dacd9af09de636b8f"
+    },
+    {
+      "id": "ankle-band-inversion-eversion",
+      "path": "public/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "sha256": "17780592c95963f360454215e17f5e61dfa22bc8476c0a438ae0b860aca3bbe0"
+    }
+  ],
+  "status": "Named comparison only; style NOT VERIFIED; not independent blind screening"
+}

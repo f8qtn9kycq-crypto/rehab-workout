@@ -1,4 +1,8 @@
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import HomeSavedPlans from '../components/HomeSavedPlans';
+import { useState } from 'react';
+import TodayGoalPlan from '../components/TodayGoalPlan';
+import ActivityTracking from '../components/ActivityTracking';
+import { ArrowRight, ClipboardList, ShieldCheck } from 'lucide-react';
 import { Navigate, Link } from 'react-router-dom';
 import { onboardingStorageKey } from '../data/safety';
 import { getSavedAssessment } from '../services/assessmentStorage';
@@ -11,6 +15,7 @@ import { canEnterSession, getSafetyStatus, isSafetyGateCurrentForToday } from '.
 
 export default function HomePage({ demo = false }: { demo?: boolean }) {
   const { t } = useI18n();
+  const [, setSummaryVersion] = useState(0);
   const seenOnboarding = safeGetItem(onboardingStorageKey);
   if (!seenOnboarding && !demo) return <Navigate to="/onboarding" replace />;
 
@@ -28,7 +33,7 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
   });
 
   return (
-    <div className="page">
+    <div className="page space-y-5">
       <section className="card mx-auto max-w-xl space-y-6 p-5 sm:p-6" aria-labelledby="home-next-action-title">
         <div className="inline-flex min-h-11 items-center gap-2 rounded-md bg-calm-100 px-3 font-semibold text-calm-700">
           <ShieldCheck size={20} aria-hidden="true" />
@@ -40,7 +45,20 @@ export default function HomePage({ demo = false }: { demo?: boolean }) {
           {t(nextAction.ctaKey)}
           <ArrowRight size={20} aria-hidden="true" />
         </Link>
+        <div className="space-y-2 border-t border-slate-200 pt-4">
+          <Link to="/logs/new" className="focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-calm-700 px-4 py-3 font-bold text-calm-800">
+            <ClipboardList size={20} aria-hidden="true" />
+            {t('manualWorkout.entry')}
+          </Link>
+          <p className="text-sm leading-6 text-slate-600">{t('home.quickLogHint')}</p>
+        </div>
       </section>
+      {!demo && <HomeSavedPlans /> }
+      {!demo && <TodayGoalPlan />}
+      {!demo && <details className="mx-auto max-w-xl">
+        <summary className="focus-ring min-h-11 cursor-pointer rounded-md px-3 py-3 font-bold text-calm-800">{t('home.activityDetails')}</summary>
+        <div className="mt-3"><ActivityTracking onActivitiesChange={() => setSummaryVersion(value => value + 1)} /></div>
+      </details>}
     </div>
   );
 }

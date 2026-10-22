@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import BodyAreaSelector from '../components/BodyAreaSelector';
+import BodyMapSelector from '../components/BodyMapSelector';
 import PainScale from '../components/PainScale';
-import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
+import { ASSESSMENT_EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { saveAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import type { BodyArea, Equipment } from '../types/rehab';
@@ -43,14 +43,14 @@ export default function AssessmentPage() {
           <h1 className="text-2xl font-bold text-ink">{t('assessment.title')}</h1>
           <p className="mt-2 text-slate-600">{t('assessment.subtitle')}</p>
         </div>
-        <BodyAreaSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('assessment.bodyAreaLabel')} />
+        <BodyMapSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('assessment.bodyAreaLabel')} />
         <PainScale label={t('assessment.painLabel')} value={pain} onChange={setPain} />
         <PainScale label={t('assessment.confidenceLabel')} value={confidence} onChange={setConfidence} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`assessment.confidenceLevels.${value}`)]))} />
         <PainScale label={t('assessment.functionalLabel')} value={functionalBaseline} onChange={setFunctionalBaseline} levelDescriptions={Object.fromEntries(Array.from({ length: 11 }, (_, value) => [value, t(`outcomes.scoreLabels.${value}`)]))} />
         <div>
           <span className="mb-2 block font-semibold text-slate-800">{t('assessment.equipmentLabel')}</span>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
-            {EQUIPMENT_OPTIONS.map((item) => (
+            {ASSESSMENT_EQUIPMENT_OPTIONS.map((item) => (
               <button key={item.id} onClick={() => toggle(item.id)} className={`focus-ring min-h-11 rounded-md px-3 py-2 font-semibold ${equipment.includes(item.id) ? 'bg-calm-700 text-white' : 'bg-slate-100 text-slate-700'}`}>
                 {t(`equipmentLabels.${item.id}`)}
               </button>

@@ -1,0 +1,68 @@
+{
+  "recordedDate": "2026-10-06",
+  "timezone": "Asia/Taipei",
+  "reviewer": "user",
+  "reviewedHead": "03688a645f903ab95e659bc67bfcc168d14578e6",
+  "referenceCommit": "6a18c78f582cf2424f40b9ba1e42e0c990d842d8",
+  "packet": "comparison-mobile-390.png",
+  "verbatimFeedback": "the images after the first 8 do not have same style and look and feel, audit the visual qa spec against the first 8 images, fix if fails,",
+  "scope": "Nine candidates in this comparison packet; no decision inferred for the other library assets",
+  "visualGate": "FAIL",
+  "independentBlindReview": false,
+  "assets": [
+    {
+      "id": "shoulder-flexion",
+      "path": "public/exercise-visuals/movements/shoulder-flexion.png",
+      "sha256": "755821bd6173ae82e30dafa91f0a5323c400d1191afea055fdb94df189061ac6",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "shoulder-scapular-squeeze",
+      "path": "public/exercise-visuals/movements/shoulder-scapular-squeeze.png",
+      "sha256": "ffb17ff8b2302e51b9be64571f94a9852ec0b99efdef89ee222d1e76911a2f2b",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "shoulder-external-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-external-rotation-band.png",
+      "sha256": "96ba01930d681f24e93369b575e02a949968b405126054ade39865140e811a9d",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "shoulder-internal-rotation-band",
+      "path": "public/exercise-visuals/movements/shoulder-internal-rotation-band.png",
+      "sha256": "0212b9dc50b3cd841e338e2ae412edc22aba46d9f9d3a7f77ffb7b93e6d2b350",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "glute-bridge",
+      "path": "public/exercise-visuals/movements/glute-bridge.png",
+      "sha256": "20f2b40500f27d4f3c2f6195046c6dce2cc8b9ed0d39c937aa980567ec2477ff",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "hip-clamshell",
+      "path": "public/exercise-visuals/movements/hip-clamshell.png",
+      "sha256": "94d0ba46dc48fd437ea7038804186d5820d6353d02f85339f2e48a2b7ee753bf",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "shoulder-neck-thoracic-extension-chair",
+      "path": "public/exercise-visuals/movements/shoulder-neck-thoracic-extension-chair.png",
+      "sha256": "f12f92b80b38438f4edde9b0d33d750137c3edcc78d802c14a772085c12f8ed2",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "knee-straight-leg-raise",
+      "path": "public/exercise-visuals/movements/knee-straight-leg-raise.png",
+      "sha256": "9f6340ff1fb8aa5676a7a6636ed9317a240c7311389347a1e3ea657b299d2240",
+      "visualGate": "FAIL"
+    },
+    {
+      "id": "ankle-band-inversion-eversion",
+      "path": "public/exercise-visuals/movements/ankle-band-inversion-eversion.png",
+      "sha256": "2897128676bb6033d4f7c93150e03c5ef44619807262592a536a3719b00185b1",
+      "visualGate": "FAIL"
+    }
+  ]
+}

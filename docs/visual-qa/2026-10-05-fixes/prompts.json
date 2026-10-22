@@ -1,0 +1,43 @@
+[
+  {
+    "id": "shoulder-flexion",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Use consistent three-quarter side view in both phases. LEFT both arms hang relaxed. RIGHT BOTH arms independently reach straight FORWARD to SHOULDER HEIGHT, never overhead. Draw both arms visibly, slightly separated forearms and two hands; NOT one raised and one lowered. Same shirtless adult with plain shorts in both views. No t-shirt."
+  },
+  {
+    "id": "shoulder-scapular-squeeze",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Replace standing raised-arm exercise with seated scapular squeeze. Same adult sitting upright on a stable chair in both frames, BOTH hands resting on thighs in both. Three-quarter back view showing upper back, LEFT neutral shoulders, RIGHT subtle backward/downward shoulder-blade retraction with hands still on thighs. No lifting arms, no shrug, no excessive lumbar arch. Bare upper torso plain shorts, no muscles/shading."
+  },
+  {
+    "id": "shoulder-external-rotation-band",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading.Final correction: bilateral shoulder external rotation. Both upper arms vertical beside ribs and elbows bent 90 degrees at waist throughout. Left hands close together in front of abdomen, palms up, band between hands. Right forearms rotate outward and hands move apart, elbows remain beside ribs. No fixed post, no dangling arm, no shoulder abduction."
+  },
+  {
+    "id": "shoulder-internal-rotation-band",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. One-arm low-resistance internal rotation, same shirtless adult in shorts, three-quarter frontal view. In BOTH frames working upper arm vertical touching ribs, elbow bent 90 degrees waist height. LEFT forearm rotated outward away from abdomen; RIGHT forearm rotates toward/across abdomen. Band anchored to fixed post on working-arm side at elbow height, continuously visible from hand to post in both panels. Same fixed post/foot stance. Do NOT show band disappearing or elbow lifting away from body."
+  },
+  {
+    "id": "ankle-band-inversion-eversion",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Correct setup to adult sitting on FLOOR, both legs extended straight forward, upright relaxed torso, feet clear in three-quarter elevated view. Band loops around forefoot of working foot, other end held securely in hand. LEFT working foot turns inward slightly at ankle; RIGHT it turns outward slightly. Same extended knees and stable hip positions both phases; only ankle/foot angle changes. Draw band path plausible and visibly taut in BOTH. No chair, no bent knees, no whole-leg rotation. Plain shirtless adult/shorts. No text/arrows.",
+    "followup": "Change working foot only: left forefoot turns toward other foot; right forefoot turns away 15–20 degrees. Keep knees/shins oriented alike, seated floor legs extended, band around working forefoot and held in hand. Preserve upper body and other foot."
+  },
+  {
+    "id": "shoulder-neck-thoracic-extension-chair",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Same adult seated in stable backed chair, SIDE view in both frames. Both hands CROSS ON CHEST below shoulders in BOTH frames, never behind/on head. LEFT upright neutral upper back. RIGHT small controlled UPPER BACK extension over chair back, neck neutral, gaze horizontal, chin not lifted, no forced cervical extension, feet planted same positions, pelvis stable. Modest safe range. Chair remains exactly same."
+  },
+  {
+    "id": "knee-straight-leg-raise",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Same adult supine SIDE view, head on left in both frames. NON-WORKING far leg knee bent with foot FLAT ON FLOOR in BOTH frames. WORKING near leg knee straight: LEFT resting flat on floor; RIGHT raised modestly about 15–30 cm, 20 degrees or less, not a high 60-degree kick. Both arms at sides palms on floor, neutral neck/back. Show resting bent far knee and foot clearly without confusing with straight working leg. Same scale/style and direction."
+  },
+  {
+    "id": "glute-bridge",
+    "mode": "built-in ImageGen precise-object-edit",
+    "prompt": "Image 1 is the edit target; image 2 is the approved library-v2 style reference. White 40:23 two-panel canvas, single light-gray divider, thin dark hand-drawn outlines, adult proportions, minimal facial detail, no text/arrows/shading. Change ONLY line style/proportions to match reference sheet's thin dark hand-drawn outline, especially the hip-clamshell and straight-leg-raise cells. Preserve complete two-phase bridge pose exactly: side view head left, both arms resting along floor, knees bent and feet planted. LEFT pelvis on floor, RIGHT pelvis raised in comfortable controlled bridge; preserve head, neck and planted feet in both. Plain shorts, simplify clothing as reference, no t-shirt. Do not change motion or add muscles. Remove thick bold cartoon contour, use consistent fine line width like reference."
+  }
+]

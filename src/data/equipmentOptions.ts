@@ -15,7 +15,15 @@ export const EQUIPMENT_OPTIONS: EquipmentOption[] = [
   { id: EQUIPMENT_IDS.FOAM_ROLLER, icon: 'roller', priority: 5, role: 'recovery' },
   { id: EQUIPMENT_IDS.DUMBBELL, icon: 'dumbbell', priority: 6, role: 'load' },
   { id: EQUIPMENT_IDS.KETTLEBELL, icon: 'kettlebell', priority: 7, role: 'load' },
+  { id: EQUIPMENT_IDS.BARBELL, icon: 'barbell', priority: 8, role: 'load' },
+  { id: EQUIPMENT_IDS.MACHINE, icon: 'machine', priority: 9, role: 'load' },
 ];
+
+// Barbell and machine content are catalog-only; it is available for browsing/backfill,
+// but must not appear as equipment for a guided assessment.
+export const ASSESSMENT_EQUIPMENT_OPTIONS = EQUIPMENT_OPTIONS.filter(
+  item => item.id !== EQUIPMENT_IDS.BARBELL && item.id !== EQUIPMENT_IDS.MACHINE,
+);
 
 export const PRIMARY_EQUIPMENT_IDS = [
   EQUIPMENT_IDS.BODYWEIGHT,
@@ -28,6 +36,8 @@ export const ADVANCED_EQUIPMENT_IDS = [
   EQUIPMENT_IDS.FOAM_ROLLER,
   EQUIPMENT_IDS.DUMBBELL,
   EQUIPMENT_IDS.KETTLEBELL,
+  EQUIPMENT_IDS.BARBELL,
+  EQUIPMENT_IDS.MACHINE,
 ] as const satisfies readonly Equipment[];
 
 export const SUPPORT_ONLY_EQUIPMENT_IDS = [

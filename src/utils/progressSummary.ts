@@ -4,6 +4,7 @@ export type TrendDirection = 'not_enough_data' | 'lower' | 'higher' | 'steady' |
 
 export interface WeeklyProgressSummary {
   weekStart: string;
+  focusBodyArea: BodyArea | null;
   sessionsThisWeek: number;
   trainedBodyAreas: BodyArea[];
   averagePainBefore: number | null;
@@ -13,14 +14,14 @@ export interface WeeklyProgressSummary {
   latestOutcomeByArea: Partial<Record<BodyArea, FunctionalOutcomeEntry>>;
 }
 
-function getLogDate(log: TrainingLogEntry): Date | null {
+function getLogDate(log: TrainingLogEntry, today: Date): Date | null {
   const date = new Date(log.date ?? log.completedAt);
-  return Number.isNaN(date.getTime()) ? null : date;
+  return Number.isNaN(date.getTime()) || date > today ? null : date;
 }
 
-function getEntryDate(entry: FunctionalOutcomeEntry): Date | null {
+function getEntryDate(entry: FunctionalOutcomeEntry, today: Date): Date | null {
   const date = new Date(entry.date);
-  return Number.isNaN(date.getTime()) ? null : date;
+  return Number.isNaN(date.getTime()) || date > today ? null : date;
 }
 
 function startOfWeek(date: Date): Date {
@@ -38,10 +39,10 @@ function average(values: number[]): number | null {
   return Math.round((total / values.length) * 10) / 10;
 }
 
-function getPainTrend(logs: TrainingLogEntry[]): TrendDirection {
+function getPainTrend(logs: TrainingLogEntry[], today: Date): TrendDirection {
   const orderedLogs = [...logs]
-    .filter((log) => getLogDate(log))
-    .sort((a, b) => Number(getLogDate(a)) - Number(getLogDate(b)));
+    .filter((log) => getLogDate(log, today))
+    .sort((a, b) => Number(getLogDate(a, today)) - Number(getLogDate(b, today)));
 
   if (orderedLogs.length < 2) return 'not_enough_data';
 
@@ -53,31 +54,25 @@ function getPainTrend(logs: TrainingLogEntry[]): TrendDirection {
   return 'steady';
 }
 
-function getLatestOutcomeByArea(outcomes: FunctionalOutcomeEntry[]): Partial<Record<BodyArea, FunctionalOutcomeEntry>> {
+function getLatestOutcomeByArea(outcomes: FunctionalOutcomeEntry[], today: Date): Partial<Record<BodyArea, FunctionalOutcomeEntry>> {
   return BODY_AREAS.reduce<Partial<Record<BodyArea, FunctionalOutcomeEntry>>>((latestEntries, bodyArea) => {
     const latest = outcomes
-      .filter((entry) => entry.bodyArea === bodyArea && getEntryDate(entry))
-      .sort((a, b) => Number(getEntryDate(b)) - Number(getEntryDate(a)))[0];
+      .filter((entry) => entry.bodyArea === bodyArea && getEntryDate(entry, today))
+      .sort((a, b) => Number(getEntryDate(b, today)) - Number(getEntryDate(a, today)))[0];
 
     if (latest) latestEntries[bodyArea] = latest;
     return latestEntries;
   }, {});
 }
 
-function getFunctionTrend(outcomes: FunctionalOutcomeEntry[]): TrendDirection {
-  const latestComparableArea = BODY_AREAS.map((bodyArea) => {
-    const entries = outcomes
-      .filter((entry) => entry.bodyArea === bodyArea && getEntryDate(entry))
-      .sort((a, b) => Number(getEntryDate(b)) - Number(getEntryDate(a)));
+function getFunctionTrend(outcomes: FunctionalOutcomeEntry[], today: Date): TrendDirection {
+  const orderedOutcomes = [...outcomes]
+    .filter((entry) => getEntryDate(entry, today))
+    .sort((a, b) => Number(getEntryDate(b, today)) - Number(getEntryDate(a, today)));
 
-    return entries.length >= 2 ? entries : null;
-  })
-    .filter((entries): entries is FunctionalOutcomeEntry[] => Boolean(entries))
-    .sort((a, b) => Number(getEntryDate(b[0])) - Number(getEntryDate(a[0])))[0];
+  if (orderedOutcomes.length < 2) return 'not_enough_data';
 
-  if (!latestComparableArea) return 'not_enough_data';
-
-  const [latest, previous] = latestComparableArea;
+  const [latest, previous] = orderedOutcomes;
   if (latest.score > previous.score) return 'improved';
   if (latest.score < previous.score) return 'declined';
   return 'steady';
@@ -89,21 +84,33 @@ export function buildWeeklyProgressSummary(
   today = new Date(),
 ): WeeklyProgressSummary {
   const weekStart = startOfWeek(today);
-  const weeklyLogs = logs.filter((log) => {
-    const logDate = getLogDate(log);
+  const validLogs = logs.filter((log) => getLogDate(log, today));
+  const latestLog = [...validLogs]
+    .sort((a, b) => Number(getLogDate(b, today)) - Number(getLogDate(a, today)))[0];
+  const focusBodyArea = latestLog?.bodyArea ?? null;
+  const focusedLogs = focusBodyArea ? validLogs.filter((log) => log.bodyArea === focusBodyArea) : [];
+  const focusedOutcomes = focusBodyArea
+    ? outcomes.filter((entry) => entry.bodyArea === focusBodyArea && getEntryDate(entry, today))
+    : [];
+  const weeklyLogs = validLogs.filter((log) => {
+    const logDate = getLogDate(log, today);
     return logDate ? logDate >= weekStart : false;
   });
+  const focusedWeeklyLogs = focusBodyArea
+    ? weeklyLogs.filter((log) => log.bodyArea === focusBodyArea)
+    : [];
 
   const trainedBodyAreas = BODY_AREAS.filter((bodyArea) => weeklyLogs.some((log) => log.bodyArea === bodyArea));
 
   return {
     weekStart: weekStart.toISOString(),
+    focusBodyArea,
     sessionsThisWeek: weeklyLogs.length,
     trainedBodyAreas,
-    averagePainBefore: average(weeklyLogs.map((log) => Number(log.painBefore)).filter(Number.isFinite)),
-    averagePainAfter: average(weeklyLogs.map((log) => Number(log.painAfter)).filter(Number.isFinite)),
-    painTrend: getPainTrend(logs),
-    functionTrend: getFunctionTrend(outcomes),
-    latestOutcomeByArea: getLatestOutcomeByArea(outcomes),
+    averagePainBefore: average(focusedWeeklyLogs.map((log) => Number(log.painBefore)).filter(Number.isFinite)),
+    averagePainAfter: average(focusedWeeklyLogs.map((log) => Number(log.painAfter)).filter(Number.isFinite)),
+    painTrend: getPainTrend(focusedLogs, today),
+    functionTrend: getFunctionTrend(focusedOutcomes, today),
+    latestOutcomeByArea: getLatestOutcomeByArea(outcomes, today),
   };
 }

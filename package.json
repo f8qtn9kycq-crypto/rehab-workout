@@ -23,8 +23,9 @@
     "test:goal-plan": "node scripts/goal-plan-regression.mjs",
     "test:saved-routines": "node scripts/saved-routine-regression.mjs",
     "test:favorites": "node scripts/favorites-regression.mjs",
-    "test:soreness": "node scripts/soreness-regression.mjs && node scripts/soreness-v2-storage-regression.mjs && node scripts/soreness-trends-regression.mjs",
-    "test:records-body-area": "node scripts/records-body-area-regression.mjs"
+    "test:soreness": "node scripts/soreness-regression.mjs && node scripts/soreness-v2-storage-regression.mjs && node scripts/soreness-trends-regression.mjs && npm run test:soreness-transfer",
+    "test:records-body-area": "node scripts/records-body-area-regression.mjs",
+    "test:soreness-transfer": "node scripts/soreness-transfer-regression.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

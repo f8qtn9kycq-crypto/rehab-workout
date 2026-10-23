@@ -80,12 +80,25 @@ async page => {
     await input.setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{bad')});
     await tools.getByRole('alert').waitFor();
     check(await page.evaluate(()=>window.__transferWrites)===1,'invalid file wrote data');
+    // Restore the same actual download to a fresh destination, including legacy payload.
+    await page.evaluate(()=>{
+      localStorage.removeItem('rehab.sorenessEntries.v1');
+      localStorage.setItem('rehab.sorenessEntries.v2',JSON.stringify({schemaVersion:2,entries:[],deletedLegacyIds:[]}));
+    });
+    await page.reload();
+    await tools.locator('summary').first().click(); await tools.locator('summary').nth(1).click();
+    await input.setInputFiles({name:'fresh-backup.json',mimeType:'application/json',buffer:Buffer.from(json)});
+    await confirm.waitFor(); await confirm.click();
+    await page.waitForFunction(()=>JSON.parse(localStorage.getItem('rehab.sorenessEntries.v2')).schemaVersion===3);
+    const fresh = await page.evaluate(()=>({v1:localStorage.getItem('rehab.sorenessEntries.v1'),v2:JSON.parse(localStorage.getItem('rehab.sorenessEntries.v2'))}));
+    check(fresh.v1===null && fresh.v2.importedLegacyEntries.length===1 && fresh.v2.importedLegacyEntries[0].id===fixture.legacy.id,'fresh legacy restore/version protection');
+    check(fresh.v2.entries.length===1,'fresh modern restore');
     for (const element of await tools.locator('button,input[type="date"],summary').all()) {
       if(await element.isVisible()) { const box=await element.boundingBox();check(box && box.height>=44,'small primary control'); }
     }
     check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'horizontal overflow');
     if(language==='en')check(!/[\u3400-\u9fff]/.test(await tools.innerText()),'English leakage');
-    results.push({language,width,nativePartialDateBlocked:true,actualDownloads:true,privateDefault:true,confirmedAtomicRestore:true,quotaRetry:true,invalidPreserved:true,overflow:false});
+    results.push({language,width,nativePartialDateBlocked:true,freshLegacyVersionProtected:true,actualDownloads:true,privateDefault:true,confirmedAtomicRestore:true,quotaRetry:true,invalidPreserved:true,overflow:false});
   }
   return results;
 }

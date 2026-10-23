@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { build } from 'vite';
 import en from '../src/locales/en.js';
 import zh from '../src/locales/zh-TW.js';
@@ -8,6 +10,9 @@ async function load(entry) {
 }
 const s = await load('src/services/sorenessStorage.ts');
 const t = await load('src/utils/sorenessTransfer.ts');
+const oldWriter = await load('scripts/fixtures/soreness-storage-before-transfer.ts');
+const frozen = readFileSync('scripts/fixtures/soreness-storage-before-transfer.ts', 'utf8').split('\n').slice(2).join('\n').replaceAll("from '../../src/data/", "from '../data/");
+assert.equal(createHash('sha256').update(frozen).digest('hex'), '522bcc5553083ae81c938952c830835c082bb7632be006256e80ee22b2766500', 'actual pre-transfer writer fixture must remain unchanged');
 let data = new Map(), writes = [], failRead, failWrite = false;
 globalThis.window = { localStorage: {
   getItem(key) { if (failRead === key) throw Error('read'); return data.get(key) ?? null; },
@@ -50,7 +55,7 @@ assert.deepEqual(s.restoreSorenessBackup(JSON.parse(json)), { ok: true, added: 2
 assert.deepEqual(byId(s.readSorenessEntries().entries), byId(original));
 assert.equal(data.has(s.SORENESS_KEY), false, 'fresh restore never writes v1');
 assert.deepEqual(writes, [s.SORENESS_V2_KEY]);
-assert.deepEqual(JSON.parse(data.get(s.SORENESS_V2_KEY)), env([modern], [], [legacy]));
+assert.deepEqual(JSON.parse(data.get(s.SORENESS_V2_KEY)), { ...env([modern], [], [legacy]), schemaVersion: 3 });
 checkOthers();
 const restoredBytes = snapshot();
 assert.deepEqual(s.restoreSorenessBackup(JSON.parse(json)), { ok: true, added: 0, skipped: 2 });
@@ -199,4 +204,41 @@ assert.equal(t.shareEntries(original, '2026-10-23', '2026-10-23').length, 2);
 assert.equal(t.shareEntries(original, '2026-10-24').length, 0);
 for (const [start, end] of [['2026-02-30', ''], ['2026-10-24', '2026-10-23'], ['', 'bad']]) assert.throws(() => t.shareEntries(original, start, end));
 assert.deepEqual(JSON.parse(t.sorenessBackup(original)).entries, original);
+// Even a no-addition restore protects authoritative no-payload tombstones from old tabs.
+reset(undefined, env([], [legacy.id]));
+assert.deepEqual(s.restoreSorenessBackup(backup([legacy])), { ok: true, added: 0, skipped: 1 });
+assert.equal(JSON.parse(data.get(s.SORENESS_V2_KEY)).schemaVersion, 3);
+assert.equal(oldWriter.saveSorenessEntry({ ...entry(), date: s.localSorenessDate() }).error, 'corrupt');
+const noAddProtected = snapshot(), noAddWrites = [...writes];
+s.restoreSorenessBackup(backup([legacy])); unchanged(noAddProtected, noAddWrites);
+const freshModern = { ...entry(), date: s.localSorenessDate() };
+assert.equal(s.saveSorenessEntry(freshModern).ok, true);
+assert.equal(s.deleteSorenessEntry(freshModern.id).ok, true);
+assert.equal(JSON.parse(data.get(s.SORENESS_V2_KEY)).schemaVersion, 3, 'never downgrade protected envelope');
+reset(); s.restoreSorenessBackup(backup([modern]));
+assert.equal(JSON.parse(data.get(s.SORENESS_V2_KEY)).schemaVersion, 2, 'ordinary new-format-only restore remains v2 compatible');
+assert.equal(oldWriter.readSorenessEntries().error, undefined);
+reset(undefined, { ...env(), schemaVersion: 4 }); blocked(backup(), 'corrupt');
+
+// Protection-only version upgrade is atomic on quota failure and retry.
+reset(undefined, env([], [legacy.id])); failWrite = true;
+blocked(backup([legacy]), 'write-failed'); failWrite = false;
+assert.deepEqual(s.restoreSorenessBackup(backup([legacy])), { ok: true, added: 0, skipped: 1 });
+assert.deepEqual(writes, [s.SORENESS_V2_KEY]);
+reset(undefined, { ...env([legacy]), schemaVersion: 3 }); blocked(backup(), 'corrupt');
+reset([legacy], { ...env([modern]), schemaVersion: 3 });
+const rawLegacyProtected = snapshot();
+assert.deepEqual(oldWriter.deleteSorenessEntry(legacy.id), { ok: false, error: 'corrupt' });
+unchanged(rawLegacyProtected, []);
+
+// Real pre-transfer writer must fail closed rather than silently drop imported legacy.
+reset();
+s.restoreSorenessBackup(backup([legacy, modern]));
+const extendedBytes = snapshot(), extendedWrites = [...writes];
+assert.equal(oldWriter.readSorenessEntries().error, 'corrupt', 'old reader must refuse extended schema');
+assert.deepEqual(oldWriter.saveSorenessEntry({ ...entry(), date: s.localSorenessDate() }), { ok: false, error: 'corrupt' });
+assert.deepEqual(oldWriter.deleteSorenessEntry(modern.id), { ok: false, error: 'corrupt' });
+unchanged(extendedBytes, extendedWrites);
+assert.deepEqual(byId(s.readSorenessEntries().entries), byId([legacy, modern]));
+
 console.log('PASS: v1/v2 backup round trips, current-wins restore, legacy tombstones and bounded capacity, atomic failure/retry, bilingual private/full CSV, formula escape and date filters.');

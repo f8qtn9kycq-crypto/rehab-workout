@@ -6,7 +6,7 @@ Tier 3；接續 #230 的剩餘完整功能。分享 CSV 可選日期，預設備
 
 還原接受原 #230 schemaVersion 1 的 legacy JSON，以及 schemaVersion 2 可見 snapshot。全檔先驗證，duplicate backup IDs／非法日期、位置、程度、備註或 schema 整批拒絕；既存 ID 與本機 legacy 刪除狀態優先，不覆蓋現有內容。來源 tombstone 不攜入、不刪目的端可見資料。每次確認重讀目前資料，成功只一次 setItem(v2)，v1 原 bytes 永不改寫；quota／read-failed／corrupt／capacity 保留原值，重試不重複，不自動淘汰紀錄。
 
-v2 envelope 新增 optional `importedLegacyEntries`，專放從備份加入的 legacy，不能塞入新式 `entries` 或猜 view。讀取嚴格驗證各集合與跨集合 ID collision。刪除 imported legacy 保留 payload 及 tombstone，避免舊備份復活；可見集合、imported 集合、墓碑各最多200，超額操作拒絕並保留原資料。已刪 payload 不進匯出；clear-data 仍涵蓋整個v2 key。既有無 imported 欄位的資料相容。
+既有v2儲存key的 envelope 新增 optional `importedLegacyEntries`，專放從備份加入的 legacy，不能塞入新式 `entries` 或猜 view。讀取嚴格驗證各集合與跨集合 ID collision。刪除 imported legacy 保留 payload 及 tombstone，避免舊備份復活；可見集合、imported 集合、墓碑各最多200，超額操作拒絕並保留原資料。已刪 payload 不進匯出；clear-data 仍涵蓋整個v2 key。既有無 imported 欄位的資料相容。
 
 這是加項且可回復的還原；不更動疼痛門檻、紅旗、SafetyGate、SafetyRouteGuard、session 或推薦，不把0或缺值解釋成康復。
 
@@ -33,3 +33,13 @@ v2 envelope 新增 optional `importedLegacyEntries`，專放從備份加入的 l
 ## Codex P1 修正：無 payload 的墓碑仍具權威
 
 獨立Codex於a80d25d指出一般save/delete會沿用舊過濾、清除沒有本地payload的墓碑，造成restore已略過的ID於下一次匯入復活。先新增restore→一般save/delete→再import的三路徑regression，舊碼RED實際新增了原本應略過的1筆。修復為所有writer保留同一份validated墓碑，不分restore或一般寫入；墓碑滿200時新增刪除操作capacity拒絕並保留bytes，不以清理墓碑騰空間。原v2測試的「刪除stale墓碑」預期因此更新為資料保留／容量拒絕；不是刪除安全驗證來取得綠燈。
+
+## Claude P1 修正：舊分頁／rollback writer 拒寫
+
+Claude在舊a80head clone實測原main writer會靜默丟掉 importedLegacyEntries，列為P1。已選實作修復，不defer資料遺失風險。reader支援儲存schema2與3；含imported payload、無raw-v1 payload的權威墓碑，或已是3的後續寫入使用schema3，使原版writer在寫入前回corrupt而保留bytes；版本永不自動降級。普通v2新式資料仍維持2。原key不變、v1bytes不改，外部JSON snapshot schema2是另一獨立格式，不隨儲存版本變更。還原後提示其他開啟分頁先重新整理；舊版程式／rollback不能編輯受保護資料，需回新版讀取，不清除資料或繞過拒寫。
+
+全略過的restore若遇尚未升版的imported／orphan墓碑，也以一次原子寫保護性升3；一般已保護的重複還原仍零寫入。升版quota失敗保留原bytes，重試一次寫入。凍結fixture取自main a0a4d035的實際舊storage，只改relative imports；回歸以原碼SHA256驗證fixture不可變。舊reader拒絕、舊save／delete-new／delete-raw-legacy均保留bytes；新reader／writer正常且不降版、未知或非法schema3拒絕，專用與完整測試通過。Chrome/WebKit的12組實際下載還原新增fresh destination legacy匯入與schema3保護，全部通過。
+
+此設計另由Astra/high只讀審查，實際模型NOT VERIFIED；確認base真實writer每次read且拒絕非2，未找到其他隱性v2writer，設計Partial Pass、需要實作證據，不替代Claude。父代理補齊其指出的orphan／no-op／quota／fixture驗收。容量文案不再指示墓碑滿時反覆刪除，先備份再檢查資料管理。
+
+Claude新head復審因桌面額度限制Pending，畫面顯示2026-10-23 19:20恢復；不沿用舊head Partial、不以Astra取代required Claude，也不合併。

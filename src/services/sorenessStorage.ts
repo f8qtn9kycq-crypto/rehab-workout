@@ -27,7 +27,7 @@ export type SorenessRegion = LegacySorenessRegion | NewSorenessRegion;
 export interface SorenessEntry { id: string; date: string; createdAt: string; regions: SorenessRegion[] }
 export interface NewSorenessEntry extends SorenessEntry { regions: NewSorenessRegion[] }
 interface LegacySorenessEntry extends SorenessEntry { regions: LegacySorenessRegion[] }
-interface SorenessV2Envelope { schemaVersion: 2; entries: NewSorenessEntry[]; deletedLegacyIds: string[]; importedLegacyEntries?: LegacySorenessEntry[] }
+interface SorenessV2Envelope { schemaVersion: 2 | 3; entries: NewSorenessEntry[]; deletedLegacyIds: string[]; importedLegacyEntries?: LegacySorenessEntry[] }
 export type StorageError = 'invalid' | 'corrupt' | 'capacity' | 'read-failed' | 'write-failed';
 export type WriteResult = { ok: true } | { ok: false; error: StorageError };
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -88,7 +88,7 @@ function readState(): ReadState {
     if (!Array.isArray(legacy) || legacy.length > MAX_ENTRIES || !legacy.every(validLegacySorenessEntry) || new Set(legacy.map(e => e.id)).size !== legacy.length) return { ok: false, error: 'corrupt' };
     if (!value || typeof value !== 'object') return { ok: false, error: 'corrupt' };
     const v2 = value as SorenessV2Envelope;
-    if (v2.schemaVersion !== 2 || !Array.isArray(v2.entries) || v2.entries.length > MAX_ENTRIES || !v2.entries.every(validNewSorenessEntry) || new Set(v2.entries.map(e => e.id)).size !== v2.entries.length || !Array.isArray(v2.deletedLegacyIds) || v2.deletedLegacyIds.length > MAX_ENTRIES || v2.deletedLegacyIds.some(id => typeof id !== 'string' || !uuid.test(id)) || new Set(v2.deletedLegacyIds).size !== v2.deletedLegacyIds.length) return { ok: false, error: 'corrupt' };
+    if ((v2.schemaVersion !== 2 && v2.schemaVersion !== 3) || !Array.isArray(v2.entries) || v2.entries.length > MAX_ENTRIES || !v2.entries.every(validNewSorenessEntry) || new Set(v2.entries.map(e => e.id)).size !== v2.entries.length || !Array.isArray(v2.deletedLegacyIds) || v2.deletedLegacyIds.length > MAX_ENTRIES || v2.deletedLegacyIds.some(id => typeof id !== 'string' || !uuid.test(id)) || new Set(v2.deletedLegacyIds).size !== v2.deletedLegacyIds.length) return { ok: false, error: 'corrupt' };
     const imported = v2.importedLegacyEntries === undefined ? [] : v2.importedLegacyEntries;
     if (!Array.isArray(imported) || imported.length > MAX_ENTRIES || !imported.every(validLegacySorenessEntry) || new Set(imported.map(e => e.id)).size !== imported.length) return { ok: false, error: 'corrupt' };
     const legacyIds = new Set(legacy.map(e => e.id));
@@ -106,6 +106,9 @@ export function readSorenessEntries(): { entries: SorenessEntry[]; error?: Stora
   const result = readState();
   return result.ok ? { entries: result.state.entries } : { entries: [], error: result.error };
 }
+function extendedSchemaRequired(state: StorageState, imported = state.v2.importedLegacyEntries, deleted = state.v2.deletedLegacyIds): boolean {
+  return state.v2.schemaVersion === 3 || Boolean(imported?.length) || deleted.some(id => !state.legacy.some(entry => entry.id === id));
+}
 function write(state: StorageState, entries: NewSorenessEntry[], deletedLegacyIds = state.v2.deletedLegacyIds, importedLegacyEntries = state.v2.importedLegacyEntries): WriteResult {
   // Restore honors every validated local tombstone, even without its payload.
   // All subsequent writes must preserve the same authoritative deletion set.
@@ -113,7 +116,9 @@ function write(state: StorageState, entries: NewSorenessEntry[], deletedLegacyId
   // Imported legacy payloads stay in their own collection, including deleted IDs.
   // Never drop a real tombstone to make room: reject before the single atomic write.
   if (retained.length > MAX_ENTRIES || (importedLegacyEntries?.length ?? 0) > MAX_ENTRIES) return { ok: false, error: 'capacity' };
-  const envelope: SorenessV2Envelope = { schemaVersion: 2, entries, deletedLegacyIds: retained, ...(importedLegacyEntries ? { importedLegacyEntries } : {}) };
+  // Old v2 bundles reject schema 3 before writing, instead of dropping fields or tombstones.
+  const schemaVersion = extendedSchemaRequired(state, importedLegacyEntries, retained) ? 3 : 2;
+  const envelope: SorenessV2Envelope = { schemaVersion, entries, deletedLegacyIds: retained, ...(importedLegacyEntries ? { importedLegacyEntries } : {}) };
   // 只以一次寫入更新 v2；v1 原始 bytes 永不改寫。
   try { window.localStorage.setItem(SORENESS_V2_KEY, JSON.stringify(envelope)); return { ok: true }; }
   catch { return { ok: false, error: 'write-failed' }; }
@@ -159,7 +164,8 @@ export function restoreSorenessBackup(value: unknown): RestoreResult {
   const addedLegacy = additions.filter(validLegacySorenessEntry);
   const imported = [...(state.v2.importedLegacyEntries ?? []), ...addedLegacy];
   if (imported.length > MAX_ENTRIES) return { ok: false, error: 'capacity' };
-  if (additions.length) {
+  const needsVersionProtection = state.v2.schemaVersion === 2 && extendedSchemaRequired(state, imported);
+  if (additions.length || needsVersionProtection) {
     const written = write(state, [...state.v2.entries, ...additions.filter(validNewSorenessEntry)], state.v2.deletedLegacyIds, imported.length ? imported : state.v2.importedLegacyEntries);
     if (!written.ok) return written;
   }

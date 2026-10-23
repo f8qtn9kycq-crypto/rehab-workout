@@ -62,6 +62,9 @@ def normalize(source_path, output_path):
     for center, phase, box in zip((160,) if phase_count == 1 else (80, 240), phases, bounds):
         crop = phase.crop((box[0], top, box[2], bottom))
         size = (max(1, round(crop.width * scale)), max(1, round(crop.height * scale)))
+        # Preserve the pre-Pillow-13 horizontal-then-vertical sampling order.
+        # Pillow 13 may choose vertical first for tall crops, changing frozen pixels.
+        crop = crop.resize((size[0], crop.height), Image.Resampling.LANCZOS)
         crop = crop.resize(size, Image.Resampling.LANCZOS)
         canvas.paste(crop, (round(center - crop.width / 2), round(92 - crop.height / 2)))
     if phase_count == 2:

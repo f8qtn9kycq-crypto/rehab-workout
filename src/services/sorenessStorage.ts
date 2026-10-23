@@ -106,9 +106,10 @@ export function readSorenessEntries(): { entries: SorenessEntry[]; error?: Stora
   const result = readState();
   return result.ok ? { entries: result.state.entries } : { entries: [], error: result.error };
 }
-function write(state: StorageState, entries: NewSorenessEntry[], deletedLegacyIds = state.v2.deletedLegacyIds, importedLegacyEntries = state.v2.importedLegacyEntries, preserveTombstones = false): WriteResult {
-  const legacyIds = new Set([...state.legacy, ...(importedLegacyEntries ?? [])].map(e => e.id));
-  const retained = preserveTombstones ? deletedLegacyIds : deletedLegacyIds.filter(id => legacyIds.has(id));
+function write(state: StorageState, entries: NewSorenessEntry[], deletedLegacyIds = state.v2.deletedLegacyIds, importedLegacyEntries = state.v2.importedLegacyEntries): WriteResult {
+  // Restore honors every validated local tombstone, even without its payload.
+  // All subsequent writes must preserve the same authoritative deletion set.
+  const retained = deletedLegacyIds;
   // Imported legacy payloads stay in their own collection, including deleted IDs.
   // Never drop a real tombstone to make room: reject before the single atomic write.
   if (retained.length > MAX_ENTRIES || (importedLegacyEntries?.length ?? 0) > MAX_ENTRIES) return { ok: false, error: 'capacity' };
@@ -159,7 +160,7 @@ export function restoreSorenessBackup(value: unknown): RestoreResult {
   const imported = [...(state.v2.importedLegacyEntries ?? []), ...addedLegacy];
   if (imported.length > MAX_ENTRIES) return { ok: false, error: 'capacity' };
   if (additions.length) {
-    const written = write(state, [...state.v2.entries, ...additions.filter(validNewSorenessEntry)], state.v2.deletedLegacyIds, imported.length ? imported : state.v2.importedLegacyEntries, true);
+    const written = write(state, [...state.v2.entries, ...additions.filter(validNewSorenessEntry)], state.v2.deletedLegacyIds, imported.length ? imported : state.v2.importedLegacyEntries);
     if (!written.ok) return written;
   }
   return { ok: true, added: additions.length, skipped: value.entries.length - additions.length };

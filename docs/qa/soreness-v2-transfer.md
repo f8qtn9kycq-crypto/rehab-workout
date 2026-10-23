@@ -29,3 +29,7 @@ v2 envelope 新增 optional `importedLegacyEntries`，專放從備份加入的 l
 ## P1 修正：原生日期未完成輸入
 
 真實 Chrome 的分段日期只輸入 `1` 時，`value === ''` 但 `validity.badInput === true`；舊UI仍顯示不限日期2筆、下載可用，可能分享超出使用者預期的日期範圍。只監聽input事件不足以捕捉此原生鍵盤狀態；改在input/keyup/blur更新validity，並在下載當下再次讀實際欄位有效性。空白仍是合法不限日期；未完成或倒置日期顯示錯誤且禁止分享，完整備份不受影響。新增真實鍵盤、修正日期恢復預覽、倒置與清空日期回歸，Chrome/WebKit雙語三寬完整流程重跑通過。
+
+## Codex P1 修正：無 payload 的墓碑仍具權威
+
+獨立Codex於a80d25d指出一般save/delete會沿用舊過濾、清除沒有本地payload的墓碑，造成restore已略過的ID於下一次匯入復活。先新增restore→一般save/delete→再import的三路徑regression，舊碼RED實際新增了原本應略過的1筆。修復為所有writer保留同一份validated墓碑，不分restore或一般寫入；墓碑滿200時新增刪除操作capacity拒絕並保留bytes，不以清理墓碑騰空間。原v2測試的「刪除stale墓碑」預期因此更新為資料保留／容量拒絕；不是刪除安全驗證來取得綠燈。

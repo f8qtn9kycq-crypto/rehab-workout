@@ -103,6 +103,19 @@ s.restoreSorenessBackup(backup([legacy, modern]));
 assert.deepEqual(s.readSorenessEntries().entries, [modern]);
 assert.deepEqual(JSON.parse(data.get(s.SORENESS_V2_KEY)).deletedLegacyIds, [legacy.id]);
 
+// Every tombstone honored by restore remains authoritative after normal writes.
+for (const action of ['save', 'delete-new', 'delete-legacy']) {
+  const otherLegacy = entry(reg(undefined, 'left', 3));
+  reset([otherLegacy], env([modern], [legacy.id]));
+  assert.deepEqual(s.restoreSorenessBackup(backup([legacy])), { ok: true, added: 0, skipped: 1 });
+  const result = action === 'save'
+    ? s.saveSorenessEntry({ ...entry(), date: s.localSorenessDate() })
+    : s.deleteSorenessEntry(action === 'delete-new' ? modern.id : otherLegacy.id);
+  assert.deepEqual(result, { ok: true });
+  assert.deepEqual(s.restoreSorenessBackup(backup([legacy])), { ok: true, added: 0, skipped: 1 }, action + ' must not resurrect blocked ID');
+  assert.ok(JSON.parse(data.get(s.SORENESS_V2_KEY)).deletedLegacyIds.includes(legacy.id));
+}
+
 // Whole batch validation happens before dedupe: even invalid duplicate candidates reject.
 const invalids = [null, [], {}, { ...backup(), format: 'bodymap.v1' }, { ...backup(), schemaVersion: 3 }, backup([legacy, legacy]), backup([modern, { ...legacy, date: '2026-02-30' }]), backup([modern, { ...legacy, createdAt: '2026-02-30T00:00:00.000Z' }]), backup([{ ...legacy, id: 'bad' }]), backup([{ ...modern, regions: [reg('F'), reg(undefined)] }]), backup([{ ...legacy, regions: [reg(undefined, 'center')] }]), backup([{ ...modern, regions: [reg('F', 'center')] }]), backup([{ ...modern, regions: [reg('F', 'left', 11)] }]), backup([{ ...modern, regions: [reg('F', 'left', 1, 'a'.repeat(501))] }]), backup(Array.from({ length: 201 }, () => entry()))];
 reset(legacyBytes, env([modern]));

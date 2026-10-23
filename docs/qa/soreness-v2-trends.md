@@ -16,3 +16,7 @@ Tier3保守分級；7/30/90天實際1–10分離散點，不補值或連線；�
 ## 委派與審查
 
 初次指定Astra/high實作，因額度限制停止且未留下檔案；實際模型NOT VERIFIED。主代理接手完成，無以較弱模型冒充Astra結果。新head必須完成獨立Codex、Claude與PM審查；請求不等於完成，結果以PR紀錄為準。沒有合併授權以外的gate豁免。
+
+## 最新 main 整合重驗
+
+基準更新至相依交付 `8632db3554bdadac2997b3e35b4024a173fe1ba1` 後，重新通過 npm ci/build/完整 npm test/safety-i18n/diff check。以隔離 Chrome（Chromium）與 WebKit profiles 重跑同一 browser QA，雙語×320/375/390 共12組皆通過；包含身份、日期範圍、0／刪除排除、不寫入及44px控制項。未將舊head的審查直接沿用；新精確head重新路由獨立審查。

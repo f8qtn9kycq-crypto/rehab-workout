@@ -121,6 +121,18 @@ section('SafetyRouteGuard protects assessment and session while browse remains r
   assertIncludes(source.safetyRouteGuard, 'to="/safety"', 'unsafe redirect target');
 });
 
+section('assessment progressively reuses a preselected body area', () => {
+  assertIncludes(source.assessmentPage, 'const hasPreselectedBodyArea = isBodyArea(bodyAreaParam)', 'valid query body area is detected');
+  assertIncludes(source.assessmentPage, "useState(!hasPreselectedBodyArea)", 'preselected body area starts collapsed');
+  assertIncludes(source.assessmentPage, "useState<'condition' | 'settings'>('condition')", 'today setup starts with current condition');
+  assertIncludes(source.assessmentPage, "setStep('settings')", 'condition continues to training settings');
+  assertIncludes(source.assessmentPage, "setStep('condition')", 'settings can return without losing inputs');
+  assertIncludes(source.assessmentPage, 'aria-pressed={equipment.includes(item.id)}', 'equipment choices expose selected state');
+  assertIncludes(source.assessmentPage, 'aria-pressed={sessionLength === length}', 'session length choices expose selected state');
+  assertIncludes(source.assessmentPage, 'saveAssessment({ bodyArea, pain, confidence, functionalBaseline, equipment, sessionLength, mode', 'existing assessment storage contract is preserved');
+  assertIncludes(source.assessmentPage, 'to={`/exercises?mode=recommended&bodyArea=${bodyArea}`}', 'existing recommendation entry route is preserved');
+});
+
 section('red flags still block training and none-of-above stays exclusive', () => {
   assertIncludes(source.safetyUtils, 'blocked: input.redFlags.length > 0', 'red flags block status');
   assertIncludes(source.safetyUtils, 'return isSafetyGateCurrentForToday(status) && !status.blocked', 'blocked status prevents entry');

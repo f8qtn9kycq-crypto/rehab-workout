@@ -4,14 +4,9 @@ This file defines how ChatGPT, Codex, Claude, Gemini, and Perplexity should coll
 
 ## Source Of Truth Order
 
-When instructions conflict, use this order:
-
-1. Latest repo files: `AGENTS.md`, `REVIEW.md`, `.github/pull_request_template.md`, `.github/ai-automation.yml`, and relevant docs under `/docs`.
-2. Current PR description, changed files, and build/test evidence.
-3. Current user request.
-4. Current compact context.
-5. Prior chat memory.
-6. Uploaded ChatGPT Project sources or one-time branch context.
+任務範圍與授權依目前使用者明確指示；平台安全限制仍適用。
+實作現況依最新 `AGENTS.md`、`REVIEW.md`、automation contract 與相關 docs 核對。
+PR 描述、舊 compact context、記憶與上傳文件都是參考，不能自行覆蓋使用者授權。
 
 Repo-tracked workflow files override pasted compact context, memory, and uploaded Project sources when they conflict.
 

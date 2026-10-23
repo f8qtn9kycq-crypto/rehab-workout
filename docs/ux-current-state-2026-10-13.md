@@ -111,10 +111,10 @@ P0：本次靜態盤點沒有證明新安全／資料遺失／核心故障；不
 
 每項記錄：日期、head／網址、裝置瀏覽器、語言、first-run或回訪、起始資料、預期、實際、卡住位置、是否需提示、是否離開app、資料正確／重複與任務時間（有實測才填）。不要求真人刻意誘發疼痛或紅旗。
 
-## 7. Codex-ready 下一步
+## 7. 下一步更新（2026-10-23）
 
-F1 已由 #207 交付，不再提供重做 F1 的可執行提示。下一個最小 PR 是 F2 第一階段：只在動作詳情概覽重用動作庫圖片，分支 `codex/detail-library-artwork`。實作前重新讀 workflow 與最新 main，核對詳情仍沒有該圖片、搜尋既有 issue／PR；不將 active 圖片或整套 session 自動加入同一 PR。
+F1 已由 #207 交付；F2 第一階段「詳情重用動作庫圖片」也已由 #209 交付，不再提供重做該功能的提示。#213 已增加回來源組合導覽；它不是整套session協調，不代表跨動作執行需求已成立。上述各節保留為10/13歷史觀察，不能當目前未完成清單。
 
-> Implement the first stage of F2 described in docs/ux-current-state-2026-10-13.md: reuse the existing canonical WorkoutMovementArt in ExerciseDetailPage overview. Read AGENTS.md, REVIEW.md and the PR template, verify current main, and keep the scope to detail-page image continuity. Preserve video, written steps, cautions, adjustments, catalog-only start restrictions, SafetyGate and storage. Do not change assets or ID aliases. Compare actual rendered image sources against ExerciseCard in both languages and check mobile layout. Use an isolated branch, open one minimal PR and trigger applicable exact-head reviews. Merge only with explicit authorization and a clean exact-head gate.
+目前交付與候選下一步改見[Roadmap追蹤](roadmap-delivery-2026-10-23.md)：先完成新版痠痛備份還原，再觀察已交付的評估／補記／回訪入口，依具體證據決定#150及下一個小型修正。沒有新增真人或真機證據；不將舊walkthrough套用新head。
 
 後續每次更新報告須更換基準 SHA／觀察日期與證據範圍；不將歷史真人 Pass 自動套用新 head。不修改 ChatGPT project 的 `sources/`。

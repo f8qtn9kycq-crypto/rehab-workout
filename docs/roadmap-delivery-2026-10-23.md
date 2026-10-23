@@ -32,6 +32,10 @@
 
 ## 下一個實作的準備條件
 
+### 2026-10-24 技術驗證進展
+
+等待 #238 必要外部審查期間，已先補齊目前 HomePage 實際渲染與導覽驗證：46 個 SSR 案例、Chrome/WebKit 合計192矩陣導覽及36邊界流程。固定 `/start` 的 temporary mutation 會使測試失敗，還原後通過；沒有改 runtime。詳見[驗證報告](qa/home-returning-flow-validation.md)。這完成下列候選的技術檢查部分；真人理解、任務時間與三動作組合使用阻力仍待觀察，不能把自動化 Pass 當成新首頁設計已獲接受。
+
 候選分支 `codex/home-returning-flow-validation`；範圍為首頁實際render/navigation驗證及有證據的最小修正，涉及routing/session時至少Tier2。可能檔案：HomePage、homeNextAction、home-entry regression、兩locale與QA。驗收必須涵蓋首次／回訪、安全有效／失效／blocked、已有評估、最近紀錄及功能追蹤狀態；SafetyGate、疼痛門檻、紅旗、guard、推薦與storage保持。不先實作全新首頁或新增常駐分類服務。
 
 > Read AGENTS.md, REVIEW.md, the PR template and the latest roadmap status. First inspect the rendered HomePage and existing next-action coverage on current main. Compare first-run, safe returning, continue-training and outcome-check-in scenarios before adopting PR #150. Preserve the current primary context and retrospective logging entry. Implement only a demonstrated scoped regression, add meaningful rendered-navigation validation, open a minimal PR and trigger applicable exact-head review. Do not merge without explicit authorization and a clean final gate.

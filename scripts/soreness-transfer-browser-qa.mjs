@@ -30,6 +30,15 @@ async page => {
     await page.reload();
     const tools = page.locator('section[aria-labelledby="soreness-transfer-title"]');
     await tools.locator('summary').first().click();
+    const share = tools.locator('details').first(), dates = share.locator('input[type="date"]');
+    await dates.first().focus(); await dates.first().press('ArrowLeft'); await dates.first().press('1');
+    check(await dates.first().evaluate(e => e.validity.badInput), 'partial date fixture not invalid');
+    check(await share.getByRole('button').isDisabled(), 'partial native date treated as unlimited');
+    await dates.first().fill('2026-01-01');
+    check(!await share.getByRole('button').isDisabled(), 'corrected date did not restore preview');
+    await dates.first().fill('2099-01-01'); await dates.nth(1).fill('2020-01-01');
+    check(await share.getByRole('button').isDisabled(), 'reversed date range allowed');
+    await dates.first().fill(''); await dates.nth(1).fill('');
     const notes = tools.getByRole('checkbox'); check(!await notes.isChecked(),'notes default enabled');
     const shared = await download(tools.locator('details').first().getByRole('button'));
     check(!shared.includes('SECRET') && !shared.includes('HIDDEN'),'private data in default share');
@@ -76,7 +85,7 @@ async page => {
     }
     check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'horizontal overflow');
     if(language==='en')check(!/[\u3400-\u9fff]/.test(await tools.innerText()),'English leakage');
-    results.push({language,width,actualDownloads:true,privateDefault:true,confirmedAtomicRestore:true,quotaRetry:true,invalidPreserved:true,overflow:false});
+    results.push({language,width,nativePartialDateBlocked:true,actualDownloads:true,privateDefault:true,confirmedAtomicRestore:true,quotaRetry:true,invalidPreserved:true,overflow:false});
   }
   return results;
 }

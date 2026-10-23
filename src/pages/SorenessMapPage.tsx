@@ -1,3 +1,4 @@
+import SorenessTrends from '../components/SorenessTrends';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AnatomicalBodyMap, { regionKey, type RegionSelection } from '../components/AnatomicalBodyMap';
@@ -67,6 +68,7 @@ export default function SorenessMapPage() {
       <p role={guidance === 'stop' ? 'alert' : 'status'} className={`rounded-md border p-4 leading-7 ${guidance === 'stop' ? 'border-red-300 bg-red-50 font-bold' : 'border-amber-200 bg-amber-50'}`}>{t(`soreness.guidance.${guidance}`)}</p>
       <button type="button" disabled={!regions.length || Boolean(stored.error)} onClick={save} className="focus-ring min-h-12 w-full rounded-md bg-calm-700 px-4 font-bold text-white">{t('soreness.save')}</button>
     </>}
+    {!stored.error && <SorenessTrends entries={stored.entries} />}
     <section className="space-y-3" aria-labelledby="soreness-recent"><h2 id="soreness-recent" className="text-xl font-black">{t('soreness.recent')}</h2>
       {!stored.entries.length && !stored.error && <p>{t('soreness.empty')}</p>}
       {stored.entries.slice(0, visibleCount).map(entry => <article data-entry-id={entry.id} key={entry.id} className="card space-y-3 p-4"><h3 className="font-bold">{entry.date}</h3><ul className="space-y-3">{entry.regions.map(r => <li key={regionKey(r)} className="break-words"><p>{sorenessPositionLabel(r, t)} · <span className={`inline-block rounded-md border px-2 py-1 font-bold ${sorenessTone(r.severity).classes}`}>{r.severity}/10</span></p><p>{r.symptoms.map(s => t(`soreness.symptoms.${s}`)).join(' · ')}</p>{r.note && <p className="whitespace-pre-wrap">{r.note}</p>}</li>)}</ul><p className="rounded-md bg-amber-50 p-3">{t(`soreness.guidance.${sorenessGuidance(entry.regions)}`)}</p><button type="button" className="focus-ring rounded-md border px-4 text-red-800" onClick={() => remove(entry.id)} aria-label={`${t('soreness.delete')} · ${entry.date}`}>{t('soreness.delete')}</button></article>)}

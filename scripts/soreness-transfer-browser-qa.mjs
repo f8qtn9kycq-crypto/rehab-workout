@@ -56,7 +56,7 @@ async page => {
     },fixture);
     const input = backupDetails.locator('input[type="file"]');
     await input.setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(json)});
-    const confirm = backupDetails.getByRole('button').nth(2);
+    const confirm = backupDetails.getByRole('button', {name: language === 'en' ? 'Confirm additive restore' : '確認加入備份紀錄', exact: true});
     await confirm.waitFor();
     check(await page.evaluate(()=>window.__transferWrites)===0,'preview wrote data');
     await page.evaluate(()=>{window.__transferQuota=true;});

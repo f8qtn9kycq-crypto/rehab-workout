@@ -43,3 +43,11 @@ Claude在舊a80head clone實測原main writer會靜默丟掉 importedLegacyEntri
 此設計另由Astra/high只讀審查，實際模型NOT VERIFIED；確認base真實writer每次read且拒絕非2，未找到其他隱性v2writer，設計Partial Pass、需要實作證據，不替代Claude。父代理補齊其指出的orphan／no-op／quota／fixture驗收。容量文案不再指示墓碑滿時反覆刪除，先備份再檢查資料管理。
 
 Claude新head復審因桌面額度限制Pending，畫面顯示2026-10-23 19:20恢復；不沿用舊head Partial、不以Astra取代required Claude，也不合併。
+
+## 原#230完整需求核對補齊（本機，待外部驗證）
+
+本機git object直接讀原head b967d73的helper與QA，確認分享僅正分數、預覽紀錄／列數的原需求。補齊shareRows正分數篩選與兩種計數，fullCSV／JSON仍保留全部0；不改目前main已具備的明確0分輸入契約。先新增legacy0-only分享應只有header的RED（原碼2列），修復後GREEN；測試同一紀錄含兩個正分列的紀錄數與列數不同。瀏覽器fixture改為2筆／3個正分列，另驗證0分備註即使opt-in仍不進分享、完整備份保留。
+
+本次本機build/full npm test/safety與專用回歸通過；更新後browser QA、push、CI及獨立審查尚未完成。外部操作因自動核准審查服務額度限制未執行（提示19:21恢復），未繞過核准檢查，不將舊12組Pass當成這次變更的結果。
+
+原#230曾驗證1280px桌面；新版腳本也補列1280，下一次完整browser矩陣為雙引擎×雙語×四寬16組，尚未執行。不把目前main的明確0分選擇改回舊v1禁選0；本次保留最新地圖／儲存契約，只恢復原分享排除0與完整備份保留0的差異。

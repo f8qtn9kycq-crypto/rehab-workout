@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useI18n } from '../services/i18n';
 import { readSorenessEntries, restoreSorenessBackup, type SorenessEntry } from '../services/sorenessStorage';
-import { downloadSoreness, MAX_BACKUP_BYTES, parseSorenessBackup, shareEntries, sorenessBackup, sorenessCsv } from '../utils/sorenessTransfer';
+import { downloadSoreness, MAX_BACKUP_BYTES, parseSorenessBackup, shareRows, sorenessBackup, sorenessCsv } from '../utils/sorenessTransfer';
 
 export default function SorenessTransferTools({ entries, onRestored }: { entries: SorenessEntry[]; onRestored: () => void }) {
   const { t } = useI18n();
@@ -18,8 +18,8 @@ export default function SorenessTransferTools({ entries, onRestored }: { entries
   const fileGeneration = useRef(0);
   const restoreLock = useRef(false);
   const control = 'focus-ring min-h-11 rounded-md border bg-white px-3 py-2 text-left font-bold';
-  let count = 0, validRange = dateValid.start && dateValid.end;
-  try { count = shareEntries(entries, start, end).length; } catch { validRange = false; }
+  let count = 0, rowCount = 0, validRange = dateValid.start && dateValid.end;
+  try { const rows = shareRows(entries, start, end); count = new Set(rows.map(row => row.entry.id)).size; rowCount = rows.length; } catch { validRange = false; }
   function updateDateValidity(key: 'start' | 'end', input: HTMLInputElement) {
     const valid = input.validity.valid;
     setDateValid(current => ({ ...current, [key]: valid }));
@@ -63,7 +63,7 @@ export default function SorenessTransferTools({ entries, onRestored }: { entries
       <p>{t('soreness.transfer.shareHint')}</p>
       <div className="grid gap-3 sm:grid-cols-2">{(['start', 'end'] as const).map(key => <label key={key} className="block min-w-0 font-bold">{t(`soreness.transfer.${key}`)}<input type="date" ref={input => { dateInputs.current[key] = input; }} onKeyUp={event => updateDateValidity(key, event.currentTarget)} onBlur={event => updateDateValidity(key, event.currentTarget)} className="focus-ring mt-1 block h-11 w-full min-w-0 appearance-none rounded-md border bg-white p-2" value={key === 'start' ? start : end} onInput={event => updateDateValidity(key, event.currentTarget)} onChange={event => key === 'start' ? setStart(event.target.value) : setEnd(event.target.value)} /></label>)}</div>
       <label className="flex min-h-11 items-center gap-3"><input type="checkbox" className="focus-ring h-5 w-5 shrink-0" checked={notes} onChange={event => setNotes(event.target.checked)} />{t('soreness.transfer.includeNotes')}</label>
-      <p role="status">{validRange ? t(notes ? 'soreness.transfer.previewWithNotes' : 'soreness.transfer.previewPrivate', { count }) : t('soreness.transfer.invalidRange')}</p>
+      <p role="status">{validRange ? t(notes ? 'soreness.transfer.previewWithNotes' : 'soreness.transfer.previewPrivate', { count, rows: rowCount }) : t('soreness.transfer.invalidRange')}</p>
       <button type="button" className={control} disabled={!validRange || !count} onClick={() => exportFile('share')}>{t('soreness.transfer.downloadShare')}</button>
     </details>
     <details className="space-y-3"><summary className="focus-ring min-h-11 cursor-pointer py-2 font-bold">{t('soreness.transfer.backup')}</summary>

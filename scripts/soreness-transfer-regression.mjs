@@ -179,29 +179,35 @@ function parseCsv(content) {
   row.push(cell); rows.push(row);
   return rows.map((r, i) => i ? Object.fromEntries(rows[0].map((header, index) => [header, r[index]])) : r);
 }
+assert.equal(parseCsv(t.sorenessCsv([legacy], label(en))).length, 1, 'legacy zero is excluded from sharing, not from backup');
 for (const locale of [en, zh]) {
   const shared = t.sorenessCsv(original, label(locale));
   const rows = parseCsv(shared);
-  assert.equal(rows.length, 5); assert.equal(rows[0].includes('note'), false);
+  assert.equal(rows.length, 3); assert.equal(rows[0].includes('note'), false);
   assert.equal(shared.includes('private'), false); assert.equal(shared.includes('secret'), false);
-  assert.deepEqual(rows.slice(1).map(r => r.view), ['F', 'B', 'B', '']);
-  assert.deepEqual(rows.slice(1).map(r => r.side), ['left', 'right', 'center', 'right']);
-  assert.deepEqual(rows.slice(1).map(r => r.severity), ['0', '7', '4', '0']);
+  assert.deepEqual(rows.slice(1).map(r => r.view), ['B', 'B']);
+  assert.deepEqual(rows.slice(1).map(r => r.side), ['right', 'center']);
+  assert.deepEqual(rows.slice(1).map(r => r.severity), ['7', '4']);
   assert.equal(rows[1].symptom_ids, 'sore|tight');
-  assert.ok(rows[4].position_label.includes(locale.soreness.legacyView));
+  assert.ok(!rows.slice(1).some(row => row.severity === '0'));
+  const positiveLegacy = { ...legacy, regions: [{ ...legacy.regions[0], severity: 4 }] };
+  assert.ok(parseCsv(t.sorenessCsv([positiveLegacy], label(locale)))[1].position_label.includes(locale.soreness.legacyView));
   const fullCsv = parseCsv(t.sorenessCsv(original, label(locale), { full: true, start: '2099-01-01' }));
   assert.equal(fullCsv.length, 5, 'full backup ignores share date range');
   assert.equal(fullCsv[1].note_present, 'true'); assert.equal(fullCsv[1].note, '');
   assert.equal(fullCsv[3].note_present, 'false');
   assert.equal(fullCsv[4].note, "'" + legacy.regions[0].note);
   assert.equal(fullCsv[4].created_at, legacy.createdAt);
-  assert.equal(parseCsv(t.sorenessCsv(original, label(locale), { notes: true }))[4].note, "'" + legacy.regions[0].note);
+  assert.equal(parseCsv(t.sorenessCsv(original, label(locale), { notes: true }))[1].note, "'+secret");
 }
 assert.equal(/[\u3400-\u9fff]/.test(t.sorenessCsv(original, label(en))), false);
 for (const value of ['=SUM(A1)', '+1', '-1', '@user', ' \t=1', '\nplain', '\rplain', '\tplain', '\uFEFF=1']) assert.ok(t.csvCell(value).startsWith('"\''));
 assert.equal(t.csvCell('hello,"world"'), '"hello,""world"""');
 assert.equal(t.shareEntries(original, '2026-10-23', '2026-10-23').length, 2);
 assert.equal(t.shareEntries(original, '2026-10-24').length, 0);
+assert.equal(t.shareRows([legacy]).length, 0);
+assert.equal(new Set(t.shareRows(original).map(row => row.entry.id)).size, 1);
+assert.equal(t.shareRows(original).length, 2);
 for (const [start, end] of [['2026-02-30', ''], ['2026-10-24', '2026-10-23'], ['', 'bad']]) assert.throws(() => t.shareEntries(original, start, end));
 assert.deepEqual(JSON.parse(t.sorenessBackup(original)).entries, original);
 // Even a no-addition restore protects authoritative no-payload tombstones from old tabs.

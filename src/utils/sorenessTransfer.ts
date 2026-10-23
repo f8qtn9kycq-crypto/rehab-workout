@@ -7,6 +7,9 @@ export function shareEntries(entries: readonly SorenessEntry[], start = '', end 
   if ((start && !validHistoryDate(start)) || (end && !validHistoryDate(end)) || (start && end && start > end)) throw new Error('invalid-range');
   return entries.filter(e => (!start || e.date >= start) && (!end || e.date <= end));
 }
+export function shareRows(entries: readonly SorenessEntry[], start = '', end = '') {
+  return shareEntries(entries, start, end).flatMap(entry => entry.regions.filter(region => region.severity > 0).map(region => ({ entry, region })));
+}
 export function csvCell(value: unknown): string {
   let text = String(value ?? '');
   // Spreadsheet formula neutralization also covers whitespace-prefixed formulas.
@@ -14,9 +17,9 @@ export function csvCell(value: unknown): string {
   return `"${text.replace(/"/g, '""')}"`;
 }
 export function sorenessCsv(entries: readonly SorenessEntry[], label: (key: string) => string, options: { full?: boolean; notes?: boolean; start?: string; end?: string } = {}) {
-  const selected = options.full ? entries : shareEntries(entries, options.start, options.end);
+  const selected = options.full ? entries.flatMap(entry => entry.regions.map(region => ({ entry, region }))) : shareRows(entries, options.start, options.end);
   const headers = ['schema_version', 'entry_id', 'date', 'region_id', 'view', 'side', 'position_label', 'severity', 'symptom_ids', 'symptom_labels', ...(options.full ? ['created_at', 'tissue', 'note_present'] : []), ...(options.notes || options.full ? ['note'] : [])];
-  const rows = selected.flatMap(entry => entry.regions.map(region => [2, entry.id, entry.date, region.regionId, region.view ?? '', region.side, sorenessPositionLabel(region, label), region.severity, region.symptoms.join('|'), region.symptoms.map(s => label(`soreness.symptoms.${s}`)).join(' / '), ...(options.full ? [entry.createdAt, region.tissue, region.note !== undefined] : []), ...(options.notes || options.full ? [region.note ?? ''] : [])]));
+  const rows = selected.map(({ entry, region }) => [2, entry.id, entry.date, region.regionId, region.view ?? '', region.side, sorenessPositionLabel(region, label), region.severity, region.symptoms.join('|'), region.symptoms.map(s => label(`soreness.symptoms.${s}`)).join(' / '), ...(options.full ? [entry.createdAt, region.tissue, region.note !== undefined] : []), ...(options.notes || options.full ? [region.note ?? ''] : [])]);
   return '\uFEFF' + [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
 }
 export function sorenessBackup(entries: readonly SorenessEntry[]): string {

@@ -9,7 +9,7 @@ async page => {
     check(!await file.failure(), 'download failed'); return content;
   }
   const results = [];
-  for (const language of ['zh-TW', 'en']) for (const width of [320, 375, 390]) {
+  for (const language of ['zh-TW', 'en']) for (const width of [320, 375, 390, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(base + '/logs/soreness');
     const fixture = await page.evaluate(language => {
@@ -20,7 +20,7 @@ async page => {
       const entry = regions => ({id:crypto.randomUUID(),date:day,createdAt:new Date().toISOString(),regions});
       const legacy = entry([region(undefined,4,'=SECRET-LEGACY')]);
       const hidden = entry([region(undefined,9,'HIDDEN-DELETED')]);
-      const modern = entry([region('F',2,'SECRET-FRONT'),region('B',0,'SECRET-BACK')]);
+      const modern = entry([region('F',2,'SECRET-FRONT'),region('B',0,'SECRET-BACK'),{...region('B',6,'SECRET-CENTER'),regionId:'jLumbar',tissue:'joint',side:'center'}]);
       const raw = JSON.stringify([legacy,hidden],null,2);
       localStorage.setItem('rehab.sorenessEntries.v1',raw);
       localStorage.setItem('rehab.sorenessEntries.v2',JSON.stringify({schemaVersion:2,entries:[modern],deletedLegacyIds:[hidden.id]}));
@@ -42,16 +42,17 @@ async page => {
     const notes = tools.getByRole('checkbox'); check(!await notes.isChecked(),'notes default enabled');
     const shared = await download(tools.locator('details').first().getByRole('button'));
     check(!shared.includes('SECRET') && !shared.includes('HIDDEN'),'private data in default share');
-    check(shared.includes('"0"') && shared.includes('"F"') && shared.includes('"B"'),'share lost zero/view');
+    check(!shared.includes('"0"') && shared.includes('"F"') && shared.includes('"B"'),'share positive-only identity');
+    check((await share.getByRole('status').innerText()).includes(language==='en'?'2 entries, 3 rows':'2 筆紀錄、3 列資料'), 'share preview record/row counts');
     await notes.check();
     const opted = await download(tools.locator('details').first().getByRole('button'));
-    check(opted.includes('SECRET-FRONT') && opted.includes("'=SECRET-LEGACY"),'opt-in/formula escaping');
+    check(opted.includes('SECRET-FRONT') && opted.includes("'=SECRET-LEGACY") && !opted.includes('SECRET-BACK'),'opt-in/formula escaping/zero exclusion');
     await tools.locator('summary').nth(1).click();
     const backupDetails = tools.locator('details').nth(1);
     const full = await download(backupDetails.getByRole('button').nth(0));
     const json = await download(backupDetails.getByRole('button').nth(1));
     const backup = JSON.parse(json);
-    check(full.includes('SECRET-BACK') && !full.includes('HIDDEN-DELETED'),'full CSV visibility');
+    check(full.includes('SECRET-BACK') && full.includes('"0"') && full.includes('"B"') && !full.includes('HIDDEN-DELETED'),'full CSV visibility/zero');
     check(backup.schemaVersion===2 && backup.entries.length===2 && !json.includes(fixture.hidden.id),'JSON visible snapshot');
     check(backup.entries.find(e=>e.id===fixture.legacy.id).regions[0].view===undefined,'legacy view invented');
     await page.evaluate(({hidden}) => {

@@ -165,3 +165,7 @@ Do not include P2 wishlist items unless explicitly requested. Do not suggest bro
 - 實作授權不等於合併授權；任何 Tier 的合併皆需使用者明確授權，並通過本 repo 的 exact-head 與產品門檻。
 - 依變更範圍驗證，分開記錄本機、CI、自動化瀏覽器、真人、真機及正式環境證據；未驗證者標示 Pending／Blocked。
 - 排程每次最多一個工作單位，沿用本 repo 規則；沒有可行工作或狀態未變時保持安靜，只有重要變化或需使用者處理時通知。此規則本身不建立排程。
+
+## 專案技能探索
+
+Codex 透過 `.agents/skills/` 的相對連結探索 `ai/skills/` 內的專案技能；後者為唯一內容來源。依任務載入對應技能與必要參考，不預讀所有手冊。新增技能時一併建立探索連結。技能不增加 push、合併或全域設定授權。

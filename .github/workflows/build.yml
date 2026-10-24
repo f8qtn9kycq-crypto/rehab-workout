@@ -31,9 +31,12 @@ jobs:
 
       - name: Verify frozen movement art and effective sources
         run: |
-          python -m pip install -r scripts/movement-art-requirements.txt
+          python -m pip install -r scripts/movement-art-requirements.txt -r scripts/workflow-requirements.txt
           npm run audit:movement-art
           npm run audit:movement-art-sources
+
+      - name: Workflow regression fixtures
+        run: python3 scripts/workflow-regression.py
 
       - name: Build
         run: npm run build

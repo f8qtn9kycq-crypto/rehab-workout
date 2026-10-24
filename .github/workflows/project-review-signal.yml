@@ -1,0 +1,21 @@
+name: Project review signal
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+
+# This event uses the PR workflow definition. It must not receive PROJECTS_TOKEN.
+# Project auto-add handles workflow_run using its trusted default-branch definition.
+permissions:
+  contents: read
+
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record review event
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]
+          echo "Project review state changed for PR #$PR_NUMBER."

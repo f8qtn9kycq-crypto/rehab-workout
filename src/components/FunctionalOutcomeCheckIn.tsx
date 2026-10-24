@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useLocation } from 'react-router-dom';
 import BodyAreaIcon from './BodyAreaIcon';
 import PainScale from './PainScale';
 import { useI18n } from '../services/i18n';
@@ -13,9 +14,22 @@ interface FunctionalOutcomeCheckInProps {
 
 export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: FunctionalOutcomeCheckInProps) {
   const { language, t } = useI18n();
+  const { search, hash } = useLocation();
+  const heading = useRef<HTMLHeadingElement>(null);
   const [bodyArea, setBodyArea] = useState<BodyArea>('shoulder');
   const [score, setScore] = useState<OutcomeScore>(5);
   const [note, setNote] = useState('');
+
+  useEffect(() => {
+    if (hash !== '#function-check-in') return;
+    const requestedArea = new URLSearchParams(search).get('outcomeArea');
+    if (BODY_AREAS.includes(requestedArea as BodyArea)) setBodyArea(requestedArea as BodyArea);
+    const frame = requestAnimationFrame(() => {
+      heading.current?.focus({ preventScroll: true });
+      heading.current?.scrollIntoView({ block: 'start' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [search, hash]);
 
   const latestForBodyArea = outcomes
     .filter((entry) => entry.bodyArea === bodyArea)
@@ -30,7 +44,7 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
   return (
     <section id="function-check-in" className="card p-5" aria-labelledby="outcome-check-in-title">
       <div>
-        <h2 id="outcome-check-in-title" className="text-xl font-black text-ink">{t('outcomes.title')}</h2>
+        <h2 ref={heading} tabIndex={-1} id="outcome-check-in-title" className="scroll-mt-24 text-xl font-black text-ink">{t('outcomes.title')}</h2>
         <p className="mt-1 text-sm leading-6 text-slate-600">{t('outcomes.subtitle')}</p>
       </div>
 

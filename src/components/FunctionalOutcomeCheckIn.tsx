@@ -14,8 +14,9 @@ interface FunctionalOutcomeCheckInProps {
 
 export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: FunctionalOutcomeCheckInProps) {
   const { language, t } = useI18n();
-  const { search, hash } = useLocation();
+  const { search, hash, key } = useLocation();
   const heading = useRef<HTMLHeadingElement>(null);
+  const appliedHandoff = useRef<string | null>(null);
   const [bodyArea, setBodyArea] = useState<BodyArea>('shoulder');
   const [score, setScore] = useState<OutcomeScore>(5);
   const [note, setNote] = useState('');
@@ -23,13 +24,17 @@ export default function FunctionalOutcomeCheckIn({ outcomes, onSave }: Functiona
   useEffect(() => {
     if (hash !== '#function-check-in') return;
     const requestedArea = new URLSearchParams(search).get('outcomeArea');
-    if (BODY_AREAS.includes(requestedArea as BodyArea)) setBodyArea(requestedArea as BodyArea);
+    const handoff = JSON.stringify([key, search]);
+    if (BODY_AREAS.includes(requestedArea as BodyArea) && appliedHandoff.current !== handoff) {
+      setBodyArea(requestedArea as BodyArea);
+      appliedHandoff.current = handoff;
+    }
     const frame = requestAnimationFrame(() => {
       heading.current?.focus({ preventScroll: true });
       heading.current?.scrollIntoView({ block: 'start' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [search, hash]);
+  }, [search, hash, key]);
 
   const latestForBodyArea = outcomes
     .filter((entry) => entry.bodyArea === bodyArea)

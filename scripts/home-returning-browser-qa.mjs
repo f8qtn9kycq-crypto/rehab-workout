@@ -23,7 +23,7 @@ async page => {
       await page.goto(base);
       const section = page.locator('section[aria-labelledby="home-next-action-title"]');
       await section.waitFor();
-      const expected = !safety ? '/safety' : !assessment ? '/assessment' : log && !outcome ? '/logs' : log ? '/session/ankle-circles' : '/exercises';
+      const expected = !safety ? '/safety' : !assessment ? '/assessment' : log && !outcome ? '/logs?outcomeArea=ankle#function-check-in' : log ? '/session/ankle-circles' : '/exercises';
       const primary = section.locator('a').first();
       check(await primary.getAttribute('href') === expected, `wrong primary: ${language}/${width}/${JSON.stringify({ safety, assessment, log, outcome })}`);
       check(await section.locator('a[href="/logs/new"]').count() === 1, 'secondary quick log missing');
@@ -33,8 +33,21 @@ async page => {
       check(JSON.stringify(observed.bytes) === JSON.stringify(fixture), 'homepage changed source records');
       check(!observed.overflow, 'homepage horizontal overflow');
       await primary.click();
-      await page.waitForURL(url => url.pathname === expected);
-      check(new URL(page.url()).pathname === expected, 'rendered primary did not navigate');
+      await page.waitForURL(url => url.pathname + url.search + url.hash === expected);
+      check(new URL(page.url()).pathname + new URL(page.url()).search + new URL(page.url()).hash === expected, 'rendered primary did not navigate');
+      if (expected.includes('outcomeArea=')) {
+        const form = page.locator('#function-check-in');
+        await form.locator('button[aria-pressed="true"]').filter({ hasText: language === 'en' ? 'Ankle Stability' : '踝關節穩定' }).waitFor();
+        await page.waitForFunction(() => document.activeElement?.id === 'outcome-check-in-title');
+        check(await form.locator('button[aria-pressed="true"]').innerText() === (language === 'en' ? 'Ankle Stability' : '踝關節穩定'), 'outcome area handoff');
+        check(await page.locator('#outcome-check-in-title').evaluate(el => el === document.activeElement), 'check-in heading focus');
+        check(await page.locator('#outcome-check-in-title').evaluate(el => el.getBoundingClientRect().top >= 0 && el.getBoundingClientRect().bottom <= innerHeight), 'check-in visible');
+        await form.locator('button[type="submit"]').click();
+        const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('rehab.functionalOutcomes.v2')));
+        check(saved.length === 1 && saved[0].bodyArea === 'ankle', 'saved wrong outcome area');
+        await page.goto(base);
+        check(await page.locator('section[aria-labelledby="home-next-action-title"] a').first().getAttribute('href') === '/session/ankle-circles', 'check-in did not complete home action');
+      }
       results.push({ language, width, safety, assessment, log, outcome, destination: expected });
     }
     for (const mode of ['expired', 'blocked', 'first-run']) {

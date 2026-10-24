@@ -29,7 +29,7 @@ for (const safetyReady of [false, true]) {
         const before = JSON.stringify(input);
         const action = getNextAction(input);
         const expected = !safetyReady ? '/safety' : !hasAssessment ? '/assessment'
-          : hasLog && !hasRecentOutcomeEntry ? '/logs'
+          : hasLog && !hasRecentOutcomeEntry ? '/logs#function-check-in'
           : hasLog ? '/session/ankle-circles' : '/exercises';
         assert.equal(action.href, expected);
         assert.equal(action.variant, 'primary');
@@ -57,3 +57,8 @@ const boundary = today.getTime() - 14 * 24 * 60 * 60 * 1000;
 assert.equal(hasRecentOutcome([outcome(new Date(boundary).toISOString())], 'knee', today), true);
 assert.equal(hasRecentOutcome([outcome(new Date(boundary - 1).toISOString())], 'knee', today), false);
 console.log(`Home entry regression passed: ${cases} state combinations, locale coverage, immutable inputs and outcome date boundaries.`);
+
+for (const bodyArea of ['shoulder', 'hip', 'shoulder_neck', 'knee', 'ankle']) {
+  assert.equal(getNextAction({ safetyReady: true, hasAssessment: true, latestLog: { bodyArea }, hasRecentOutcomeEntry: false }).href, `/logs?outcomeArea=${bodyArea}#function-check-in`);
+}
+assert.equal(getNextAction({ safetyReady: true, hasAssessment: true, latestLog: { bodyArea: 'invalid' }, hasRecentOutcomeEntry: false }).href, '/logs#function-check-in');

@@ -9,12 +9,7 @@ For every ChatGPT, Codex, Claude, Gemini, or other AI-assisted task in this repo
 3. Read `.github/pull_request_template.md` before opening or updating a PR.
 4. Read `.github/ai-automation.yml` before scheduled automation, issue selection, PR gating, or any GitHub mutation when the file exists.
 5. Use repo-tracked files to establish implementation facts; current explicit user instructions govern task scope and authorization. Treat older pasted context as reference.
-6. Classify risk tier before implementation:
-   - Tier 0: docs / copy / small CSS
-   - Tier 1: mobile UX / i18n / navigation
-   - Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更。
-   - Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更。
-   - 純文件描述現有行為仍為 Tier 0；若實際改變上述產品行為，依最高受影響風險分級。
+6. 實作前讀取[單一風險／審查契約](.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy` 與 `review_policy`，完成分級。
 7. Keep changes minimal and localized. Split broad work into the smallest safe PR.
 
 ## Product and safety contract
@@ -67,46 +62,19 @@ Codex must:
 - run `npm run audit:exercise-coverage` when exercise data, filters, recommendations, or coverage docs may be affected;
 - avoid changing safety, session, storage, or routing behavior unless explicitly scoped.
 
-ChatGPT must inspect the repo workflow contract before generating Codex prompts, PR reviews, merge gates, or workflow recommendations. Review agents follow `REVIEW.md`, avoid duplicate findings, and include file, behavior, risk, and acceptance criterion for every P0/P1.
+ChatGPT must inspect the repo workflow contract before generating Codex prompts, PR reviews, merge gates, or workflow recommendations. Review agents enter through [REVIEW.md](REVIEW.md) and follow the central contract.
 
-## PR Draft and readiness policy
+## 風險、審查與合併契約
 
-Draft means implementation or required current-head automated evidence is incomplete.
+唯一規則來源為 [.github/ai-automation.yml](.github/ai-automation.yml)：
 
-Mark a PR **Ready for review** when:
+- `risk_tiers`：分級、必要／建議 AI 審查。
+- `pull_request_state_policy`：Draft、Ready、真人／真機條件。
+- `approval_policy`：即時 collaborator／author 核對、sole-contributor 與必要 review。
+- `review_policy`：P0／P1、exact-head gate、專項審查、輸出。
+- `auto_merge`：資格及額外門檻；資格不是授權。
 
-- implementation is complete;
-- required current-head automated checks pass;
-- no known blocking P0 remains;
-- P1 findings are fixed or explicitly deferred according to the review contract.
-
-Do **not** keep a PR in Draft solely because:
-
-- a human walkthrough has not occurred;
-- an automation agent cannot authenticate to a Vercel preview;
-- physical iPhone Safari evidence is absent;
-- the sole contributor cannot formally self-approve.
-
-Those are evidence gaps, not default Draft gates. They block merge only when the changed behavior cannot be validated reliably by automation, an explicit acceptance criterion requires that environment, or an unresolved P0/P1 requires human confirmation.
-
-## Sole-contributor approval policy
-
-While this repository has one collaborator and the PR author is that collaborator, formal GitHub self-approval is not a default merge-readiness requirement.
-
-每次交付前核對即時 collaborator 清單與 PR author；查詢失敗時不得推定符合 sole-contributor 條件。條件不符時遵循實際 branch protection、ruleset 與 requested-review 要求。
-
-For Tier 0-2 work, the default gate is:
-
-- required AI review routing complete;
-- current-head required checks pass;
-- no active requested-changes review;
-- no unresolved blocking review threads;
-- clean mergeability;
-- product safety and acceptance criteria pass.
-
-For Tier 3 work, keep required Claude Tier 3 review and ChatGPT PM synthesis. Add a human walkthrough only when the change includes safety logic, destructive or irreversible data migration, security-sensitive behavior, or another acceptance criterion that cannot be validated reliably by automation.
-
-Never claim a formal GitHub `APPROVE` when none exists. If collaborators are added, follow actual branch-protection and requested-review rules rather than inventing an extra blanket manual gate.
+本檔不維護第二份門檻；審查入口見 [REVIEW.md](REVIEW.md)。
 
 ## GitHub Projects V2 automation
 
@@ -121,40 +89,13 @@ Lifecycle semantics:
 - merged PR -> `Done`;
 - closed-unmerged PR must not be marked `Done`.
 
-## P0 blockers
-
-Use P0 only when:
-
-- build fails;
-- core user flow is broken;
-- safety gate can be bypassed;
-- pain >=6 can start training;
-- red flag does not block training;
-- required session state is lost;
-- iOS Safari / SPA routing breaks core use;
-- existing stored user data may be lost.
-
-## P1 improvements
-
-Use P1 for material merge-scope issues such as confusing mobile navigation, hidden important controls, dense user-facing copy, broken i18n, missing accessibility labels on primary controls, or changed behavior lacking test/QA evidence.
-
-Do not classify the mere absence of manual or physical-device evidence as P1 when reliable automated/scripted evidence covers the changed behavior and no acceptance criterion explicitly requires that environment.
-
 ## Post-merge cleanup
 
 After merge, confirm the PR is merged into `main`, confirm no open follow-up depends on the branch, verify/delete the remote branch, and remove only safe temporary local branches/worktrees. Do not touch unrelated local edits.
 
 ## Output contract
 
-Return:
-
-1. Verdict: Pass / Partial Pass / Fail
-2. P0 blockers
-3. P1 improvements
-4. Exact files to change
-5. Acceptance criteria
-
-Do not include P2 wishlist items unless explicitly requested. Do not suggest broad rewrites.
+依[單一契約](.github/ai-automation.yml)的 `review_policy.output`；自動化另填 `reporting.required_output`。
 
 ## 共通設定與授權邊界
 

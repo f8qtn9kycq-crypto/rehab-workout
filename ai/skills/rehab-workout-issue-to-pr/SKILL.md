@@ -34,7 +34,7 @@ Before making changes, read:
    - exercise data: `docs/exercise-data-model.md`
    - workflow: `docs/ai-workflow.md`, `docs/pr-workflow.md`, `docs/codex-issue-workflow.md`
 
-Repo-tracked files override pasted compact context and chat memory.
+以 repo-tracked 文件核對實作現況與驗證門檻；使用者目前明確指示決定任務與授權。舊提示與記憶不會自行擴大範圍或取得合併授權。
 
 ## Workflow
 
@@ -48,14 +48,11 @@ Repo-tracked files override pasted compact context and chat memory.
 8. Fill the PR template with concrete evidence.
 9. Open a PR.
    依 `.github/ai-automation.yml` 風險分級主動發起必要或建議的 exact-head 審查，先查同 SHA 請求避免重複；請求不等於完成，外部結果不可用時標 Pending。新 head 重查 checks、threads 與 review 狀態。
-10. Stop before merge unless the user explicitly asks to merge.
+10. 未獲使用者明確合併授權時停止於本機或 PR；已有授權時依[單一契約](../../../.github/ai-automation.yml)的 `review_policy.exact_head_gate`、`approval_policy` 與 `auto_merge` 執行及回報，不另設技能門檻。
 
 ## Risk tiers
 
-- Tier 0: docs / copy / small CSS.
-- Tier 1: mobile UX / i18n / navigation.
-- Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更.
-- Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更.
+分級與必要審查統一依[單一契約](../../../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy` 與 `review_policy`；Draft／正式review／合併資格分別讀 `pull_request_state_policy`、`approval_policy`、`auto_merge`。不在技能維護副本。
 
 ## Safety guardrails
 
@@ -89,7 +86,7 @@ Run tests if available:
 npm run test
 ```
 
-UI 變更需附 320px 與 375px QA，可使用可靠的瀏覽器自動化；只有變更行為無法可靠自動驗證、明確驗收條件或未解 P0/P1 要求時，才增加真人／真機 walkthrough。分開標示證據環境。
+UI 證據與真人／真機條件依同一契約 `review_policy.routing_and_evidence`；不另設一律人工驗證門檻。
 
 ## PR body evidence
 
@@ -112,4 +109,4 @@ Return:
 2. changed files
 3. validation results
 4. safety impact
-5. note that the PR was not merged automatically
+5. 實際交付／合併狀態、精確 head、驗證結果及尚未通過的 gate；不把 Pending 寫成完成。

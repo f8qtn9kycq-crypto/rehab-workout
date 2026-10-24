@@ -46,7 +46,7 @@ A GitHub issue can hold the task scope and acceptance criteria. Codex then only 
 5. Codex reads the issue plus repo workflow docs.
 6. Codex creates a branch, implements the smallest safe change, runs validation, and opens a PR.
 7. Review the PR using `REVIEW.md`.
-8. Merge only when the PR template evidence is complete and no P0 remains.
+8. 合併依[單一契約](../.github/ai-automation.yml)的 `review_policy.exact_head_gate`、`approval_policy` 與 `auto_merge`，不以此流程列舉取代完整 gate。
 9. After merge, verify branch auto-delete or delete the branch manually.
 
 ## Active issue normalization
@@ -112,10 +112,7 @@ The skill keeps product decisions in the GitHub issue and repo docs, while Codex
 
 ## Risk tier routing
 
-- Tier 0: docs / copy / small CSS. Codex review is usually enough.
-- Tier 1: mobile UX / i18n / navigation. Codex review is usually enough unless findings conflict.
-- Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更. Claude review is recommended.
-- Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更. 範圍過大時拆分；Codex、Claude 審查必要，ChatGPT PM synthesis 合併前必要。
+分級、必要審查與合併門檻統一依[單一契約](../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy`、`review_policy`、`approval_policy` 與 `auto_merge`，不以 issue 範本或本文件另定義。
 
 ## Guardrails
 

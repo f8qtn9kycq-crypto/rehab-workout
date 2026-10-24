@@ -34,76 +34,9 @@ Before implementation:
 6. Classify risk tier.
 7. Keep scope minimal and localized.
 
-## Risk Tiers
+## 風險與審查契約
 
-風險分級與審查路由以 `AGENTS.md`、`REVIEW.md` 與 `.github/ai-automation.yml` 為契約，PR template 用於記錄適用項目及證據。純文件描述現有行為為 Tier 0；產品變更依最高受影響風險分級。
-
-### Tier 0 — Docs / workflow only
-
-Examples:
-
-- docs files
-- workflow instructions
-- PR template wording
-- review docs
-
-Rules:
-
-- no product code changes
-- no app behavior changes
-- no safety logic changes
-- no data migration
-
-### Tier 1 — Copy / UI / low-risk UX
-
-Examples:
-
-- labels
-- translation copy
-- visual hierarchy
-- simple mobile UX adjustments
-- accessibility wording
-
-Expected evidence:
-
-- build result when runtime files change
-- mobile QA notes when UX changes
-- confirmation no safety behavior changed
-
-### Tier 2 — 安全相關流程／state／routing／session／storage
-
-Examples:
-
-- session flow（不含安全邏輯變更）
-- route guards
-- LocalStorage behavior
-- recommendation filtering
-- exercise detail navigation
-
-Expected evidence:
-
-- build result
-- relevant test or manual QA
-- safety regression check
-- iOS Safari / SPA routing consideration
-- Codex 審查必要；Claude 建議，衝突或 merge gate 時建議 ChatGPT PM synthesis
-
-### Tier 3 — 架構／資料遷移／安全性／安全邏輯／推薦安全／動作內容
-
-Examples:
-
-- 架構變更、資料遷移或安全性變更
-- SafetyGate、PainScale、red flags 或 Recovery Mode 的安全邏輯
-- 推薦安全規則
-- 動作內容變更
-
-Expected evidence:
-
-- build result
-- relevant audit/test result
-- Codex 與 Claude 審查必要，ChatGPT PM synthesis 合併前必要；結果綁定精確 head
-- no diagnosis/cure claims
-- stricter merge gate
+所有規則依[單一契約](../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy`、`review_policy`、`approval_policy` 與 `pull_request_state_policy`。本手冊說明操作順序，不維護分級或門檻副本。
 
 Tier 3 PRs automatically receive one exact-head AI review request on open,
 reopen, synchronization, and transition to ready-for-review. The trusted
@@ -115,14 +48,6 @@ completed review, synthesis result, approval, or merge authorization.
 If the automatic request workflow fails, fix or rerun the request path and keep
 the PR blocked. Do not treat a required-review checkbox or request comment as
 evidence that either reviewer completed its work.
-
-## Sole-contributor approval policy
-
-每次交付前核對即時 collaborator 清單及 PR author。只有 collaborator 恰為一人、且 PR author 為該人時，才適用 sole-contributor 政策；無法查證時不得推定符合條件。
-
-Tier 0–2 不以作者無法 self-approve 作為預設阻塞；仍需適用的 AI 審查、精確 head checks、無 active requested changes／blocking threads、clean mergeability 及驗收通過。Tier 3 保留必要 Claude 審查與 ChatGPT PM synthesis。真人 walkthrough 依 `AGENTS.md`／`REVIEW.md` 的安全邏輯、破壞性或不可逆資料遷移、安全敏感行為、無法可靠自動驗證或明確驗收需求判定，並綁定精確 head。
-
-AI 或 walkthrough 結果不得宣稱為正式 GitHub `APPROVE`；條件不符或新增 collaborator 時，遵循實際 branch protection、ruleset 與 requested-review 要求，不另設一律真人核准的門檻。
 
 ## PR Template Evidence
 
@@ -138,94 +63,9 @@ Every PR should fill or preserve:
 - Merge readiness
 - Post-merge cleanup
 
-## Review Contract
+## Review、Merge 與 Auto-Merge
 
-Follow `REVIEW.md`.
-
-Final review output should use:
-
-```text
-Verdict:
-P0:
-P1:
-Files:
-Acceptance criteria:
-Suggested next Codex command:
-```
-
-Every P0/P1 finding must include:
-
-```text
-File:
-Behavior:
-Risk:
-Acceptance criterion:
-```
-
-Do not include P2 wishlist items unless explicitly requested.
-
-## Merge Gate
-
-Before merge, confirm:
-
-- 依 `REVIEW.md` 的精確 head gate 核對 SHA、required Check Runs／GitHub App、reviews／threads、Draft、mergeability 及授權；每次 head 改變後重新驗證
-
-- no P0 remains
-- P1 findings are fixed or explicitly deferred
-- acceptance criteria are met
-- PR template is filled
-- branch cleanup plan exists
-- no broad unrelated refactor was introduced
-
-For runtime PRs, also confirm:
-
-- build passes
-- relevant audit/test passes
-- mobile 320px / 375px checked when UI changed
-- LocalStorage compatibility considered when storage changed
-- iOS Safari / SPA routing risk considered when routes changed
-
-## Auto-Merge Eligibility
-
-任何合併都先需要使用者明確授權，並通過正常 merge gate；Tier 0 eligibility 本身不是授權。 Risk tier lowers the review burden; it does not bypass evidence, CI, or the PR template.
-
-### Tier 0 docs-only PRs
-
-Auto-merge may be enabled when all are true:
-
-- changed files are limited to documentation, comments, templates, or non-runtime workflow instructions
-- no product source files under `src/` changed
-- no app behavior changed
-- no safety, session, storage, routing, recommendation, or exercise data behavior changed
-- PR template is filled
-- required checks pass
-- no P0 remains
-- P1 findings are fixed or explicitly deferred
-- acceptance criteria are met
-- branch cleanup plan exists
-
-### Tier 0 workflow PRs
-
-Workflow-only PRs are still Tier 0 when they do not change runtime app behavior, but they affect repository trust and automation reliability.
-
-Auto-merge may be enabled only when all Tier 0 docs-only conditions are true and the PR also documents:
-
-- changed workflow files are limited to `.github/workflows/*` and supporting docs
-- YAML and shell syntax were validated as practical
-- `PROJECTS_TOKEN` remains required for Projects V2 field writes
-- no fallback to `github.token` is introduced for Projects V2
-- Project owner type remains explicit when Projects V2 automation is touched
-- post-merge runtime validation steps are listed when behavior depends on real GitHub Actions or GitHub Projects events
-
-For Tier 0 workflow PRs, human review is recommended but not mandatory when the PR is narrow, evidence is complete, and CI passes. Claude review is not required unless findings conflict or the change broadens beyond workflow/docs.
-
-### Tier 1 and higher PRs
-
-Do not enable blind auto-merge for Tier 1 or higher.
-
-- Tier 1 PRs require acceptance-criteria review before merge.
-- Tier 2 PRs require state, routing, session, storage, and safety regression consideration where applicable.
-- Tier 3 PRs require stronger safety/content review and should not auto-merge without explicit approval.
+由 [REVIEW.md](../REVIEW.md) 進入[單一契約](../.github/ai-automation.yml)：finding／輸出格式讀 `review_policy`，精確 head 合併讀 `review_policy.exact_head_gate` 與 `approval_policy`，自動化資格及 workflow 額外條件讀 `auto_merge`。執行與回報所用證據必須對應實際變更，不以本手冊作第二份門檻。
 
 ## Deployment Environment Gate
 

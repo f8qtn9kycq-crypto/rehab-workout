@@ -13,7 +13,7 @@ body:
     id: risk_tier
     attributes:
       label: Risk tier
-      description: Match the repo PR template.
+      description: 依 .github/ai-automation.yml 的 risk_tiers 與 risk_classification_policy 選擇；不以本表單另定義。
       options:
         - "Tier 0: 文件／文案／小幅 CSS"
         - "Tier 1: 行動版 UX／i18n／導覽"
@@ -88,7 +88,7 @@ body:
         - npm run build
         - npm run audit:exercise-coverage if exercise data, filters, recommendations, or coverage docs are affected
         - npm run test if available
-        - UI 變更需 320px／375px QA，可用瀏覽器自動化；真人／真機門檻依 REVIEW.md 的實際驗收需求。
+        - UI/mobile 與真人／真機證據依 .github/ai-automation.yml 的 review_policy.routing_and_evidence
     validations:
       required: true
 

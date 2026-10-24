@@ -197,6 +197,8 @@ control_plane:
   tier_3_ai_review_request:
     automatic_events:
       - pull_request_target.opened
+      - pull_request_target.edited
+      - pull_request_target.labeled
       - pull_request_target.reopened
       - pull_request_target.synchronize
       - pull_request_target.ready_for_review

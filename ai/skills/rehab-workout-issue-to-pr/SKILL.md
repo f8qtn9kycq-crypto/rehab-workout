@@ -24,8 +24,9 @@ Before making changes, read:
 1. `AGENTS.md`
 2. `REVIEW.md`
 3. `.github/pull_request_template.md`
-4. The GitHub issue
-5. Relevant docs:
+4. `.github/ai-automation.yml`
+5. The GitHub issue
+6. Relevant docs:
    - mobile UX: `docs/mobile-ux-guidelines.md`
    - localization: `docs/localization-style-guide.md`
    - safety: `docs/safety-rules.md`
@@ -46,6 +47,7 @@ Repo-tracked files override pasted compact context and chat memory.
 7. Run required validation.
 8. Fill the PR template with concrete evidence.
 9. Open a PR.
+   依 `.github/ai-automation.yml` 風險分級主動發起必要或建議的 exact-head 審查，先查同 SHA 請求避免重複；請求不等於完成，外部結果不可用時標 Pending。新 head 重查 checks、threads 與 review 狀態。
 10. Stop before merge unless the user explicitly asks to merge.
 
 ## Risk tiers
@@ -87,7 +89,7 @@ Run tests if available:
 npm run test
 ```
 
-For UI changes, include manual 320px and 375px mobile QA evidence.
+UI 變更需附 320px 與 375px QA，可使用可靠的瀏覽器自動化；只有變更行為無法可靠自動驗證、明確驗收條件或未解 P0/P1 要求時，才增加真人／真機 walkthrough。分開標示證據環境。
 
 ## PR body evidence
 

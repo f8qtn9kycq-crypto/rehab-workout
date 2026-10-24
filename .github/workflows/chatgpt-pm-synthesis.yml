@@ -4,6 +4,8 @@ on:
   pull_request_target:
     types:
       - opened
+      - edited
+      - labeled
       - reopened
       - synchronize
       - ready_for_review
@@ -38,6 +40,9 @@ permissions:
 jobs:
   request:
     name: Request exact-head AI reviews
+    concurrency:
+      group: ai-review-request-${{ github.repository }}-${{ github.event.issue.number || github.event.pull_request.number }}
+      cancel-in-progress: false
     if: >-
       (github.event_name == 'pull_request_target') ||
       (github.event_name == 'issue_comment' &&

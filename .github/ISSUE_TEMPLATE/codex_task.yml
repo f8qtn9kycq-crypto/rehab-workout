@@ -15,10 +15,10 @@ body:
       label: Risk tier
       description: Match the repo PR template.
       options:
-        - Tier 0: docs / copy / small CSS
-        - Tier 1: mobile UX / i18n / navigation
-        - Tier 2: safety / session / storage / routing
-        - Tier 3: architecture / data migration / security
+        - "Tier 0: 文件／文案／小幅 CSS"
+        - "Tier 1: 行動版 UX／i18n／導覽"
+        - "Tier 2: 安全相關流程／session／storage／routing／推薦流程；不含安全邏輯"
+        - "Tier 3: 架構／資料遷移／安全性／安全邏輯／推薦安全規則／動作內容"
     validations:
       required: true
 
@@ -27,7 +27,7 @@ body:
     attributes:
       label: Goal
       description: What should Codex accomplish?
-      placeholder: Example: Make the mobile body-area selector show all 4 options without hidden horizontal scroll.
+      placeholder: "範例：讓行動版身體部位選擇器完整顯示四個選項，避免隱藏的水平捲動。"
     validations:
       required: true
 
@@ -74,7 +74,7 @@ body:
         - Do not change pain thresholds.
         - Do not bypass SafetyGate.
         - Do not weaken red-flag blocking.
-        - Do not change SessionRouteGuard.
+        - Do not change SafetyRouteGuard.
         - Do not change recommendation safety logic.
         - Do not introduce diagnosis or cure claims.
     validations:
@@ -88,7 +88,7 @@ body:
         - npm run build
         - npm run audit:exercise-coverage if exercise data, filters, recommendations, or coverage docs are affected
         - npm run test if available
-        - Manual 320px / 375px mobile QA if UI changed
+        - UI 變更需 320px／375px QA，可用瀏覽器自動化；真人／真機門檻依 REVIEW.md 的實際驗收需求。
     validations:
       required: true
 

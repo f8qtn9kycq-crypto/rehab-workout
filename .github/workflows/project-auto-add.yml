@@ -17,6 +17,7 @@ on:
       - edited
       - synchronize
       - ready_for_review
+      - converted_to_draft
       - labeled
       - closed
   pull_request_target:
@@ -26,8 +27,12 @@ on:
       - edited
       - synchronize
       - ready_for_review
+      - converted_to_draft
       - labeled
       - closed
+  workflow_run:
+    workflows: [Build, Project review signal]
+    types: [in_progress, completed]
   workflow_dispatch:
     inputs:
       target_type:
@@ -76,9 +81,47 @@ jobs:
 
           echo "Recorded Project sync request for PR #$EVENT_PULL_REQUEST_NUMBER at $EVENT_PULL_REQUEST_HEAD_SHA."
 
+  resolve-targets:
+    name: Resolve trusted Project sync targets
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.targets.outputs.targets }}
+    steps:
+      - name: Resolve current pull requests without executing their code
+        id: targets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+            sha="$(jq -r '.workflow_run.head_sha' "$GITHUB_EVENT_PATH")"
+            [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+            targets="$(jq -c '[.workflow_run.pull_requests[]? | {type: "pull_request", number: .number}] | unique_by(.number)' "$GITHUB_EVENT_PATH")"
+            if [[ "$targets" == "[]" ]]; then
+              targets="$(gh api "repos/$GITHUB_REPOSITORY/commits/$sha/pulls" --paginate --slurp | jq -c '[.[][] | select(.state == "open") | {type: "pull_request", number: .number}] | unique_by(.number)')"
+            fi
+          else
+            targets="$(jq -c '
+              if .inputs.target_number then [{type: .inputs.target_type, number: (.inputs.target_number | tonumber)}]
+              elif .pull_request then [{type: "pull_request", number: .pull_request.number}]
+              else [{type: "issue", number: .issue.number}] end
+            ' "$GITHUB_EVENT_PATH")"
+          fi
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+
   add-content-to-project:
     name: Add GitHub content to Project
-    if: github.event_name != 'pull_request' && (github.event_name != 'issues' || github.event.issue.pull_request == null)
+    needs: resolve-targets
+    if: needs.resolve-targets.outputs.targets != '[]' && (github.event_name != 'issues' || github.event.issue.pull_request == null)
+    strategy:
+      max-parallel: 1
+      matrix:
+        target: ${{ fromJSON(needs.resolve-targets.outputs.targets) }}
+    concurrency:
+      group: project-sync-${{ github.repository }}-${{ matrix.target.type }}-${{ matrix.target.number }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     env:
       PROJECT_OWNER: f8qtn9kycq-crypto
@@ -102,11 +145,8 @@ jobs:
         id: content
         shell: bash
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_TARGET_TYPE: ${{ inputs.target_type }}
-          INPUT_TARGET_NUMBER: ${{ inputs.target_number }}
-          EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-          EVENT_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          INPUT_TARGET_TYPE: ${{ matrix.target.type }}
+          INPUT_TARGET_NUMBER: ${{ matrix.target.number }}
         run: |
           set -euo pipefail
 
@@ -122,18 +162,8 @@ jobs:
             } >> "$GITHUB_OUTPUT"
           }
 
-          event_name="$EVENT_NAME"
-
-          if [[ "$event_name" == "workflow_dispatch" ]]; then
-            target_type="$INPUT_TARGET_TYPE"
-            target_number="$INPUT_TARGET_NUMBER"
-          elif [[ "$event_name" == "pull_request_target" ]]; then
-            target_type="pull_request"
-            target_number="$EVENT_PULL_REQUEST_NUMBER"
-          else
-            target_type="issue"
-            target_number="$EVENT_ISSUE_NUMBER"
-          fi
+          target_type="$INPUT_TARGET_TYPE"
+          target_number="$INPUT_TARGET_NUMBER"
 
           case "$target_type" in
             issue|pull_request)
@@ -564,21 +594,24 @@ jobs:
             local head_sha="$1"
             local checks_json
 
-            checks_json="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/check-runs?per_page=100")"
+            if ! checks_json="$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/check-runs?per_page=100&filter=latest" --paginate --slurp | jq '{check_runs: [.[].check_runs[]]}')"; then
+              return 1
+            fi
             jq -e --arg sha "$head_sha" '
               [.check_runs[]?
                 | select((.name | ascii_downcase) == "build")
-                | select(.head_sha == $sha)
-                | select(.status == "completed")
-                | select(.conclusion == "success")
-              ] | length > 0
+                | select(.head_sha == $sha and .app.slug == "github-actions")
+              ] | sort_by(.id) | last
+              | .status == "completed" and .conclusion == "success"
             ' <<<"$checks_json" >/dev/null
           }
 
           has_no_active_requested_changes() {
             local reviews_json
 
-            reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews?per_page=100")"
+            if ! reviews_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$target_number/reviews?per_page=100" --paginate --slurp | jq 'add')"; then
+              return 1
+            fi
             jq -e '
               [.[]?
                 | select(.user.login != null)

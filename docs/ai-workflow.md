@@ -312,3 +312,18 @@ Do not:
 - bypass SafetyGate
 - weaken red-flag blocking
 ```
+
+## 技能與代理的載入方式
+
+- 專案技能原始檔維持在 `ai/skills/`；`.agents/skills/` 以相對連結提供 Codex 自動探索，避免複製內容。新增或調整後核對連結與 frontmatter；下一回合檢查技能是否出現，必要時重新開啟 Codex。
+- issue 實作載入 `rehab-workout-issue-to-pr`；影片來源／動作內容載入 `rehab-exercise-youtube`；插圖載入 `rehab-exercise-image-creation`。其他手冊依變更範圍載入。
+- 已有的 exact-head PR review、Playwright 與安全技能足以支援目前流程。沒有具體能力缺口時不重複安裝同功能技能，不為每個 prompt 建立常駐代理。
+- 委派只處理能獨立驗收且減少主代理工作的範圍；簡短問答直接完成。子任務風險、可寫範圍、不可改契約與驗收先固定，指定模型不等於可驗證的實際模型，也不等於獨立 Claude 審查。
+
+## Project 狀態更新與本機驗證
+
+`Project auto-add` 在 PR 轉 Draft、Build 執行／完成及審查訊號完成時，重新查詢當前 PR 狀態。`Project review signal` 只在 PR review 事件記錄訊號，不接收 `PROJECTS_TOKEN`；可信 default-branch `workflow_run` 才更新 Project，且不 checkout PR、不下載或執行產物。fork 的 review signal 可能需先取得 Actions 執行核准；缺少事件時仍可使用既有 `workflow_dispatch` 補同步。
+
+Build gate 限定當前 head 的 GitHub Actions `build`，採最新 check run；reviews 與 checks 分頁讀取。這只支援 Project 顯示狀態，不能代替完整 exact-head 合併 gate。
+
+本機先以虛擬環境安裝 `scripts/workflow-requirements.txt`，再執行 `python3 scripts/workflow-regression.py`，使用固定 fixture 驗證事件路由、Build／review gate 與 shell 語法；CI Build 亦執行。真正 GitHub 事件與 Project 欄位更新，須在 workflow 進入 main 後觀察，不以本機 fixture 冒充。

@@ -10,7 +10,7 @@ const expected = {
   'zh-TW': {
     safety: ['今天先確認一下身體狀況', '開始前，確認今天有沒有需要留意的不適。', '開始安全確認', '/safety'],
     assessment: ['今天活動起來感覺如何？', '確認疼痛與動作信心，再挑選動作。', '確認今天狀況', '/assessment'],
-    outcome: ['補一筆功能確認', '你已經有訓練紀錄。用一個快速確認，看看日常動作感覺如何。', '新增功能確認', '/logs'],
+    outcome: ['補一筆功能確認', '你已經有訓練紀錄。用一個快速確認，看看日常動作感覺如何。', '新增功能確認', '/logs?outcomeArea=ankle#function-check-in'],
     continue: ['從最近一次訓練繼續', '如果今天仍覺得可控制、沒有警訊，可以重複最近一次動作。', '繼續訓練', '/session/ankle-circles'],
     start: ['從今天適合的動作開始', '選一個身體部位，用慢速度、可控制、低衝擊的方式開始。', '選擇動作', '/exercises'],
     manual: '補記已完成的訓練',
@@ -19,7 +19,7 @@ const expected = {
   en: {
     safety: ['Check how your body feels today', 'Before starting, check for any discomfort that needs attention today.', 'Start safety check', '/safety'],
     assessment: ['How does movement feel today?', 'Check pain and movement confidence, then choose an exercise.', 'Check today’s condition', '/assessment'],
-    outcome: ['Add a quick function check-in', 'You have recent training logs. A short function check-in helps compare how daily movement feels.', 'Add check-in', '/logs'],
+    outcome: ['Add a quick function check-in', 'You have recent training logs. A short function check-in helps compare how daily movement feels.', 'Add check-in', '/logs?outcomeArea=ankle#function-check-in'],
     continue: ['Continue from your latest training', 'Repeat the last exercise only if today still feels controlled and safe.', 'Continue training', '/session/ankle-circles'],
     start: ['Start with today’s suitable exercises', 'Choose a body area and begin with slow, controlled, low-impact movement.', 'Choose exercises', '/exercises'],
     manual: 'Log a finished workout',

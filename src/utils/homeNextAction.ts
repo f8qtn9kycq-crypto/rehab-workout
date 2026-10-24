@@ -1,4 +1,4 @@
-import type { BodyArea, FunctionalOutcomeEntry, TrainingLogEntry } from '../types/rehab';
+import { BODY_AREAS, type BodyArea, type FunctionalOutcomeEntry, type TrainingLogEntry } from '../types/rehab';
 
 type NextAction = {
   titleKey: string;
@@ -61,7 +61,7 @@ export function getNextAction(input: {
       titleKey: 'home.nextAction.outcome.title',
       bodyKey: 'home.nextAction.outcome.body',
       ctaKey: 'home.nextAction.outcome.cta',
-      href: '/logs',
+      href: `/logs${BODY_AREAS.includes(input.latestLog.bodyArea) ? `?outcomeArea=${input.latestLog.bodyArea}` : ''}#function-check-in`,
       variant: 'primary',
     };
   }

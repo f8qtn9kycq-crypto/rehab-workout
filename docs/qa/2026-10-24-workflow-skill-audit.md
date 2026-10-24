@@ -1,6 +1,6 @@
 # 指示、技能、代理與工作流程審查
 
-日期：2026-10-24（Asia/Taipei）。基準：`8e8ae0ef082320e564105c37f0ee0786511f95eb`。
+日期：2026-10-24（Asia/Taipei）。初次審查基準：`8e8ae0ef082320e564105c37f0ee0786511f95eb`；交付前同步基準：`5ed50040744be5292e30d39f85dc7ffb1a052474`。
 repo：`f8qtn9kycq-crypto/rehab-workout`。
 
 ## 判定與範圍
@@ -35,7 +35,8 @@ P0：未發現產品 P0；本次未修改 `src/`、產品資料、安全門檻�
 
 ## 本機證據
 
-- `npm ci`、`npm run build`、完整 `npm test`：Pass。
+- 同步最新 main 後重跑 `npm ci`、`npm run build`、完整 `npm test`、`npm run audit:safety-i18n`：Pass。
+- actionlint v1.7.12（官方 archive checksum 已核對），workflow schema／expression 檢查：Pass；此輪未啟用額外 shellcheck／pyflakes。
 - `scripts/workflow-regression.py`：YAML／form、workflow shell 語法、6 個事件路由、6 個 Build gate、3 個 review gate、2 個 API 失敗情境 Pass。
 - 三個 `.agents/skills` 連結皆可讀；使用 skill-creator `quick_validate.py` 均 Pass。
 - `git diff --check`：Pass；`src/` 未變動。
@@ -52,3 +53,11 @@ P0：未發現產品 P0；本次未修改 `src/`、產品資料、安全門檻�
 1. 同 SHA 的 PR 從未分類改成 Tier 3：產生一次必要審查請求；再編輯不重複。
 2. Build 開始／失敗／完成、review requested changes／dismissed、PR 轉 Draft：Project 以即時狀態更新。fork review signal 可能需 Actions 核准；必要時用既有 workflow_dispatch 補同步。
 3. 新 head 必須重查 checks、threads、reviews、rulesets 及 mergeability；本機 fixture 不作為 GitHub 事件或 Project 寫入證據。
+
+## 交付續輪
+
+使用者明確要求實作建議與修復問題後，重查 repo 身分、同步最新 main 並重跑本機驗證，準備以 PR 交付；未取得合併授權。
+
+重新委派：指定 `gpt-6-astra` high／實際模型 NOT VERIFIED；repo／子任務 Tier 3，範圍限 workflow token 信任邊界、事件解析與 readiness gate 的唯讀檢查。初步未發現新增 P0/P1；最終 exact-head 結果另記 PR。此檢查不替代必要 Claude 審查與 PM synthesis。
+
+GitHub current-head checks、必要 review、threads 與 mergeability 以 PR 即時紀錄為準；main 合併後的事件驗收仍依上列步驟，不以此本機報告宣稱已上線。

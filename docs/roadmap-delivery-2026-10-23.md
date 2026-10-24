@@ -1,6 +1,6 @@
 # Roadmap 交付追蹤與下一輪候選
 
-本文件更新 2026-10-08 至 10-22 PR 回顧後的實作路線圖。觀察日為 2026-10-23（臺灣時間），已核對的 main 基準為 `a0a4d03560193da0ca332dac9b2939db4fabdf1b`。產品方向維持安全、信任、低摩擦開始、引導與追蹤；不以 PR 數量代表產品成果。
+本文件更新 2026-10-08 至 10-22 PR 回顧後的實作路線圖。觀察日更新為 2026-10-24（臺灣時間），已核對的 main 基準為 `4d5c2829a4bd6a3cc9d9d976230712df2a656fd1`。產品方向維持安全、信任、低摩擦開始、引導與追蹤；不以 PR 數量代表產品成果。
 
 ## 已交付
 
@@ -15,18 +15,17 @@
 
 各 PR 的精確 head、獨立審查、CI 與分支清理以該 PR 留言為準。#225／#151 的 Claude 為建議審查，額度限制及未採用原因有記錄；#236／#237 的必要 Claude 已實際完成，不能將此差異抹平。
 
-## 尚未完成的原路線圖範圍
+## 原路線圖完成核對
 
-完整分享CSV、完整CSV/JSON備份、additive restore由 #238 承接原 #230，不能用 #237 的唯讀趨勢代替。#238 尚待最終精確 head 必要審查與合併；在 main 實際包含交付前，這項維持 Pending。
+完整分享CSV、完整CSV/JSON備份與additive restore已由 #238 承接原 #230，於2026-10-24合併為 `4d5c2829a4bd6a3cc9d9d976230712df2a656fd1`。最終head `0365cffc28182d4fe66291516be770db019b106c` 的Codex、Claude、PM與必要CI完成；詳見PR最終gate留言。原路線圖交付完成；舊 #230 分支仍開啟，不能稱該PR已合併。
 
 #230 舊分支基於v1而與main衝突。保留其需求，但不機械合入舊writer。#134／#135／#145／#186指定版本已由#236涵蓋；這是main版本證據，並非那些PR本身已合併。#187的Tailwind4方案目前因PostCSS設定失敗，不能作為一般修補直接合入；新版selector公告與剩餘工具鏈風險仍需另案評估。
 
 ## 下一輪優先序
 
-1. 完成 #238 必要審查、任何具體修復與 exact-head gate；備份／還原不得以「只做匯出」或只支援新資料縮小驗收。
-2. 對已交付流程做固定情境觀察：首次安全開始、已安全且有評估的回訪、功能追蹤到期、動作庫器材交接補記、痠痛資料攜出與空白profile還原。每項記錄是否需要提示、卡點、是否產生重複／遺失；只填實測時間，不估算改善百分比。
-3. 依上述觀察重新決定 #150。舊diff移除情境首頁nextAction並固定導向/start，會失去回訪繼續／功能追蹤主入口。先保留既有情境與次要補記，再比較是否需要身體圖入口；不把unused helper的16-state測試當實際首頁導覽證據。
-4. 另訂Tailwind工具鏈遷移方案：列公告適用路徑、PostCSS設定、CSS前後比對、雙語320/375/390核心操作與回退計畫；Tier3獨立審查。未證明production可利用性，不宣稱目前網站已被利用，也不將所有相依公告視為同一緊急事件。
+1. 對已交付流程做固定情境觀察：首次安全開始、已安全且有評估的回訪、功能追蹤到期、動作庫器材交接補記、痠痛資料攜出與空白profile還原。每項記錄是否需要提示、卡點、是否產生重複／遺失；只填實測時間，不估算改善百分比。
+2. 依上述觀察重新決定 #150。舊diff移除情境首頁nextAction並固定導向/start，會失去回訪繼續／功能追蹤主入口。先保留既有情境與次要補記，再比較是否需要身體圖入口；不把unused helper的16-state測試當實際首頁導覽證據。
+3. 依已合併 #241 的[工具鏈遷移方案](toolchain-migration-plan-2026-10-24.md)，先確認最低瀏覽器版本與是否需要控制性實驗，再決定實作。方案已涵蓋：列公告適用路徑、PostCSS設定、CSS前後比對、雙語320/375/390核心操作與回退計畫；Tier3獨立審查。未證明production可利用性，不宣稱目前網站已被利用，也不將所有相依公告視為同一緊急事件。
 
 暫不排入新增進階動作、整套session orchestration、後端同步、AI chatbot或遊戲化。組合執行上下文需先觀察3動作使用情境，再定partial save、去重、停止／resume與跨動作安全契約。保守內容缺口可以保留。
 
@@ -36,11 +35,9 @@
 
 等待 #238 必要外部審查期間，已先補齊目前 HomePage 實際渲染與導覽驗證：46 個 SSR 案例、Chrome/WebKit 合計192矩陣導覽及36邊界流程。固定 `/start` 的 temporary mutation 會使測試失敗，還原後通過；沒有改 runtime。詳見[驗證報告](qa/home-returning-flow-validation.md)。這完成下列候選的技術檢查部分；真人理解、任務時間與三動作組合使用阻力仍待觀察，不能把自動化 Pass 當成新首頁設計已獲接受。
 
-候選分支 `codex/home-returning-flow-validation`；範圍為首頁實際render/navigation驗證及有證據的最小修正，涉及routing/session時至少Tier2。可能檔案：HomePage、homeNextAction、home-entry regression、兩locale與QA。驗收必須涵蓋首次／回訪、安全有效／失效／blocked、已有評估、最近紀錄及功能追蹤狀態；SafetyGate、疼痛門檻、紅旗、guard、推薦與storage保持。不先實作全新首頁或新增常駐分類服務。
+上述驗證已由 #240 合併（`5fe187c132fbe5dddfec1ad6e1fc7bca9dbbb401`），不再作為待實作候選。#241 文件方案亦已合併（`8501178c600c4ede62445e0b8206a012912c0df5`），未升級Tailwind或提高瀏覽器門檻。
 
-> Read AGENTS.md, REVIEW.md, the PR template and the latest roadmap status. First inspect the rendered HomePage and existing next-action coverage on current main. Compare first-run, safe returning, continue-training and outcome-check-in scenarios before adopting PR #150. Preserve the current primary context and retrospective logging entry. Implement only a demonstrated scoped regression, add meaningful rendered-navigation validation, open a minimal PR and trigger applicable exact-head review. Do not merge without explicit authorization and a clean final gate.
-
-這是下一輪候選提示，不代表本輪自動啟動新的首頁改版。完成 #238 後重新核對main與需求，再選一個工作單位。
+下一個產品實作必須先有固定情境的實際卡點與驗收條件，再選一個最小修正。現階段沒有足夠證據直接合入 #150 或啟動三動作session orchestration；不為等待審查而新增範圍。
 
 ## 證據邊界
 

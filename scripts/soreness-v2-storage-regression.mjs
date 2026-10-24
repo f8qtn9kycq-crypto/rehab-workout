@@ -148,8 +148,9 @@ assert.equal(s.readSorenessEntries().entries.length, 200);
 assert.deepEqual(s.readSorenessEntries().entries, [replacement, ...fullLegacy.slice(1)]);
 const staleTombstones = Array.from({ length: 200 }, () => s.sorenessId());
 reset(legacy, envelope([], staleTombstones));
-assert.equal(s.deleteSorenessEntry(legacy[0].id).ok, true);
-assert.deepEqual(JSON.parse(data.get(s.SORENESS_V2_KEY)).deletedLegacyIds, [legacy[0].id], 'prune only tombstones absent from current v1');
+const tombstoneCapacityBytes = bytes();
+assert.deepEqual(s.deleteSorenessEntry(legacy[0].id), { ok: false, error: 'capacity' });
+assert.deepEqual(bytes(), tombstoneCapacityBytes, 'preserve authoritative tombstones instead of pruning for capacity');
 
 // Save/delete re-read current state, including externally added records.
 reset(legacy);

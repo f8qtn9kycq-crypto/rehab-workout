@@ -33,7 +33,7 @@ Before making changes, read:
    - exercise data: `docs/exercise-data-model.md`
    - workflow: `docs/ai-workflow.md`, `docs/pr-workflow.md`, `docs/codex-issue-workflow.md`
 
-Repo-tracked files override pasted compact context and chat memory.
+以 repo-tracked 文件核對實作現況與驗證門檻；使用者目前明確指示決定任務與授權。舊提示與記憶不會自行擴大範圍或取得合併授權。
 
 ## Workflow
 
@@ -46,7 +46,7 @@ Repo-tracked files override pasted compact context and chat memory.
 7. Run required validation.
 8. Fill the PR template with concrete evidence.
 9. Open a PR.
-10. Stop before merge unless the user explicitly asks to merge.
+10. 沿用本次使用者授權：未授權合併時停止於 PR；已明確授權 merge-if-pass 時，依 REVIEW.md 重查 exact-head checks／App、threads、requested changes、Draft、mergeability、適用獨立審查與接受條件，以 expected head SHA 合併。授權持續有效，但不得繞過任何門檻。
 
 ## Risk tiers
 
@@ -87,7 +87,7 @@ Run tests if available:
 npm run test
 ```
 
-For UI changes, include manual 320px and 375px mobile QA evidence.
+UI 變更依影響驗證 320px／375px，必要時加 390px 與桌面；可採可靠瀏覽器自動化。只有明確接受條件、具體 P0/P1，或自動化無法可靠涵蓋的變更行為，才將真人／真機列為 gate。分開標示本機、CI、瀏覽器、真人、真機與 production，不能以一種證據冒充另一種。
 
 ## PR body evidence
 
@@ -110,4 +110,4 @@ Return:
 2. changed files
 3. validation results
 4. safety impact
-5. note that the PR was not merged automatically
+5. 實際交付狀態：未合併時列具體 gate；已授權且合併時列 reviewed head、merge SHA、main 核對及遠端分支清理結果。不得把仍 Pending 的審查寫成完成。

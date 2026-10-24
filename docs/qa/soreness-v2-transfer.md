@@ -55,3 +55,9 @@ Claude新head復審因桌面額度限制Pending，畫面顯示2026-10-23 19:20�
 ## 更新驗證（2026-10-23 20:06 臺北）
 
 產品程式與測試head f0700f861059826459f906a84d96f7139d54ff62，Chrome／WebKit各8組、雙語×320/375/390/1280共16組完整通過。實際下載驗證分享2筆／3正分列、0分與其備註不進分享、完整備份保留0；原生partial日期、fresh legacy schema3保護、確認前零寫入、quota失敗／重試、invalid原bytes與overflow均通過。兩CLI程序exit0並回傳完整8列結果；非真機或正式環境證據。先前測試程序已因npm DNS錯誤terminal，確認舊server handle不存在後重建；正常核准工具恢復，未繞過核准檢查。上述舊Pending是歷史；push／新head CI與必要獨立審查仍待完成。
+
+## 最終交付（2026-10-24）
+
+#238 已 squash merge 至main：`4d5c2829a4bd6a3cc9d9d976230712df2a656fd1`；reviewed head `0365cffc28182d4fe66291516be770db019b106c`，base `8501178c600c4ede62445e0b8206a012912c0df5`。上文Pending均為歷史過程。最終head完整test/build/safety通過；產品src與鎖檔相對16組瀏覽器驗證版本未變，沒有宣稱重新跑過真機。
+
+Claude已完成同一head獨立檢查與探針，Pass、無P0/P1，結果[PR留言](https://github.com/f8qtn9kycq-crypto/rehab-workout/pull/238#issuecomment-6379367209)。Codex雲端原工作停留Running超過十小時，依使用者要求單次重試後於2026-10-24T04:12:35Z完成、無findings；[摘要](https://github.com/f8qtn9kycq-crypto/rehab-workout/pull/238#issuecomment-6358992495)。[最終PM gate](https://github.com/f8qtn9kycq-crypto/rehab-workout/pull/238#issuecomment-6379716303)重新核對CI、ruleset、collaborator、threads及mergeability，Pass後以expected head合併，未繞過規則。遠端分支已自動刪除；無真人、實體iPhone、VoiceOver或production操作新證據。

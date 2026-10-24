@@ -87,7 +87,7 @@ Automated checks can prove dimensions, loading, registry reuse, and overflow. Th
 
 Create the named final-image comparison packet required by `docs/exercise-visual-qa.md`: all eight frozen references and every changed runtime image at native and measured mobile sizes. Include exact hashes and record visual acceptance separately from loading/overflow. Only attributable approved images may be anonymous controls; byte-unchanged is insufficient.
 
-Use the repo's risk tier and PR review workflow. Image-only mobile UX changes are normally Tier 1 unless they also alter safety, routing, session, storage, or exercise data semantics. Never merge without explicit authorization.
+分級與審查依[單一契約](../../../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy`、`review_policy` 及 `approval_policy`；依實際最高受影響行為判定，不以圖像副檔名單獨分類。
 
 ## Handoff
 

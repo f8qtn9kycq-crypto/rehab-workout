@@ -42,3 +42,37 @@
 ## 證據邊界
 
 本機測試、CI、Chrome/WebKit自動化、真人、實體iPhone、VoiceOver與production分開記錄。沒有新的真人／真機結果；walkthrough不得要求刻意誘發疼痛或紅旗。專業動作定位驗收另依既有視覺與安全規則，不能用此roadmap文件授予核准。`sources/`同步參考不修改。
+
+## 2026-10-24 再評估：目前可做與等待條件
+
+下表保留原7個舊PR的exact head與Build快照；本次重查#187已closed-unmerged，其他舊head未變。舊head的綠燈不能代替最新main的合併門檻。未知mergeability曾重新查詢，結果如下。未關閉、合併或重寫這些舊分支。
+
+| PR | head | 即時狀態與風險 | 本輪決定 |
+|---|---|---|---|
+| #230 | b967d73eb9d211e45bd707426772cc43e0362ec0 | 非Draft、dirty/conflict；原head Build success，舊v1 writer不適用目前v2 | 需求由#237/#238交付，不合入舊writer |
+| #150 | 8726ea88213f8284151d767b3cd0984992929077 | 非Draft、dirty/conflict；原head Build success；固定/start會丟情境下一步 | 先取得真實使用卡點，不盲解衝突推出原設計 |
+| #187 | f7fec2eec9ac22e12e044a00e2b6571748e159bf | 已closed、未merged；歷史Build120776704673 failure，PostCSS plugin未遷移 | 維持目前相容性，不重開或遷移v4 |
+| #186 | 3240a27dee8b4b6918b7fa5b1625a8aebebfa8ef | 非Draft、mergeable/behind；原head Build success | source-map-js1.2.2已由#236交付，不重複改lock |
+| #145 | b8621ab0254f83d0aceca62aa26aa843cb07c919 | 非Draft、mergeable/behind；原head Build success | baseline-browser-mapping2.11.28已由#236交付 |
+| #135 | af2185e166740908195cfa0ef050baa07152080c | 非Draft、dirty/conflict；原head Build success | browserslist4.29.3已由#236交付 |
+| #134 | 98051b50ca212787956434429b18eb83899caeac | 非Draft、mergeable/behind；原head Build success | parser6.1.4已由#236交付，不能為合舊PR而降版 |
+
+#185的37張固定圖片hash、canonical/alias及review欄位核對一致；文件準備已具備，實際專業動作/安全結果仍NOT VERIFIED，不以AI機械核對結案。指定Luna/medium，實際模型NOT VERIFIED；Tier0機械核對、無寫檔；父代理核對既有packet與回報，無返工。
+
+後續產品成果觀察可用[固定情境紀錄](qa/roadmap-dogfood-2026-10-24.md)；工程實作優先先收尾已發現的功能確認交接問題，再重新選一個瓶頸。觀察表已準備，真人結果尚未取得；不把表格或自動化視為使用者結果。Tailwind4仍待產品支援版本決策，新的進階動作／雲端／整套session引擎亦沒有新的ready依據。
+
+既有issue-to-PR技能已局部對齊目前授權與證據規則，沒有新增分類服務或自動合併權限。官方quick_validate通過；系統Python缺PyYAML時改用任務專用臨時venv安裝依賴驗證，沒有改全域設定。
+
+本輪已完成可行的維護工作 #243：保留Tailwind3.4.19，以精確parser7.1.6 override移除本次npm公告；squash `5ed50040744be5292e30d39f85dc7ffb1a052474`，reviewed head `e3d9c3e223fef69d097a30d6a798a39a712ed43b`。Codex、Claude、PM與CI均Pass後依明確授權合併；58份dist bytes相同、完整測試與安全audit通過。詳見[相容性QA](qa/parser-override-compatibility.md)。工具鏈方案的「override尚未驗證」是實驗前快照，現由此結果更新；Tailwind4與最低browser決策仍未ready。
+
+## 最新交接與文件修正（2026-10-24）
+
+本輪重新核對 main `8d461fc4546740b17f9aabba97620e65a726abe4`，已包含 #246 與 #245。#245 的技能探索、Issue form、審查事件、Project token trusted-main 邊界與 workflow fixtures 均沿用；本機只整理尚未交付的中央契約、Build concurrency 與 roadmap 文件。#244 遠端仍為舊文件分支，本機整合不代表其 PR 已更新或合併。
+
+功能確認的非肩部 Session 交接與同文件 SPA 錨點返回已獨立發布為 PR #247，head `f5a5cde435314e05ea2b5a656bb9aa2df2667988`，尚未合併。對齊此 main 後兩 TSX 與 browser QA 腳本保持舊驗證版本 bytes；新 head 必要 Build（含完整測試、workflow／動作圖檢查與安全稽核）成功，Codex provider completed 無 findings，Ready／MERGEABLE／CLEAN；Claude 為 Tier 2 建議審查，已請求但 Pending。舊基準瀏覽器結果不冒稱新基準重跑。#246 已交付的是首頁入口，不能與 #247 後續修正混為同一交付。
+
+優先序：①交付已完成的功能確認小修正；②整合 workflow／roadmap 尚餘差異；③再決定 Exercise Discovery。47 項分類仍為提案、四項歧義待決，舊 kind 不是 trainingPurpose，Phase B–D 尚未獲准。
+
+#152 產品成果與每 PR 工程門檻分開；不新增每 PR 真人／iPhone／VoiceOver／臨床／production walkthrough，未驗證仍標 NOT VERIFIED。使用者已分別授權 #247 與獨立 workflow PR 的 push／PR／CI及審查；未授權 merge、刪除、部署或改保護設定。本 workflow 本機完成不代表遠端交付完成，不修改其他工作線的 #244。Build 真實取消行為與 fork／審查事件完整矩陣仍依既有計畫驗證。
+
+本 workflow 的本機靜態補充審查：指定 gpt-6-astra/high，實際模型 NOT VERIFIED；repo Tier 0 候選／子任務為高風險契約保留判斷。完整18檔無高信心 P0/P1，另建議同步 #247 發布狀態，已由父代理修正；未改產品或降低安全／審查要求。父代理已執行 workflow fixtures、保留語義檢查、三技能驗證及32個本機連結核對；代理未獨立跑動態 fixtures，結果不當 GitHub provider approval。

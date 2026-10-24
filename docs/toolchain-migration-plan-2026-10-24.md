@@ -34,3 +34,9 @@
 ## 待驗證與下一步
 
 override相容性、Tailwind4遷移、最低版本真機、正式環境可利用性均未驗證。本輪完成的是原roadmap的「先訂工具鏈遷移方案」；下一個runtime工作取決於平台需求及獨立實驗，不能以本文件當安全審查或migration Pass。使用者理解／三動作組合觀察亦不是此調查的證據。
+
+## 2026-10-24 隔離實驗完成更新
+
+#243已完成保留Tailwind3的parser7.1.6精確override，reviewed head `e3d9c3e223fef69d097a30d6a798a39a712ed43b`，squash `5ed50040744be5292e30d39f85dc7ffb1a052474`。前文「override尚未驗證」為當時快照；目前現行consumer、全dist、完整測試與必要獨立審查已通過，範圍和跨major剩餘風險見[QA](qa/parser-override-compatibility.md)。npm audit當次snapshot為0，不等於所有安全風險已消除。
+
+使用者明確選擇最低版本尚未決定、保留目前相容性，因此不執行Tailwind4遷移；#187新head f7fec2e的Build仍因舊PostCSS plugin設定失敗。不能用本次parser維護Pass替代v4框架遷移驗收。

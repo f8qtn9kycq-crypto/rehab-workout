@@ -73,6 +73,6 @@ If all available assets were recently changed, there are no unchanged controls: 
 
 ## PR evidence
 
-For asset/mapping PRs, include exact head and reference paths/hashes; per-asset gate results and disposition; minimal edits; relevant generator/build/test output; mobile evidence; any independent trial result or its limitations; and deferred work. Follow the repo risk tier: docs-only Tier 0, presentation-only Tier 1, safety/content semantics Tier 3 per `.github/ai-automation.yml`.
+For asset/mapping PRs, include exact head and reference paths/hashes; per-asset gate results and disposition; minimal edits; relevant generator/build/test output; mobile evidence; any independent trial result or its limitations; and deferred work. 分級與必要審查依[單一契約](../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy` 與 `review_policy`；本專項 QA 不維護分級副本。
 
 First audit: [2026-10-05](visual-qa/2026-10-05/audit.md). Reuse this rubric for 3–5 image changes and record issues caught, disagreements, re-review outcomes and effort before extending skill automation. The existing creation skill remains the authoring workflow.

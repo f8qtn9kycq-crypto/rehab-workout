@@ -40,3 +40,9 @@
 本機與瀏覽器自動化不等於遠端 CI、真人、實體 iPhone、VoiceOver、臨床判定或 production。以上後者均 NOT VERIFIED；CI 與 exact-head Codex／Tier 3 Claude／PM 結果於 PR 更新。沒有合併、分支刪除或手動部署授權。
 
 Phase C 的歷史用途及 Phase D 的 Home／Routine／Session 導覽未啟動。既有疼痛門檻、red flags、SafetyGate、推薦、session writer、storage schema、圖示、Tailwind 3 保留。
+
+## Claude 完整審查後的部位範圍修正
+
+Claude 已取得並讀完整19檔，對293dd22回報一項P1：推薦範圍下的「全部部位」仍回退身體評估部位，按鈕標示誤導。SSR先驗證推薦清單仍等於原肩部推薦，並以「不應有無效全部部位按鈕」新增斷言重現RED。修正只在「所有動作」範圍顯示全部部位，推薦範圍改顯示中英文說明；沒有改推薦引擎或安全資格。新增兩語SSR與兩引擎瀏覽器邊界，涵蓋推薦結果保持、控制項隱藏、說明可見與儲存不變。最終head的驗證與再審查於PR記錄。
+
+另核對到舊head830395a的Codex inline P1（收藏前提錯誤）：已由293dd22改為正確27項，兩引擎原始報告皆完整返回且後續pain-stop通過；解決與驗證紀錄留於該thread，不以最新summary無finding忽略舊thread。

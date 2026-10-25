@@ -90,6 +90,9 @@ export function library(url) { return renderToStaticMarkup(<MemoryRouter initial
     assert.equal(renderedIds('/exercises?mode=all&bodyArea=all').ids.length, 47, 'explicit all areas overrides browsing default without changing assessment');
     const filters = { mode: 'recommended', bodyArea: 'shoulder', type: 'all', level: 'all', equipment: [], noEquipmentOnly: false, duration: 'all', painSensitive: false };
     const recommended = api.getRecommendedExercises(exercises, filters, { assessment, assessmentEquipment: ['bodyweight'], logs: [] });
+    const recommendedAllAreas = renderedIds('/exercises?bodyArea=all');
+    assert.deepEqual(recommendedAllAreas.ids, recommended.map(item => item.id), 'all areas in recommended scope still uses the assessment area');
+    assert(!recommendedAllAreas.html.includes(language === 'en' ? '>All body areas</button>' : '>全部部位</button>'), 'recommended scope must not offer an ineffective all-body control');
     const recommendedStrength = renderedIds('/exercises?purpose=strength').ids;
     assert.deepEqual(recommendedStrength, recommended.filter(item => matchesExerciseDiscovery(item, 'strength', '')).map(item => item.id), 'purpose only narrows the original recommendation order');
     assert(recommendedStrength.every(id => !exercises.find(item => item.id === id).catalogOnly), 'catalog-only cannot leak through purpose');

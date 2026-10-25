@@ -1,5 +1,6 @@
 export default {
   discovery: {
+    recommendedAreaHint: '推薦仍依指定部位或你的身體評估篩選；要瀏覽全部部位，請先選「所有動作」。',
     catalogEmpty: '官方動作沒有符合條件的結果；可清除用途與搜尋，或查看下方個人動作。',
   "allBodyAreas": "全部部位",
   "bodyAreas": {"shoulder": "肩部", "hip": "髖部", "shoulder_neck": "肩頸", "knee": "膝部", "ankle": "踝部"},

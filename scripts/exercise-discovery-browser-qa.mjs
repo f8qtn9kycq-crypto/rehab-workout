@@ -56,6 +56,7 @@ async (page) => {
     check(await page.getByRole('searchbox', { name: t.search, exact: true }).inputValue() === 'external rotation', 'return loses search');
     check(await page.evaluate(() => window.__discoveryDocument) === 'same-document', 'return used full reload');
     await page.getByRole('group', { name: t.purpose, exact: true }).getByRole('button', { name: t.strength, exact: true }).click();
+    await page.getByRole('group', { name: t.purpose, exact: true }).getByRole('button', { name: t.strength, exact: true, pressed: true }).waitFor();
     await count('article', 1);
     await page.getByRole('searchbox', { name: t.search, exact: true }).fill('bench press');
     await count('article', 1);
@@ -115,6 +116,18 @@ async (page) => {
 
   const assessment = { bodyArea: 'shoulder', mode: 'beginner', pain: 1, equipment: ['bodyweight'] };
   await seed('zh-TW', assessment, ['catalog-bench-press']);
+  await page.goto(base + '/exercises');
+  await page.locator('article').first().waitFor();
+  const recommendedIds = await page.locator('article a[href^="/exercise/"]').evaluateAll(links => [...new Set(links.map(link => new URL(link.href).pathname))]);
+  const recommendedAreaBytes = await bytes();
+  await page.goto(base + '/exercises?bodyArea=all');
+  await page.locator('article').first().waitFor();
+  const allAreaRecommendedIds = await page.locator('article a[href^="/exercise/"]').evaluateAll(links => [...new Set(links.map(link => new URL(link.href).pathname))]);
+  check(JSON.stringify(recommendedIds) === JSON.stringify(allAreaRecommendedIds), 'all areas must preserve assessment recommendations');
+  check(await page.getByRole('button', { name: '全部部位', exact: true }).count() === 0, 'recommended scope exposes ineffective all-body button');
+  await page.getByText('推薦仍依指定部位或你的身體評估篩選；要瀏覽全部部位，請先選「所有動作」。', { exact: true }).waitFor();
+  check(await bytes() === recommendedAreaBytes, 'recommendation area explanation writes storage');
+  report.boundaries.recommendedAreaScope = 'PASS';
   await page.goto(base + '/exercises?purpose=strength&favorites=1');
   await count('article', 0);
   const recommendationBytes = await bytes();

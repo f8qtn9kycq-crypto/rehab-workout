@@ -72,7 +72,8 @@ export default function ExerciseFilter({
 
       <div>
         <span className="mb-2 block text-sm font-semibold text-slate-700">{t('exercises.bodyArea')}</span>
-        <button type="button" aria-pressed={filters.bodyArea === 'all'} onClick={() => onChange({ ...filters, bodyArea: 'all' })} className={`focus-ring mb-3 min-h-11 rounded-md border px-3 text-sm font-bold ${filters.bodyArea === 'all' ? 'border-calm-900 bg-calm-700 text-white' : 'border-slate-200 bg-white text-slate-700'}`}>{t('discovery.allBodyAreas')}</button>
+        {filters.mode === 'all' && <button type="button" aria-pressed={filters.bodyArea === 'all'} onClick={() => onChange({ ...filters, bodyArea: 'all' })} className={`focus-ring mb-3 min-h-11 rounded-md border px-3 text-sm font-bold ${filters.bodyArea === 'all' ? 'border-calm-900 bg-calm-700 text-white' : 'border-slate-200 bg-white text-slate-700'}`}>{t('discovery.allBodyAreas')}</button>}
+        {filters.mode === 'recommended' && <p className="mb-3 text-sm leading-6 text-slate-600">{t('discovery.recommendedAreaHint')}</p>}
         <BodyMapSelector
           selected={filters.bodyArea}
           availability={availability.bodyArea}

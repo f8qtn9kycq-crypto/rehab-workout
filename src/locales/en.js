@@ -1,5 +1,6 @@
 export default {
   discovery: {
+    recommendedAreaHint: 'Recommendations use the selected area or your assessment. Choose All exercises to browse all body areas.',
     catalogEmpty: 'No official exercises match. Clear purpose and search, or check personal exercises below.',
   "allBodyAreas": "All body areas",
   "bodyAreas": {"shoulder": "Shoulder", "hip": "Hip", "shoulder_neck": "Neck and shoulder", "knee": "Knee", "ankle": "Ankle"},

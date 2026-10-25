@@ -108,4 +108,74 @@ for name, call, fixture in [
     code, _, _ = execute('target_number=8\n' + function(name) + '\n' + call, fixture, {'GH_FIXTURE_EXIT': '1'})
     assert code != 0, 'API 失敗必須保守阻擋 ' + name
 
-print('Pass: YAML／issue form 結構、workflow shell 語法、6 個事件 fixture、6 個 Build gate 與 3 個 review gate 與 2 個 API 失敗情境。')
+# 直接讀 Build 的實際分組；僅解讀本設定使用的 context、fallback 與 event 比較。
+# queue 模型依 GitHub 預設 single pending 語義：false 只保護 running，並不保護 pending。
+concurrency = yaml.load((ROOT / '.github/workflows/build.yml').read_text(), Loader=yaml.BaseLoader)['concurrency']
+
+
+def concurrency_context(event, run_id, number=None, ref='refs/heads/main', name='Build'):
+    return {'github': {'workflow': name, 'event_name': event, 'run_id': run_id,
+                       'ref': ref, 'event': {'pull_request': {'number': number}}}}
+
+
+def concurrency_group(context):
+    def resolve(match):
+        value = None
+        for fallback in match.group(1).strip().split('||'):
+            path = fallback.strip()
+            assert re.fullmatch(r'github(?:\.[a-z_]+)+', path), path
+            value = context
+            for key in path.split('.'):
+                value = value.get(key) if isinstance(value, dict) else None
+            if value not in (None, False, 0, ''):
+                break
+        return '' if value is None else str(value)
+    return re.sub(r'\$\{\{(.*?)\}\}', resolve, concurrency['group']).lower()
+
+
+def cancels_running(context):
+    match = re.fullmatch(r"\$\{\{\s*github.event_name\s*==\s*'([^']+)'\s*\}\}",
+                         concurrency['cancel-in-progress'])
+    assert match, '取消條件改變時須更新語義驗證，不得默認通過'
+    return context['github']['event_name'] == match.group(1)
+
+
+def queue_cancellations(contexts):
+    # 假定這一連串新 run 入隊期間沒有工作完成；每組最多一個 running、一個 pending。
+    groups, cancelled = {}, []
+    for context in contexts:
+        group = concurrency_group(context)
+        run_id = context['github']['run_id']
+        running, pending = groups.get(group, (None, None))
+        if pending is not None:
+            cancelled.append(pending)
+        if running is None:
+            groups[group] = (run_id, None)
+        elif cancels_running(context):
+            cancelled.append(running)
+            groups[group] = (run_id, None)
+        else:
+            groups[group] = (running, run_id)
+    return cancelled
+
+
+pr_one = concurrency_context('pull_request', 101, 247, 'refs/pull/247/merge')
+pr_one_new = concurrency_context('pull_request', 102, 247, 'refs/pull/247/merge')
+pr_two = concurrency_context('pull_request', 103, 248, 'refs/pull/248/merge')
+assert concurrency_group(pr_one) == concurrency_group(pr_one_new)
+assert concurrency_group(pr_one) != concurrency_group(pr_two)
+assert concurrency_group(pr_one) != concurrency_group(concurrency_context('push', 247))
+assert concurrency_group(pr_one) != concurrency_group(concurrency_context(
+    'pull_request', 104, 247, 'refs/pull/247/merge', name='Other'))
+assert cancels_running(pr_one) and not cancels_running(concurrency_context('push', 105))
+assert queue_cancellations([pr_one, pr_two, pr_one_new]) == [101]
+
+for ref in ('refs/heads/main', 'refs/heads/codex/example'):
+    pushes = [concurrency_context('push', run_id, ref=ref) for run_id in (201, 202, 203)]
+    assert queue_cancellations(pushes) == [], '同分支三次 push 不得取消 running 或 pending run'
+    assert len({concurrency_group(context) for context in pushes}) == 3
+
+assert queue_cancellations([pr_one, pr_one_new, concurrency_context(
+    'pull_request', 104, 247, 'refs/pull/247/merge')]) == [101, 102]
+
+print('Pass: YAML／form／shell、6事件、6 Build gate、3 review gate、2 API失敗，以及跨PR／事件／workflow隔離與running／pending取消模型（非真實GitHub事件）。')

@@ -286,3 +286,60 @@ reporting:
     - review verdicts retrieved
     - merge or stop reason
     - next recommended action
+
+# 集中的風險與審查補充：由既有 AGENTS／REVIEW／workflow 文件搬移，非新增門檻。
+risk_classification_policy:
+- 實作前依 risk_tiers 分級；純文件描述既有行為為 Tier 0，實際產品變更依最高受影響風險分級。
+- 產品安全契約仍依 AGENTS.md 與 docs/safety-rules.md；此處只集中工作流程，不改產品規則。
+review_policy:
+  objective: 以最小額外範圍達到可審查、可驗證的合併就緒狀態，不建議廣泛重寫。
+  severity:
+    P0:
+    - build 失敗。
+    - 主要使用流程中斷或重大行動版可用性阻塞。
+    - 安全 gate 可繞過、pain >=6 可開始訓練、紅旗未阻擋或其他安全回歸。
+    - 必要 session state 遺失。
+    - iOS Safari／SPA 路由或載入破壞核心使用。
+    - 既有使用者資料有遺失風險。
+    P1:
+    - 會影響一般使用的行動導覽混淆、重要控制隱藏、過密文案。
+    - i18n 不一致或無障礙問題（含主要控制缺少標籤）。
+    - 變更行為缺乏測試／QA 證據，或一般使用容易遇到的邊界問題。
+    - 可靠自動化已涵蓋且無明確環境要求時，單獨缺少真人／實體裝置／Preview 證據不列 P1。
+    P2:
+    - 僅列 backlog，不阻擋合併；未明確要求時不列 wishlist。
+  findings:
+  - 優先高信心 finding，不列主觀風格意見、廣泛架構重寫或重複 finding；已有其他 reviewer 提出時只補新證據。
+  - 每個 P0／P1 必須列檔案、行為、風險與接受條件；P0 合併前必修，P1 在本 PR 修復或依契約明確 defer。
+  - 確認 PR template 已填 scope、risk tier、安全影響、QA、AI routing、merge readiness 與清理計畫。
+  routing_and_evidence:
+  - 逐項記錄適用審查的必要性、requested／Pending／completed／不適用、具名 reviewer、head SHA 與結果連結；建議審查未採用時記錄原因。請求不等於完成，AI 結果不等於正式 GitHub APPROVE。
+  - 審查路由唯一依據為 risk_tiers.<Tier>.review_routing；Tier 0／1 不額外要求 Claude／PM，除非 finding 衝突或升級的安全／session／routing 風險。
+  - Tier 2+ 明確核對 SafetyGate、疼痛與紅旗規則、session route guard、LocalStorage 相容及 iOS Safari／SPA 風險。
+  - 真人／真機 gate 僅依 pull_request_state_policy.manual_evidence_blocks_only_when 與 approval_policy；不是一律要求。
+  - Tier 0 workflow 變更範圍窄、證據完整、CI 通過時，真人 review 建議但非必要；衝突或超出 workflow/docs 時重新依最高風險判定。
+  - UI 變更需檢查 320px／375px mobile QA；依影響補足其他環境，可採可靠瀏覽器自動化，真人／真機 gate 仍依上述條件。
+  - 本機、CI、瀏覽器自動化、真人、真機與 production 分開報告；未量測效能不宣稱效能改善。
+  exact_head_gate:
+  - 記錄 repo、PR、base、head branch 與當前 head SHA；push／rebase／head 改變後先前審查與 QA 不直接沿用。
+  - 即時 branch protection／ruleset 決定 required contexts 與 GitHub App；Check Runs 必須成功且對應同一 head。較新的必要 run pending／fail 時不得用較早
+    success 覆蓋。
+  - Legacy Commit Status 為空不代表失敗；若相符 required Check Run 已成功，採用該證據。缺少／過期／Pending／失敗不得判 Pass，禁止 synthetic status。
+  - 檢查 active requested changes、未解決 blocking threads、必要 review、Draft、衝突、mergeability；unknown／unstable 先重新查詢。
+  - P0 已修、P1 已修或明確 defer、接受條件通過、PR template 完整、無無關重構且有分支清理計畫；runtime 依 validation 與 mobile/storage/routing 影響補足證據。
+  - 分開報告產品／程式就緒與 workflow／合併就緒；使用者明確授權後，合併前重查所有門檻並以 expected head SHA 執行。Pass、契約與自動化資格本身不是授權。
+  specialized_reviews:
+    modal:
+    - 背景隔離、初始焦點、Tab／Shift+Tab 循環、enabled 控制項、Escape 明確語意、返回觸發按鈕、小視窗控制可見／可捲動。
+    - 影片關閉卸載 iframe；退出訓練的取消／繼續保留進度且不寫紀錄；跨來源播放器鍵盤能力另標證據邊界。
+    exercise_art: 動作圖或 image-ID alias 變更依 docs/exercise-visual-qa.md，分別記錄視覺、動作、安全呈現、mobile；依具體步驟／參考差異，不以同URL或主觀喜好判動作正確。
+  output:
+  - 'Verdict: Pass / Partial Pass / Fail'
+  - P0 blockers
+  - P1 improvements
+  - Exact files to change
+  - Acceptance criteria
+  - Suggested next Codex command
+  auto_merge_note: 資格與額外門檻只依 auto_merge；Tier 1 以上不啟用盲目 auto-merge。所有 Tier 仍需明確授權。
+  workflow_validation:
+  - workflow-only 自動化資格另需檔案範圍限 .github/workflows/* 與支持文件，並在可行範圍驗證 YAML／shell 語法；其餘額外條件依 auto_merge.workflow_pr_extra_requirements。

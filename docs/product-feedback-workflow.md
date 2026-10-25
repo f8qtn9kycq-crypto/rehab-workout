@@ -206,7 +206,7 @@ Feedback triage must never weaken these rules:
 - Do not change pain thresholds unless explicitly approved.
 - Do not bypass SafetyGate.
 - Do not weaken red-flag blocking.
-- Do not change SessionRouteGuard without Tier 2+ review.
+- SessionRouteGuard 相關變更的分級及審查依[單一契約](../.github/ai-automation.yml)的 `risk_tiers`、`risk_classification_policy` 與 `review_policy`。
 - Do not introduce diagnosis or cure claims.
 - Written steps and safety notes must remain accessible.
 

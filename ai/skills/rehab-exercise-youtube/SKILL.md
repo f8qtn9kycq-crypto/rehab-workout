@@ -12,7 +12,7 @@ description: 在 Rehab-Workout 為既有動作新增或替換 YouTube 來源，�
 1. 核對 cwd、Git remote、Git status；讀取 `AGENTS.md`、`REVIEW.md`、`.github/pull_request_template.md`、`.github/ai-automation.yml` 及相關資料／安全文件。repo 當前契約優先於本技能。
 2. 確認是「既有動作更新」或「新增動作」，記錄目標 ID、中英文名稱、影片 URL、使用者要改的內容及不可改契約。搜尋相同 ID／名稱／影片，避免重複建立。
 3. 先讀當前資料與相近動作範例，不以過去 PR 已完成推定現況。保留未提交工作；新分支先同步 main，需要隔離時使用乾淨 worktree。
-4. 動作資料／來源／操作指引變更依 repo 規則列 Tier 3；僅撰寫本工作流程、無產品變更時為 Tier 0。播放器 UX 或圖像變更依實際最高風險另判，不擴張原任務。
+4. 依[單一契約](../../../.github/ai-automation.yml)的 `risk_tiers` 與 `risk_classification_policy` 判定實際最高風險，不擴張原任務。
 
 ## 查證影片後才寫內容
 
@@ -63,7 +63,7 @@ git diff --check
 - 圖像／mapping 變更另外執行 movement-art 與 source audits、重建及視覺證據流程；無圖像變更不重新生成資產。
 - 頁面檢查中英文名稱、器材、指引、影片 ID、實際 fallback 行為及 catalog-only 提示。針對變更在 320／375／390px 檢查可讀性與溢出；共用影片彈窗有變更時才套用 `docs/video-dialog-qa.md` 的焦點／關閉測試。
 - 依 [來源與 QA 紀錄範本](references/evidence-template.md) 建立任務紀錄；填實際結果，不照抄過去 coverage 數字或 Pass。分開記本機、CI、瀏覽器、真人、真機、production 與影片播放證據。
-- 在授權範圍內建立／更新 PR，使用目前 template。Tier 3 主動發起 exact-head Codex／Claude 審查與合併前 PM synthesis；先查現有請求避免同 SHA 重複。依 repo readiness 政策管理 Draft；缺外部結果標 Pending，不能把已送請求當審查完成。
+- 在授權範圍內建立／更新 PR，使用目前 template。審查路由、exact-head、請求去重與 Draft／Ready 統一依同一契約的 `risk_tiers`、`review_policy`、`control_plane` 與 `pull_request_state_policy`。
 - head 改變後重查 checks、review threads、requested changes 與必要證據；在 PR 留可追溯結果。若需要真人檢查，附對應 head 的 Preview、操作步驟與回報格式，不替真人回報。
 - 不因執行本技能取得 push／發布／合併等額外授權。產品程式可完成而外部門檻未過時分開報告；合併只按使用者明確授權及當前門檻執行。
 

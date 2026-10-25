@@ -17,12 +17,12 @@ What user problem this addresses:
 
 ## Risk tier
 
-- [ ] Tier 0: docs / copy / small CSS
-- [ ] Tier 1: mobile UX / i18n / navigation
-- [ ] Tier 2: 安全相關流程、session、storage、routing 或推薦流程；不含安全邏輯變更
-- [ ] Tier 3: 架構、資料遷移、安全性、安全邏輯、推薦安全規則或動作內容變更
+依[單一契約](https://github.com/f8qtn9kycq-crypto/rehab-workout/blob/main/.github/ai-automation.yml)的 `risk_tiers` 與 `risk_classification_policy` 選最高受影響分級；以下是表單值，不另定義規則。
 
-純文件描述現有行為仍為 Tier 0；產品變更依最高受影響風險分級。
+- [ ] Tier 0: 依中央契約
+- [ ] Tier 1: 依中央契約
+- [ ] Tier 2: 依中央契約
+- [ ] Tier 3: 依中央契約
 
 ## Safety impact
 
@@ -48,27 +48,24 @@ For those changes, include frozen-baseline integrity and effective-source regene
 
 ## AI review routing
 
-- [ ] Codex：Tier 0 選用、Tier 1 建議、Tier 2／3 必要
-- [ ] Claude：Tier 2 建議、Tier 3 必要；Tier 0／1 依衝突或升級風險判斷
-- [ ] ChatGPT PM synthesis：Tier 2 的衝突／merge gate 建議、Tier 3 合併前必要
+依[單一契約](https://github.com/f8qtn9kycq-crypto/rehab-workout/blob/main/.github/ai-automation.yml)的 `risk_tiers.<Tier>.review_routing`、`approval_policy` 與 `review_policy`，填寫每項適用審查；不以此表另定必要性。
 
-每項適用審查填寫：required／recommended、requested／Pending／completed／不適用、reviewer、head SHA、結果連結。建議審查未採用時記錄原因；請求不等於完成，AI 結果不等於正式 GitHub `APPROVE`。
+| Reviewer | required／recommended／不適用 | requested／Pending／completed | head SHA／結果連結 |
+|---|---|---|---|
+| Codex | 待填 | 待填 | 待填 |
+| Claude | 待填 | 待填 | 待填 |
+| ChatGPT PM synthesis | 待填 | 待填 | 待填 |
 
 ## Merge readiness
 
-- [ ] No P0
-- [ ] P1 either fixed or explicitly deferred
-- [ ] Acceptance criteria met
-- [ ] Current-head required checks passed
-- [ ] No active requested-changes review or unresolved blocking review thread
-- [ ] Manual walkthrough required only when a P0/P1, explicit acceptance criterion, or changed behavior cannot be validated reliably by automation
+依[單一契約](https://github.com/f8qtn9kycq-crypto/rehab-workout/blob/main/.github/ai-automation.yml)的 `review_policy.exact_head_gate`、`pull_request_state_policy`、`approval_policy` 與 `auto_merge` 核對，記錄實際觀察：
 
 精確 head SHA：
+P0／P1 與接受條件結果：
 Required Check Runs／GitHub App 與結果連結：
-Review threads／requested changes／Draft／mergeability：
+Review threads／requested changes／必要 review／Draft／mergeability：
+使用者合併授權與清理計畫：
 真人／真機／production 的已驗證及未驗證範圍：
-
-A PR should be marked **Ready for review** once implementation is complete and required automated evidence is green. Do not keep a PR in Draft solely because human/iPhone/preview evidence is absent.
 
 ## Post-merge cleanup
 

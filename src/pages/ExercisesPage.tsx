@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ExerciseCard from '../components/ExerciseCard';
+import { REHAB_DISCOVERY_GROUPS } from '../data/exercisePurposes';
+import { getExercisePurposeInfo, matchesExerciseDiscovery, parseExercisePurpose } from '../utils/exerciseDiscovery';
 import ExerciseFilter, { type FilterAvailability } from '../components/ExerciseFilter';
 import { EQUIPMENT_OPTIONS } from '../data/equipmentOptions';
 import { exercises } from '../data/exercises';
@@ -8,7 +10,7 @@ import { readFavorites } from '../services/favoriteStorage';
 import { getSavedAssessment } from '../services/assessmentStorage';
 import { useI18n } from '../services/i18n';
 import { getLogs } from '../services/logService';
-import { BODY_AREAS, type BodyArea, type ExerciseFilterMode, type ExerciseFilters, type SavedAssessment } from '../types/rehab';
+import { BODY_AREAS, type BodyArea, type ExerciseFilterMode, type ExerciseFilters, type SavedAssessment, type Exercise } from '../types/rehab';
 import {
   filterExercises,
   isBodyArea,
@@ -33,7 +35,7 @@ function buildInitialFilters(searchParams: URLSearchParams, assessment: SavedAss
 
   return {
     mode: getModeParam(searchParams.get('mode')),
-    bodyArea: queryBodyArea !== 'all' ? queryBodyArea : assessment?.bodyArea ?? 'all',
+    bodyArea: searchParams.get('bodyArea') === 'all' ? 'all' : queryBodyArea !== 'all' ? queryBodyArea : assessment?.bodyArea ?? 'all',
     type: 'all',
     level: 'all',
     equipment: [],
@@ -79,6 +81,8 @@ export default function ExercisesPage() {
   }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const favoritesOnly = searchParams.get('favorites') === '1';
+  const purpose = parseExercisePurpose(searchParams.get('purpose'));
+  const query = searchParams.get('q') ?? '';
   const { t } = useI18n();
   const assessment = useMemo(() => getSavedAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
@@ -106,16 +110,22 @@ export default function ExercisesPage() {
     });
   }, [assessment, searchParams, setSearchParams]);
 
-  function handleFilterChange(nextFilters: ExerciseFilters): void {
+  function handleFilterChange(nextFilters: ExerciseFilters, discovery = { purpose, query }): void {
     const visibleFilters = normalizeVisibleFilters(nextFilters);
     setFilters(visibleFilters);
     const nextSearchParams = new URLSearchParams();
 
     if (favoritesOnly) nextSearchParams.set('favorites', '1');
+    if (discovery.purpose !== 'all') nextSearchParams.set('purpose', discovery.purpose);
+    if (discovery.query) nextSearchParams.set('q', discovery.query);
     if (visibleFilters.mode !== 'recommended') nextSearchParams.set('mode', visibleFilters.mode);
-    if (visibleFilters.bodyArea !== 'all') nextSearchParams.set('bodyArea', visibleFilters.bodyArea);
+    nextSearchParams.set('bodyArea', visibleFilters.bodyArea);
 
     setSearchParams(nextSearchParams, { replace: true });
+  }
+
+  function handleDiscoveryChange(nextPurpose: typeof purpose, nextQuery: string): void {
+    handleFilterChange(filters, { purpose: nextPurpose, query: nextQuery });
   }
 
   function getFilteredExercises(nextFilters: ExerciseFilters) {
@@ -141,12 +151,24 @@ export default function ExercisesPage() {
     return getFilteredExercises(filters);
   }, [assessment, filters, logs]);
 
-  const visibleExercises = favoritesOnly ? filtered.filter(exercise => favorites.ids.includes(exercise.id)) : filtered;
+  function visibleMatches(items: Exercise[]): Exercise[] {
+    return items.filter(exercise => matchesExerciseDiscovery(exercise, purpose, query)
+      && (!favoritesOnly || favorites.ids.includes(exercise.id)));
+  }
+  const visibleExercises = visibleMatches(filtered);
+  const hasDiscoveryFilters = purpose !== 'all' || Boolean(query.trim()) || favoritesOnly;
+  const discoveryEmpty = visibleExercises.length === 0 && hasDiscoveryFilters && !showHighPainWarning;
+  const resultGroups = purpose === 'rehab'
+    ? REHAB_DISCOVERY_GROUPS.map(group => ({
+      id: group,
+      exercises: visibleExercises.filter(exercise => (getExercisePurposeInfo(exercise.id)?.rehabGroup ?? 'control') === group),
+    }))
+    : [{ id: 'all', exercises: visibleExercises }];
 
   const availability = useMemo<FilterAvailability>(() => {
     function countFor(nextFilters: ExerciseFilters): number {
       const matches = getFilteredExercises(nextFilters);
-      return (favoritesOnly ? matches.filter(exercise => favorites.ids.includes(exercise.id)) : matches).length;
+      return visibleMatches(matches).length;
     }
 
     const bodyArea = Object.fromEntries(BODY_AREAS.map((bodyAreaOption) => [
@@ -155,7 +177,7 @@ export default function ExercisesPage() {
     ])) as FilterAvailability['bodyArea'];
 
     return { bodyArea };
-  }, [assessment, assessmentEquipment, filters, logs, favoritesOnly, favorites.ids]);
+  }, [assessment, assessmentEquipment, filters, logs, favoritesOnly, favorites.ids, purpose, query]);
 
   function clearExerciseFilters(): void {
     handleFilterChange({
@@ -167,7 +189,7 @@ export default function ExercisesPage() {
       noEquipmentOnly: false,
       duration: 'all',
       painSensitive: false,
-    });
+    }, { purpose: 'all', query: '' });
   }
 
   function tryBodyweightExercises(): void {
@@ -225,15 +247,24 @@ export default function ExercisesPage() {
         <button type="button" aria-pressed={favoritesOnly} onClick={() => { const next = !favoritesOnly; const params = new URLSearchParams(searchParams); if (next) params.set('favorites', '1'); else params.delete('favorites'); setSearchParams(params, { replace: true }); }} className="focus-ring min-h-11 rounded-md border border-calm-700 px-4 py-2 font-bold text-calm-800">{t(favoritesOnly ? 'favorites.showAll' : 'favorites.show')}</button>
         <p className="text-sm leading-6">{t('favorites.hint')}</p>
         {favorites.error && <p role="alert" className="text-red-800">{t('favorites.error')}</p>}
-        {favoritesOnly && visibleExercises.length === 0 && <p role="status">{t('favorites.empty')}</p>}
       </div>
-      <ExerciseFilter filters={filters} availability={availability} onChange={handleFilterChange} />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {visibleExercises.map((exercise) => (
-          <ExerciseCard key={exercise.id} exercise={exercise} />
-        ))}
-      </div>
-      {filtered.length === 0 && !showHighPainWarning && !(filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') ? (
+      <ExerciseFilter filters={filters} availability={availability} onChange={handleFilterChange}
+        purpose={purpose} query={query} onDiscoveryChange={handleDiscoveryChange} onClear={clearExerciseFilters} />
+      {resultGroups.filter(group => group.exercises.length > 0).map(group => <section key={group.id} className="space-y-3" aria-label={group.id === 'all' ? t('exercises.title') : t(`discovery.groups.${group.id}`)}>
+        {group.id !== 'all' && <h2 className="text-xl font-bold text-ink">{t(`discovery.groups.${group.id}`)}</h2>}
+        {group.id === 'care' && <p className="text-sm leading-6 text-slate-600">{t('discovery.careHint')}</p>}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {group.exercises.map(exercise => <ExerciseCard key={exercise.id} exercise={exercise} />)}
+        </div>
+      </section>)}
+      {discoveryEmpty && <section className="card space-y-3 p-4" role="status">
+        <p>{t(favoritesOnly ? 'favorites.empty' : 'discovery.empty')}</p>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="focus-ring min-h-11 rounded-md border border-calm-700 px-3 font-bold text-calm-800" onClick={() => handleDiscoveryChange('all', '')}>{t('discovery.clear')}</button>
+          {filters.mode === 'recommended' && <button type="button" className="focus-ring min-h-11 rounded-md bg-calm-700 px-3 font-bold text-white" onClick={() => handleFilterChange({ ...filters, mode: 'all' })}>{t('discovery.viewAll')}</button>}
+        </div>
+      </section>}
+      {!discoveryEmpty && filtered.length === 0 && !showHighPainWarning && !(filters.mode === 'recommended' && !assessment && filters.bodyArea === 'all') ? (
         <div className="card space-y-4 p-5 text-slate-700">
           <div>
             <h2 className="text-lg font-bold text-ink">{t('exercises.emptyTitle')}</h2>
@@ -266,7 +297,7 @@ export default function ExercisesPage() {
             </button>
           </div>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : !discoveryEmpty && filtered.length === 0 ? (
         <div className="card p-5 text-slate-600">{emptyMessage}</div>
       ) : null}
     </div>

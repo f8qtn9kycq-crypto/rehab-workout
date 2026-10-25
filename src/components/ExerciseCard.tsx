@@ -1,3 +1,4 @@
+import ExercisePurposeBadges from './ExercisePurposeBadges';
 import FavoriteButton from './FavoriteButton';
 import { Clock, Dumbbell, Layers3, MapPin } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,8 +17,12 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
 
   return (
     <article className="card flex h-full flex-col p-4">
+      <div className="mb-3 space-y-2">
+        <ExercisePurposeBadges exerciseId={exercise.id} />
+        {exercise.catalogOnly && <p className="text-sm font-semibold text-slate-600">{t('discovery.catalogOnly')}</p>}
+      </div>
       <div className="flex flex-wrap gap-2 text-sm font-semibold">
-        <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
+        <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`discovery.bodyAreas.${exercise.bodyArea}`)}</span>
         <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
         <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
         <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>

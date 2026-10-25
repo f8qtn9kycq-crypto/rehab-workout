@@ -1,4 +1,34 @@
 export default {
+  discovery: {
+    recommendedAreaHint: '推薦仍依指定部位或你的身體評估篩選；要瀏覽全部部位，請先選「所有動作」。',
+    catalogEmpty: '官方動作沒有符合條件的結果；可清除用途與搜尋，或查看下方個人動作。',
+  "allBodyAreas": "全部部位",
+  "bodyAreas": {"shoulder": "肩部", "hip": "髖部", "shoulder_neck": "肩頸", "knee": "膝部", "ankle": "踝部"},
+  "purpose": "尋找用途",
+  "purposes": {
+    "all": "全部用途",
+    "rehab": "復健",
+    "strength": "肌力"
+  },
+  "purposeHint": "用途協助尋找動作，不代表適合直接訓練；仍須依安全檢查與原有限制。",
+  "labels": "動作用途",
+  "purposeLabel": "用途",
+  "scope": "目前結果範圍",
+  "search": "搜尋動作名稱（中／英文）",
+  "empty": "目前用途、搜尋或部位沒有符合的動作。",
+  "clear": "清除用途與搜尋",
+  "viewAll": "查看全部符合動作",
+  "groups": {
+    "control": "肌力與動作控制",
+    "mobility": "活動度與伸展",
+    "care": "照護與放鬆"
+  },
+  "careHint": "這是照護內容，請依原注意事項查閱，不當作一般組次運動。",
+  "catalogOnly": "僅供查閱與記錄",
+  "quickGroups": "肌力快捷選擇",
+  "other": "其他符合的動作",
+  "customHint": "個人動作獨立保留；原動作類型不等於當次訓練用途。"
+},
   soreness: {
     transfer: {"title": "分享與備份紀錄", "share": "分享 CSV", "shareHint": "可選擇日期範圍，只分享正分數；0 分保留在完整備份。預設不包含備註。檔案先下載到你的裝置，由你決定是否分享。", "start": "開始日期（選填）", "end": "結束日期（選填）", "includeNotes": "在分享檔案中包含我的備註", "previewPrivate": "預覽：{count} 筆紀錄、{rows} 列資料，不含備註。包含日期、位置、分數及症狀。", "previewWithNotes": "預覽：{count} 筆紀錄、{rows} 列資料，包含私人備註。分享前請先檢查檔案。", "invalidRange": "請輸入有效日期，開始日期不能晚於結束日期。", "downloadShare": "下載分享 CSV", "backup": "完整備份與還原", "backupHint": "完整 CSV 與 JSON 包含所有可見紀錄、0 分及私人備註，不受分享日期範圍影響。JSON 保留原始值供還原，不含已刪除紀錄。CSV 會處理試算表公式字元，供閱讀使用，不能用來還原。請妥善保管檔案。", "fullCsv": "下載完整 CSV", "json": "下載 JSON 備份", "restoreHint": "從本 App 的 JSON 備份加入缺少的紀錄。相同 ID 與本機舊紀錄的刪除狀態優先，不覆蓋現有紀錄。檔案無效或超過容量時整批拒絕。資料不會上傳。", "file": "選擇 JSON 備份", "reading": "正在讀取備份…", "restorePreview": "預覽：{count} 筆紀錄已通過驗證。確認後加入缺少的紀錄；相同 ID 與本機已刪除的舊紀錄會略過。", "restore": "確認加入備份紀錄", "cancel": "取消還原", "restored": "還原完成：新增 {added} 筆，略過 {skipped} 筆。 還原後，其他已開啟的分頁請先重新整理再使用。", "fileError": "這不是支援的痠痛 JSON 備份、含有無效紀錄，或超過 40 MB。現有紀錄未變更。", "exportError": "無法準備下載檔案，請檢查日期範圍後重試。"},
     trends: {"title": "痠痛觀察趨勢", "note": "只顯示實際記錄的 1–10 分離散點，不補缺值或連線。0 分不納入此圖；空白不代表已恢復。正背面、側別與未區分正背面的舊記錄分開顯示。", "noRecords": "先新增一筆痠痛觀察，再查看同一位置的變化。", "position": "觀察位置", "range": "觀察期間", "days": "最近 {count} 天", "empty": "這個位置在所選期間沒有 1–10 分的觀察點。", "values": "實際觀察值"},
@@ -499,11 +529,11 @@ export default {
   },
   exercises: {
     title: '動作庫',
-    subtitle: '可以先看推薦動作，也可以選身體部位開始。文字步驟與安全提醒會一直保留。',
+    subtitle: '先選用途或直接搜尋動作，再依需要選部位。文字步驟與安全提醒會一直保留。',
     startingTitle: '今天可以從這些動作開始',
     startingReason: '根據你選擇的「{bodyArea}」、目前疼痛與動作信心，先顯示較容易控制的選擇。',
     filterTitle: '尋找動作',
-    filterHint: '先選今天模式與身體部位。難度與器材會保留在動作卡作為參考。',
+    filterHint: '先找復健或肌力動作，再選結果範圍與部位。難度與器材保留在動作卡作為參考。',
     mode: '模式',
     recommendedMode: '今天適合的動作',
     recommendedHelper: '依目前狀態篩選',

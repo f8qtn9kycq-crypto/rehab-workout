@@ -76,3 +76,13 @@
 #152 產品成果與每 PR 工程門檻分開；不新增每 PR 真人／iPhone／VoiceOver／臨床／production walkthrough，未驗證仍標 NOT VERIFIED。使用者已分別授權 #247 與獨立 workflow PR 的 push／PR／CI及審查；未授權 merge、刪除、部署或改保護設定。本 workflow 本機完成不代表遠端交付完成，不修改其他工作線的 #244。Build 真實取消行為與 fork／審查事件完整矩陣仍依既有計畫驗證。
 
 本 workflow 的本機靜態補充審查：指定 gpt-6-astra/high，實際模型 NOT VERIFIED；repo Tier 0 候選／子任務為高風險契約保留判斷。完整18檔無高信心 P0/P1，另建議同步 #247 發布狀態，已由父代理修正；未改產品或降低安全／審查要求。父代理已執行 workflow fixtures、保留語義檢查、三技能驗證及32個本機連結核對；代理未獨立跑動態 fixtures，結果不當 GitHub provider approval。
+
+## PR #248：push pending 隔離修正（2026-10-25）
+
+在 `576ad14` 的遠端 Build 成功、Codex 無 findings 後，父代理補核 GitHub 官方 concurrency 文件確認：預設 single pending 會以新 pending 取代同組既有 pending，`cancel-in-progress: false` 只保護正在執行的 run。原 push 以 branch ref 共組，不足以完整保證「只取消同 PR 舊執行」。來源：https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency 。
+
+最小修正保留 workflow＋event 前綴，PR 以 pull_request.number 共組，非 PR 以 run_id 獨立分組，cancel-in-progress 仍僅 PR 為 true。原 triggers、jobs、steps、token、安裝與必要檢查不變。既有 workflow-regression.py 補實際 expression 分組及 GitHub single-pending 佇列模型；同分支三次 push 的既有設定先 RED（pending 被取消），修正後 GREEN，另覆蓋同PR取消、不同PR／workflow／event隔離及main／codex push。此模型不是 GitHub 真實取消事件證據，原完整事件矩陣仍 NOT VERIFIED。
+
+原臨時副本在目前執行環境不可用；另建本聊天 work/ 隔離clone，未刪除或更動原 checkout。使用 repo 固定 PyYAML==6.0.3 的本機虛擬環境，不變更系統或全域設定。新增 regression 使本 PR 共19檔，仍無產品 src 或分類實作。新 head 必須重新取得 CI／審查，不能沿用舊head無findings作Pass。
+
+分類 Phase A 的四項歧義已由使用者確認，並沿用其餘43項草稿；這只完成用途決策，Phase B–D 仍未開始。

@@ -1,3 +1,4 @@
+import ExercisePurposeBadges from '../components/ExercisePurposeBadges';
 import ExerciseRecordingSetup from '../components/ExerciseRecordingSetup';
 import { Clock, Dumbbell, Layers3, MapPin, PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -64,8 +65,9 @@ export default function ExerciseDetailPage() {
       <SavedRoutineReturnLink exerciseId={exercise.id} />
       <section id="overview" className="card scroll-mt-60 sm:scroll-mt-40 md:scroll-mt-52 space-y-5 p-4">
         <h2 className="text-xl font-bold text-ink">{t('detail.sectionOverview')}</h2>
+        <ExercisePurposeBadges exerciseId={exercise.id} />
         <div className="flex flex-wrap gap-2 text-sm font-semibold">
-          <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`bodyAreas.${exercise.bodyArea}.label`)}</span>
+          <span className="inline-flex items-center gap-1 rounded-md bg-calm-100 px-2 py-1 text-calm-700"><MapPin size={14} />{t(`discovery.bodyAreas.${exercise.bodyArea}`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Layers3 size={14} />{t(`typeLabels.${exercise.type}`)}</span>
           <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">{t(`levelLabels.${exercise.level}`)}</span>
           <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-slate-700"><Clock size={14} />{displayExercise.durationText}</span>

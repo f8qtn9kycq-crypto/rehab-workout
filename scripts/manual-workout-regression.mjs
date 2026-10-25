@@ -21,11 +21,12 @@ assert.match(pickerSource, /<WorkoutMovementArt id=\{id\} loading="eager"/, 'qui
 assert.match(pickerSource, /hasWorkoutMovementArt\(selectedIds\[index\]\).*<WorkoutMovementArt id=\{selectedIds\[index\]\}/s, 'selected quick or library exercise keeps the same art in the form');
 assert.doesNotMatch(pickerSource, /<QuickMovementIcon id=\{id\}/, 'quick choices do not render stick figures');
 assert.match(pickerSource, /<LibraryMovementArt id=\{item\.id\}/, 'library choices use exercise-specific movement art');
-assert.doesNotMatch(pickerSource, /moreExerciseCatalog\.map[\s\S]*?<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
+assert.doesNotMatch(pickerSource, /<BodyAreaIcon/, 'library choices do not fall back to generic body-area glyphs');
 assert.match(libraryArtSource, /<WorkoutMovementArt id=\{id\}/, 'library choices use the shared movement-art component');
-assert.match(pickerSource, /moreExerciseCatalog\.map\(item => <div[^>]*><button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
-assert.match(pickerSource, /<details className="mt-3 rounded-lg border border-slate-200 py-3" open=\{query\.trim\(\) \? true : undefined\}><summary className="focus-ring cursor-pointer px-3/, 'library art avoids duplicate horizontal padding so it matches quick-art width');
-assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 2, 'quick and library choices use one enlarged movement per row');
+assert.match(pickerSource, /moreExerciseCatalog\.filter\(matchesCatalog\)\.map\(item => <div[^>]*><button[\s\S]*?min-h-44[\s\S]*?p-2 text-center text-base font-bold/, 'library choices use the same enlarged card geometry as quick choices');
+assert.match(pickerSource, /<section className="mt-3 rounded-lg border border-slate-200 py-3" aria-labelledby=\{`other-exercises-/, 'other library choices stay directly visible without duplicate horizontal art padding');
+assert.doesNotMatch(pickerSource, /manualWorkout\.moreExercises/, 'matching official exercises do not require opening More Exercises');
+assert.equal((pickerSource.match(/grid grid-cols-1 gap-3/g) ?? []).length, 3, 'quick, other and rehab choices use one enlarged movement per row');
 const quickChoiceList = optionsSource.match(/quickExerciseIds = \[([\s\S]*?)\] as const/);
 assert.ok(quickChoiceList, 'quick choice list exists');
 const quickIds = [...quickChoiceList[1].matchAll(/'([^']+)'/g)].map(([, id]) => id);
@@ -39,7 +40,16 @@ assert.ok(en.manualWorkout.strengthGroups.push && en.manualWorkout.strengthGroup
 assert.ok(zhTW.manualWorkout.strengthGroups.push && zhTW.manualWorkout.strengthGroups.pull && zhTW.manualWorkout.strengthGroups.leg, 'Traditional Chinese strength group labels resolve');
 assert.match(optionsSource, /new Set\(quickExerciseIds\)/, 'quick exercise catalog exclusions reuse the canonical id list');
 assert.match(pickerSource, /const moreExerciseCatalog = catalog\.filter\(exercise => !quickExerciseCatalogIds\.has\(exercise\.id\)\)/, 'more exercises exclude quick-choice equivalents');
-assert.match(pickerSource, /moreExerciseCatalog\.map\(item =>/, 'more exercises render the filtered catalog');
+assert.match(pickerSource, /moreExerciseCatalog\.filter\(matchesCatalog\)\.map\(item =>/, 'other exercises render the filtered catalog');
+assert.match(pickerSource, /const purpose = purposeFilters\[exercise\.id\] \?\? 'all'/, 'purpose defaults to all and is kept per stable draft exercise id');
+assert.match(pickerSource, /matchesExerciseDiscovery\(item, purpose, query\)/, 'official discovery uses the shared bilingual purpose matcher');
+assert.match(pickerSource, /REHAB_DISCOVERY_GROUPS\.map\(group =>/, 'rehab uses the three approved discovery groups');
+assert.match(pickerSource, /group === 'care' &&.*discovery\.careHint/, 'care choices retain the distinct care explanation');
+assert.match(pickerSource, /<ExercisePurposeBadges exerciseId=\{selectedIds\[index\]\}/, 'selected exercise exposes shared purpose labels');
+assert.match(pickerSource, /onBlur=\{event => event\.stopPropagation\(\)\}/, 'pure discovery controls do not invoke form blur autosave');
+assert.match(pickerSource, /const hasMatches = catalog\.some\(item => matchesExerciseDiscovery\(item, 'all', query\)\) \|\| matchingCustom\.length > 0/, 'custom creation remains guarded by official name matches outside the current purpose');
+assert.match(pickerSource, /customState\.exercises\.filter\(item => matchesManualExercise\(query, \[item\.name\]\)\)/, 'personal exercise discovery keeps name search and ignores official purpose');
+assert.match(pickerSource, /<RecordOnlyExercisePicker searchQuery=\{query\} allowCreate=\{!query\.trim\(\) \|\| !hasMatches\}/, 'personal exercise create conditions remain unchanged');
 const libraryArtIds = artManifest.filter(entry => entry.group === 'library').map(entry => entry.id);
 const quickArtIds = artManifest.filter(entry => entry.group === 'quick').map(entry => entry.id);
 const additionalCatalogIds = quickIds;
@@ -107,6 +117,24 @@ async function loadModule(entry) {
 }
 
 const { exercises: canonicalExercises } = await loadModule('src/data/exercises.ts');
+const { matchesExerciseDiscovery, getExercisePurposeInfo } = await loadModule('src/utils/exerciseDiscovery.ts');
+const { REHAB_DISCOVERY_GROUPS } = await loadModule('src/data/exercisePurposes.ts');
+const { quickExerciseGroups, quickExerciseCatalogIds } = await loadModule('src/data/manualWorkoutOptions.ts');
+const rehabChoices = canonicalExercises.filter(item => matchesExerciseDiscovery(item, 'rehab', ''));
+const groupedRehabIds = REHAB_DISCOVERY_GROUPS.flatMap(group => rehabChoices.filter(item => getExercisePurposeInfo(item.id)?.rehabGroup === group).map(item => item.id));
+assert.deepEqual([...groupedRehabIds].sort(), rehabChoices.map(item => item.id).sort(), 'every matching rehab choice is directly reachable in exactly one displayed group');
+assert.equal(new Set(groupedRehabIds).size, groupedRehabIds.length, 'rehab groups do not duplicate choices');
+for (const purpose of ['all', 'strength']) {
+  const choices = canonicalExercises.filter(item => matchesExerciseDiscovery(item, purpose, ''));
+  const visible = [...quickExerciseGroups.flatMap(group => group.exerciseIds).filter(id => choices.some(item => item.id === id)), ...choices.filter(item => !quickExerciseCatalogIds.has(item.id)).map(item => item.id)];
+  assert.deepEqual(visible.sort(), choices.map(item => item.id).sort(), `${purpose}: shortcuts plus the visible other group cover the complete matching official catalog`);
+}
+assert.ok(rehabChoices.some(item => item.id === 'ankle-circles'), 'rehab mobility is not hidden behind strength shortcuts');
+assert.equal(matchesExerciseDiscovery(canonicalExercises.find(item => item.id === 'catalog-prone-ytw'), 'rehab', 'prone'), true, 'catalog-only rehab remains reachable by English name');
+assert.equal(matchesExerciseDiscovery(canonicalExercises.find(item => item.id === 'catalog-lat-pulldown'), 'rehab', '下拉'), false, 'purpose narrows official name results without inferring from type');
+assert.equal(matchesExerciseDiscovery(canonicalExercises.find(item => item.id === 'catalog-lat-pulldown'), 'strength', 'LAT  PULL'), true, 'strength discovery preserves normalized English search');
+const persistSource = pickerSource.slice(pickerSource.indexOf('async function persist('), pickerSource.indexOf('function save(event:'));
+assert.doesNotMatch(persistSource, /purposeFilters|searchQueries|primaryPurpose|secondaryPurposes/, 'discovery UI state is excluded from draft serialization and autosave dependencies');
 const { isCompatibleWithEquipment } = await loadModule('src/utils/exerciseModel.ts');
 const { getRecommendedExercises } = await loadModule('src/utils/recommendationEngine.ts');
 const shoulderPressExercise = canonicalExercises.find(exercise => exercise.id === 'catalog-shoulder-press');

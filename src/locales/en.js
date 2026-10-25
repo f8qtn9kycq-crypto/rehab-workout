@@ -1,4 +1,34 @@
 export default {
+  discovery: {
+    recommendedAreaHint: 'Recommendations use the selected area or your assessment. Choose All exercises to browse all body areas.',
+    catalogEmpty: 'No official exercises match. Clear purpose and search, or check personal exercises below.',
+  "allBodyAreas": "All body areas",
+  "bodyAreas": {"shoulder": "Shoulder", "hip": "Hip", "shoulder_neck": "Neck and shoulder", "knee": "Knee", "ankle": "Ankle"},
+  "purpose": "Find by purpose",
+  "purposes": {
+    "all": "All purposes",
+    "rehab": "Rehab",
+    "strength": "Strength"
+  },
+  "purposeHint": "Purpose helps you find a movement; it does not establish training eligibility. Safety checks and existing limits still apply.",
+  "labels": "Exercise purpose",
+  "purposeLabel": "Purpose",
+  "scope": "Current result scope",
+  "search": "Search exercise names (Chinese or English)",
+  "empty": "No exercise matches this purpose, search, and body-area selection.",
+  "clear": "Clear purpose and search",
+  "viewAll": "Browse all matching exercises",
+  "groups": {
+    "control": "Strength and movement control",
+    "mobility": "Mobility and stretching",
+    "care": "Care and relaxation"
+  },
+  "careHint": "Care content: follow its existing cautions; this is not a conventional sets-and-reps exercise.",
+  "catalogOnly": "Reference and recording only",
+  "quickGroups": "Strength shortcuts",
+  "other": "Other matching exercises",
+  "customHint": "Personal exercises remain separate; their movement type is not a saved training purpose."
+},
   soreness: {
     transfer: {"title": "Share and back up observations", "share": "Share CSV", "shareHint": "Choose an optional date range. Only positive scores are shared; zero values remain in full backups. Notes are excluded by default. Exported files stay on your device until you choose to share them.", "start": "From (optional)", "end": "To (optional)", "includeNotes": "Include my notes in the shared file", "previewPrivate": "Preview: {count} entries, {rows} rows; notes excluded. Dates, positions, scores, and symptoms are included.", "previewWithNotes": "Preview: {count} entries, {rows} rows including private notes. Review the file before sharing.", "invalidRange": "Enter valid dates with the start on or before the end.", "downloadShare": "Download share CSV", "backup": "Full backup and restore", "backupHint": "Full CSV and JSON include every visible entry, including zero values and private notes, regardless of the share date range. JSON preserves the original values for restore. Deleted entries are excluded. CSV escapes spreadsheet formulas and is for reading, not restore. Store these files privately.", "fullCsv": "Download full CSV", "json": "Download JSON backup", "restoreHint": "Restore adds missing entries from a native JSON backup. Existing IDs and local legacy deletions win; existing entries are never replaced. The whole file is rejected if invalid or over capacity. Nothing is uploaded.", "file": "Choose JSON backup", "reading": "Reading backup…", "restorePreview": "Preview: {count} entries validated. Confirm to add missing entries; duplicate and locally deleted legacy IDs will be skipped.", "restore": "Confirm additive restore", "cancel": "Cancel restore", "restored": "Restore complete: {added} added, {skipped} skipped. Other open tabs must be refreshed before use after restore.", "fileError": "This file is not a supported soreness JSON backup, contains invalid entries, or exceeds 40 MB. No records were changed.", "exportError": "The download could not be prepared. Check the date range and try again."},
     trends: {"title": "Soreness observations", "note": "Only recorded values from 1–10 are shown as separate points, without filling gaps or connecting lines. Zero values are excluded; a gap does not mean recovery. Front, back, body side, and legacy entries with no recorded view stay separate.", "noRecords": "Add a soreness observation to see changes at the same position.", "position": "Observed position", "range": "Observation period", "days": "Last {count} days", "empty": "No observations from 1–10 for this position in the selected period.", "values": "Recorded observations"},
@@ -499,11 +529,11 @@ export default {
   },
   exercises: {
     title: 'Exercise Library',
-    subtitle: 'Start with recommended exercises or choose a body area. Written steps and safety notes stay visible.',
+    subtitle: 'Choose a purpose or search by name, then narrow by body area if needed. Written steps and safety notes stay visible.',
     startingTitle: 'Start with these exercises today',
     startingReason: 'Based on your selected area ({bodyArea}), current pain, and movement confidence, these options are easier to control.',
     filterTitle: 'Find exercises',
-    filterHint: 'Choose today’s mode and body area. Level and equipment stay visible as reference labels.',
+    filterHint: 'Find rehab or strength exercises first, then choose the result scope and body area. Level and equipment remain reference labels.',
     mode: 'Mode',
     recommendedMode: "Today's suitable exercises",
     recommendedHelper: 'Filtered by your current status',

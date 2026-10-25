@@ -4,11 +4,12 @@ import { useI18n } from '../services/i18n';
 import { BODY_AREAS, type BodyArea } from '../types/rehab';
 
 
-export default function BodyMapSelector({ selected, onChange, ariaLabel, availability }: {
+export default function BodyMapSelector({ selected, onChange, ariaLabel, availability, labels }: {
   selected: BodyArea | 'all';
   onChange: (area: BodyArea) => void;
   ariaLabel?: string;
   availability?: Record<BodyArea, number>;
+  labels?: Partial<Record<BodyArea, string>>;
 }) {
   const { t } = useI18n();
   const clipId = `body-map-${useId().replace(/:/g, '')}`;
@@ -16,7 +17,7 @@ export default function BodyMapSelector({ selected, onChange, ariaLabel, availab
   function areaMeta(area: BodyArea) {
     const count = availability?.[area];
     const disabled = count === 0 && selected !== area;
-    const label = t(`bodyAreas.${area}.label`);
+    const label = labels?.[area] ?? t(`bodyAreas.${area}.label`);
     const accessibleLabel = count === undefined
       ? label
       : disabled
@@ -70,6 +71,6 @@ export default function BodyMapSelector({ selected, onChange, ariaLabel, availab
         </button>;
       })}
     </div>
-    <p role="status" className="text-sm font-semibold text-calm-800">{selected === 'all' ? t('bodyEntry.choose') : t('bodyEntry.selected', { area: t(`bodyAreas.${selected}.label`) })}</p>
+    <p role="status" className="text-sm font-semibold text-calm-800">{selected === 'all' ? t('bodyEntry.choose') : t('bodyEntry.selected', { area: areaMeta(selected).label })}</p>
   </div>;
 }

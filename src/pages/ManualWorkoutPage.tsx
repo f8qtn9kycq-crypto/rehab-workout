@@ -1,6 +1,10 @@
 import RecordingEquipmentFields from '../components/RecordingEquipmentFields';
 import { readLibraryRecordingSelection } from '../utils/libraryRecording';
 import { matchesManualExercise } from '../utils/manualWorkoutSearch';
+import { getExercisePurposeInfo, matchesExerciseDiscovery } from '../utils/exerciseDiscovery';
+import { REHAB_DISCOVERY_GROUPS, type ExercisePurposeFilter } from '../data/exercisePurposes';
+import ExercisePurposeSelector from '../components/ExercisePurposeSelector';
+import ExercisePurposeBadges from '../components/ExercisePurposeBadges';
 import { draftExercise, readManualDrafts, persistManualDraft, type DraftExercise, type ManualWorkoutDraft } from '../services/manualWorkoutDraftStorage';
 import { isLegacyRevisedCatalogRecord } from '../components/ManualWorkoutCard';
 import FavoriteButton from '../components/FavoriteButton';
@@ -65,6 +69,7 @@ export default function ManualWorkoutPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.exerciseId ?? ''));
   const [equipmentIds, setEquipmentIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.equipmentId ?? ''));
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
+  const [purposeFilters, setPurposeFilters] = useState<Record<string, ExercisePurposeFilter>>({});
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
   const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
   const revision = useRef(resumed?.revision ?? 0);
@@ -185,28 +190,48 @@ export default function ManualWorkoutPage() {
       <label className="block font-bold">{t('manualWorkout.date')}<input className={control} type="date" required max={localDate()} value={date} onChange={event => setDate(event.target.value)} /></label>
       {exercises.map((exercise, index) => {
         const query = searchQueries[exercise.id] ?? '';
-        const matchesCatalog = (item: typeof catalog[number]) => matchesManualExercise(query, [item.title, getLocalizedExercise(item, 'en').title]);
+        const purpose = purposeFilters[exercise.id] ?? 'all';
+        const matchesCatalog = (item: typeof catalog[number]) => matchesExerciseDiscovery(item, purpose, query);
+        const matchingCatalog = catalog.filter(matchesCatalog);
         const matchingCustom = customState.exercises.filter(item => matchesManualExercise(query, [item.name]));
-        const hasMatches = catalog.some(matchesCatalog) || matchingCustom.length > 0;
+        const hasMatches = catalog.some(item => matchesExerciseDiscovery(item, 'all', query)) || matchingCustom.length > 0;
         return <fieldset key={exercise.id} className="card space-y-4 p-4">
         <legend className="px-2 text-lg font-black">{t('manualWorkout.exerciseNumber', { number: index + 1 })}</legend>
         <div>
           {(selectedIds[index] || ((source || resumed) && exercise.name)) && editingExerciseIndex !== index ? <div className="space-y-2 rounded-lg bg-calm-50 p-3">
             {!legacyRecords[index] && hasWorkoutMovementArt(selectedIds[index]) && <div className="mx-auto w-full max-w-xs"><WorkoutMovementArt id={selectedIds[index]} loading="eager" /></div>}
             {catalog.some(item => item.id === selectedIds[index]) && <FavoriteButton id={selectedIds[index]} title={exercise.name} />}
+            <ExercisePurposeBadges exerciseId={selectedIds[index]} />
             <p className="text-sm text-slate-600">{t('manualWorkout.artEquipmentHint')}</p>
             <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-bold text-ink">{t('manualWorkout.selectedExercise', { name: exercise.name || t('manualWorkout.otherExercise') })}</p><button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => setEditingExerciseIndex(index)}>{t('manualWorkout.changeExercise')}</button></div>
           </div> : <>
+          {/* Discovery controls do not autosave on blur; choosing an exercise keeps the existing save flow. */}
+          <div className="space-y-3" onBlur={event => event.stopPropagation()}>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
           <label className="block font-bold">{t('manualWorkout.search')}<input className={control} type="search" value={query} onChange={event => setSearchQueries(current => ({ ...current, [exercise.id]: event.target.value }))} /></label>
-          {query.trim() && !hasMatches && <p role="status">{t('manualWorkout.noSearchResults')}</p>}
-          <div className="mt-3 space-y-5">
+          <ExercisePurposeSelector value={purpose} onChange={value => setPurposeFilters(current => ({ ...current, [exercise.id]: value }))} />
+          {matchingCatalog.length === 0 && <div role="status" className="space-y-2">
+            <p>{t('discovery.catalogEmpty')}</p>
+            <button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => { setPurposeFilters(current => ({ ...current, [exercise.id]: 'all' })); setSearchQueries(current => ({ ...current, [exercise.id]: '' })); }}>{t('discovery.clear')}</button>
+          </div>}
+          {purpose === 'rehab' ? <div className="mt-3 space-y-5">
+            {REHAB_DISCOVERY_GROUPS.map(group => {
+              const groupExercises = matchingCatalog.filter(item => getExercisePurposeInfo(item.id)?.rehabGroup === group);
+              return groupExercises.length > 0 ? <section key={group} aria-labelledby={`rehab-group-${index}-${group}`}>
+                <h3 id={`rehab-group-${index}-${group}`} className="mb-2 text-base font-black text-slate-800">{t(`discovery.groups.${group}`)}</h3>
+                {group === 'care' && <p className="mb-3 text-sm leading-6 text-slate-600">{t('discovery.careHint')}</p>}
+                <div className="grid grid-cols-1 gap-3">{groupExercises.map(item => <div key={item.id}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 w-full flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
+              </section> : null;
+            })}
+          </div> : <>
+          <div className="mt-3 space-y-5" aria-label={t('discovery.quickGroups')}>
+            {quickExerciseGroups.some(group => group.exerciseIds.some(id => matchingCatalog.some(item => item.id === id))) && <p className="font-bold text-slate-700">{t('discovery.quickGroups')}</p>}
             {quickExerciseGroups.map(group => <section key={group.id} hidden={!group.exerciseIds.some(id => { const item = catalog.find(e => e.id === id); return item && matchesCatalog(item); })} aria-labelledby={`strength-group-${index}-${group.id}`}>
               <h3 id={`strength-group-${index}-${group.id}`} className="mb-2 text-base font-black text-slate-800">{t(`manualWorkout.strengthGroups.${group.id}`)}</h3>
               <div className="grid grid-cols-1 gap-3">
                 {group.exerciseIds.map(id => {
                   const catalogExercise = catalog.find(item => item.id === id);
-                  return catalogExercise && matchesCatalog(catalogExercise) ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
+                  return catalogExercise && matchesCatalog(catalogExercise) ? <div key={id}><button type="button" aria-pressed={selectedIds[index] === id} onClick={() => chooseExercise(index, id)} className={`focus-ring flex min-h-44 w-full flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}>
                     <WorkoutMovementArt id={id} loading="eager" />
                     <span>{getLocalizedExercise(catalogExercise, language).title}</span>
                   </button><FavoriteButton id={id} title={getLocalizedExercise(catalogExercise, language).title} /></div> : null;
@@ -214,9 +239,13 @@ export default function ManualWorkoutPage() {
               </div>
             </section>)}
           </div>
-          <details className="mt-3 rounded-lg border border-slate-200 py-3" open={query.trim() ? true : undefined}><summary className="focus-ring cursor-pointer px-3 font-bold text-calm-800">{t('manualWorkout.moreExercises')}</summary>
-            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.map(item => <div key={item.id} hidden={!matchesCatalog(item)}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
-          </details>
+          {moreExerciseCatalog.some(matchesCatalog) && <section className="mt-3 rounded-lg border border-slate-200 py-3" aria-labelledby={`other-exercises-${index}`}>
+            <h3 id={`other-exercises-${index}`} className="mb-2 px-3 text-base font-black text-slate-800">{t('discovery.other')}</h3>
+            <div className="mt-3 grid grid-cols-1 gap-3">{moreExerciseCatalog.filter(matchesCatalog).map(item => <div key={item.id}><button type="button" aria-pressed={selectedIds[index] === item.id} onClick={() => chooseExercise(index, item.id)} className={`focus-ring flex min-h-44 w-full flex-col items-center justify-center gap-2 rounded-lg p-2 text-center text-base font-bold ${selectedIds[index] === item.id ? 'bg-calm-100 text-calm-900 ring-2 ring-calm-700' : 'bg-white text-ink'}`}><LibraryMovementArt id={item.id} /><span>{getLocalizedExercise(item, language).title}</span></button><FavoriteButton id={item.id} title={getLocalizedExercise(item, language).title} /></div>)}</div>
+          </section>}
+          </>}
+          </div>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{t('discovery.customHint')}</p>
           <RecordOnlyExercisePicker searchQuery={query} allowCreate={!query.trim() || !hasMatches} exercises={matchingCustom} storageError={customState.error}
             onSelect={exercise => chooseCustomExercise(index, exercise)}
             onCreated={exercise => { setCustomState(readCustomExercises()); chooseCustomExercise(index, exercise); }} />

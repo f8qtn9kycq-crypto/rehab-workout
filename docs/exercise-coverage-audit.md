@@ -1,8 +1,8 @@
 # Exercise Coverage Audit
 
-Generated: 2026-10-21T15:33:36.880Z
+Generated: 2026-10-25T06:34:24.661Z
 
-Source commit: 4138e2e
+Source commit: 8d461fc
 
 Scope: audit only. This report does not add exercise content, change recommendation behavior, change pain thresholds, or bypass SafetyGate.
 
@@ -77,7 +77,7 @@ Top 5 gaps:
 | 負重深蹲 | catalog-squat | shoulder_hip | strength | intermediate | barbell |
 | 引體向上 | catalog-pull-up | shoulder_hip | strength | advanced | bodyweight |
 | 雙槓撐體 | catalog-dip | shoulder_hip | strength | advanced | bodyweight |
-| 下拉機 | catalog-lat-pulldown | shoulder_hip | strength | intermediate | machine |
+| 滑輪下拉 | catalog-lat-pulldown | shoulder_hip | strength | intermediate | machine |
 | 機械坐姿划船 | catalog-seated-row | shoulder_hip | strength | intermediate | machine |
 | 機械膝伸 | catalog-leg-extension | knee | strength | intermediate | machine |
 | 弓步轉體伸展 | catalog-worlds-greatest-stretch | shoulder_hip | mobility | intermediate | bodyweight |
@@ -91,7 +91,7 @@ Top 5 gaps:
 | 負重深蹲 | catalog-squat | Yes | hip | strength | barbell | catalogOnly: true | None |
 | 引體向上 | catalog-pull-up | Yes | shoulder | strength | bodyweight | catalogOnly: true | None |
 | 雙槓撐體 | catalog-dip | Yes | shoulder | strength | bodyweight | catalogOnly: true | None |
-| 下拉機 | catalog-lat-pulldown | Yes | shoulder | strength | machine | catalogOnly: true | None |
+| 滑輪下拉 | catalog-lat-pulldown | Yes | shoulder | strength | machine | catalogOnly: true | None |
 | 機械坐姿划船 | catalog-seated-row | Yes | shoulder | strength | machine | catalogOnly: true | None |
 | 機械膝伸 | catalog-leg-extension | Yes | knee | strength | machine | catalogOnly: true | None |
 | 肩關節前彎運動 | shoulder-flexion | Yes | shoulder | mobility | bodyweight, chair, dumbbell | Recommendation eligible | None |

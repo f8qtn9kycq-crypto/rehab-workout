@@ -1,6 +1,6 @@
 # Roadmap 交付追蹤與下一輪候選
 
-本文件更新 2026-10-08 至 10-22 PR 回顧後的實作路線圖。歷史觀察保留2026-10-24快照；本輪收尾核對為2026-10-26（臺灣時間），main基準 `1a20543ad73acf64f0dd79668b48881aa973859b`，已包含#249。產品方向維持安全、信任、低摩擦開始、引導與追蹤；不以 PR 數量代表產品成果。
+本文件更新 2026-10-08 至 10-22 PR 回顧後的實作路線圖。歷史觀察保留2026-10-24快照；本輪收尾核對為2026-10-26（臺灣時間），main基準 `e35454952701ee8b397a245697ec5cb6bdae4bdf`，已包含#249與#247。產品方向維持安全、信任、低摩擦開始、引導與追蹤；不以 PR 數量代表產品成果。
 
 ## 已交付
 
@@ -13,6 +13,7 @@
 | 建置相依收斂 | #236 | 8632db3554bdadac2997b3e35b4024a173fe1ba1 | Node修補＋Pillow13；CSS/JS bytes相同，40圖片來源再生相同；剩餘公告明示 |
 | 唯讀痠痛趨勢 | #237 | a0a4d03560193da0ca332dac9b2939db4fabdf1b | 前後／側別／中央／legacy分離，7/30/90真實離散點；缺值與0不推論恢復；雙引擎12組QA |
 | Exercise Discovery Phase B | #249 | 1a20543ad73acf64f0dd79668b48881aa973859b | Phase A 47項已核准；動作庫／補記用途入口與搜尋、標籤交付；[分類](exercise-taxonomy.md)與[QA](qa/exercise-discovery-phase-b.md)，main Build成功 |
+| 功能確認Session／SPA交接 | #247 | e35454952701ee8b397a245697ec5cb6bdae4bdf | 已保存部位交接、返回保留草稿；雙引擎30情境及邊界通過，main Build成功；[QA](qa/outcome-check-in-handoff.md) |
 
 各 PR 的精確 head、獨立審查、CI 與分支清理以該 PR 留言為準。#225／#151 的 Claude 為建議審查，額度限制及未採用原因有記錄；#236／#237 的必要 Claude 已實際完成，不能將此差異抹平。
 
@@ -68,13 +69,13 @@
 
 ## 交接與文件收尾（2026-10-26；保留10/24歷史基準）
 
-10/24交接基準為 main `8d461fc4546740b17f9aabba97620e65a726abe4`，已包含 #246 與 #245；本輪已更新至 `1a20543ad73acf64f0dd79668b48881aa973859b`，另含#249。#245 的技能探索、Issue form、審查事件、Project token trusted-main 邊界與 workflow fixtures 均沿用；本機只整理尚未交付的中央契約、Build concurrency 與 roadmap 文件。#244 遠端仍為舊文件分支，本機整合不代表其 PR 已更新或合併。
+10/24交接基準為 main `8d461fc4546740b17f9aabba97620e65a726abe4`，已包含 #246 與 #245；本輪已更新至 `1a20543ad73acf64f0dd79668b48881aa973859b`，另含#249；其後#247已合併，本輪收尾基準為 `e35454952701ee8b397a245697ec5cb6bdae4bdf`。#245 的技能探索、Issue form、審查事件、Project token trusted-main 邊界與 workflow fixtures 均沿用；本機只整理尚未交付的中央契約、Build concurrency 與 roadmap 文件。#244 遠端仍為舊文件分支，本機整合不代表其 PR 已更新或合併。
 
-功能確認的非肩部Session交接與同文件SPA錨點返回仍是未合併PR #247，不與已交付的#246首頁入口混稱完成。本輪#247以普通merge對齊main1a20543，新head `50f6d674d7c62e8669f4fb7cdeeac7a32f437b1b`，兩個TSX及既有QA腳本bytes不變。新隔離clone完整測試／build／safety及Chrome、WebKit各15矩陣與真正同document Back/Forward／草稿／完整hip session交接通過，新head Build及Codex completed無findings。Claude為Tier2建議審查，已主動送出新head審查；即時review／mergeability依PR最新紀錄，不沿用舊head的CLEAN結論。
+功能確認的非肩部Session交接與同文件SPA錨點返回已由#247合併為 `e35454952701ee8b397a245697ec5cb6bdae4bdf`，不與#246首頁入口混稱同一修正。Reviewed head為 `50f6d674d7c62e8669f4fb7cdeeac7a32f437b1b`；完整本機測試、雙引擎各15矩陣及真正同document Back/Forward／草稿／完整hip session交接、新head Build／Codex與Claude獨立靜態審查皆Pass。main push Build40214656550亦成功，main內容與reviewed head的diff為空。使用者只批准此PR合併並接受GitHub既有自動刪遠端分支，不外推至#248。
 
-優先序：①收尾#247與#248、分別取得交付決策；②再審議Phase C。Phase A的47項用途及四項歧義已核准，Phase B已由#249交付main；舊kind仍不等於trainingPurpose。Phase C只有唯讀提案，實作未授權；Phase D未啟動。
+優先序：①#247已交付，維持#248就緒並等待其獨立交付決策；②再審議Phase C。Phase A的47項用途及四項歧義已核准，Phase B已由#249交付main；舊kind仍不等於trainingPurpose。Phase C只有唯讀提案，實作未授權；Phase D未啟動。
 
-#152 產品成果與每 PR 工程門檻分開；不新增每 PR 真人／iPhone／VoiceOver／臨床／production walkthrough，未驗證仍標 NOT VERIFIED。使用者已授權#247與獨立workflow PR #248的push／PR更新／CI／審查，並於本輪選擇先收尾這兩項；未授權它們合併、刪除、手動部署或改保護設定。#249的獨立合併授權不擴及這兩個PR。#248已發布但尚未合併，本機完成不等於交付；不修改其他工作線的#244。Build 真實取消行為與 fork／審查事件完整矩陣仍依既有計畫驗證。
+#152 產品成果與每 PR 工程門檻分開；不新增每 PR 真人／iPhone／VoiceOver／臨床／production walkthrough，未驗證仍標 NOT VERIFIED。使用者已授權#247與獨立workflow PR #248的push／PR更新／CI／審查，並於本輪選擇先收尾這兩項。其後使用者僅批准#247合併，尚未授權#248合併、刪除、手動部署或改保護設定。#249與#247的獨立合併授權均不擴及#248。#248已發布但尚未合併，本機完成不等於交付；不修改其他工作線的#244。Build 真實取消行為與 fork／審查事件完整矩陣仍依既有計畫驗證。
 
 本 workflow 的本機靜態補充審查：指定 gpt-6-astra/high，實際模型 NOT VERIFIED；repo Tier 0 候選／子任務為高風險契約保留判斷。完整18檔無高信心 P0/P1，另建議同步 #247 發布狀態，已由父代理修正；未改產品或降低安全／審查要求。父代理已執行 workflow fixtures、保留語義檢查、三技能驗證及32個本機連結核對；代理未獨立跑動態 fixtures，結果不當 GitHub provider approval。
 
@@ -97,3 +98,7 @@
 本PR是實際CI排程變更，不稱純文件；按現行docs/pr-workflow.md所容許的不改app runtime之窄幅workflow維持Tier0，不改權限、token、必要檢查、執行來源或部署邊界。Tier0不等於自動合併資格：本PR含可執行regression腳本，不能只憑分級視為符合嚴格檔案白名單，更不能推定合併授權。真實取消／fork事件矩陣仍NOT VERIFIED，不冒稱模型測試等於遠端事件。
 
 本輪整合副本已實際完成：workflow-regression（YAML／form／shell、6事件／6 Build gate／3 review gate／2 API失敗及取消模型）、原14契約區段逐值相同、三個trusted workflow bytes相同、Build除concurrency外結構相同、所有變更Markdown的本機連結、三技能quick_validate、完整npm test、build、safety-i18n與diff check，皆Pass。獨立Astra對本輪roadmap單檔差異再核對無新P0/P1；實際模型仍NOT VERIFIED。這些是本機及獨立靜態證據，遠端CI／provider結果另依新head留言。
+
+## #247合併後的base對齊（2026-10-26）
+
+本輪繼續先前已授權的#248收尾，以普通merge承接main e354549；沒有合併#248至main。相對前一輪4f6079b，除main的四檔#247改動外，只更新本文件的交付事實；相對最新main仍維持原19檔workflow／契約／文件範圍，無src差異。原本對base1a20543的CI／CLEAN結論不直接沿用，另在新head重新驗證。本機原始checkout、本機分支與QA保留；未手動部署，C1／PhaseD未啟動。

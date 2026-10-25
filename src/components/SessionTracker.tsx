@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../services/i18n';
 import { createTrainingLog, saveLog } from '../services/logService';
 import { getOutcomeEntries } from '../services/outcomeStorage';
-import type { Exercise, TrainingLogEntry, TrainingSet } from '../types/rehab';
+import { BODY_AREAS, type Exercise, type TrainingLogEntry, type TrainingSet } from '../types/rehab';
 import { hasRecentOutcome } from '../utils/homeNextAction';
 import { hasPainValue, shouldStopForPain, shouldUseRecoveryMode, shouldWarnForPainIncrease } from '../utils/painRules';
 import { normalizeStopReasonForSave, USER_EXIT_REASON_CODE } from '../utils/trainingLogStopReasons';
@@ -177,7 +177,8 @@ export default function SessionTracker({ exercise, onNavigateBack }: SessionTrac
   }
 
   function addOutcomeNow(): void {
-    navigate('/logs#function-check-in');
+    const search = savedLog && BODY_AREAS.includes(savedLog.bodyArea) ? `?outcomeArea=${savedLog.bodyArea}` : '';
+    navigate(`/logs${search}#function-check-in`);
   }
 
   function returnHome(): void {

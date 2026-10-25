@@ -44,3 +44,13 @@
 獨立本機補充審查：指定 gpt-6.1-sol/high，實際模型 NOT VERIFIED；repo／子任務 Tier 2，唯讀核對兩 TSX、既有 QA 腳本、保存與安全 guard。結果無高信心 P0/P1；未重跑測試、未寫檔、無返工。父代理核對 finding 範圍與四檔差異，未將本機補充審查當必要 GitHub provider／Claude 結果。
 
 尚未 commit、push、建立 PR、取得新遠端 CI 或必要 provider review；不以本機 Pass 推定合併資格。原工作目錄及未追蹤資料保留。下一步取得明確發布授權，先交付本 Tier 2 功能修正，再處理獨立 workflow patch；兩者不混成同一 PR，不改其他聊天的 #244。
+
+## #249 交付後的整合收尾（2026-10-26，base 1a20543）
+
+本次將最新main `1a20543ad73acf64f0dd79668b48881aa973859b` 以merge方式合入#247獨立分支，不改寫既有遠端歷史。與新main相比仍只有原四檔；兩個TSX與既有outcome browser QA bytes相對舊head f5a5cde完全相同，新增差異只為本段證據。Phase B的搜尋／用途／中英標籤由main承接，沒有混入額外功能改動。
+
+在全新隔離clone實際重跑完整 `npm test`（含main的exercise-discovery）、build、safety-i18n、diff check，皆Pass。Chrome／WebKit各跑五部位×320/375/390共15矩陣，另驗一般／非法URL、兩輪真正同document錨點Back/Forward、分數7與備註保留、新key及query明確handoff、所有localStorage bytes零導覽寫入、保存一次與完整hip三組session交接，均成功回傳JSON。
+
+原始結果在本輪隔離clone `output/playwright/closeout247-{chrome,webkit}.json`，圖檔使用引擎後綴以避免覆蓋；QA執行副本只改截圖檔名，沒有更動斷言或產品程式。這輪沒有重跑舊192＋36首頁瀏覽器矩陣；首頁16-state／46 SSR已由完整測試涵蓋，不把舊矩陣冒稱本輪新證據。
+
+本機結果不等於新head CI或provider審查；它們在push後綁定精確head補齊並留PR。使用者授權本次收尾／必要push與審查，不包含合併、刪除、設定變更或手動部署。真人／實體iPhone／VoiceOver／clinical／production仍NOT VERIFIED。此段為最新收尾進度，前面各歷史基準的發布狀態不作目前狀態。

@@ -132,7 +132,7 @@ async (page) => {
   report.boundaries.explicitScopeAndCatalogGuard = 'PASS';
   await page.goto(base + '/exercises?mode=all&purpose=strength');
   await page.getByRole('button', { name: '全部部位', exact: true }).click();
-  await count('article', 1); // Favorite Bench remains an independent intersection.
+  await count('article', 27); // This fresh route has no favorites filter.
   check(new URL(page.url()).searchParams.get('bodyArea') === 'all', 'all body areas not explicit');
   await page.goto(base + '/exercises?mode=all&bodyArea=all');
   await count('article', 47);

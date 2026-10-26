@@ -20,7 +20,7 @@ import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../serv
 import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
 import { buildRecordsPresentation, TRAINING_CATEGORIES, type RecordsActivityItem } from '../utils/recordsPresentation';
-import { filterRecordsDiscoveryDays, matchingRecordsDiscoveryEntries, recordDiscoveryEntries, type RecordsPurposeFilter, type RecordsDiscoveryEntry } from '../utils/recordsDiscovery';
+import { buildRecordsDiscoveryHistory, filterRecordsDiscoveryDays, matchingRecordsDiscoveryEntries, recordDiscoveryEntries, type RecordsPurposeFilter, type RecordsDiscoveryEntry } from '../utils/recordsDiscovery';
 import { getExerciseById } from '../utils/exerciseModel';
 import { getLocalizedExercise, getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 import RecordsPurposeEvidence from '../components/RecordsPurposeEvidence';
@@ -53,7 +53,7 @@ export default function LogsPage() {
   const latestOutcome = presentation.validOutcomes[0] ?? null;
   const filteredDays = useMemo(() => filterRecordsDiscoveryDays(presentation.days, bodyArea, purpose, logs), [presentation.days, bodyArea, purpose, logs]);
   const recentDays = filteredDays.slice(0, 5);
-  const historyItems = filteredDays.flatMap(day => day.items);
+  const historyItems = useMemo(() => buildRecordsDiscoveryHistory(logs, activities, manualWorkouts).filter(item => matchingRecordsDiscoveryEntries(item, bodyArea, purpose, logs).length > 0), [logs, activities, manualWorkouts, bodyArea, purpose]);
   const filtering = bodyArea !== 'all' || purpose !== 'all';
   const historyActivities = historyItems.flatMap(item => item.source === 'activity' ? [item.activity] : []);
   const selectedAreaLabel = bodyArea === 'all' ? t('records.bodyArea.all') : t(`bodyAreas.${bodyArea}.label`);

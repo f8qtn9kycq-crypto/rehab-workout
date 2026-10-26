@@ -1,4 +1,6 @@
 import { exercises } from '../data/exercises';
+import type { Activity } from '../services/activityStorage';
+import type { ManualWorkout } from '../services/manualWorkoutStorage';
 import type { ManualExercise } from '../services/manualWorkoutStorage';
 import type { BodyArea, TrainingLogEntry } from '../types/rehab';
 import { getExercisePurposeInfo } from './exerciseDiscovery';
@@ -78,4 +80,14 @@ export function filterRecordsDiscoveryDays(days: RecordsPresentation['days'], ar
   if (area === 'all' && purpose === 'all') return days;
   return days.map(day => ({ ...day, items: day.items.filter(item => matchingRecordsDiscoveryEntries(item, area, purpose, logs).length > 0) }))
     .filter(day => day.items.length > 0);
+}
+
+/** 完整歷史沿用 reader 接受的資料，不把近期的未來日期排除規則套入歷史。 */
+export function buildRecordsDiscoveryHistory(logs: TrainingLogEntry[], activities: Activity[], workouts: ManualWorkout[]): RecordsActivityItem[] {
+  const linked = new Set(activities.flatMap(activity => activity.kind === 'resistance' ? activity.exerciseLogIds : []));
+  return [
+    ...activities.map((activity): RecordsActivityItem => ({ id: `activity:${activity.id}`, source: 'activity', date: activity.date, activity })),
+    ...workouts.map((workout): RecordsActivityItem => ({ id: `manual:${workout.id}`, source: 'manual', date: workout.date, workout })),
+    ...logs.filter(log => !linked.has(log.id)).map((log): RecordsActivityItem => ({ id: `training:${log.id}`, source: 'training', date: log.date ?? log.completedAt, log })),
+  ];
 }

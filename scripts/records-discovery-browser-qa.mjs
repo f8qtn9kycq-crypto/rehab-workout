@@ -104,6 +104,18 @@ async page => {
   check(afterLog.find(row => row.id === 'linked-cuff').sets[0].weightKg === 14, 'linked set editor no longer saves');
   check(JSON.stringify(afterLog.find(row => row.id === 'standalone-ankle')) === JSON.stringify(beforeLog.find(row => row.id === 'standalone-ankle')), 'edit changed unrelated log');
   check(await page.evaluate(() => window.__c1Writes.every(key => ['rehab.activities.v1', 'rehab.trainingLogs.v2'].includes(key))), 'explicit edits wrote unrelated data');
-  report.boundaries = { kindOnlyAndRevised: 'PASS', partialMissingLink: 'PASS', linkedDeduplication: 'PASS', keyboard: 'PASS', nextDayFeedbackAndLinkedSetSave: 'PASS', emptyAndReset: 'PASS', evidence: 'browser automation; human/device/production NOT VERIFIED' };
+  const beforeFutureStats = await page.locator('section[aria-labelledby="records-week-title"]').innerText();
+  await page.evaluate(() => {
+    for (const [key, id] of [['rehab.manualWorkouts.v1','future-manual'], ['rehab.trainingLogs.v2','future-log'], ['rehab.activities.v1','future-cycle']]) {
+      const rows = JSON.parse(localStorage.getItem(key)); const row = { ...(key.includes('activities') ? rows.find(row => row.kind === 'cycling') : rows[0]), id, date: key.includes('trainingLogs') ? '2099-01-01T12:00:00' : '2099-01-01' };
+      if (key.includes('trainingLogs')) row.completedAt = row.date;
+      localStorage.setItem(key, JSON.stringify([...rows, row]));
+    }
+  });
+  await page.reload(); await filters.waitFor(); await history.locator('summary').first().click();
+  const fullFuture = await ids(history); const recentFuture = await ids(recent);
+  check(['manual:future-manual','training:future-log','activity:future-cycle'].every(id => fullFuture.includes(id) && !recentFuture.includes(id)), 'future-dated saved records hidden from full history or leaked into recent');
+  check(await page.locator('section[aria-labelledby="records-week-title"]').innerText() === beforeFutureStats, 'future record changed weekly totals');
+  report.boundaries = { kindOnlyAndRevised: 'PASS', partialMissingLink: 'PASS', linkedDeduplication: 'PASS', keyboard: 'PASS', nextDayFeedbackAndLinkedSetSave: 'PASS', futureDatedFullHistory: 'PASS', emptyAndReset: 'PASS', evidence: 'browser automation; human/device/production NOT VERIFIED' };
   return report;
 }

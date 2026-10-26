@@ -10,7 +10,7 @@ async function loadModule(entry) {
   return import(`data:text/javascript;base64,${Buffer.from(output.find(item => item.type === 'chunk').code).toString('base64')}`);
 }
 
-const { recordDiscoveryEntries, matchingRecordsDiscoveryEntries, filterRecordsDiscoveryDays, isLegacyRevisedCatalogRecord } = await loadModule('src/utils/recordsDiscovery.ts');
+const { buildRecordsDiscoveryHistory, recordDiscoveryEntries, matchingRecordsDiscoveryEntries, filterRecordsDiscoveryDays, isLegacyRevisedCatalogRecord } = await loadModule('src/utils/recordsDiscovery.ts');
 const { buildRecordsPresentation } = await loadModule('src/utils/recordsPresentation.ts');
 const { exercises } = await loadModule('src/data/exercises.ts');
 const { getLocalizedExercise } = await loadModule('src/utils/localizedExercise.ts');
@@ -80,4 +80,14 @@ assert.equal(filterRecordsDiscoveryDays(days, 'shoulder', 'rehab', [log]).slice(
 assert.equal(filterRecordsDiscoveryDays(days, 'ankle', 'rehab', [log]).length, 0);
 filterRecordsDiscoveryDays(presentation.days, 'all', 'cardio', [log, log2]);
 assert.equal(JSON.stringify({ days, presentation, log, log2, mixed }), snapshot, '輸入、完整場次及既有 weekly 統計不變');
+const futureManual = { ...cuff.workout, id: 'future-manual', date: '2099-01-01' };
+const futureLog = { ...log, id: 'future-log', date: '2099-01-01T12:00:00', completedAt: '2099-01-01T12:00:00' };
+const futureActivity = { ...cycling, id: 'future-cycle', date: '2099-01-01' };
+const full = buildRecordsDiscoveryHistory([log, futureLog], [cycling, futureActivity, activity], [futureManual]);
+assert.equal(full.some(item => item.id === 'manual:future-manual'), true, '完整歷史不隱藏 reader 接受的未來日期補記');
+assert.equal(full.some(item => item.id === 'training:future-log'), true, '完整歷史不隱藏未來日期舊訓練');
+assert.equal(full.some(item => item.id === 'activity:future-cycle'), true, '完整歷史不隱藏未來日期活動');
+assert.equal(full.some(item => item.id === `training:${log.id}`), false, '完整歷史 linked log 仍去重');
+assert.equal(full.filter(item => matchingRecordsDiscoveryEntries(item, 'all', 'rehab', [log, futureLog]).length).some(item => item.id === 'manual:future-manual'), true);
+assert.equal(buildRecordsPresentation([futureLog], [futureActivity], [], new Date('2026-10-26'), [futureManual]).recentActivities.length, 0, '近期與統計的原日期排除規則維持');
 console.log('Records discovery regression passed: 官方與次要用途、舊資料未知、同動作交集、linked 去重、五日前篩選、修訂辨識及資料統計不變。');

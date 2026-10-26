@@ -1,4 +1,26 @@
 export default {
+  recordsDiscovery: {
+    "areaTitle": "篩選歷史紀錄",
+  "title": "依用途找紀錄",
+  "purposes": {
+    "all": "全部",
+    "rehab": "復健",
+    "strength": "肌力",
+    "cardio": "有氧",
+    "unknown": "未分類"
+  },
+  "hint": "依官方動作用途尋找，不代表當次訓練目的。用途與部位須符合同一動作；近期與完整歷史共用篩選，場次仍保留完整內容。週統計與活動補記不受篩選影響。",
+  "selected": "目前範圍：{purpose} · {area}",
+  "clear": "清除用途與部位篩選",
+  "empty": "沒有符合目前用途與部位的紀錄。",
+  "matched": "符合篩選",
+  "sources": {
+    "official": "官方動作用途",
+    "activity": "活動類型",
+    "unknown": "用途未確認"
+  },
+  "statsHint": "依既有紀錄分類計算，與上方官方用途篩選不同。"
+},
   discovery: {
     recommendedAreaHint: '推薦仍依指定部位或你的身體評估篩選；要瀏覽全部部位，請先選「所有動作」。',
     catalogEmpty: '官方動作沒有符合條件的結果；可清除用途與搜尋，或查看下方個人動作。',

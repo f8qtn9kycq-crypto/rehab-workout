@@ -3,7 +3,7 @@ import ActivityTracking from '../components/ActivityTracking';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
-import TrainingLog from '../components/TrainingLog';
+import TrainingLog, { TrainingSetLogEditor } from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import ManualWorkoutCard from '../components/ManualWorkoutCard';
@@ -19,8 +19,11 @@ import { clearRehabLocalData } from '../services/localStorageService';
 import { createOutcomeEntry, getOutcomeEntries, saveOutcomeEntry } from '../services/outcomeStorage';
 import type { BodyArea, OutcomeScore } from '../types/rehab';
 import { buildWeeklyProgressSummary } from '../utils/progressSummary';
-import { buildRecordsPresentation, recordCategories, TRAINING_CATEGORIES } from '../utils/recordsPresentation';
-import { filterRecordsDays, matchingManualExercises } from '../utils/recordsBodyArea';
+import { buildRecordsPresentation, TRAINING_CATEGORIES, type RecordsActivityItem } from '../utils/recordsPresentation';
+import { filterRecordsDiscoveryDays, matchingRecordsDiscoveryEntries, recordDiscoveryEntries, type RecordsPurposeFilter, type RecordsDiscoveryEntry } from '../utils/recordsDiscovery';
+import { getExerciseById } from '../utils/exerciseModel';
+import { getLocalizedExercise, getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
+import RecordsPurposeEvidence from '../components/RecordsPurposeEvidence';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
   return (
@@ -41,14 +44,40 @@ export default function LogsPage() {
   const [draftState, setDraftState] = useState(readManualDrafts);
   const savedAssessment = useMemo(() => getSavedAssessment(), []);
   const [clearStatus, setClearStatus] = useState<'idle' | 'success' | 'partial'>('idle');
+  const [purpose, setPurpose] = useState<RecordsPurposeFilter>('all');
   const [bodyArea, setBodyArea] = useState<BodyArea | 'all'>('all');
   const summary = useMemo(() => buildWeeklyProgressSummary(logs, outcomes), [logs, outcomes]);
   const presentation = useMemo(() => buildRecordsPresentation(logs, activities, outcomes, new Date(), manualWorkouts), [logs, activities, outcomes, manualWorkouts]);
   const savedManualId = (location.state as { manualSavedId?: string } | null)?.manualSavedId;
   const savedManualWorkout = manualWorkouts.find(workout => workout.id === savedManualId);
   const latestOutcome = presentation.validOutcomes[0] ?? null;
-  const recentDays = useMemo(() => filterRecordsDays(presentation.days, bodyArea, logs).slice(0, 5), [presentation.days, bodyArea, logs]);
+  const filteredDays = useMemo(() => filterRecordsDiscoveryDays(presentation.days, bodyArea, purpose, logs), [presentation.days, bodyArea, purpose, logs]);
+  const recentDays = filteredDays.slice(0, 5);
+  const historyItems = filteredDays.flatMap(day => day.items);
+  const filtering = bodyArea !== 'all' || purpose !== 'all';
+  const historyActivities = historyItems.flatMap(item => item.source === 'activity' ? [item.activity] : []);
   const selectedAreaLabel = bodyArea === 'all' ? t('records.bodyArea.all') : t(`bodyAreas.${bodyArea}.label`);
+
+  function resetFilters(): void { setBodyArea('all'); setPurpose('all'); }
+
+  function discoveryName(entry: RecordsDiscoveryEntry): string {
+    const exercise = entry.exerciseId && !entry.purposes.includes('unknown') ? getExerciseById(entry.exerciseId) : undefined;
+    return exercise ? getLocalizedExercise(exercise, language).title : entry.name || t(entry.source === 'cycling' ? 'activities.cycling' : 'logs.savedExerciseFallback');
+  }
+
+  function evidence(item: RecordsActivityItem) {
+    const entries = recordDiscoveryEntries(item, logs);
+    const matches = matchingRecordsDiscoveryEntries(item, bodyArea, purpose, logs);
+    return <div className="space-y-2">{entries.map((entry, index) => <div key={index} className={filtering && matches.some(match => match.manualIndex === entry.manualIndex && match.logId === entry.logId && match.source === entry.source) ? 'border-l-4 border-calm-500 pl-3' : ''}>
+      {entries.length > 1 && <p className="break-words text-sm font-bold">{discoveryName(entry)}</p>}
+      <RecordsPurposeEvidence entry={entry} matched={filtering && matches.some(match => match.manualIndex === entry.manualIndex && match.logId === entry.logId && match.source === entry.source)} />
+    </div>)}</div>;
+  }
+
+  function manualCard(item: Extract<RecordsActivityItem, { source: 'manual' }>) {
+    const matches = filtering ? matchingRecordsDiscoveryEntries(item, bodyArea, purpose, logs) : [];
+    return <ManualWorkoutCard workout={item.workout} discoveryEntries={recordDiscoveryEntries(item, logs)} matchingIndices={matches.flatMap(entry => entry.manualIndex === undefined ? [] : [entry.manualIndex])} matchingCycling={matches.some(entry => entry.source === 'cycling')} />;
+  }
 
   function formatDate(date: string): string {
     return new Date(date).toLocaleDateString(language);
@@ -98,11 +127,17 @@ export default function LogsPage() {
       <a href="#records-cycling" className="focus-ring inline-flex min-h-11 items-center font-bold text-calm-800 underline">{t('activities.cycling')}</a>
 
       <section className="card space-y-3 p-5" aria-labelledby="records-body-area-title">
-        <h2 id="records-body-area-title" className="text-xl font-black text-ink">{t('records.bodyArea.title')}</h2>
-        <p className="text-sm leading-6 text-slate-600">{t('records.bodyArea.hint')}</p>
-        <BodyMapSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('records.bodyArea.title')} />
-        <p role="status" className="text-sm font-semibold text-calm-800">{t('records.bodyArea.selected', { area: selectedAreaLabel })}</p>
-        <button type="button" onClick={() => setBodyArea('all')} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('records.bodyArea.clear')}</button>
+        <h2 id="records-body-area-title" className="text-xl font-black text-ink">{t('recordsDiscovery.areaTitle')}</h2>
+        <fieldset className="space-y-2">
+          <legend className="font-bold text-ink">{t('recordsDiscovery.title')}</legend>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+            {(['all', 'rehab', 'strength', 'cardio', 'unknown'] as const).map(value => <button key={value} type="button" aria-pressed={purpose === value} onClick={() => setPurpose(value)} className={`focus-ring min-h-11 rounded-md border px-3 py-2 font-bold ${purpose === value ? 'border-calm-900 bg-calm-700 text-white' : 'border-slate-300 bg-white text-calm-800'}`}>{t(`recordsDiscovery.purposes.${value}`)}</button>)}
+          </div>
+        </fieldset>
+        <p className="text-sm leading-6 text-slate-600">{t('recordsDiscovery.hint')}</p>
+        <BodyMapSelector selected={bodyArea} onChange={setBodyArea} ariaLabel={t('recordsDiscovery.areaTitle')} />
+        <p role="status" className="text-sm font-semibold text-calm-800">{t('recordsDiscovery.selected', { area: selectedAreaLabel, purpose: t(`recordsDiscovery.purposes.${purpose}`) })}</p>
+        <button type="button" onClick={resetFilters} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('recordsDiscovery.clear')}</button>
       </section>
 
       <section className="space-y-4" aria-labelledby="records-recent-title">
@@ -111,25 +146,26 @@ export default function LogsPage() {
           <div className="space-y-3">
             {recentDays.map(day => <section key={day.date} className="space-y-2" aria-label={day.date}>
               <h3 className="text-lg font-black text-ink">{day.date}</h3>
-              {day.items.map(item => <div key={item.id} className="space-y-2">
+              {day.items.map(item => <div key={item.id} data-record-id={item.id} className="space-y-2">
                 <p className="flex flex-wrap gap-2 text-sm font-semibold text-calm-800">
                   <span>{t(`records.sources.${item.source}`)}</span>
-                  {recordCategories(item, logs).map(category => <span key={category} className="rounded-md bg-calm-100 px-2 py-1">{t(`records.categories.${category}`)}</span>)}
+
                 </p>
                 {item.source === 'training' ? (
               <article key={item.id} className="card space-y-3 p-4">
                 <ExerciseIdentityVisual log={item.log} compact />
+                {evidence(item)}
                 <p className="text-sm font-semibold text-calm-800">{t('records.recent.trainingMeta', { date: formatDate(item.date), painBefore: item.log.painBefore, painAfter: item.log.painAfter })}</p>
                 <TrainingSetSummary sets={item.log.sets} />
               </article>
             ) : item.source === 'manual' ? (
               <div className="space-y-2">
-                {bodyArea !== 'all' && <p className="text-sm font-semibold text-calm-800">{t('records.bodyArea.matching', { names: matchingManualExercises(item, bodyArea).map(exercise => exercise.name).join(t('progress.areaSeparator')) })}</p>}
-                <ManualWorkoutCard key={item.id} workout={item.workout} />
+                {manualCard(item)}
               </div>
             ) : (
               <article key={item.id} className="card p-4">
                 <ActivityIdentityVisual activity={item.activity} />
+                {evidence(item)}
                 <p className="mt-2 text-lg font-black text-ink">{t('records.recent.activityMeta', { date: formatDate(item.date), minutes: item.activity.actualMinutes })}</p>
                 {item.activity.kind === 'resistance' ? <p className="mt-1 text-sm text-slate-600">{t(`activities.focuses.${item.activity.primaryFocus}`)}</p> : null}
                 {item.activity.kind === 'resistance' && item.activity.exerciseLogIds.map(id => {
@@ -141,8 +177,8 @@ export default function LogsPage() {
             </section>)}
           </div>
         ) : <div className="card space-y-2 p-5 text-sm leading-6 text-slate-600">
-          <p>{bodyArea === 'all' ? t('records.recent.empty') : t('records.bodyArea.empty', { area: selectedAreaLabel })}</p>
-          {bodyArea !== 'all' && <button type="button" onClick={() => setBodyArea('all')} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('records.bodyArea.clear')}</button>}
+          <p>{filtering ? t('recordsDiscovery.empty') : t('records.recent.empty')}</p>
+          {filtering && <button type="button" onClick={resetFilters} className="focus-ring min-h-11 rounded-md border border-calm-300 px-4 py-2 font-bold text-calm-800">{t('recordsDiscovery.clear')}</button>}
         </div>}
       </section>
 
@@ -158,7 +194,7 @@ export default function LogsPage() {
               <dd className="mt-1 text-sm">{t('records.week.categoryDays', { count: presentation.weeklyCategoryDays[category] })}</dd>
             </div>)}
           </dl>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{t('records.week.countingHint')}</p>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{t('records.week.countingHint')} {t('recordsDiscovery.statsHint')}</p>
         </article>
       </section>
 
@@ -186,9 +222,9 @@ export default function LogsPage() {
         <details className="card p-3">
           <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
           <div className="mt-4 space-y-5">
-            <ActivityTracking allowCycling={false} activities={activities} onActivitiesChange={() => setActivities(readActivities().activities)} />
-            {manualWorkouts.length > 0 && <div className="space-y-3">{manualWorkouts.map(workout => <ManualWorkoutCard key={workout.id} workout={workout} />)}</div>}
-            {logs.length > 0 ? <TrainingLog logs={logs} onLogsChange={setLogs} /> : null}
+            <ActivityTracking allowCycling={false} activities={activities} historyActivities={historyActivities} renderHistoryEvidence={activity => <>{evidence({ id: `activity:${activity.id}`, source: 'activity', date: activity.date, activity })}{activity.kind === 'resistance' && [...new Set(activity.exerciseLogIds)].map(id => { const log = logs.find(row => row.id === id); return log ? <div key={id}><p className="text-sm font-bold">{getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback'))}</p><TrainingSetLogEditor log={log} onSaved={setLogs} /></div> : null; })}</>} onActivitiesChange={() => setActivities(readActivities().activities)} />
+            {historyItems.length === 0 && <p role="status">{t('recordsDiscovery.empty')}</p>}
+            {historyItems.map(item => item.source === 'manual' ? <div key={item.id} data-record-id={item.id}>{manualCard(item)}</div> : item.source === 'training' ? <div key={item.id} data-record-id={item.id} className="space-y-2">{evidence(item)}<TrainingLog logs={[item.log]} onLogsChange={setLogs} /></div> : null)}
           </div>
         </details>
       </section>

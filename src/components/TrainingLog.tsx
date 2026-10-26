@@ -9,7 +9,7 @@ import TrainingSetEditor from './TrainingSetEditor';
 import ExerciseIdentityVisual from './ExerciseIdentityVisual';
 import TrainingSetSummary from './TrainingSetSummary';
 
-function TrainingSetLogEditor({ log, onSaved }: { log: TrainingLogEntry; onSaved: (logs: TrainingLogEntry[]) => void }) {
+export function TrainingSetLogEditor({ log, onSaved }: { log: TrainingLogEntry; onSaved: (logs: TrainingLogEntry[]) => void }) {
   const { t } = useI18n();
   const [draft, setDraft] = useState<TrainingSet[]>(log.sets ?? []);
   const [status, setStatus] = useState<'idle' | 'saved' | 'error'>('idle');

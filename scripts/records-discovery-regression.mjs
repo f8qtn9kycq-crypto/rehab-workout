@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { build } from 'vite';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 async function loadModule(entry) {
   const result = await build({ configFile: false, logLevel: 'silent', build: {
@@ -90,4 +93,38 @@ assert.equal(full.some(item => item.id === 'activity:future-cycle'), true, '完�
 assert.equal(full.some(item => item.id === `training:${log.id}`), false, '完整歷史 linked log 仍去重');
 assert.equal(full.filter(item => matchingRecordsDiscoveryEntries(item, 'all', 'rehab', [log, futureLog]).length).some(item => item.id === 'manual:future-manual'), true);
 assert.equal(buildRecordsPresentation([futureLog], [futureActivity], [], new Date('2026-10-26'), [futureManual]).recentActivities.length, 0, '近期與統計的原日期排除規則維持');
+// 實際渲染完整頁面，防止 linked 場次去重後隱藏原訓練明細。
+const temporary = mkdtempSync(join(process.cwd(), '.records-discovery-render-'));
+try {
+  const entry = join(temporary, 'entry.tsx');
+  writeFileSync(entry, `
+    import { renderToStaticMarkup } from 'react-dom/server';
+    import { MemoryRouter } from 'react-router-dom';
+    import { I18nProvider } from '../src/services/i18n';
+    import LogsPage from '../src/pages/LogsPage';
+    export const render = () => renderToStaticMarkup(<MemoryRouter initialEntries={['/logs']}><I18nProvider><LogsPage /></I18nProvider></MemoryRouter>);
+  `);
+  const result = await build({ configFile: false, logLevel: 'silent', build: { ssr: entry, write: false } });
+  const chunks = Array.isArray(result) ? result[0].output : result.output;
+  const output = join(temporary, 'entry.mjs');
+  writeFileSync(output, chunks.find(item => item.type === 'chunk').code);
+  const app = await import(pathToFileURL(output));
+  const stoppedLog = { id: 'rendered-linked', exerciseId: 'ankle-circles', exerciseTitle: 'QA original', title: 'QA original', bodyArea: 'ankle', type: 'mobility', level: 'beginner', date: '2026-09-19T12:00:00', completedAt: '2026-09-19T12:00:00', painBefore: 2, painAfter: 6, stoppedEarly: true, stopReason: 'QA stopped without sets', plannedSets: 4, setsCompleted: 1, plannedReps: 12, repsCompleted: 3, difficultyRating: 7, notes: '' };
+  const values = new Map([
+    ['rehab.language.v1', 'zh-TW'],
+    ['rehab.functionalOutcomes.v2', '[]'],
+    ['rehab.trainingLogs.v2', JSON.stringify([stoppedLog])],
+    ['rehab.activities.v1', JSON.stringify([{ id: 'rendered-session', date: '2026-09-19', kind: 'resistance', actualMinutes: 15, completed: false, symptomResponse: 'worse', primaryFocus: 'lower', exerciseLogIds: [stoppedLog.id] }])],
+  ]);
+  const before = JSON.stringify([...values]);
+  let writes = 0;
+  globalThis.window = { localStorage: { getItem: key => values.get(key) ?? null, setItem: () => { writes++; }, removeItem: () => { writes++; } } };
+  const html = app.render();
+  const fullHistory = html.slice(html.indexOf('aria-labelledby="records-history-title"'));
+  for (const text of ['疼痛 2 → 6', '提早停止', 'QA stopped without sets', '完成 1/4 組，3/12 次', '動作吃力程度：7/10']) assert.ok(fullHistory.includes(text), `linked 完整歷史缺少 ${text}`);
+  assert.equal(fullHistory.includes('data-record-id="training:rendered-linked"'), false, 'linked log 不另建重複場次');
+  assert.equal((fullHistory.match(/data-record-id="activity:rendered-session"/g) ?? []).length, 1);
+  assert.equal(writes, 0, 'render 不寫入資料');
+  assert.equal(JSON.stringify([...values]), before);
+} finally { delete globalThis.window; rmSync(temporary, { recursive: true, force: true }); }
 console.log('Records discovery regression passed: 官方與次要用途、舊資料未知、同動作交集、linked 去重、五日前篩選、修訂辨識及資料統計不變。');

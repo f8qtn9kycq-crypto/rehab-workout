@@ -89,10 +89,24 @@ async page => {
     report.cases.push({ language, width, purposeFilters: 4, sameExerciseIntersection: 'PASS', olderDates: 'PASS', storageAndStatistics: 'PASS', screenshot });
   }
   await seed('zh-TW');
+  await page.evaluate(() => {
+    const logs = JSON.parse(localStorage.getItem('rehab.trainingLogs.v2'));
+    const stopped = { ...logs[1], id: 'linked-no-sets', painBefore: 2, painAfter: 6, stoppedEarly: true, stopReason: 'QA stopped without sets', plannedSets: 4, setsCompleted: 1, plannedReps: 12, repsCompleted: 3, difficultyRating: 7 };
+    delete stopped.sets;
+    localStorage.setItem('rehab.trainingLogs.v2', JSON.stringify([...logs, stopped]));
+    const activities = JSON.parse(localStorage.getItem('rehab.activities.v1'));
+    const linked = activities.find(row => row.id === 'linked');
+    linked.exerciseLogIds.push(stopped.id); linked.segments[0].exerciseLogIds.push(stopped.id);
+    localStorage.setItem('rehab.activities.v1', JSON.stringify(activities));
+  });
+  await page.reload(); await filters.waitFor();
+  await page.evaluate(() => { window.__c1Writes = []; const original = Storage.prototype.setItem; Storage.prototype.setItem = function(key, value) { window.__c1Writes.push(key); return original.call(this, key, value); }; });
   await history.locator('summary').first().click();
   await history.locator('details').nth(1).locator('summary').first().click();
   const linked = history.locator('[data-record-id="activity:linked"]');
-  const beforeFeedback = JSON.parse(await bytes());
+  const linkedText = await linked.innerText();
+  for (const expected of ['疼痛 2 → 6', '提早停止', 'QA stopped without sets', '完成 1/4 組，3/12 次', '動作吃力程度：7/10']) check(linkedText.includes(expected), 'linked full detail missing: ' + expected);
+  check(!(await ids(history)).includes('training:linked-no-sets'), 'stopped linked log duplicated outside session');
   await linked.locator('select').last().selectOption('better'); await settle();
   check(await page.evaluate(() => JSON.parse(localStorage.getItem('rehab.activities.v1')).find(row => row.id === 'linked').nextDayResponse === 'better'), 'next-day feedback no longer saves');
   const beforeLog = await page.evaluate(() => JSON.parse(localStorage.getItem('rehab.trainingLogs.v2')));
@@ -112,10 +126,11 @@ async page => {
       localStorage.setItem(key, JSON.stringify([...rows, row]));
     }
   });
-  await page.reload(); await filters.waitFor(); await history.locator('summary').first().click();
+  await page.reload(); await filters.waitFor();
+  await page.evaluate(() => { window.__c1Writes = []; const original = Storage.prototype.setItem; Storage.prototype.setItem = function(key, value) { window.__c1Writes.push(key); return original.call(this, key, value); }; }); await history.locator('summary').first().click();
   const fullFuture = await ids(history); const recentFuture = await ids(recent);
   check(['manual:future-manual','training:future-log','activity:future-cycle'].every(id => fullFuture.includes(id) && !recentFuture.includes(id)), 'future-dated saved records hidden from full history or leaked into recent');
   check(await page.locator('section[aria-labelledby="records-week-title"]').innerText() === beforeFutureStats, 'future record changed weekly totals');
-  report.boundaries = { kindOnlyAndRevised: 'PASS', partialMissingLink: 'PASS', linkedDeduplication: 'PASS', keyboard: 'PASS', nextDayFeedbackAndLinkedSetSave: 'PASS', futureDatedFullHistory: 'PASS', emptyAndReset: 'PASS', evidence: 'browser automation; human/device/production NOT VERIFIED' };
+  report.boundaries = { kindOnlyAndRevised: 'PASS', partialMissingLink: 'PASS', linkedDeduplication: 'PASS', keyboard: 'PASS', nextDayFeedbackAndLinkedSetSave: 'PASS', futureDatedFullHistory: 'PASS', linkedStoppedWithoutSetsFullDetail: 'PASS', emptyAndReset: 'PASS', evidence: 'browser automation; human/device/production NOT VERIFIED' };
   return report;
 }

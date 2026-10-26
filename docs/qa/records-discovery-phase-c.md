@@ -13,9 +13,9 @@
 
 ## 實際檔案範圍
 
-純讀投影 `recordsDiscovery.ts`；`LogsPage`；用途依據元件；ManualWorkoutCard 的可選標籤；ActivityTracking 的可選歷史清單與證據；TrainingLog 僅 export 原組數編輯器供 linked 場次沿用；雙語文案；純邏輯回歸、瀏覽器腳本、既有 source assertions 對齊與 npm test 接入。
+純讀投影 `recordsDiscovery.ts`；`LogsPage`；用途依據元件；ManualWorkoutCard 的可選標籤；ActivityTracking 的可選歷史清單與證據；linked 場次直接沿用完整 TrainingLog 明細與原編輯器（TrainingLog 本身不變）；雙語文案；純邏輯回歸、瀏覽器腳本、既有 source assertions 對齊與 npm test 接入。
 
-`recordsPresentation.ts`、`recordsBodyArea.ts`、TodayGoalPlan、storage services、schema、安全、推薦、Session 與功能確認元件均未修改。修訂紀錄辨識由 ManualWorkoutCard 搬到純讀工具，共用原邏輯，保留舊 export 相容性。
+`TrainingLog.tsx`、`recordsPresentation.ts`、`recordsBodyArea.ts`、TodayGoalPlan、storage services、schema、安全、推薦、Session 與功能確認元件均未修改。修訂紀錄辨識由 ManualWorkoutCard 搬到純讀工具，共用原邏輯，保留舊 export 相容性。
 
 ## 本機驗證
 
@@ -45,6 +45,8 @@ playwright-cli -s=rehab-c1-webkit run-code --filename scripts/records-discovery-
 ## 審查與決策邊界
 
 整體 Tier 2：顯示層篩選跨完整歷史及既有編輯入口，沒有修改安全邏輯、資料契約或統計算法。Codex 必要、Claude 建議；精確 head 的觸發、結果及 CI 留於 PR，不以本文件預先宣稱完成。
+
+審查修正：Codex P1 指出 linked 場次去重後不應只保留組數編輯器，否則原疼痛、停止原因、計畫／實際組次與費力程度不可讀。以「無逐組資料的提前停止動作」先實測 RED（缺少疼痛 2 → 6），改為場次內沿用完整 TrainingLog，再驗證 GREEN；不恢復獨立重複場次，不改 writer。
 
 委派：指定 gpt-6.1-sol／medium，實際模型 NOT VERIFIED；一般純讀工具實作，整體 Tier 2／子任務一般實作。僅工具與新增回歸兩檔，通過實載 TS 回歸及 tsc。父代理檢查 API、原 helper 行為、全測試與兩引擎操作；返工一次補上部分失效 linked ID 的未分類投影，其餘無父代理重作。
 

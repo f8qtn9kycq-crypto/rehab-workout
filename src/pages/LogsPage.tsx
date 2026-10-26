@@ -3,7 +3,7 @@ import ActivityTracking from '../components/ActivityTracking';
 import { useMemo, useState } from 'react';
 import FunctionalOutcomeCheckIn from '../components/FunctionalOutcomeCheckIn';
 import ProgressSummary from '../components/ProgressSummary';
-import TrainingLog, { TrainingSetLogEditor } from '../components/TrainingLog';
+import TrainingLog from '../components/TrainingLog';
 import ExerciseIdentityVisual from '../components/ExerciseIdentityVisual';
 import ActivityIdentityVisual from '../components/ActivityIdentityVisual';
 import ManualWorkoutCard from '../components/ManualWorkoutCard';
@@ -22,7 +22,7 @@ import { buildWeeklyProgressSummary } from '../utils/progressSummary';
 import { buildRecordsPresentation, TRAINING_CATEGORIES, type RecordsActivityItem } from '../utils/recordsPresentation';
 import { buildRecordsDiscoveryHistory, filterRecordsDiscoveryDays, matchingRecordsDiscoveryEntries, recordDiscoveryEntries, type RecordsPurposeFilter, type RecordsDiscoveryEntry } from '../utils/recordsDiscovery';
 import { getExerciseById } from '../utils/exerciseModel';
-import { getLocalizedExercise, getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
+import { getLocalizedExercise } from '../utils/localizedExercise';
 import RecordsPurposeEvidence from '../components/RecordsPurposeEvidence';
 
 function SectionHeader({ id, title, subtitle, icon: Icon }: { id: string; title: string; subtitle: string; icon: typeof Activity }) {
@@ -222,7 +222,10 @@ export default function LogsPage() {
         <details className="card p-3">
           <summary className="focus-ring flex min-h-11 cursor-pointer items-center rounded-md px-1 font-bold text-ink">{t('records.history.open')}</summary>
           <div className="mt-4 space-y-5">
-            <ActivityTracking allowCycling={false} activities={activities} historyActivities={historyActivities} renderHistoryEvidence={activity => <>{evidence({ id: `activity:${activity.id}`, source: 'activity', date: activity.date, activity })}{activity.kind === 'resistance' && [...new Set(activity.exerciseLogIds)].map(id => { const log = logs.find(row => row.id === id); return log ? <div key={id}><p className="text-sm font-bold">{getLocalizedTrainingLogTitle(log, language, t('logs.savedExerciseFallback'))}</p><TrainingSetLogEditor log={log} onSaved={setLogs} /></div> : null; })}</>} onActivitiesChange={() => setActivities(readActivities().activities)} />
+            <ActivityTracking allowCycling={false} activities={activities} historyActivities={historyActivities} renderHistoryEvidence={activity => <>
+              {evidence({ id: `activity:${activity.id}`, source: 'activity', date: activity.date, activity })}
+              {activity.kind === 'resistance' && <TrainingLog logs={logs.filter(log => activity.exerciseLogIds.includes(log.id))} onLogsChange={setLogs} />}
+            </>} onActivitiesChange={() => setActivities(readActivities().activities)} />
             {historyItems.length === 0 && <p role="status">{t('recordsDiscovery.empty')}</p>}
             {historyItems.map(item => item.source === 'manual' ? <div key={item.id} data-record-id={item.id}>{manualCard(item)}</div> : item.source === 'training' ? <div key={item.id} data-record-id={item.id} className="space-y-2">{evidence(item)}<TrainingLog logs={[item.log]} onLogsChange={setLogs} /></div> : null)}
           </div>

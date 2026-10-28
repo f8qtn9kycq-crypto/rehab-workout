@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { readManualWorkouts } from '../services/manualWorkoutStorage';
 import ActivityPlan from './ActivityPlan';
 import { useId, useState } from 'react';
@@ -10,7 +11,7 @@ import { getLocalizedTrainingLogTitle } from '../utils/localizedExercise';
 
 const newSegment = (phase: SessionPhase = 'main'): SessionSegment => ({ phase, exerciseLogIds: [], exerciseResults: [] });
 
-export default function ActivityTracking({ onActivitiesChange = () => {}, activities, initialKind = null, allowCycling = true }: { onActivitiesChange?: () => void; activities?: Activity[]; initialKind?: Activity['kind'] | null; allowCycling?: boolean }) {
+export default function ActivityTracking({ onActivitiesChange = () => {}, activities, initialKind = null, allowCycling = true, historyActivities, renderHistoryEvidence }: { onActivitiesChange?: () => void; activities?: Activity[]; initialKind?: Activity['kind'] | null; allowCycling?: boolean; historyActivities?: Activity[]; renderHistoryEvidence?: (activity: Activity) => ReactNode }) {
   const { t, language } = useI18n();
   const titleId = useId();
   const [savedActivity, setSavedActivity] = useState<Activity | null>(null);
@@ -116,7 +117,8 @@ export default function ActivityTracking({ onActivitiesChange = () => {}, activi
       <button className={button} type="button" onClick={() => setKind(null)}>{t('activities.cancel')}</button>
     </form>}
     {!initialKind && <><details><summary className="min-h-11 cursor-pointer py-3 font-bold">{t('activities.history')}</summary>
-      <div className="space-y-4">{[...currentActivities].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} className="space-y-2 border-t pt-3">
+      <div className="space-y-4">{[...(historyActivities ?? currentActivities)].sort((a,b) => b.date.localeCompare(a.date)).map(a => <article key={a.id} data-record-id={`activity:${a.id}`} className="space-y-2 border-t pt-3">
+        {renderHistoryEvidence?.(a)}
         <p>{a.date} · {t(`activities.${a.kind}`)} · {a.actualMinutes} {t('activities.minuteUnit')} · {t(a.completed ? 'activities.completed' : 'activities.incomplete')}</p>
         {a.kind === 'resistance' && <><p>{t(`activities.focuses.${a.primaryFocus}`)} · {a.exerciseLogIds.length} {t('activities.logUnit')}</p>{a.segments && <ul className="space-y-2 pl-5">{a.segments.map((segment, index) => <li key={`${segment.phase}-${index}`} className="list-disc">{t(`activities.phases.${segment.phase}`)} · {segment.exerciseLogIds.length} {t('activities.logUnit')}{segment.exerciseLogIds.length > 0 && <ul className="pl-5">{segment.exerciseLogIds.map(logId => {
           const linkedLog = logs.find(log => log.id === logId);

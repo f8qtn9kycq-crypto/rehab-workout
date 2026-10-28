@@ -1,3 +1,6 @@
+import RecordsPurposeEvidence from './RecordsPurposeEvidence';
+import { isLegacyRevisedCatalogRecord, type RecordsDiscoveryEntry } from '../utils/recordsDiscovery';
+export { isLegacyRevisedCatalogRecord } from '../utils/recordsDiscovery';
 import { readManualDrafts } from '../services/manualWorkoutDraftStorage';
 import { Link } from 'react-router-dom';
 import { exercises as catalog } from '../data/exercises';
@@ -13,22 +16,8 @@ export function isLegacyShoulderPressRecord(exercise: ManualExercise): boolean {
   return isLegacyRevisedCatalogRecord(exercise);
 }
 
-export function isLegacyRevisedCatalogRecord(exercise: ManualExercise): boolean {
-  const revisedEquipment: Record<string, string> = {
-    'catalog-shoulder-press': 'barbell',
-    'catalog-squat': 'barbell',
-    'catalog-lat-pulldown': 'machine',
-    'catalog-seated-row': 'machine',
-    'catalog-leg-extension': 'machine',
-  };
-  const expected = revisedEquipment[exercise.exerciseId ?? ''];
-  if (!expected) return false;
-  if (exercise.equipmentId && exercise.equipmentId !== expected) return true;
-  const current = catalog.find(item => item.id === exercise.exerciseId);
-  return !current || ![current.title, getLocalizedExercise(current, 'en').title].includes(exercise.name.trim());
-}
 
-export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout }) {
+export default function ManualWorkoutCard({ workout, discoveryEntries, matchingIndices = [], matchingCycling = false }: { workout: ManualWorkout; discoveryEntries?: RecordsDiscoveryEntry[]; matchingIndices?: number[]; matchingCycling?: boolean }) {
   const { t, language } = useI18n();
   const inProgress = readManualDrafts().drafts.some(d => d.id === workout.id);
   return <article className="card space-y-2 p-4">
@@ -41,7 +30,8 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
       const name = !legacyRevisedCatalog && catalogExercise ? getLocalizedExercise(catalogExercise, language).title : exercise.name;
       const equipmentId = equipmentChoiceIds.find(id => id === exercise.equipmentId);
       const equipment = equipmentId ? t(`manualWorkout.equipmentChoices.${equipmentId}`) : exercise.equipment;
-      return <div key={index} className="border-t border-slate-100 pt-2">
+      return <div key={index} data-discovery-match={matchingIndices.includes(index) || undefined} className={`border-t border-slate-100 pt-2 ${matchingIndices.includes(index) ? 'rounded-md border-l-4 border-l-calm-500 pl-3' : ''}`}>
+        {discoveryEntries?.filter(entry => entry.manualIndex === index).map(entry => <RecordsPurposeEvidence key={index} entry={entry} matched={matchingIndices.includes(index)} />)}
         {!legacyRevisedCatalog && hasWorkoutMovementArt(exercise.exerciseId) && <div className="mb-2 w-full max-w-sm"><WorkoutMovementArt id={exercise.exerciseId} /></div>}
         {(exercise.recordOnly || exercise.exerciseId?.startsWith('custom-')) && <p className="text-sm text-slate-600">{t('manualWorkout.recordOnly')}</p>}
         <p className="text-sm text-slate-600">{t('manualWorkout.artEquipmentHint')}</p>
@@ -65,6 +55,7 @@ export default function ManualWorkoutCard({ workout }: { workout: ManualWorkout 
       </div>;
     })}
     {workout.cyclingMinutes !== undefined && <p className="border-t border-slate-100 pt-2 font-semibold text-calm-800">{t('manualWorkout.cyclingSummary', { minutes: workout.cyclingMinutes })}</p>}
+    {discoveryEntries?.filter(entry => entry.source === 'cycling').map((entry, index) => <RecordsPurposeEvidence key={index} entry={entry} matched={matchingCycling} />)}
     <p className="text-xs text-slate-600">{t('manualWorkout.recommendationNote')}</p>
   </article>;
 }

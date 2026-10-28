@@ -1,4 +1,26 @@
 export default {
+  recordsDiscovery: {
+    "areaTitle": "Filter recorded history",
+  "title": "Find records by purpose",
+  "purposes": {
+    "all": "All",
+    "rehab": "Rehab",
+    "strength": "Strength",
+    "cardio": "Cardio",
+    "unknown": "Unclassified"
+  },
+  "hint": "Uses current official exercise purposes, not your purpose at the time. Purpose and body area must match the same exercise. Recent and full history share these filters; sessions keep all their details. Weekly totals and activity recording stay unfiltered.",
+  "selected": "Showing: {purpose} · {area}",
+  "clear": "Clear purpose and body area filters",
+  "empty": "No records match this purpose and body area.",
+  "matched": "Matches filters",
+  "sources": {
+    "official": "Official exercise purpose",
+    "activity": "Activity type",
+    "unknown": "Purpose unconfirmed"
+  },
+  "statsHint": "Uses existing record categories, separately from the official-purpose filters above."
+},
   discovery: {
     recommendedAreaHint: 'Recommendations use the selected area or your assessment. Choose All exercises to browse all body areas.',
     catalogEmpty: 'No official exercises match. Clear purpose and search, or check personal exercises below.',

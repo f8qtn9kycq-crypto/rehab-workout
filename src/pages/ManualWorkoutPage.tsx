@@ -1,3 +1,5 @@
+import ExerciseTaxonomySelector from '../components/ExerciseTaxonomySelector';
+import { EMPTY_TAXONOMY, matchesExerciseTaxonomy, type ExerciseTaxonomyFilters } from '../utils/exerciseTaxonomy';
 import RecordingEquipmentFields from '../components/RecordingEquipmentFields';
 import { readLibraryRecordingSelection } from '../utils/libraryRecording';
 import { matchesManualExercise } from '../utils/manualWorkoutSearch';
@@ -70,6 +72,8 @@ export default function ManualWorkoutPage() {
   const [equipmentIds, setEquipmentIds] = useState<string[]>(() => initialExercises.map(exercise => exercise.equipmentId ?? ''));
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [purposeFilters, setPurposeFilters] = useState<Record<string, ExercisePurposeFilter>>({});
+  const [taxonomyFilters, setTaxonomyFilters] = useState<Record<string, ExerciseTaxonomyFilters>>({});
+  const [discoveryAreas, setDiscoveryAreas] = useState<Record<string, BodyArea | 'all'>>({});
   const [editingExerciseIndex, setEditingExerciseIndex] = useState<number | null>(null);
   const [error, setError] = useState<'input' | 'storage' | 'write' | 'conflict' | null>(null);
   const revision = useRef(resumed?.revision ?? 0);
@@ -191,7 +195,11 @@ export default function ManualWorkoutPage() {
       {exercises.map((exercise, index) => {
         const query = searchQueries[exercise.id] ?? '';
         const purpose = purposeFilters[exercise.id] ?? 'all';
-        const matchesCatalog = (item: typeof catalog[number]) => matchesExerciseDiscovery(item, purpose, query);
+        const taxonomy = taxonomyFilters[exercise.id] ?? EMPTY_TAXONOMY;
+        const discoveryArea = discoveryAreas[exercise.id] ?? 'all';
+        const matchesCatalog = (item: typeof catalog[number]) => matchesExerciseDiscovery(item, purpose, query)
+          && matchesExerciseTaxonomy(item.id, purpose, taxonomy)
+          && (purpose !== 'rehab' || discoveryArea === 'all' || item.bodyArea === discoveryArea);
         const matchingCatalog = catalog.filter(matchesCatalog);
         const matchingCustom = customState.exercises.filter(item => matchesManualExercise(query, [item.name]));
         const hasMatches = catalog.some(item => matchesExerciseDiscovery(item, 'all', query)) || matchingCustom.length > 0;
@@ -209,10 +217,11 @@ export default function ManualWorkoutPage() {
           <div className="space-y-3" onBlur={event => event.stopPropagation()}>
           <p className="font-bold">{t('manualWorkout.chooseExercise')}</p>
           <label className="block font-bold">{t('manualWorkout.search')}<input className={control} type="search" value={query} onChange={event => setSearchQueries(current => ({ ...current, [exercise.id]: event.target.value }))} /></label>
-          <ExercisePurposeSelector value={purpose} onChange={value => setPurposeFilters(current => ({ ...current, [exercise.id]: value }))} />
+          <ExercisePurposeSelector value={purpose} onChange={value => { setPurposeFilters(current => ({ ...current, [exercise.id]: value })); setTaxonomyFilters(current => ({ ...current, [exercise.id]: EMPTY_TAXONOMY })); setDiscoveryAreas(current => ({ ...current, [exercise.id]: 'all' })); }} />
+          <ExerciseTaxonomySelector purpose={purpose} value={taxonomy} onChange={value => setTaxonomyFilters(current => ({ ...current, [exercise.id]: value }))} area={discoveryArea} onAreaChange={value => setDiscoveryAreas(current => ({ ...current, [exercise.id]: value }))} />
           {matchingCatalog.length === 0 && <div role="status" className="space-y-2">
             <p>{t('discovery.catalogEmpty')}</p>
-            <button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => { setPurposeFilters(current => ({ ...current, [exercise.id]: 'all' })); setSearchQueries(current => ({ ...current, [exercise.id]: '' })); }}>{t('discovery.clear')}</button>
+            <button type="button" className="focus-ring min-h-11 font-bold text-calm-800 underline" onClick={() => { setPurposeFilters(current => ({ ...current, [exercise.id]: 'all' })); setSearchQueries(current => ({ ...current, [exercise.id]: '' })); setTaxonomyFilters(current => ({ ...current, [exercise.id]: EMPTY_TAXONOMY })); setDiscoveryAreas(current => ({ ...current, [exercise.id]: 'all' })); }}>{t('discovery.clear')}</button>
           </div>}
           {purpose === 'rehab' ? <div className="mt-3 space-y-5">
             {REHAB_DISCOVERY_GROUPS.map(group => {

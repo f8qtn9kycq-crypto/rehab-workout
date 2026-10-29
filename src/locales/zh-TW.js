@@ -1,4 +1,39 @@
 export default {
+  taxonomy: {
+  "strengthTitle": "肌力：依動作模式找",
+  "legsTitle": "下肢動作模式",
+  "rehabTitle": "復健：依功能找",
+  "areaTitle": "復健部位",
+  "strengthType": "肌力分類",
+  "rehabType": "復健功能",
+  "groups": {
+    "all": "全部模式",
+    "push": "推 Push",
+    "pull": "拉 Pull",
+    "legs": "下肢 Legs",
+    "core": "核心／軀幹",
+    "other": "其他／尚未分類"
+  },
+  "patterns": {
+    "all": "全部下肢",
+    "squat": "蹲 Squat",
+    "hinge": "髖鉸鏈 Hinge",
+    "lunge": "弓步／踏階",
+    "isolation": "單關節動作",
+    "other": "其他下肢"
+  },
+  "functions": {
+    "all": "全部功能",
+    "mobility": "活動度",
+    "control": "控制與穩定",
+    "strength": "肌力",
+    "stretch": "伸展",
+    "balance": "平衡",
+    "care": "照護與放鬆",
+    "other": "其他／尚未分類"
+  },
+  "hint": "分類依現有動作內容協助尋找，可有多個標籤；不代表個人適用性。沒有符合動作時可清除篩選，不會新增或放寬訓練內容。"
+},
   recordsDiscovery: {
     "areaTitle": "篩選歷史紀錄",
   "title": "依用途找紀錄",

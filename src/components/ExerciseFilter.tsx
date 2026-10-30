@@ -1,3 +1,5 @@
+import ExerciseTaxonomySelector from './ExerciseTaxonomySelector';
+import { EMPTY_TAXONOMY, type ExerciseTaxonomyFilters } from '../utils/exerciseTaxonomy';
 import ExercisePurposeSelector from './ExercisePurposeSelector';
 import type { ExercisePurposeFilter } from '../data/exercisePurposes';
 import {
@@ -17,7 +19,7 @@ export default function ExerciseFilter({
   filters,
   availability,
   onChange,
-  purpose, query, onDiscoveryChange, onClear,
+  purpose, query, onDiscoveryChange, onClear, taxonomy = EMPTY_TAXONOMY, onTaxonomyChange,
 }: {
   filters: ExerciseFilters;
   availability: FilterAvailability;
@@ -26,6 +28,8 @@ export default function ExerciseFilter({
   query: string;
   onDiscoveryChange: (purpose: ExercisePurposeFilter, query: string) => void;
   onClear: () => void;
+  taxonomy?: ExerciseTaxonomyFilters;
+  onTaxonomyChange?: (value: ExerciseTaxonomyFilters) => void;
 }) {
   const { t } = useI18n();
 
@@ -33,6 +37,9 @@ export default function ExerciseFilter({
   const summaryChips = [
     t(`discovery.purposes.${purpose}`),
     query || null,
+    purpose === 'strength' && taxonomy.strengthGroup !== 'all' ? t(`taxonomy.groups.${taxonomy.strengthGroup}`) : null,
+    purpose === 'strength' && taxonomy.strengthGroup === 'legs' && taxonomy.legPattern !== 'all' ? t(`taxonomy.patterns.${taxonomy.legPattern}`) : null,
+    purpose === 'rehab' && taxonomy.rehabFunction !== 'all' ? t(`taxonomy.functions.${taxonomy.rehabFunction}`) : null,
     filters.mode === 'recommended' ? t('exercises.recommendedSummary') : t('exercises.allSummary'),
     filters.bodyArea !== 'all' ? t(`discovery.bodyAreas.${filters.bodyArea}`) : null,
   ].filter(Boolean) as string[];
@@ -45,6 +52,7 @@ export default function ExerciseFilter({
       </div>
 
       <ExercisePurposeSelector value={purpose} onChange={value => onDiscoveryChange(value, query)} />
+      {onTaxonomyChange && <ExerciseTaxonomySelector purpose={purpose} value={taxonomy} onChange={onTaxonomyChange} />}
       <label className="block text-sm font-semibold text-slate-700">{t('discovery.search')}
         <input type="search" maxLength={100} value={query} onChange={event => onDiscoveryChange(purpose, event.target.value)} className="focus-ring mt-1 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base" />
       </label>

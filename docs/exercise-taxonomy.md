@@ -1,6 +1,6 @@
 # 動作尋找用途：Phase A 與 Phase B
 
-2026-10-25。47 個官方 ID 的人工對照由使用者確認；Phase B 已授權實作與建立 PR。Phase C／D 尚未啟動。
+2026-10-25 的 Phase A／B 用途基準：47 個官方 ID 的對照由使用者確認。2026-10-30 更新：C1 歷史尋找已由 #250 交付；本次不同次分類見[Strength／Rehab 次層分類](exercise-taxonomy-facets.md)。原主要／次要用途保持。C2／D 尚未啟動。
 
 用途協助使用者尋找動作，不是醫療適用性、當次訓練目的或推薦資格。`Exercise.type`、既有 `kind`、`catalogOnly` 與安全限制各自保留；不複製 ID、不修改動作內容、劑量或歷史資料。
 
@@ -68,6 +68,6 @@
 
 Library 用途與搜尋保存在 URL，詳情返回保留條件；Manual 的用途只在當前選擇器狀態，不加入草稿、完成紀錄或新 schema。既有初次開啟補記表單會建立草稿；這次只確保初始化後純搜尋／切換用途不增加儲存寫入。
 
-History 的當次目的、legacy 來源標示與混合場次屬 Phase C；Home／Routine／Session 的導覽擴充屬 Phase D，均不在本 PR。安全 Body-first 引導不變。
+History 的官方用途來源標示、混合場次與去重已由 C1（#250）交付；保存當次目的或改統計屬 C2。Home／Routine／Session 的導覽擴充屬 Phase D，均不混入次層分類。安全 Body-first 引導不變。
 
 驗證與證據邊界見 [Phase B QA](qa/exercise-discovery-phase-b.md)。

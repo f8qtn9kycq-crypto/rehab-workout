@@ -1,3 +1,4 @@
+import { EMPTY_TAXONOMY, matchesExerciseTaxonomy, parseExerciseTaxonomy } from '../utils/exerciseTaxonomy';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ExerciseCard from '../components/ExerciseCard';
@@ -83,6 +84,7 @@ export default function ExercisesPage() {
   const favoritesOnly = searchParams.get('favorites') === '1';
   const purpose = parseExercisePurpose(searchParams.get('purpose'));
   const query = searchParams.get('q') ?? '';
+  const taxonomy = parseExerciseTaxonomy(searchParams, purpose);
   const { t } = useI18n();
   const assessment = useMemo(() => getSavedAssessment(), []);
   const logs = useMemo(() => getLogs(), []);
@@ -110,7 +112,7 @@ export default function ExercisesPage() {
     });
   }, [assessment, searchParams, setSearchParams]);
 
-  function handleFilterChange(nextFilters: ExerciseFilters, discovery = { purpose, query }): void {
+  function handleFilterChange(nextFilters: ExerciseFilters, discovery = { purpose, query, taxonomy }): void {
     const visibleFilters = normalizeVisibleFilters(nextFilters);
     setFilters(visibleFilters);
     const nextSearchParams = new URLSearchParams();
@@ -118,6 +120,9 @@ export default function ExercisesPage() {
     if (favoritesOnly) nextSearchParams.set('favorites', '1');
     if (discovery.purpose !== 'all') nextSearchParams.set('purpose', discovery.purpose);
     if (discovery.query) nextSearchParams.set('q', discovery.query);
+    if (discovery.taxonomy.strengthGroup !== 'all') nextSearchParams.set('group', discovery.taxonomy.strengthGroup);
+    if (discovery.taxonomy.legPattern !== 'all') nextSearchParams.set('pattern', discovery.taxonomy.legPattern);
+    if (discovery.taxonomy.rehabFunction !== 'all') nextSearchParams.set('function', discovery.taxonomy.rehabFunction);
     if (visibleFilters.mode !== 'recommended') nextSearchParams.set('mode', visibleFilters.mode);
     nextSearchParams.set('bodyArea', visibleFilters.bodyArea);
 
@@ -125,7 +130,7 @@ export default function ExercisesPage() {
   }
 
   function handleDiscoveryChange(nextPurpose: typeof purpose, nextQuery: string): void {
-    handleFilterChange(filters, { purpose: nextPurpose, query: nextQuery });
+    handleFilterChange(filters, { purpose: nextPurpose, query: nextQuery, taxonomy: nextPurpose === purpose ? taxonomy : EMPTY_TAXONOMY });
   }
 
   function getFilteredExercises(nextFilters: ExerciseFilters) {
@@ -153,6 +158,7 @@ export default function ExercisesPage() {
 
   function visibleMatches(items: Exercise[]): Exercise[] {
     return items.filter(exercise => matchesExerciseDiscovery(exercise, purpose, query)
+      && matchesExerciseTaxonomy(exercise.id, purpose, taxonomy)
       && (!favoritesOnly || favorites.ids.includes(exercise.id)));
   }
   const visibleExercises = visibleMatches(filtered);
@@ -177,7 +183,7 @@ export default function ExercisesPage() {
     ])) as FilterAvailability['bodyArea'];
 
     return { bodyArea };
-  }, [assessment, assessmentEquipment, filters, logs, favoritesOnly, favorites.ids, purpose, query]);
+  }, [assessment, assessmentEquipment, filters, logs, favoritesOnly, favorites.ids, purpose, query, taxonomy.strengthGroup, taxonomy.legPattern, taxonomy.rehabFunction]);
 
   function clearExerciseFilters(): void {
     handleFilterChange({
@@ -189,7 +195,7 @@ export default function ExercisesPage() {
       noEquipmentOnly: false,
       duration: 'all',
       painSensitive: false,
-    }, { purpose: 'all', query: '' });
+    }, { purpose: 'all', query: '', taxonomy: EMPTY_TAXONOMY });
   }
 
   function tryBodyweightExercises(): void {
@@ -249,6 +255,7 @@ export default function ExercisesPage() {
         {favorites.error && <p role="alert" className="text-red-800">{t('favorites.error')}</p>}
       </div>
       <ExerciseFilter filters={filters} availability={availability} onChange={handleFilterChange}
+        taxonomy={taxonomy} onTaxonomyChange={value => handleFilterChange(filters, { purpose, query, taxonomy: value })}
         purpose={purpose} query={query} onDiscoveryChange={handleDiscoveryChange} onClear={clearExerciseFilters} />
       {resultGroups.filter(group => group.exercises.length > 0).map(group => <section key={group.id} className="space-y-3" aria-label={group.id === 'all' ? t('exercises.title') : t(`discovery.groups.${group.id}`)}>
         {group.id !== 'all' && <h2 className="text-xl font-bold text-ink">{t(`discovery.groups.${group.id}`)}</h2>}

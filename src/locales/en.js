@@ -1,4 +1,39 @@
 export default {
+  taxonomy: {
+  "strengthTitle": "Strength: movement pattern",
+  "legsTitle": "Lower-body movement pattern",
+  "rehabTitle": "Rehab: function",
+  "areaTitle": "Rehab body area",
+  "strengthType": "Strength group",
+  "rehabType": "Rehab function",
+  "groups": {
+    "all": "All patterns",
+    "push": "Push",
+    "pull": "Pull",
+    "legs": "Legs",
+    "core": "Core / trunk",
+    "other": "Other / unclassified"
+  },
+  "patterns": {
+    "all": "All lower body",
+    "squat": "Squat",
+    "hinge": "Hip hinge",
+    "lunge": "Lunge / step-up",
+    "isolation": "Single-joint",
+    "other": "Other lower body"
+  },
+  "functions": {
+    "all": "All functions",
+    "mobility": "Mobility",
+    "control": "Control / stability",
+    "strength": "Strength",
+    "stretch": "Stretching",
+    "balance": "Balance",
+    "care": "Care / relaxation",
+    "other": "Other / unclassified"
+  },
+  "hint": "Labels describe existing movements for discovery and may overlap. They do not establish personal suitability. Clear filters if there are no matches; training content and eligibility stay unchanged."
+},
   recordsDiscovery: {
     "areaTitle": "Filter recorded history",
   "title": "Find records by purpose",

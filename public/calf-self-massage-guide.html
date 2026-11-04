@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="小腿自我按壓的安全入門指南：先排除警訊，再用輕柔、可控制的方式放鬆小腿肌肉。">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23176f69'/%3E%3Cpath d='M27 12c-2 12-6 24-4 36 1 7 5 8 9 4 3 4 8 3 9-4 2-12-2-24-4-36Z' fill='white'/%3E%3C/svg%3E">
+  <title>小腿自我按壓指南</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #eef2f4;
+      --ink: #15293a;
+      --muted: #556674;
+      --line: #bcc9d2;
+      --card: #fff;
+      --rose: #ebb0ba;
+      --rose-strong: #a93f55;
+      --indigo: #c6c4ee;
+      --indigo-strong: #5551a6;
+      --tendon: #cdd1d5;
+      --point: #176f69;
+      --selected: #d88d08;
+      --point-text: #fff;
+      --warning-bg: #fff0d6;
+      --warning-ink: #5f3b00;
+      --urgent-bg: #fde7e7;
+      --urgent-ink: #7b1f24;
+      --link: #125f5a;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1b25;
+        --ink: #e6eef3;
+        --muted: #a9bac5;
+        --line: #3a4e5c;
+        --card: #162734;
+        --rose: #743443;
+        --rose-strong: #f0a0b1;
+        --indigo: #393772;
+        --indigo-strong: #b7b4f6;
+        --tendon: #47535c;
+        --point: #45beb4;
+        --selected: #f0b03a;
+        --point-text: #0f1b25;
+        --warning-bg: #3a2c10;
+        --warning-ink: #f8dda5;
+        --urgent-bg: #402126;
+        --urgent-ink: #ffc5cb;
+        --link: #65d1c7;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: env(safe-area-inset-top, 0); }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 17px/1.7 system-ui, -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid var(--selected);
+      outline-offset: 3px;
+    }
+    a { color: var(--link); text-underline-offset: .2em; }
+    .wrap {
+      width: min(100% - 32px, 1040px);
+      margin: 0 auto;
+      padding-top: calc(32px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    }
+    h1, h2, h3 { line-height: 1.3; }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 3.25rem); letter-spacing: .02em; }
+    h2 { margin: 0 0 14px; font-size: 1.5rem; }
+    h3 { margin: 0 0 6px; font-size: 1.08rem; }
+    p { margin-top: 0; }
+    .subtitle { max-width: 42rem; margin-bottom: 26px; color: var(--muted); }
+    .scope-note {
+      max-width: 48rem;
+      margin-bottom: 28px;
+      padding-left: 14px;
+      border-left: 4px solid var(--point);
+    }
+    .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 28px; align-items: start; }
+    .figure, .detail, .step-card, .sources {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .figure { padding: 12px; }
+    .figure svg { display: block; width: 100%; height: auto; max-height: 620px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 8px 8px 2px; color: var(--muted); font-size: .82rem; }
+    .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border: 1px solid; border-radius: 3px; vertical-align: -1px; }
+    .area-list { display: grid; gap: 8px; margin: 0 0 14px; padding: 0; list-style: none; }
+    .area-list button {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 52px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .area-list button b {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--point);
+      color: var(--point-text);
+      font-size: .84rem;
+    }
+    .area-list button span { min-width: 0; }
+    .area-list button small { display: block; color: var(--muted); font-size: .78rem; }
+    .area-list button[aria-pressed="true"] { border-color: var(--selected); box-shadow: 0 0 0 1px var(--selected); }
+    .area-list button[aria-pressed="true"] b { background: var(--selected); color: #1c1300; }
+    .detail { padding: 18px 20px; }
+    .detail .en { margin-bottom: 12px; color: var(--muted); font-size: .9rem; }
+    dl { display: grid; grid-template-columns: 3em minmax(0, 1fr); gap: 8px 14px; margin: 0; font-size: .94rem; }
+    dt { color: var(--muted); }
+    dd { margin: 0; }
+    .nav { display: flex; gap: 10px; margin-top: 18px; }
+    .nav button {
+      min-height: 44px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+    section { margin-top: 52px; }
+    .warning, .urgent { border-radius: 12px; padding: 18px 20px; }
+    .warning { background: var(--warning-bg); color: var(--warning-ink); }
+    .urgent { margin-bottom: 14px; background: var(--urgent-bg); color: var(--urgent-ink); }
+    .warning h2, .urgent h2 { color: inherit; font-size: 1.25rem; }
+    .warning ul, .urgent ul { margin: 0; padding-left: 1.25em; }
+    .routine { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .step-card { padding: 16px; border-top: 4px solid var(--point); }
+    .step-card p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .sources { padding: 18px 20px; }
+    .sources ul { margin-bottom: 0; padding-left: 1.2em; }
+    .fine-print { color: var(--muted); font-size: .85rem; }
+    footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+    .point { cursor: pointer; }
+    .point .hit { fill: transparent; }
+    .point .dot { transition: r .15s; }
+    .no-script { margin-top: 12px; color: var(--urgent-ink); }
+
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: minmax(0, 1fr); }
+      .figure svg { max-height: 450px; }
+    }
+    @media (max-width: 360px) {
+      .wrap { width: min(100% - 24px, 1040px); }
+      .detail { padding: 16px; }
+      dl { grid-template-columns: 1fr; gap: 2px; }
+      dd { margin-bottom: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .point .dot { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>小腿自我按壓指南</h1>
+      <p class="subtitle">Calf self-massage guide｜先排除警訊，再用輕柔、可控制的方式按壓小腿肌肉。</p>
+      <p class="scope-note"><strong>適用範圍：</strong>一般活動後的輕微緊繃。這不是診斷或治療；不確定症狀來源時，先不要按摩。</p>
+    </header>
+
+    <main>
+      <section class="urgent" aria-labelledby="urgent-title">
+        <h2 id="urgent-title">先不要按摩，並儘快就醫</h2>
+        <ul>
+          <li>單側小腿突然腫脹、發熱、泛紅或變色，或休息時仍明顯疼痛。即使沒有全部症狀，也不要自行排除血栓。</li>
+          <li>近期手術、住院、長時間不動、長途旅行、懷孕或產後，並新出現上述單側症狀。</li>
+          <li>突然喘不過氣、胸痛、咳血、心跳異常、頭暈或昏厥：請停止操作並立即撥打 119。</li>
+        </ul>
+      </section>
+
+      <div class="hero">
+        <div class="figure">
+          <svg viewBox="20 36 350 454" role="img" aria-labelledby="figure-title figure-desc">
+            <title id="figure-title">小腿背面與五個按壓區域</title>
+            <desc id="figure-desc">五個編號都位於小腿肌肉區，避開膝窩正中央、脛骨、明顯血管與阿基里斯腱本身。</desc>
+            <g fill="var(--card)" stroke="var(--line)" stroke-width="1.2">
+              <circle cx="80" cy="60" r="14"/>
+              <rect x="58" y="80" width="44" height="80" rx="10"/>
+              <rect x="46" y="84" width="10" height="64" rx="5"/>
+              <rect x="104" y="84" width="10" height="64" rx="5"/>
+              <rect x="60" y="164" width="18" height="100" rx="8"/>
+              <rect x="82" y="164" width="18" height="100" rx="8"/>
+            </g>
+            <rect x="82" y="205" width="18" height="36" rx="8" fill="var(--rose)" stroke="var(--rose-strong)" stroke-width="1.2"/>
+            <text x="80" y="288" text-anchor="middle" font-size="12" fill="var(--muted)">背面</text>
+
+            <path d="M220 70 C210 120,192 160,196 215 C200 270,228 330,236 400 L242 440 L298 440 L304 400 C312 330,340 270,344 215 C348 160,330 120,320 70 Z" fill="var(--card)" stroke="var(--muted)" stroke-width="1.2"/>
+            <ellipse cx="270" cy="458" rx="34" ry="14" fill="var(--card)" stroke="var(--muted)" stroke-width="1.2"/>
+            <path d="M222 84 Q270 96 318 84" fill="none" stroke="var(--line)" stroke-dasharray="4 4" stroke-width="1.2"/>
+            <ellipse cx="270" cy="290" rx="34" ry="56" fill="var(--indigo)" stroke="var(--indigo-strong)" stroke-width="1.2"/>
+            <ellipse cx="243" cy="170" rx="38" ry="66" fill="var(--rose)" stroke="var(--rose-strong)" stroke-width="1.2"/>
+            <ellipse cx="297" cy="165" rx="36" ry="60" fill="var(--rose)" stroke="var(--rose-strong)" stroke-width="1.2"/>
+            <rect x="261" y="348" width="18" height="92" rx="6" fill="var(--tendon)" stroke="var(--muted)" stroke-width="1.2"/>
+            <g id="point-group"></g>
+          </svg>
+          <div class="legend" aria-hidden="true">
+            <span><i style="background:var(--rose);border-color:var(--rose-strong)"></i>腓腸肌</span>
+            <span><i style="background:var(--indigo);border-color:var(--indigo-strong)"></i>比目魚肌區</span>
+            <span><i style="background:var(--tendon);border-color:var(--muted)"></i>阿基里斯腱（不直接按壓）</span>
+          </div>
+        </div>
+
+        <div>
+          <ol class="area-list" id="area-list"></ol>
+          <div class="detail" aria-live="polite" aria-atomic="true">
+            <h2 id="area-title"></h2>
+            <p class="en" id="area-en"></p>
+            <dl>
+              <dt>位置</dt><dd id="area-where"></dd>
+              <dt>做法</dt><dd id="area-how"></dd>
+              <dt>原則</dt><dd id="area-dose"></dd>
+            </dl>
+            <div class="nav">
+              <button id="previous" type="button">上一區</button>
+              <button id="next" type="button">下一區</button>
+            </div>
+          </div>
+          <noscript><p class="no-script">此頁需要 JavaScript 才能切換五個按壓區域。</p></noscript>
+        </div>
+      </div>
+
+      <section aria-labelledby="routine-title">
+        <h2 id="routine-title">安全操作流程</h2>
+        <div class="routine">
+          <div class="step-card"><h3>1. 先確認症狀</h3><p>只有一般活動後的輕微緊繃，且沒有上方警訊時，才考慮自我按壓。</p></div>
+          <div class="step-card"><h3>2. 從輕壓開始</h3><p>壓力以舒適、可放鬆呼吸為準。疼痛維持 0–3／10；若超過 3、增加或出現尖銳痛，立即減壓或停止。若達 6／10 以上，停止並儘速尋求專業評估。</p></div>
+          <div class="step-card"><h3>3. 短時間試做</h3><p>輕壓數次呼吸後放開，再確認反應。一次只做一個區域；不必把五區全部做完，也不要為了湊時間反覆深壓。</p></div>
+          <div class="step-card"><h3>4. 操作後再確認</h3><p>不應出現新瘀青、腫脹、麻木、刺痛、無力或走路更不舒服。若出現，停止並諮詢醫師或物理治療師。</p></div>
+        </div>
+      </section>
+
+      <section class="warning" aria-labelledby="caution-title">
+        <h2 id="caution-title">先詢問醫師或物理治療師</h2>
+        <ul>
+          <li>正在服用抗凝血藥、容易瘀青、有出血問題，或曾有血栓病史。</li>
+          <li>感覺變差、糖尿病神經病變、已知循環問題，或無法可靠判斷疼痛與壓力。</li>
+          <li>近期小腿受傷、骨折、手術，或正在處理阿基里斯腱問題。</li>
+          <li>皮膚有傷口、感染、明顯發炎，或醫療人員已交代不要按摩。</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="avoid-title">
+        <h2 id="avoid-title">按壓時避開</h2>
+        <div class="routine">
+          <div class="step-card"><h3>膝窩正中央</h3><p>神經與血管通過，不做深壓。</p></div>
+          <div class="step-card"><h3>骨頭與阿基里斯腱</h3><p>只按壓兩側較柔軟的肌肉，不直接壓脛骨或肌腱。</p></div>
+          <div class="step-card"><h3>明顯血管、腫塊與傷口</h3><p>不要在凸起靜脈、未知腫塊、瘀青或皮膚損傷上按壓。</p></div>
+        </div>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title">安全資料來源</h2>
+        <ul>
+          <li><a href="https://www.cdc.gov/blood-clots/about/" target="_blank" rel="noopener noreferrer">美國疾病管制與預防中心：深層靜脈血栓與肺栓塞警訊</a></li>
+          <li><a href="https://www.nccih.nih.gov/health/massage-therapy-what-you-need-to-know" target="_blank" rel="noopener noreferrer">美國國家補充與整合健康中心：按摩的風險與安全資訊</a></li>
+        </ul>
+        <p class="fine-print">精確按壓位置與時間沒有被這些來源定義為治療處方；本頁採保守起始方式，不能取代個別評估。</p>
+      </section>
+    </main>
+
+    <footer>一般自我照護資訊，不是醫療診斷或個別治療建議。若疼痛持續、反覆、明顯單側，或影響走路與日常活動，建議諮詢復健科醫師或物理治療師。</footer>
+  </div>
+
+  <script>
+    var areas = [
+      {
+        name: '上段內側肌肉',
+        english: 'Upper medial calf muscle',
+        where: '膝後皺摺下方至少兩指寬，偏內側的柔軟肌肉。避開膝窩正中央。',
+        how: '坐穩並放鬆小腿，用指腹輕壓；不要往膝窩方向深壓。',
+        dose: '輕壓數次呼吸後放開，再確認反應。'
+      },
+      {
+        name: '腓腸肌內側',
+        english: 'Medial gastrocnemius',
+        where: '小腿肚靠內側、較厚的肌肉區。',
+        how: '用指腹或掌根穩定輕壓。可在無痛範圍內慢慢勾腳、放鬆，不要硬拉。',
+        dose: '短暫輕壓；過程中持續正常呼吸。'
+      },
+      {
+        name: '腓腸肌外側',
+        english: 'Lateral gastrocnemius',
+        where: '小腿肚靠外側、較厚的肌肉區。',
+        how: '用指腹或掌根輕壓肌肉。若出現電擊感、麻木或刺痛，立即停止。',
+        dose: '短暫輕壓；不追求「越痛越有效」。'
+      },
+      {
+        name: '下段兩側肌肉',
+        english: 'Lower calf muscle',
+        where: '小腿肚下半段、阿基里斯腱上方兩側的柔軟肌肉。',
+        how: '膝蓋微彎，沿肌肉短距離輕壓。避開脛骨內緣與凸起血管。',
+        dose: '每個位置短暫輕壓，放開後再評估。'
+      },
+      {
+        name: '肌肉與肌腱交界兩側',
+        english: 'Muscle–tendon junction sides',
+        where: '小腿肌肉逐漸變窄的位置，只碰兩側柔軟組織，不按灰色肌腱。',
+        how: '用拇指與食指輕觸兩側肌肉；若肌腱疼痛、腫脹或走路痛，略過並尋求評估。',
+        dose: '只需短暫輕觸，不做反覆深捏。'
+      }
+    ];
+    var positions = [[244, 112], [243, 200], [297, 150], [245, 295], [247, 350]];
+    var current = 0;
+    var svgNamespace = 'http://www.w3.org/2000/svg';
+    var pointGroup = document.getElementById('point-group');
+    var areaList = document.getElementById('area-list');
+
+    areas.forEach(function (area, index) {
+      var group = document.createElementNS(svgNamespace, 'g');
+      group.setAttribute('class', 'point');
+      group.setAttribute('tabindex', '0');
+      group.setAttribute('role', 'button');
+      group.setAttribute('aria-label', '第 ' + (index + 1) + ' 區：' + area.name);
+      group.innerHTML = '<circle class="hit" cx="' + positions[index][0] + '" cy="' + positions[index][1] + '" r="24"></circle><circle class="dot" cx="' + positions[index][0] + '" cy="' + positions[index][1] + '" r="13" stroke-width="2"></circle><text x="' + positions[index][0] + '" y="' + (positions[index][1] + 4.5) + '" text-anchor="middle" font-size="13" font-weight="700"></text>';
+      group.lastChild.textContent = index + 1;
+      group.addEventListener('click', function () { selectArea(index, true); });
+      group.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          selectArea(index, true);
+        }
+      });
+      pointGroup.appendChild(group);
+
+      var item = document.createElement('li');
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = '<b></b><span></span>';
+      button.children[0].textContent = index + 1;
+      button.children[1].innerHTML = area.name + '<small>' + area.english + '</small>';
+      button.addEventListener('click', function () { selectArea(index, true); });
+      item.appendChild(button);
+      areaList.appendChild(item);
+    });
+
+    function selectArea(index, focusDetail) {
+      current = index;
+      var points = pointGroup.children;
+      var buttons = areaList.querySelectorAll('button');
+
+      for (var i = 0; i < areas.length; i += 1) {
+        var selected = i === index;
+        var dot = points[i].querySelector('.dot');
+        dot.setAttribute('fill', selected ? 'var(--selected)' : 'var(--point)');
+        dot.setAttribute('stroke', selected ? 'var(--ink)' : 'var(--card)');
+        dot.setAttribute('r', selected ? '15' : '13');
+        points[i].lastChild.setAttribute('fill', selected ? '#1c1300' : 'var(--point-text)');
+        points[i].setAttribute('aria-pressed', String(selected));
+        buttons[i].setAttribute('aria-pressed', String(selected));
+      }
+
+      var area = areas[index];
+      document.getElementById('area-title').textContent = (index + 1) + '. ' + area.name;
+      document.getElementById('area-en').textContent = area.english;
+      document.getElementById('area-where').textContent = area.where;
+      document.getElementById('area-how').textContent = area.how;
+      document.getElementById('area-dose').textContent = area.dose;
+
+      if (focusDetail) {
+        document.getElementById('area-title').setAttribute('tabindex', '-1');
+        document.getElementById('area-title').focus({ preventScroll: true });
+      }
+    }
+
+    document.getElementById('previous').addEventListener('click', function () {
+      selectArea((current + areas.length - 1) % areas.length, false);
+    });
+    document.getElementById('next').addEventListener('click', function () {
+      selectArea((current + 1) % areas.length, false);
+    });
+    selectArea(0, false);
+  </script>
+</body>
+</html>

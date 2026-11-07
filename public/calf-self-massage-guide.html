@@ -202,7 +202,7 @@
         <div class="figure">
           <svg viewBox="20 36 350 454" role="img" aria-labelledby="figure-title figure-desc">
             <title id="figure-title">小腿背面與五個按壓區域</title>
-            <desc id="figure-desc">五個編號都位於小腿肌肉區，避開膝窩正中央、脛骨、明顯血管與阿基里斯腱本身。</desc>
+            <desc id="figure-desc">示意圖標出腓腸肌、比目魚肌、阿基里斯腱與五個操作位置；灰色區塊代表不直接按壓的阿基里斯腱。</desc>
             <g fill="var(--card)" stroke="var(--line)" stroke-width="1.2">
               <circle cx="80" cy="60" r="14"/>
               <rect x="58" y="80" width="44" height="80" rx="10"/>
@@ -255,7 +255,7 @@
           <div class="step-card"><h3>1. 先確認症狀</h3><p>只有一般活動後的輕微緊繃，且沒有上方警訊時，才考慮自我按壓。</p></div>
           <div class="step-card"><h3>2. 從輕壓開始</h3><p>壓力以舒適、可放鬆呼吸為準。疼痛維持 0–3／10；若超過 3，停止當前按壓。若疼痛增加，或出現尖銳痛、麻木、刺痛、無力或電擊感，立即停止並諮詢醫師或物理治療師。若達 6／10 以上，停止並儘速尋求專業評估。</p></div>
           <div class="step-card"><h3>3. 短時間試做</h3><p>輕壓數次呼吸後放開，再確認反應。一次只做一個區域；不必把五區全部做完，也不要為了湊時間反覆深壓。</p></div>
-          <div class="step-card"><h3>4. 操作後再確認</h3><p>不應出現新瘀青、腫脹、麻木、刺痛、無力或走路更不舒服。若出現，停止並諮詢醫師或物理治療師。</p></div>
+          <div class="step-card"><h3>4. 操作後再確認</h3><p>若出現新瘀青、麻木、刺痛、無力或走路更不舒服，停止並諮詢醫師或物理治療師。若新出現單側腫脹、發熱、泛紅、變色，或休息疼痛不退，停止且不要再按摩，並儘快就醫；若同時突然喘不過氣、胸痛、咳血、心跳異常、頭暈或昏厥，立即撥打 119。</p></div>
         </div>
       </section>
 
@@ -353,14 +353,14 @@
         dose: '每個位置短暫輕壓，放開後再評估。'
       },
       {
-        name: '肌肉與肌腱交界兩側',
-        english: 'Muscle–tendon junction sides',
-        where: '小腿肌肉逐漸變窄的位置，只碰兩側柔軟組織，不按灰色肌腱。',
-        how: '用拇指與食指輕觸兩側肌肉；若肌腱疼痛、腫脹或走路痛，略過並尋求評估。',
-        dose: '只需短暫輕觸，不做反覆深捏。'
+        name: '肌肉與肌腱交界單側',
+        english: 'One side of muscle–tendon junction',
+        where: '小腿肌肉逐漸變窄的位置，選一側柔軟組織，與灰色肌腱保持間隔。',
+        how: '用一到兩指的指腹從單側輕觸，不跨過或夾捏肌腱；若肌腱疼痛、腫脹或走路痛，略過並尋求評估。',
+        dose: '只需短暫輕觸，不做反覆深按。'
       }
     ];
-    var positions = [[244, 112], [243, 200], [297, 150], [245, 295], [247, 350]];
+    var positions = [[244, 112], [243, 200], [297, 150], [245, 295], [236, 360]];
     var current = 0;
     var svgNamespace = 'http://www.w3.org/2000/svg';
     var pointGroup = document.getElementById('point-group');

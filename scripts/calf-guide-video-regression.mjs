@@ -27,7 +27,39 @@ assert.match(source, /完整內容、講者資格、動作劑量及與本頁操�
 assert.match(source, /影片不取代本頁的警訊與停止規則/);
 assert.doesNotMatch(source, /<iframe\b/i, 'videos must not auto-load third-party iframes');
 
-console.log('Calf guide video regression passed: six unique links and safety disclosure are present.');
+assert.match(source, /疼痛維持 0–3／10；若超過 3，停止當前按壓/);
+assert.match(source, /若達 6／10 以上，停止並儘速尋求專業評估/);
+assert.match(
+  source,
+  /若新出現單側腫脹、發熱、泛紅、變色，或休息疼痛不退，停止且不要再按摩，並儘快就醫/,
+);
+assert.match(source, /若同時突然喘不過氣、胸痛、咳血、心跳異常、頭暈或昏厥，立即撥打 119/);
+assert.match(source, /用一到兩指的指腹從單側輕觸，不跨過或夾捏肌腱/);
+assert.doesNotMatch(source, /用拇指與食指輕觸兩側肌肉/);
+assert.match(
+  source,
+  /<desc id="figure-desc">示意圖標出腓腸肌、比目魚肌、阿基里斯腱與五個操作位置；灰色區塊代表不直接按壓的阿基里斯腱。<\/desc>/,
+);
+
+const tendonMatch = source.match(/<rect x="(\d+)" y="348" width="(\d+)" height="92"[^>]+fill="var\(--tendon\)"/);
+const positionsMatch = source.match(/var positions = \[([^;]+)\];/);
+assert.ok(tendonMatch, 'Achilles tendon geometry must remain explicit');
+assert.ok(positionsMatch, 'massage marker positions must remain explicit');
+const positions = JSON.parse(`[${positionsMatch[1]}]`);
+const tendonLeft = Number(tendonMatch[1]);
+const markerFiveX = positions[4][0];
+const selectedRadius = 15;
+const hitRadius = 24;
+assert.ok(
+  tendonLeft - markerFiveX > selectedRadius,
+  'marker 5 selected dot must not touch the Achilles tendon',
+);
+assert.ok(
+  tendonLeft - markerFiveX > hitRadius,
+  'marker 5 tap target must not touch the Achilles tendon',
+);
+
+console.log('Calf guide regression passed: links, safety wording, and Achilles avoid-zone geometry are present.');
 
 if (process.argv.includes('--online')) {
   const results = await Promise.all(

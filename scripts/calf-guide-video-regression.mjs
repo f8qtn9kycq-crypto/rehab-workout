@@ -6,6 +6,8 @@ const source = readFileSync(
   'utf8',
 );
 const expectedIds = [
+  'Ky7_Hhp6Me0',
+  'T5FaG9OZnCk',
   'jUuksM7zUU4',
   'psL-JcDp4WA',
   '-2wXrK76WxQ',
@@ -28,11 +30,22 @@ const linkedExerciseIds = [...source.matchAll(exerciseLinkPattern)].map((match) 
 assert.deepEqual(
   linkedIds,
   expectedIds,
-  'standalone guide must keep the six reviewed YouTube links in the approved order',
+  'standalone guide must keep the eight reviewed YouTube links in the approved order',
 );
 assert.equal(new Set(linkedIds).size, expectedIds.length, 'YouTube links must be unique');
-assert.match(source, /完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED/);
-assert.match(source, /影片不取代本頁的警訊與停止規則/);
+assert.match(source, /Ky7_Hhp6Me0&amp;t=268s/);
+assert.match(source, /Ky7_Hhp6Me0&amp;t=383s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=76s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=121s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=423s/);
+assert.match(source, /2026-03-05 發布/);
+assert.match(source, /2020-10-15 發布/);
+assert.match(source, /7:00 後包含離心、平衡與跳繩等進階內容，不列為本頁日常舒緩步驟/);
+assert.match(source, /不宣稱滾筒能解除組織沾黏/);
+assert.match(source, /不要以疼痛或更大壓力作為有效標準/);
+assert.match(source, /肩或手腕不適、無法穩定撐地者，改用本頁坐姿或徒手方法/);
+assert.match(source, /其餘影片的完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED/);
+assert.match(source, /影片不取代本頁的文字步驟、警訊與停止規則/);
 assert.doesNotMatch(source, /<iframe\b/i, 'videos must not auto-load third-party iframes');
 
 assert.match(source, /<title>小腿舒緩與訓練指南<\/title>/);

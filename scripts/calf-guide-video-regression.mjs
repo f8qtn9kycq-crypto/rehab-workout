@@ -16,6 +16,14 @@ const expectedIds = [
 const linkPattern =
   /<a href="https:\/\/www\.youtube\.com\/(?:watch\?v=|shorts\/)([A-Za-z0-9_-]{11})" target="_blank" rel="noopener noreferrer">/g;
 const linkedIds = [...source.matchAll(linkPattern)].map((match) => match[1]);
+const expectedExerciseIds = [
+  'ankle-gastrocnemius-stretch',
+  'ankle-soleus-stretch',
+  'ankle-seated-soleus-raise',
+  'ankle-calf-raise',
+];
+const exerciseLinkPattern = /<a href="\/exercise\/([a-z0-9-]+)">查看完整動作<\/a>/g;
+const linkedExerciseIds = [...source.matchAll(exerciseLinkPattern)].map((match) => match[1]);
 
 assert.deepEqual(
   linkedIds,
@@ -26,6 +34,16 @@ assert.equal(new Set(linkedIds).size, expectedIds.length, 'YouTube links must be
 assert.match(source, /完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED/);
 assert.match(source, /影片不取代本頁的警訊與停止規則/);
 assert.doesNotMatch(source, /<iframe\b/i, 'videos must not auto-load third-party iframes');
+
+assert.match(source, /<title>小腿舒緩與訓練指南<\/title>/);
+assert.match(source, /<a href="#relief-guide">查看徒手舒緩<\/a>/);
+assert.match(source, /<a href="#training-options">查看活動度與肌力<\/a>/);
+assert.deepEqual(
+  linkedExerciseIds,
+  expectedExerciseIds,
+  'guide must reuse the approved calf mobility and strength exercise IDs',
+);
+assert.match(source, /點選開始訓練後，仍須完成 App 的安全確認/);
 
 assert.match(source, /疼痛維持 0–3／10；若超過 3，停止當前按壓/);
 assert.match(source, /若達 6／10 以上，停止並儘速尋求專業評估/);
@@ -59,7 +77,7 @@ assert.ok(
   'marker 5 tap target must not touch the Achilles tendon',
 );
 
-console.log('Calf guide regression passed: links, safety wording, and Achilles avoid-zone geometry are present.');
+console.log('Calf guide regression passed: purpose paths, canonical exercises, video links, safety wording, and Achilles avoid-zone geometry are present.');
 
 if (process.argv.includes('--online')) {
   const results = await Promise.all(

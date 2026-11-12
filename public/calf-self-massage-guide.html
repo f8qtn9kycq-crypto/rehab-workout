@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="小腿自我按壓的安全入門指南：先排除警訊，再用輕柔、可控制的方式放鬆小腿肌肉。">
+  <meta name="description" content="小腿舒緩與訓練指南：先排除警訊，再依需求選擇徒手舒緩、活動度或肌力內容。">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23176f69'/%3E%3Cpath d='M27 12c-2 12-6 24-4 36 1 7 5 8 9 4 3 4 8 3 9-4 2-12-2-24-4-36Z' fill='white'/%3E%3C/svg%3E">
-  <title>小腿自我按壓指南</title>
+  <title>小腿舒緩與訓練指南</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -86,11 +86,27 @@
       border-left: 4px solid var(--point);
     }
     .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 28px; align-items: start; }
-    .figure, .detail, .step-card, .sources {
+    .figure, .detail, .step-card, .sources, .path-card, .exercise-card {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 14px;
     }
+    .pathways, .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .path-card, .exercise-card { padding: 18px 20px; }
+    .path-card { border-top: 4px solid var(--point); }
+    .path-card p, .exercise-card p { margin-bottom: 14px; color: var(--muted); font-size: .94rem; }
+    .path-card a, .exercise-card a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      font-weight: 700;
+    }
+    .exercise-card .meta { margin-bottom: 6px; color: var(--muted); font-size: .82rem; font-weight: 700; }
+    .section-intro { max-width: 46rem; color: var(--muted); }
     .figure { padding: 12px; }
     .figure svg { display: block; width: 100%; height: auto; max-height: 620px; }
     .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 8px 8px 2px; color: var(--muted); font-size: .82rem; }
@@ -158,6 +174,7 @@
     .video-list li:last-child { border-bottom: 0; }
     .video-list a { font-weight: 700; }
     .video-list p { margin: 3px 0 0; color: var(--muted); font-size: .88rem; }
+    .video-list p a { font-weight: 600; }
     .fine-print { color: var(--muted); font-size: .85rem; }
     footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
     .point { cursor: pointer; }
@@ -183,9 +200,9 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>小腿自我按壓指南</h1>
-      <p class="subtitle">Calf self-massage guide｜先排除警訊，再用輕柔、可控制的方式按壓小腿肌肉。</p>
-      <p class="scope-note"><strong>適用範圍：</strong>一般活動後的輕微緊繃。這不是診斷或治療；不確定症狀來源時，先不要按摩。</p>
+      <h1>小腿舒緩與訓練指南</h1>
+      <p class="subtitle">Calf relief &amp; training guide｜先排除警訊，再依需求選擇徒手舒緩、活動度或肌力內容。</p>
+      <p class="scope-note"><strong>適用範圍：</strong>一般活動後的輕微緊繃，或想了解既有的保守小腿訓練。本頁協助選擇，不是診斷、治療或個別處方；不確定症狀來源時，先不要按摩或訓練。</p>
     </header>
 
     <main>
@@ -198,7 +215,26 @@
         </ul>
       </section>
 
-      <div class="hero">
+      <section aria-labelledby="choose-title">
+        <h2 id="choose-title">你現在想做什麼？</h2>
+        <div class="pathways">
+          <article class="path-card">
+            <h3>我現在小腿緊繃</h3>
+            <p>沒有上方警訊時，可先查看五個徒手輕壓區域。一次只選一區，不必全部做完。</p>
+            <a href="#relief-guide">查看徒手舒緩</a>
+          </article>
+          <article class="path-card">
+            <h3>我想改善小腿功能</h3>
+            <p>依需求查看既有的活動度或肌力動作。完整步驟、安全提醒與停止規則由動作頁提供。</p>
+            <a href="#training-options">查看活動度與肌力</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="relief-guide" aria-labelledby="relief-title">
+        <h2 id="relief-title">徒手舒緩：五個可選區域</h2>
+        <p class="section-intro">這是短期舒緩選項，不是肌力訓練的必要前置程序。請先確認上方警訊，再選一個位置短時間試做。</p>
+        <div class="hero">
         <div class="figure">
           <svg viewBox="20 36 350 454" role="img" aria-labelledby="figure-title figure-desc">
             <title id="figure-title">小腿背面與五個按壓區域</title>
@@ -247,7 +283,8 @@
           </div>
           <noscript><p class="no-script">此頁需要 JavaScript 才能切換五個按壓區域。</p></noscript>
         </div>
-      </div>
+        </div>
+      </section>
 
       <section aria-labelledby="routine-title">
         <h2 id="routine-title">安全操作流程</h2>
@@ -278,9 +315,49 @@
         </div>
       </section>
 
+      <section id="training-options" aria-labelledby="training-title">
+        <h2 id="training-title">活動度與肌力選項</h2>
+        <p class="section-intro">以下連結使用 Rehab-Workout 既有動作內容，不在本頁複製劑量。你可以先閱讀完整步驟；點選開始訓練後，仍須完成 App 的安全確認。</p>
+        <div class="exercise-grid">
+          <article class="exercise-card">
+            <p class="meta">活動度｜初階｜牆面支撐</p>
+            <h3>靠牆直膝小腿伸展</h3>
+            <p>後腳膝蓋伸直、腳跟著地，溫和伸展小腿後側。</p>
+            <a href="/exercise/ankle-gastrocnemius-stretch">查看完整動作</a>
+          </article>
+          <article class="exercise-card">
+            <p class="meta">活動度｜初階｜牆面支撐</p>
+            <h3>靠牆屈膝小腿伸展</h3>
+            <p>後腳跟著地並微彎膝蓋，溫和伸展較深層的小腿區域。</p>
+            <a href="/exercise/ankle-soleus-stretch">查看完整動作</a>
+          </article>
+          <article class="exercise-card">
+            <p class="meta">肌力｜初階｜穩固椅子</p>
+            <h3>坐姿屈膝提踵</h3>
+            <p>以坐姿低負荷開始，適合先建立可控制的小腿出力。</p>
+            <a href="/exercise/ankle-seated-soleus-raise">查看完整動作</a>
+          </article>
+          <article class="exercise-card">
+            <p class="meta">肌力｜中階｜椅子或牆面支撐</p>
+            <h3>站姿小腿提踵</h3>
+            <p>需要站立穩定度。先能控制坐姿版本，再評估是否適合。</p>
+            <a href="/exercise/ankle-calf-raise">查看完整動作</a>
+          </article>
+        </div>
+        <p class="fine-print">若小腿或阿基里斯腱疼痛增加、腫脹、麻木、無力或失去平衡，請停止，不要自行進階，並諮詢醫師或物理治療師。</p>
+      </section>
+
       <section class="sources" aria-labelledby="videos-title">
         <h2 id="videos-title">影片參考</h2>
         <ul class="video-list">
+          <li>
+            <a href="https://www.youtube.com/watch?v=Ky7_Hhp6Me0" target="_blank" rel="noopener noreferrer">小腿肌肉緊繃沒彈性，這幾個放鬆與平衡訓練一定要學會</a>
+            <p>啾c物理治療師｜2026-03-05 發布。<a href="https://www.youtube.com/watch?v=Ky7_Hhp6Me0&amp;t=268s" target="_blank" rel="noopener noreferrer">4:28 小腿放鬆</a>、<a href="https://www.youtube.com/watch?v=Ky7_Hhp6Me0&amp;t=383s" target="_blank" rel="noopener noreferrer">6:23 靜態伸展</a>。7:00 後包含離心、平衡與跳繩等進階內容，不列為本頁日常舒緩步驟。影片提及阿基里斯腱，不作為診斷或個別治療依據。</p>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=T5FaG9OZnCk" target="_blank" rel="noopener noreferrer">8分鐘滾筒放鬆下肢筋膜沾黏，物理治療師完整示範</a>
+            <p>啾c物理治療師｜2020-10-15 發布。<a href="https://www.youtube.com/watch?v=T5FaG9OZnCk&amp;t=76s" target="_blank" rel="noopener noreferrer">1:16 小腿下段</a>、<a href="https://www.youtube.com/watch?v=T5FaG9OZnCk&amp;t=121s" target="_blank" rel="noopener noreferrer">2:01 小腿上段</a>、<a href="https://www.youtube.com/watch?v=T5FaG9OZnCk&amp;t=423s" target="_blank" rel="noopener noreferrer">7:03 小腿外側</a>。本頁不宣稱滾筒能解除組織沾黏，只將影片作為短期舒緩與活動度示範；不要以疼痛或更大壓力作為有效標準。肩或手腕不適、無法穩定撐地者，改用本頁坐姿或徒手方法。</p>
+          </li>
           <li>
             <a href="https://www.youtube.com/watch?v=jUuksM7zUU4" target="_blank" rel="noopener noreferrer">【肌筋膜放鬆】小腿肌群放鬆</a>
             <p>GYMEFIT｜小腿肌群放鬆示範。</p>
@@ -306,7 +383,7 @@
             <p>Purusa 璞實生活｜前側脛骨肌示範，不是本頁後側小腿五區。</p>
           </li>
         </ul>
-        <p class="fine-print">2026-11-07 已透過 YouTube 官方 oEmbed 確認 6 支影片仍公開可連結。僅核對標題、頻道與公開狀態；完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED。影片不取代本頁的警訊與停止規則，外部可用性也可能變更。</p>
+        <p class="fine-print">2026-11-12 已透過 YouTube 官方 oEmbed 確認 8 支影片仍公開可連結。兩支啾c影片另核對官方章節時間；未完成逐影格動作安全審查。其餘影片的完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED。影片不取代本頁的文字步驟、警訊與停止規則，外部可用性也可能變更。</p>
       </section>
 
       <section class="sources" aria-labelledby="sources-title">

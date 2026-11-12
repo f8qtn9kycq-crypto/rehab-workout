@@ -6,6 +6,8 @@ const source = readFileSync(
   'utf8',
 );
 const expectedIds = [
+  'Ky7_Hhp6Me0',
+  'T5FaG9OZnCk',
   'jUuksM7zUU4',
   'psL-JcDp4WA',
   '-2wXrK76WxQ',
@@ -16,16 +18,45 @@ const expectedIds = [
 const linkPattern =
   /<a href="https:\/\/www\.youtube\.com\/(?:watch\?v=|shorts\/)([A-Za-z0-9_-]{11})" target="_blank" rel="noopener noreferrer">/g;
 const linkedIds = [...source.matchAll(linkPattern)].map((match) => match[1]);
+const expectedExerciseIds = [
+  'ankle-gastrocnemius-stretch',
+  'ankle-soleus-stretch',
+  'ankle-seated-soleus-raise',
+  'ankle-calf-raise',
+];
+const exerciseLinkPattern = /<a href="\/exercise\/([a-z0-9-]+)">查看完整動作<\/a>/g;
+const linkedExerciseIds = [...source.matchAll(exerciseLinkPattern)].map((match) => match[1]);
 
 assert.deepEqual(
   linkedIds,
   expectedIds,
-  'standalone guide must keep the six reviewed YouTube links in the approved order',
+  'standalone guide must keep the eight reviewed YouTube links in the approved order',
 );
 assert.equal(new Set(linkedIds).size, expectedIds.length, 'YouTube links must be unique');
-assert.match(source, /完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED/);
-assert.match(source, /影片不取代本頁的警訊與停止規則/);
+assert.match(source, /Ky7_Hhp6Me0&amp;t=268s/);
+assert.match(source, /Ky7_Hhp6Me0&amp;t=383s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=76s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=121s/);
+assert.match(source, /T5FaG9OZnCk&amp;t=423s/);
+assert.match(source, /2026-03-05 發布/);
+assert.match(source, /2020-10-15 發布/);
+assert.match(source, /7:00 後包含離心、平衡與跳繩等進階內容，不列為本頁日常舒緩步驟/);
+assert.match(source, /不宣稱滾筒能解除組織沾黏/);
+assert.match(source, /不要以疼痛或更大壓力作為有效標準/);
+assert.match(source, /肩或手腕不適、無法穩定撐地者，改用本頁坐姿或徒手方法/);
+assert.match(source, /其餘影片的完整內容、講者資格、動作劑量及與本頁操作的一致性均 NOT VERIFIED/);
+assert.match(source, /影片不取代本頁的文字步驟、警訊與停止規則/);
 assert.doesNotMatch(source, /<iframe\b/i, 'videos must not auto-load third-party iframes');
+
+assert.match(source, /<title>小腿舒緩與訓練指南<\/title>/);
+assert.match(source, /<a href="#relief-guide">查看徒手舒緩<\/a>/);
+assert.match(source, /<a href="#training-options">查看活動度與肌力<\/a>/);
+assert.deepEqual(
+  linkedExerciseIds,
+  expectedExerciseIds,
+  'guide must reuse the approved calf mobility and strength exercise IDs',
+);
+assert.match(source, /點選開始訓練後，仍須完成 App 的安全確認/);
 
 assert.match(source, /疼痛維持 0–3／10；若超過 3，停止當前按壓/);
 assert.match(source, /若達 6／10 以上，停止並儘速尋求專業評估/);
@@ -59,7 +90,7 @@ assert.ok(
   'marker 5 tap target must not touch the Achilles tendon',
 );
 
-console.log('Calf guide regression passed: links, safety wording, and Achilles avoid-zone geometry are present.');
+console.log('Calf guide regression passed: purpose paths, canonical exercises, video links, safety wording, and Achilles avoid-zone geometry are present.');
 
 if (process.argv.includes('--online')) {
   const results = await Promise.all(
